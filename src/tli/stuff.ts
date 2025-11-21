@@ -112,11 +112,6 @@ export interface Loadout {
   customConfiguration: Affix.Affix[];
 }
 
-interface BasicMod {
-  value: number;
-  source: string;
-}
-
 type Mod =
   | {
       type: "Str";
@@ -168,25 +163,6 @@ type Mod =
       src?: string;
     };
 
-interface StatBag {
-  additionalMainHandDamage: BasicMod[];
-  damage: BasicMod[];
-  additionalDamage: BasicMod[];
-  critRate: BasicMod[];
-  critDamage: BasicMod[];
-  additionalCritDamage: BasicMod[];
-  attackSpeed: BasicMod[];
-  additionalAttackSpeed: BasicMod[];
-  doubleDamage: BasicMod[];
-  str: BasicMod[];
-  dex: BasicMod[];
-  steepStrikeChance: BasicMod[];
-  steepStrikeDamage: BasicMod[];
-  additionalSweepSlashDamage: BasicMod[];
-  additionalSteepStrikeDamage: BasicMod[];
-  fervorEffect: BasicMod[];
-}
-
 const calculateInc = (bonuses: number[]) => {
   return R.pipe(
     bonuses,
@@ -199,23 +175,6 @@ const calculateAddn = (bonuses: number[]) => {
   return R.pipe(
     bonuses,
     R.filter((b) => true),
-    R.reduce((b1, b2) => b1 * (1 + b2), 1)
-  );
-};
-
-const calculateBonus = (bonuses: BasicMod[]) => {
-  return R.pipe(
-    bonuses,
-    R.filter((b) => true),
-    R.sumBy((b) => b.value)
-  );
-};
-
-const calculateAdditionalBonus = (bonuses: BasicMod[]) => {
-  return R.pipe(
-    bonuses,
-    R.filter((b) => true),
-    R.map((b) => b.value),
     R.reduce((b1, b2) => b1 * (1 + b2), 1)
   );
 };
@@ -400,32 +359,25 @@ const calculateDmgPcts = (
 ): Extract<Mod, { type: "DmgPct" }>[] => {
   let dmgPctAffixes = filterAffix(allAffixes, "DmgPct");
   return dmgPctAffixes.map((a) => {
-    return { type: "DmgPct", value: a.value, addn: a.addn, modType: a.modType, src: a.src };
+    return {
+      type: "DmgPct",
+      value: a.value,
+      addn: a.addn,
+      modType: a.modType,
+      src: a.src,
+    };
   });
-  // let byModType = R.pipe(
-  //   dmgPctAffixes,
-  //   R.map((a) => {
-  //     return new BMod.DmgPct(a.value, a.addn, a.modType, a.src);
-  //   }),
-  //   R.groupBy((s) => s.modType)
-  // );
-  // let dmgPcts: DmgPcts = {
-  //   global: byModType["global"] || [],
-  //   attack: byModType["attack"] || [],
-  //   spell: byModType["spell"] || [],
-  //   physical: byModType["physical"] || [],
-  //   cold: byModType["cold"] || [],
-  //   lightning: byModType["lightning"] || [],
-  //   fire: byModType["fire"] || [],
-  //   erosion: byModType["erosion"] || [],
-  // };
-  // return dmgPcts;
 };
 
 const calculateCritRating = (allAffixes: Affix.Affix[]): number => {
   let critRatingPctAffixes = filterAffix(allAffixes, "CritRatingPct");
   let mods = critRatingPctAffixes.map((a) => {
-    return { type: "CritRatingPct", value: a.value, modType: a.modType, src: a.src };
+    return {
+      type: "CritRatingPct",
+      value: a.value,
+      modType: a.modType,
+      src: a.src,
+    };
   });
   let inc = calculateInc(mods.map((v) => v.value));
   return 0.05 * (1 + inc);
@@ -434,7 +386,13 @@ const calculateCritRating = (allAffixes: Affix.Affix[]): number => {
 const calculateCritDmg = (allAffixes: Affix.Affix[]): number => {
   let critDmgPctAffixes = filterAffix(allAffixes, "CritDmgPct");
   let mods = critDmgPctAffixes.map((a) => {
-    return { type: "CritDmgPct", value: a.value, addn: a.addn, modType: a.modType, src: a.src };
+    return {
+      type: "CritDmgPct",
+      value: a.value,
+      addn: a.addn,
+      modType: a.modType,
+      src: a.src,
+    };
   });
 
   let inc = calculateInc(mods.filter((m) => !m.addn).map((v) => v.value));
@@ -669,200 +627,4 @@ export const calculateOffense = (
     avgHitWithCrit: avgHitWithCrit,
     avgDps: avgDps,
   };
-};
-
-const _calculateDps = (statBag: StatBag) => {
-  // let weaponDamage = 178;
-  //let weaponDamage = 209.5;
-  let weaponDamage = ((20 + 107) / 2) * 2.1;
-  let weaponAttackSpeed = 1.5;
-  let weaponCritRate = 0.05;
-
-  let additionalMainHandDamageBonus = calculateAdditionalBonus(
-    statBag.additionalMainHandDamage
-  );
-  let dmgBonus = calculateBonus(statBag.damage);
-  let additionalAttrDmgBonus = {
-    value:
-      0.005 *
-      (R.sumBy(statBag.str, (b) => b.value) +
-        R.sumBy(statBag.dex, (b) => b.value)),
-    source: "main stats",
-  };
-  let additionalDmgBonus = calculateAdditionalBonus(
-    R.concat(statBag.additionalDamage, [additionalAttrDmgBonus])
-  );
-
-  let critRateBonus = calculateBonus(statBag.critRate);
-
-  let critDmgBonus = calculateBonus(statBag.critDamage);
-  let additionalCritDamageBonus = calculateAdditionalBonus(
-    statBag.additionalCritDamage
-  );
-
-  let aspdBonus = calculateBonus(statBag.attackSpeed);
-  let additionalAspdBonus = calculateAdditionalBonus(
-    statBag.additionalAttackSpeed
-  );
-
-  let doubleDamageBonus = calculateBonus(statBag.doubleDamage);
-
-  let steepStrikeChance = calculateBonus(statBag.steepStrikeChance);
-  let steepStrikeDamageBonus = calculateBonus(statBag.steepStrikeDamage);
-  let additionalSweepSlashDamage = calculateAdditionalBonus(
-    statBag.additionalSweepSlashDamage
-  );
-  let additionalSteepStrikeDamageBonus = calculateAdditionalBonus(
-    statBag.additionalSteepStrikeDamage
-  );
-  let steepWeaponDamage =
-    Math.min(1, steepStrikeChance) *
-      4.21 *
-      (1 + steepStrikeDamageBonus) *
-      additionalSteepStrikeDamageBonus +
-    Math.max(0, 1 - steepStrikeChance) * 2.1 * additionalSweepSlashDamage;
-
-  console.log(`steepWeaponDamage: ${steepWeaponDamage.toLocaleString()}`);
-
-  let trinityMult = 1;
-
-  let damage =
-    weaponDamage *
-    (1 + dmgBonus) *
-    additionalDmgBonus *
-    steepWeaponDamage *
-    additionalMainHandDamageBonus *
-    trinityMult;
-  let critRate = Math.min(1, weaponCritRate * (1 + critRateBonus));
-  let critDamage = (1.5 + critDmgBonus) * additionalCritDamageBonus;
-  let attackSpeed = Math.min(
-    30,
-    weaponAttackSpeed * (1 + aspdBonus) * additionalAspdBonus
-  );
-  let dph = damage * (1 + critRate * (critDamage - 1));
-  let dps =
-    damage *
-    (1 + critRate * (critDamage - 1)) *
-    attackSpeed *
-    (1 + doubleDamageBonus);
-
-  console.log(`dph: ${dph.toLocaleString()}`);
-  console.log(`dph no crit: ${damage.toLocaleString()}`);
-  console.log(`damage bonus: ${dmgBonus.toLocaleString()}`);
-  console.log(`critRate: ${critRate}`);
-  console.log(`critDamage: ${critDamage}`);
-  console.log(`aspdBonus: ${aspdBonus}`);
-  console.log(`additionalAspdBonus: ${additionalAspdBonus - 1}`);
-  console.log(`attackSpeed: ${attackSpeed}`);
-  console.log(`dps: ${dps.toLocaleString()}`);
-};
-let bag2: StatBag = {
-  additionalMainHandDamage: [
-    // { value: 0.08, source: "sword" },
-    { value: 0.22, source: "left ring" },
-    { value: 0.28, source: "right ring" },
-    { value: 0.192, source: "trait 3" },
-  ],
-  damage: [
-    // { value: 0.5, source: "sword" },
-    { value: 0.91, source: "right ring" },
-    { value: 0.27, source: "talent: god of might 0x3" },
-    { value: 0.54, source: "talent: god of might 3x3" },
-    { value: 0.27, source: "talent: god of might 12x1" },
-    { value: 0.54, source: "talent: god of might 15x1" },
-    { value: 0.27, source: "talent: god of might 12x5" },
-    { value: 0.36 * 1.64, source: "talent: the brave 3x4" },
-    { value: 0.54 * 1.64, source: "talent: the brave 3x5" },
-    { value: 0.27, source: "talent: the brave 12x1" },
-    { value: 0.54, source: "talent: the brave 15x1" },
-    { value: 0.27, source: "talent: ronin 15x2" },
-  ],
-  additionalDamage: [
-    // { value: -0.11, source: "lvl40 dummy armor" },
-    { value: -0.066, source: "lvl40 dummy armor nonphys" },
-    // { value: -.44, source: "lvl85 dummy armor"},
-    { value: 0.25, source: "scorch res pen" },
-    { value: 0.05, source: "numb 1 stack" },
-    { value: 0.19, source: "dirty tricks (3 ailment)" },
-    { value: 0.08, source: "agility blessing" },
-    { value: 0.1, source: "motionless" },
-    { value: 0.1, source: "boots: skill +1" },
-    { value: 0.1, source: "talent: god of might 18x1: skill +1" },
-    { value: 0.05, source: "attack aggression" },
-    { value: 0.15, source: "hidden mastery" },
-    { value: 0.25, source: "tradeoff" },
-    { value: 0.08 * 1.44, source: "talent: the brave 0x5" },
-    { value: 0.08, source: "talent: the brave 18x1" },
-    { value: 0.1, source: "talent: ranger 18x4" },
-    { value: 0.3, source: "trait 0" }, // ele only
-    { value: 0.28, source: "trait 1" }, // flaky?
-    { value: 0.4, source: "trait 2" }, // ele only
-    { value: 0.1, source: "trait 3" }, // ele only
-    { value: -0.2, source: "trait uptime" },
-  ],
-  critRate: [
-    {
-      value: 3 * (1 + 0.12 + 0.84 + 0.64 + 0.12 + 0.24 + 0.2 + 0.8),
-      source: "fervor + eff",
-    },
-  ],
-  critDamage: [
-    { value: 0.63, source: "right ring" },
-    { value: 0.225, source: "talent: ranger 3x2" },
-    { value: 0.75, source: "talent: ranger 15x1" },
-    { value: 0.58, source: "memory 1" },
-    { value: 0.42, source: "memory 2" },
-    { value: 0.58, source: "memory 2" },
-  ],
-  additionalCritDamage: [],
-  attackSpeed: [
-    { value: 0.06, source: "divinity" },
-    { value: 0.16, source: "agility blessing" },
-    { value: 0.15, source: "hidden mastery" },
-    { value: 0.05, source: "boots" },
-    { value: 0.09, source: "talent: the brave 3x2" },
-    { value: 0.06, source: "talent: the brave 6x2" },
-    { value: 0.09, source: "talent: ranger 6x1" },
-    { value: 0.18, source: "talent: ranger 9x1" },
-    { value: 0.09, source: "talent: ronin 3x2" },
-    { value: 0.18, source: "talent: ronin 6x2" },
-    { value: 0.14, source: "memory 3" },
-    { value: 0.44, source: "memory 3" },
-  ],
-  additionalAttackSpeed: [
-    { value: 0.05, source: "attack aggression" },
-    { value: 0.08, source: "hasten" },
-    { value: 0.2, source: "trait 0" },
-    { value: 0.19, source: "weapon" },
-  ],
-  doubleDamage: [
-    //{ value: 0.39, source: "sword" }
-  ],
-  str: [{ value: 162, source: "stat sheet" }],
-  dex: [{ value: 152, source: "stat sheet" }],
-  steepStrikeChance: [{ value: 1, source: "stat sheet" }],
-  steepStrikeDamage: [],
-  additionalSweepSlashDamage: [{ value: -0.15, source: "neck" }],
-  additionalSteepStrikeDamage: [{ value: 1.4, source: "neck" }],
-  fervorEffect: [],
-};
-
-// calculateDps(bag2);
-
-let loadout: Loadout = {
-  equipmentPage: {
-    helmet: { gearType: "helmet", affixes: [] },
-    chest: { gearType: "chest", affixes: [] },
-    neck: { gearType: "neck", affixes: [] },
-    gloves: { gearType: "gloves", affixes: [] },
-    belt: { gearType: "belt", affixes: [] },
-    boots: { gearType: "boots", affixes: [] },
-    leftRing: { gearType: "ring", affixes: [] },
-    rightRing: { gearType: "ring", affixes: [] },
-    mainHand: { gearType: "sword", affixes: [] },
-    offHand: { gearType: "shield", affixes: [] },
-  },
-  talentPage: { affixes: [], coreTalents: [] },
-  divinityPage: { slates: [] },
-  customConfiguration: [],
 };
