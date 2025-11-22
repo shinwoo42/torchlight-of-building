@@ -21,7 +21,7 @@ const parseDmgPct = (
 ): AffixOfType<"DmgPct"> | undefined => {
   // Regex to parse: +9% [additional] [fire] damage
   const pattern =
-    /^([+-])?(\d+(?:\.\d+)?)%\s+(?:(additional)\s+)?(?:(\w+)\s+)?damage$/i;
+    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?(?:(\w+) )?damage$/i;
   const match = input.match(pattern);
 
   if (!match) {
@@ -65,7 +65,7 @@ const parseCritRatingPct = (
   // Regex to parse: +10% [Attack] Critical Strike Rating
   // The type word comes before "Critical Strike Rating"
   const pattern =
-    /^([+-])?(\d+(?:\.\d+)?)%\s+(?:(\w+)\s+)?critical\s+strike\s+rating$/i;
+    /^([+-])?(\d+(?:\.\d+)?)% (?:(\w+) )?critical strike rating$/i;
   const match = input.match(pattern);
 
   if (!match) {
