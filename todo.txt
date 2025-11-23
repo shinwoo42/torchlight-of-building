@@ -7,6 +7,7 @@
   * inverse prism
   * talent replacement prism
   * "unimplemented" affixes
+  * core talents
 * hero memories/traits
   * rosa2
 * frontend
