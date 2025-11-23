@@ -2,6 +2,14 @@
 * affix range parsers for crafting
 * talent page
   * tlidb scraper
-  * "unimplmented" affixes
+  * page backend
+  * normal prism
+  * inverse prism
+  * talent replacement prism
+  * "unimplemented" affixes
 * hero memories/traits
+  * rosa2
 * frontend
+* uniques
+  * ghostslaughter
+  * trinity
