@@ -42,6 +42,7 @@ src/
 │   └── page.tsx          # Home page
 ├── tli/                  # Core damage calculation logic
 │   ├── affix.ts          # Affix type definitions (discriminated union)
+│   ├── mods.ts          # Mod type definitions (discriminated union)
 │   ├── affix_parser.ts   # Parser for converting human-readable strings to Affix objects
 │   ├── affix_parser.test.ts # Tests for affix parser
 │   ├── constants.ts      # Const arrays and derived types for damage/crit modifiers

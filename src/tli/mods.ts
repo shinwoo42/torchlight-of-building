@@ -46,7 +46,7 @@ export type Mod =
       src?: string;
     }
   | {
-      type: "CastSpeedPct";
+      type: "CspdPct";
       value: number;
       addn: boolean;
       src?: string;
@@ -58,7 +58,7 @@ export type Mod =
       src?: string;
     }
   | {
-      type: "MinionCastSpeedPct";
+      type: "MinionCspdPct";
       value: number;
       addn: boolean;
       src?: string;

@@ -29,6 +29,24 @@ export type Affix =
       src?: string;
     }
   | {
+      type: "CspdPct";
+      value: number;
+      addn: boolean;
+      src?: string;
+    }
+  | {
+      type: "MinionAspdPct";
+      value: number;
+      addn: boolean;
+      src?: string;
+    }
+  | {
+      type: "MinionCspdPct";
+      value: number;
+      addn: boolean;
+      src?: string;
+    }
+  | {
       type: "DblDmg";
       value: number;
       src?: string;
