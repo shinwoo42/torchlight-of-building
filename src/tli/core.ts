@@ -81,16 +81,16 @@ export interface RawGear {
 }
 
 export interface RawGearPage {
-  helmet?: Gear;
-  chest?: Gear;
-  neck?: Gear;
-  gloves?: Gear;
-  belt?: Gear;
-  boots?: Gear;
-  leftRing?: Gear;
-  rightRing?: Gear;
-  mainHand?: Gear;
-  offHand?: Gear;
+  helmet?: RawGear;
+  chest?: RawGear;
+  neck?: RawGear;
+  gloves?: RawGear;
+  belt?: RawGear;
+  boots?: RawGear;
+  leftRing?: RawGear;
+  rightRing?: RawGear;
+  mainHand?: RawGear;
+  offHand?: RawGear;
 }
 
 export interface RawLoadout {
