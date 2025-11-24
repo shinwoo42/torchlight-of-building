@@ -1,11 +1,16 @@
 import * as cheerio from "cheerio";
 
+interface TalentTree {
+  name: string;
+  nodes: TalentNode[];
+}
+
 interface TalentNode {
   nodeType: "micro" | "medium" | "legendary";
   rawAffix: string;
   position: { x: number; y: number };
   prerequisite?: { x: number; y: number };
-  levelUpTime: number;
+  maxPoints: number;
 }
 
 interface NodeData {
@@ -15,7 +20,7 @@ interface NodeData {
   gridY: number;
   type: "micro" | "medium" | "legendary";
   rawAffix: string;
-  levelUpTime: number;
+  maxPoints: number;
 }
 
 const TALENT_TYPE_MAP: Record<string, "micro" | "medium" | "legendary"> = {
@@ -71,7 +76,7 @@ const parseAffix = (htmlContent: string): string => {
  */
 const scrapeProfessionTree = async (
   professionName: string
-): Promise<TalentNode[]> => {
+): Promise<TalentTree> => {
   try {
     const url = `https://tlidb.com/en/${professionName}#ProfessionTree`;
     console.log(`Fetching profession tree from: ${url}`);
@@ -126,7 +131,7 @@ const scrapeProfessionTree = async (
         }
       );
 
-      const levelUpTime = parseInt($levelUpText.text() || "0", 10);
+      const maxPoints = parseInt($levelUpText.text() || "0", 10);
 
       const { x: gridX, y: gridY } = pixelToGrid(cx, cy);
 
@@ -137,7 +142,7 @@ const scrapeProfessionTree = async (
         gridY,
         type,
         rawAffix,
-        levelUpTime,
+        maxPoints,
       });
     });
 
@@ -195,11 +200,14 @@ const scrapeProfessionTree = async (
         rawAffix: node.rawAffix,
         position: { x: node.gridX, y: node.gridY },
         ...(prerequisite && { prerequisite }),
-        levelUpTime: node.levelUpTime,
+        maxPoints: node.maxPoints,
       };
     });
 
-    return talentNodes;
+    return {
+      name: professionName,
+      nodes: talentNodes,
+    };
   } catch (error) {
     console.error("Error scraping profession tree:", error);
     throw error;
@@ -218,9 +226,9 @@ if (require.main === module) {
         process.exit(1);
       }
 
-      const nodes = await scrapeProfessionTree(professionName);
-      console.log(`\nFound ${nodes.length} talent nodes:\n`);
-      console.log(JSON.stringify(nodes, null, 2));
+      const tree = await scrapeProfessionTree(professionName);
+      console.log(`\nFound ${tree.nodes.length} talent nodes:\n`);
+      console.log(JSON.stringify(tree.nodes, null, 2));
     } catch (error) {
       console.error("Script failed:", error);
       process.exit(1);

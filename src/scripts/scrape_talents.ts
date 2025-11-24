@@ -27,7 +27,7 @@ const scrapeTalentPage = async (): Promise<string[]> => {
       const professionLink = $(card).find(".flex-grow-1 a");
       const professionName = professionLink.text().trim();
 
-      if (professionName) {
+      if (professionName && professionName !== "New God") {
         professions.push(professionName);
       }
     });
