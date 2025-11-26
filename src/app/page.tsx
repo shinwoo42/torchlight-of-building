@@ -56,6 +56,54 @@ const SLOT_TO_EQUIPMENT_SLOT: Record<GearSlot, EquipmentSlot[]> = {
   offHand: ["Shield", "One-Handed"],
 };
 
+const SLOT_TO_VALID_EQUIPMENT_TYPES: Record<GearSlot, EquipmentType[]> = {
+  helmet: ["Helmet (DEX)", "Helmet (INT)", "Helmet (STR)"],
+  chest: ["Chest Armor (DEX)", "Chest Armor (INT)", "Chest Armor (STR)"],
+  gloves: ["Gloves (DEX)", "Gloves (INT)", "Gloves (STR)"],
+  boots: ["Boots (DEX)", "Boots (INT)", "Boots (STR)"],
+  belt: ["Belt"],
+  neck: ["Necklace"],
+  leftRing: ["Ring", "Spirit Ring"],
+  rightRing: ["Ring", "Spirit Ring"],
+  mainHand: [
+    "Bow",
+    "Cane",
+    "Claw",
+    "Crossbow",
+    "Cudgel",
+    "Dagger",
+    "Fire Cannon",
+    "Musket",
+    "One-Handed Axe",
+    "One-Handed Hammer",
+    "One-Handed Sword",
+    "Pistol",
+    "Rod",
+    "Scepter",
+    "Tin Staff",
+    "Two-Handed Axe",
+    "Two-Handed Hammer",
+    "Two-Handed Sword",
+    "Wand",
+  ],
+  offHand: [
+    "Shield (DEX)",
+    "Shield (INT)",
+    "Shield (STR)",
+    "Cane",
+    "Claw",
+    "Cudgel",
+    "Dagger",
+    "One-Handed Axe",
+    "One-Handed Hammer",
+    "One-Handed Sword",
+    "Pistol",
+    "Rod",
+    "Scepter",
+    "Wand",
+  ],
+};
+
 const getValidEquipmentTypes = (slot: GearSlot): EquipmentType[] => {
   const validEquipSlots = SLOT_TO_EQUIPMENT_SLOT[slot];
   const types = new Set<EquipmentType>();
@@ -68,6 +116,15 @@ const getValidEquipmentTypes = (slot: GearSlot): EquipmentType[] => {
 
   return Array.from(types).sort();
 };
+
+const getCompatibleItems = (itemsList: RawGear[], slot: GearSlot): RawGear[] => {
+  const validTypes = SLOT_TO_VALID_EQUIPMENT_TYPES[slot];
+  return itemsList.filter(
+    (item) => item.equipmentType && validTypes.includes(item.equipmentType)
+  );
+};
+
+const generateItemId = (): string => crypto.randomUUID();
 
 const getFilteredAffixes = (
   equipmentType: EquipmentType,
@@ -122,6 +179,7 @@ const createEmptyLoadout = (): RawLoadout => ({
   skillPage: {
     skills: [],
   },
+  itemsList: [],
 });
 
 const loadFromStorage = (): RawLoadout => {
@@ -130,7 +188,32 @@ const loadFromStorage = (): RawLoadout => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return createEmptyLoadout();
-    return JSON.parse(stored) as RawLoadout;
+    const parsed = JSON.parse(stored) as RawLoadout;
+
+    // Migration: ensure itemsList exists
+    if (!parsed.itemsList) {
+      parsed.itemsList = [];
+    }
+
+    // Migration: ensure all items have IDs
+    parsed.itemsList = parsed.itemsList.map((item) => ({
+      ...item,
+      id: item.id || generateItemId(),
+    }));
+
+    // Migration: ensure equipped items have IDs
+    const slots: GearSlot[] = [
+      "helmet", "chest", "neck", "gloves", "belt",
+      "boots", "leftRing", "rightRing", "mainHand", "offHand"
+    ];
+    slots.forEach((slot) => {
+      const gear = parsed.equipmentPage[slot];
+      if (gear && !gear.id) {
+        gear.id = generateItemId();
+      }
+    });
+
+    return parsed;
   } catch (error) {
     console.error("Failed to load from localStorage:", error);
     return createEmptyLoadout();
@@ -240,10 +323,121 @@ const AffixSlotComponent: React.FC<AffixSlotProps> = ({
   );
 };
 
+interface EquipmentSlotDropdownProps {
+  slot: GearSlot;
+  label: string;
+  selectedItemId: string | null;
+  compatibleItems: RawGear[];
+  onSelectItem: (slot: GearSlot, itemId: string | null) => void;
+}
+
+const EquipmentSlotDropdown: React.FC<EquipmentSlotDropdownProps> = ({
+  slot,
+  label,
+  selectedItemId,
+  compatibleItems,
+  onSelectItem,
+}) => {
+  const getItemTooltip = (item: RawGear): string => {
+    const lines = [`${item.equipmentType || item.gearType}`];
+    if (item.affixes.length > 0) {
+      lines.push("---");
+      item.affixes.forEach((affix) => lines.push(affix));
+    }
+    return lines.join("\n");
+  };
+
+  return (
+    <div className="flex items-center gap-3 py-2">
+      <label className="w-24 font-medium text-zinc-700 dark:text-zinc-300 text-sm">
+        {label}:
+      </label>
+      <select
+        value={selectedItemId || ""}
+        onChange={(e) => onSelectItem(slot, e.target.value || null)}
+        className="flex-1 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">-- None --</option>
+        {compatibleItems.map((item) => (
+          <option key={item.id} value={item.id} title={getItemTooltip(item)}>
+            {item.equipmentType} ({item.affixes.length} affixes)
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+interface InventoryItemProps {
+  item: RawGear;
+  isEquipped: boolean;
+  onCopy: (item: RawGear) => void;
+  onDelete: (id: string) => void;
+}
+
+const InventoryItem: React.FC<InventoryItemProps> = ({
+  item,
+  isEquipped,
+  onCopy,
+  onDelete,
+}) => {
+  return (
+    <div className="group relative flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+      <div className="flex items-center gap-2">
+        <span className="font-medium text-zinc-900 dark:text-zinc-100 text-sm">
+          {item.equipmentType}
+        </span>
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          ({item.affixes.length} affixes)
+        </span>
+        {isEquipped && (
+          <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+            Equipped
+          </span>
+        )}
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={() => onCopy(item)}
+          className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs"
+          title="Copy item"
+        >
+          Copy
+        </button>
+        <button
+          onClick={() => onDelete(item.id)}
+          className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs"
+          title="Delete item"
+        >
+          Delete
+        </button>
+      </div>
+
+      {/* Hover tooltip showing item details */}
+      <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block z-50 w-72 pointer-events-none">
+        <div className="bg-zinc-900 dark:bg-zinc-950 text-white p-3 rounded-lg shadow-xl border border-zinc-700">
+          <div className="font-semibold text-sm mb-2 text-blue-400">
+            {item.equipmentType}
+          </div>
+          {item.affixes.length > 0 ? (
+            <ul className="space-y-1">
+              {item.affixes.map((affix, idx) => (
+                <li key={idx} className="text-xs text-zinc-300">
+                  {affix}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-xs text-zinc-500 italic">No affixes</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   const [loadout, setLoadout] = useState<RawLoadout>(createEmptyLoadout);
-  const [selectedSlot, setSelectedSlot] = useState<GearSlot>("helmet");
-  const [newAffix, setNewAffix] = useState("");
   const [mounted, setMounted] = useState(false);
   const [activePage, setActivePage] = useState<
     "equipment" | "talents" | "skills"
@@ -266,7 +460,6 @@ export default function Home() {
       .fill(null)
       .map(() => ({ affixIndex: null, percentage: 50 })),
   );
-  const skipLoadoutUpdateRef = useRef(false);
   const [debugMode, setDebugMode] = useState<boolean>(false);
   const [debugPanelExpanded, setDebugPanelExpanded] = useState<boolean>(true);
 
@@ -302,8 +495,6 @@ export default function Home() {
     loadout.talentPage.tree4.name,
   ]);
 
-  const selectedGear = loadout.equipmentPage[selectedSlot];
-
   const prefixAffixes = useMemo(
     () =>
       selectedEquipmentType
@@ -320,56 +511,6 @@ export default function Home() {
     [selectedEquipmentType],
   );
 
-  useEffect(() => {
-    skipLoadoutUpdateRef.current = true;
-    const gear = loadout.equipmentPage[selectedSlot];
-    if (gear?.equipmentType) {
-      setSelectedEquipmentType(gear.equipmentType);
-    } else {
-      setSelectedEquipmentType(null);
-    }
-    setAffixSelections(
-      Array(6)
-        .fill(null)
-        .map(() => ({ affixIndex: null, percentage: 50 })),
-    );
-    setTimeout(() => {
-      skipLoadoutUpdateRef.current = false;
-    }, 0);
-  }, [selectedSlot]);
-
-  useEffect(() => {
-    if (!selectedEquipmentType || skipLoadoutUpdateRef.current) return;
-
-    const affixes: string[] = [];
-
-    affixSelections.forEach((selection, idx) => {
-      if (selection.affixIndex === null) return;
-
-      const affixType = idx < 3 ? "Prefix" : "Suffix";
-      const filteredAffixes =
-        affixType === "Prefix" ? prefixAffixes : suffixAffixes;
-      const selectedAffix = filteredAffixes[selection.affixIndex];
-
-      const craftedText = craft(selectedAffix, selection.percentage);
-      affixes.push(craftedText);
-    });
-
-    setLoadout((prev) => {
-      const slot = selectedSlot;
-      return {
-        ...prev,
-        equipmentPage: {
-          ...prev.equipmentPage,
-          [slot]: {
-            gearType: getGearType(slot),
-            equipmentType: selectedEquipmentType,
-            affixes,
-          },
-        },
-      };
-    });
-  }, [affixSelections, selectedEquipmentType, prefixAffixes, suffixAffixes]);
 
   const getCraftedText = (slotIndex: number): string => {
     const selection = affixSelections[slotIndex];
@@ -393,56 +534,117 @@ export default function Home() {
     return filteredAffixes[selection.affixIndex];
   };
 
-  const getGearType = (slot: GearSlot): RawGear["gearType"] => {
-    if (slot === "leftRing" || slot === "rightRing") return "ring";
-    if (slot === "mainHand" || slot === "offHand") return "sword";
-    return slot;
+  const getGearTypeFromEquipmentType = (equipmentType: EquipmentType): RawGear["gearType"] => {
+    if (equipmentType.includes("Helmet")) return "helmet";
+    if (equipmentType.includes("Chest")) return "chest";
+    if (equipmentType.includes("Gloves")) return "gloves";
+    if (equipmentType.includes("Boots")) return "boots";
+    if (equipmentType === "Belt") return "belt";
+    if (equipmentType === "Necklace") return "neck";
+    if (equipmentType === "Ring" || equipmentType === "Spirit Ring") return "ring";
+    if (equipmentType.includes("Shield")) return "shield";
+    return "sword"; // All weapons
   };
 
-  const handleAddAffix = () => {
-    if (!newAffix.trim()) return;
+  // Inventory handlers
+  const handleSaveToInventory = () => {
+    if (!selectedEquipmentType) return;
 
+    const affixes: string[] = [];
+    affixSelections.forEach((selection, idx) => {
+      if (selection.affixIndex === null) return;
+      const affixType = idx < 3 ? "Prefix" : "Suffix";
+      const filteredAffixes = affixType === "Prefix" ? prefixAffixes : suffixAffixes;
+      const selectedAffix = filteredAffixes[selection.affixIndex];
+      affixes.push(craft(selectedAffix, selection.percentage));
+    });
+
+    const newItem: RawGear = {
+      id: generateItemId(),
+      gearType: getGearTypeFromEquipmentType(selectedEquipmentType),
+      affixes,
+      equipmentType: selectedEquipmentType,
+    };
+
+    setLoadout((prev) => ({
+      ...prev,
+      itemsList: [...prev.itemsList, newItem],
+    }));
+
+    // Reset crafting UI
+    setSelectedEquipmentType(null);
+    setAffixSelections(
+      Array(6)
+        .fill(null)
+        .map(() => ({ affixIndex: null, percentage: 50 }))
+    );
+  };
+
+  const handleCopyItem = (item: RawGear) => {
+    const newItem: RawGear = {
+      ...item,
+      id: generateItemId(),
+    };
+    setLoadout((prev) => ({
+      ...prev,
+      itemsList: [...prev.itemsList, newItem],
+    }));
+  };
+
+  const handleDeleteItem = (itemId: string) => {
     setLoadout((prev) => {
-      const currentGear = prev.equipmentPage[selectedSlot];
-      const updatedGear: RawGear = currentGear
-        ? { ...currentGear, affixes: [...currentGear.affixes, newAffix.trim()] }
-        : { gearType: getGearType(selectedSlot), affixes: [newAffix.trim()] };
+      // Remove from inventory
+      const newItemsList = prev.itemsList.filter((item) => item.id !== itemId);
+
+      // Also unequip from any slots that have this item
+      const newEquipmentPage = { ...prev.equipmentPage };
+      const slots: GearSlot[] = [
+        "helmet", "chest", "neck", "gloves", "belt",
+        "boots", "leftRing", "rightRing", "mainHand", "offHand"
+      ];
+      slots.forEach((slot) => {
+        if (newEquipmentPage[slot]?.id === itemId) {
+          delete newEquipmentPage[slot];
+        }
+      });
 
       return {
         ...prev,
-        equipmentPage: {
-          ...prev.equipmentPage,
-          [selectedSlot]: updatedGear,
-        },
+        itemsList: newItemsList,
+        equipmentPage: newEquipmentPage,
       };
     });
-
-    setNewAffix("");
   };
 
-  const handleDeleteAffix = (index: number) => {
+  const handleSelectItemForSlot = (slot: GearSlot, itemId: string | null) => {
     setLoadout((prev) => {
-      const currentGear = prev.equipmentPage[selectedSlot];
-      if (!currentGear) return prev;
-
-      const updatedAffixes = currentGear.affixes.filter((_, i) => i !== index);
-
-      if (updatedAffixes.length === 0) {
-        const { [selectedSlot]: _, ...restEquipment } = prev.equipmentPage;
-        return {
-          ...prev,
-          equipmentPage: restEquipment,
-        };
+      if (!itemId) {
+        // Unequip
+        const newEquipmentPage = { ...prev.equipmentPage };
+        delete newEquipmentPage[slot];
+        return { ...prev, equipmentPage: newEquipmentPage };
       }
 
+      // Find the item and equip it
+      const item = prev.itemsList.find((i) => i.id === itemId);
+      if (!item) return prev;
+
       return {
         ...prev,
         equipmentPage: {
           ...prev.equipmentPage,
-          [selectedSlot]: { ...currentGear, affixes: updatedAffixes },
+          [slot]: item,
         },
       };
     });
+  };
+
+  const isItemEquipped = (itemId: string): boolean => {
+    const slots: GearSlot[] = [
+      "helmet", "chest", "neck", "gloves", "belt",
+      "boots", "leftRing", "rightRing", "mainHand", "offHand"
+    ];
+    return slots.some((slot) => loadout.equipmentPage[slot]?.id === itemId);
   };
 
   const handleEquipmentTypeChange = (
@@ -828,109 +1030,148 @@ export default function Home() {
 
         {/* Equipment Page */}
         {activePage === "equipment" && (
-          <>
-            {/* Gear Slot Selector */}
-            <div className="mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column: Equipment Slots */}
+            <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow">
               <h2 className="text-xl font-semibold mb-4 text-zinc-800 dark:text-zinc-200">
                 Equipment Slots
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+              <div className="space-y-1">
                 {GEAR_SLOTS.map(({ key, label }) => (
-                  <button
+                  <EquipmentSlotDropdown
                     key={key}
-                    onClick={() => setSelectedSlot(key)}
-                    className={`
-                      px-4 py-2 rounded-lg font-medium transition-colors
-                      ${
-                        selectedSlot === key
-                          ? "bg-blue-600 text-white"
-                          : "bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700"
-                      }
-                    `}
-                  >
-                    {label}
-                  </button>
+                    slot={key}
+                    label={label}
+                    selectedItemId={loadout.equipmentPage[key]?.id || null}
+                    compatibleItems={getCompatibleItems(loadout.itemsList, key)}
+                    onSelectItem={handleSelectItemForSlot}
+                  />
                 ))}
               </div>
             </div>
 
-            {/* Gear Crafting UI */}
-            <div className="mb-8 bg-white dark:bg-zinc-800 rounded-lg p-6 shadow">
-              <h2 className="text-xl font-semibold mb-4 text-zinc-800 dark:text-zinc-200">
-                Craft Gear for{" "}
-                {GEAR_SLOTS.find((s) => s.key === selectedSlot)?.label}
-              </h2>
+            {/* Right Column: Crafting + Inventory */}
+            <div className="space-y-6">
+              {/* Crafting UI */}
+              <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow">
+                <h2 className="text-xl font-semibold mb-4 text-zinc-800 dark:text-zinc-200">
+                  Craft New Item
+                </h2>
 
-              {/* Equipment Type Selector */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2 text-zinc-800 dark:text-zinc-200">
-                  Equipment Type
-                </label>
-                <select
-                  value={selectedEquipmentType || ""}
-                  onChange={handleEquipmentTypeChange}
-                  className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select equipment type...</option>
-                  {getValidEquipmentTypes(selectedSlot).map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
+                {/* Equipment Type Selector */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium mb-2 text-zinc-800 dark:text-zinc-200">
+                    Equipment Type
+                  </label>
+                  <select
+                    value={selectedEquipmentType || ""}
+                    onChange={handleEquipmentTypeChange}
+                    className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select equipment type...</option>
+                    {getValidEquipmentTypes("mainHand")
+                      .concat(getValidEquipmentTypes("helmet"))
+                      .concat(getValidEquipmentTypes("chest"))
+                      .concat(getValidEquipmentTypes("gloves"))
+                      .concat(getValidEquipmentTypes("boots"))
+                      .concat(getValidEquipmentTypes("belt"))
+                      .concat(getValidEquipmentTypes("neck"))
+                      .concat(getValidEquipmentTypes("leftRing"))
+                      .concat(getValidEquipmentTypes("offHand"))
+                      .filter((v, i, a) => a.indexOf(v) === i)
+                      .sort()
+                      .map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                {selectedEquipmentType ? (
+                  <>
+                    {/* Prefix Section */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold mb-3 text-zinc-800 dark:text-zinc-200">
+                        Prefixes (3 max)
+                      </h3>
+                      <div className="space-y-4">
+                        {[0, 1, 2].map((slotIndex) => (
+                          <AffixSlotComponent
+                            key={slotIndex}
+                            slotIndex={slotIndex}
+                            affixType="Prefix"
+                            affixes={prefixAffixes}
+                            selection={affixSelections[slotIndex]}
+                            onAffixSelect={handleAffixSelect}
+                            onSliderChange={handleSliderChange}
+                            onClear={handleClearAffix}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Suffix Section */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold mb-3 text-zinc-800 dark:text-zinc-200">
+                        Suffixes (3 max)
+                      </h3>
+                      <div className="space-y-4">
+                        {[3, 4, 5].map((slotIndex) => (
+                          <AffixSlotComponent
+                            key={slotIndex}
+                            slotIndex={slotIndex}
+                            affixType="Suffix"
+                            affixes={suffixAffixes}
+                            selection={affixSelections[slotIndex]}
+                            onAffixSelect={handleAffixSelect}
+                            onSliderChange={handleSliderChange}
+                            onClear={handleClearAffix}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Save to Inventory Button */}
+                    <button
+                      onClick={handleSaveToInventory}
+                      className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                    >
+                      Save to Inventory
+                    </button>
+                  </>
+                ) : (
+                  <p className="text-zinc-500 dark:text-zinc-400 italic text-center py-8">
+                    Select an equipment type to begin crafting
+                  </p>
+                )}
               </div>
 
-              {selectedEquipmentType ? (
-                <>
-                  {/* Prefix Section */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-3 text-zinc-800 dark:text-zinc-200">
-                      Prefixes (3 max)
-                    </h3>
-                    <div className="space-y-4">
-                      {[0, 1, 2].map((slotIndex) => (
-                        <AffixSlotComponent
-                          key={slotIndex}
-                          slotIndex={slotIndex}
-                          affixType="Prefix"
-                          affixes={prefixAffixes}
-                          selection={affixSelections[slotIndex]}
-                          onAffixSelect={handleAffixSelect}
-                          onSliderChange={handleSliderChange}
-                          onClear={handleClearAffix}
-                        />
-                      ))}
-                    </div>
+              {/* Inventory */}
+              <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 shadow">
+                <h2 className="text-xl font-semibold mb-4 text-zinc-800 dark:text-zinc-200">
+                  Inventory ({loadout.itemsList.length} items)
+                </h2>
+                {loadout.itemsList.length === 0 ? (
+                  <p className="text-zinc-500 dark:text-zinc-400 italic text-center py-4">
+                    No items in inventory. Craft items above to add them here.
+                  </p>
+                ) : (
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {loadout.itemsList.map((item) => (
+                      <InventoryItem
+                        key={item.id}
+                        item={item}
+                        isEquipped={isItemEquipped(item.id)}
+                        onCopy={handleCopyItem}
+                        onDelete={handleDeleteItem}
+                      />
+                    ))}
                   </div>
-
-                  {/* Suffix Section */}
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-3 text-zinc-800 dark:text-zinc-200">
-                      Suffixes (3 max)
-                    </h3>
-                    <div className="space-y-4">
-                      {[3, 4, 5].map((slotIndex) => (
-                        <AffixSlotComponent
-                          key={slotIndex}
-                          slotIndex={slotIndex}
-                          affixType="Suffix"
-                          affixes={suffixAffixes}
-                          selection={affixSelections[slotIndex]}
-                          onAffixSelect={handleAffixSelect}
-                          onSliderChange={handleSliderChange}
-                          onClear={handleClearAffix}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <p className="text-zinc-500 dark:text-zinc-400 italic text-center py-8">
-                  Select an equipment type to begin crafting affixes
-                </p>
-              )}
+                )}
+              </div>
             </div>
-          </>
+          </div>
         )}
 
         {/* Talents Page */}

@@ -7,6 +7,7 @@ describe("parse_loadout", () => {
     const rawLoadout: RawLoadout = {
       equipmentPage: {
         helmet: {
+          id: "test-helmet-1",
           gearType: "helmet",
           affixes: ["+10% fire damage", "+5% attack speed"],
         },
@@ -20,6 +21,7 @@ describe("parse_loadout", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -55,6 +57,7 @@ describe("parse_loadout", () => {
     const rawLoadout: RawLoadout = {
       equipmentPage: {
         chest: {
+          id: "test-chest-1",
           gearType: "chest",
           affixes: [
             "+10% fire damage\n+5% attack speed\n+15% critical strike rating",
@@ -70,6 +73,7 @@ describe("parse_loadout", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -104,6 +108,7 @@ describe("parse_loadout", () => {
     const rawLoadout: RawLoadout = {
       equipmentPage: {
         gloves: {
+          id: "test-gloves-1",
           gearType: "gloves",
           affixes: [
             "+10% fire damage\nsome unrecognized mod\n+5% attack speed",
@@ -119,6 +124,7 @@ describe("parse_loadout", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -149,6 +155,7 @@ describe("parse_loadout", () => {
     const rawLoadout: RawLoadout = {
       equipmentPage: {
         boots: {
+          id: "test-boots-1",
           gearType: "boots",
           affixes: [],
         },
@@ -162,6 +169,7 @@ describe("parse_loadout", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -174,14 +182,17 @@ describe("parse_loadout", () => {
     const rawLoadout: RawLoadout = {
       equipmentPage: {
         helmet: {
+          id: "test-helmet-2",
           gearType: "helmet",
           affixes: ["+10% fire damage"],
         },
         chest: {
+          id: "test-chest-2",
           gearType: "chest",
           affixes: ["+5% attack speed"],
         },
         gloves: {
+          id: "test-gloves-2",
           gearType: "gloves",
           affixes: ["+15% critical strike rating"],
         },
@@ -195,6 +206,7 @@ describe("parse_loadout", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -223,6 +235,7 @@ describe("parse_loadout", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -236,6 +249,7 @@ describe("parse_loadout", () => {
     const rawLoadout: RawLoadout = {
       equipmentPage: {
         belt: {
+          id: "test-belt-1",
           gearType: "belt",
           affixes: ["+10% fire damage\n\n+5% attack speed\n"],
         },
@@ -249,6 +263,7 @@ describe("parse_loadout", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -277,6 +292,7 @@ describe("talent tree parsing", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -308,6 +324,7 @@ describe("talent tree parsing", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -337,6 +354,7 @@ describe("talent tree parsing", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -378,6 +396,7 @@ describe("talent tree parsing", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);
@@ -406,6 +425,7 @@ describe("talent tree parsing", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     expect(() => parse_loadout(rawLoadout)).toThrow(
@@ -428,6 +448,7 @@ describe("talent tree parsing", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     expect(() => parse_loadout(rawLoadout)).toThrow(
@@ -452,6 +473,7 @@ describe("talent tree parsing", () => {
       skillPage: {
         skills: [],
       },
+      itemsList: [],
     };
 
     const result = parse_loadout(rawLoadout);

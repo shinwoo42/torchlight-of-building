@@ -102,6 +102,7 @@ export interface TalentTreeData {
 }
 
 export interface RawGear {
+  id: string;
   gearType:
     | "helmet"
     | "chest"
@@ -142,4 +143,5 @@ export interface RawLoadout {
   equipmentPage: RawGearPage;
   talentPage: RawTalentPage;
   skillPage: RawSkillPage;
+  itemsList: RawGear[];
 }
