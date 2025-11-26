@@ -91,6 +91,27 @@ const formatAffixOption = (affix: BaseGearAffix): string => {
 };
 
 const STORAGE_KEY = "tli-planner-loadout";
+const DEBUG_MODE_STORAGE_KEY = "tli-planner-debug-mode";
+
+const loadDebugModeFromStorage = (): boolean => {
+  if (typeof window === "undefined") return false;
+  try {
+    const stored = localStorage.getItem(DEBUG_MODE_STORAGE_KEY);
+    return stored === "true";
+  } catch (error) {
+    console.error("Failed to load debug mode from localStorage:", error);
+    return false;
+  }
+};
+
+const saveDebugModeToStorage = (enabled: boolean): void => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(DEBUG_MODE_STORAGE_KEY, enabled.toString());
+  } catch (error) {
+    console.error("Failed to save debug mode to localStorage:", error);
+  }
+};
 
 const createEmptyLoadout = (): RawLoadout => ({
   equipmentPage: {},
@@ -248,10 +269,13 @@ export default function Home() {
       .map(() => ({ affixIndex: null, percentage: 50 })),
   );
   const skipLoadoutUpdateRef = useRef(false);
+  const [debugMode, setDebugMode] = useState<boolean>(false);
+  const [debugPanelExpanded, setDebugPanelExpanded] = useState<boolean>(true);
 
   useEffect(() => {
     setMounted(true);
     setLoadout(loadFromStorage());
+    setDebugMode(loadDebugModeFromStorage());
   }, []);
 
   // Load talent trees when names change
@@ -725,6 +749,23 @@ export default function Home() {
     cy: y * (80 + 8) + 40,
   });
 
+  const handleDebugToggle = () => {
+    setDebugMode((prev) => {
+      const newValue = !prev;
+      saveDebugModeToStorage(newValue);
+      return newValue;
+    });
+  };
+
+  const copyDebugJson = async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(loadout, null, 2));
+      alert("Loadout JSON copied to clipboard!");
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
+    }
+  };
+
   if (!mounted) {
     return null;
   }
@@ -732,9 +773,26 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-zinc-900 dark:text-zinc-50">
-          TLI Character Build Planner
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+            TLI Character Build Planner
+          </h1>
+
+          <button
+            onClick={handleDebugToggle}
+            className={`
+              px-3 py-1 rounded-lg text-sm font-medium transition-colors
+              ${
+                debugMode
+                  ? "bg-yellow-600 text-white hover:bg-yellow-700"
+                  : "bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 dark:hover:bg-zinc-600"
+              }
+            `}
+            title="Toggle Debug Mode"
+          >
+            {debugMode ? "🐛 Debug ON" : "🐛 Debug"}
+          </button>
+        </div>
 
         {/* Page Tabs */}
         <div className="mb-8 flex gap-4 border-b border-zinc-300 dark:border-zinc-700">
@@ -1183,6 +1241,57 @@ export default function Home() {
             Save to LocalStorage
           </button>
         </div>
+
+        {/* Debug Panel */}
+        {debugMode && (
+          <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-800 border-t-2 border-blue-500 shadow-2xl z-50">
+            {/* Panel Header */}
+            <div className="bg-zinc-100 dark:bg-zinc-900 px-4 py-2 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  Debug: RawLoadout
+                </h3>
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  {JSON.stringify(loadout).length} bytes
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={copyDebugJson}
+                  className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                  title="Copy JSON to clipboard"
+                >
+                  Copy JSON
+                </button>
+                <button
+                  onClick={() => setDebugPanelExpanded((prev) => !prev)}
+                  className="px-3 py-1 bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 text-zinc-900 dark:text-zinc-100 text-sm rounded transition-colors"
+                >
+                  {debugPanelExpanded ? "▼ Minimize" : "▲ Expand"}
+                </button>
+                <button
+                  onClick={handleDebugToggle}
+                  className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors"
+                  title="Close debug panel"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Panel Content */}
+            {debugPanelExpanded && (
+              <div
+                className="p-4 overflow-auto"
+                style={{ maxHeight: "400px" }}
+              >
+                <pre className="text-xs font-mono text-zinc-900 dark:text-zinc-100 whitespace-pre-wrap break-words">
+                  {JSON.stringify(loadout, null, 2)}
+                </pre>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
