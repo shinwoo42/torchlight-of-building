@@ -94,7 +94,7 @@
     "type": "Active",
     "name": "Blazing Incineration",
     "tags": [
-      "Enhanced\n        Skill",
+      "Enhanced Skill",
       "Spell",
       "Fire",
       "Area",
@@ -118,13 +118,7 @@
   {
     "type": "Active",
     "name": "Bleak Grass",
-    "tags": [
-      "Enhanced\n        Skill",
-      "Spell",
-      "Erosion",
-      "Area",
-      "Intelligence"
-    ]
+    "tags": ["Enhanced Skill", "Spell", "Erosion", "Area", "Intelligence"]
   },
   {
     "type": "Active",
@@ -328,7 +322,7 @@
       "Attack",
       "Melee",
       "Physical",
-      "Shadow\n        Strike",
+      "Shadow Strike",
       "Area",
       "Dexterity"
     ]
@@ -482,7 +476,7 @@
       "Attack",
       "Melee",
       "Projectile",
-      "Shadow\n        Strike",
+      "Shadow Strike",
       "Cold",
       "Area",
       "Horizontal",
@@ -795,7 +789,7 @@
   {
     "type": "Active",
     "name": "Permafrost Cast",
-    "tags": ["Enhanced\n        Skill", "Spell", "Cold", "Area", "Intelligence"]
+    "tags": ["Enhanced Skill", "Spell", "Cold", "Area", "Intelligence"]
   },
   {
     "type": "Active",
@@ -858,7 +852,7 @@
     "type": "Active",
     "name": "Rock Blast",
     "tags": [
-      "Enhanced\n        Skill",
+      "Enhanced Skill",
       "Attack",
       "Melee",
       "Physical",
@@ -1033,7 +1027,7 @@
       "Persistent",
       "Lightning",
       "Summon",
-      "Synthetic\n        Troop",
+      "Synthetic Troop",
       "Intelligence"
     ]
   },
@@ -1045,7 +1039,7 @@
       "Summon",
       "Persistent",
       "Physical",
-      "Synthetic\n        Troop",
+      "Synthetic Troop",
       "Strength",
       "Intelligence"
     ]
@@ -1058,7 +1052,7 @@
       "Summon",
       "Persistent",
       "Physical",
-      "Synthetic\n        Troop",
+      "Synthetic Troop",
       "Dexterity",
       "Intelligence"
     ]
@@ -1101,7 +1095,7 @@
       "Lightning",
       "Area",
       "Melee",
-      "Shadow\n        Strike",
+      "Shadow Strike",
       "Dexterity"
     ]
   },
@@ -1148,7 +1142,7 @@
     "type": "Active",
     "name": "Thunderlight Arrow",
     "tags": [
-      "Enhanced\n        Skill",
+      "Enhanced Skill",
       "Attack",
       "Lightning",
       "Projectile",
@@ -1219,7 +1213,7 @@
     "tags": [
       "Attack",
       "Melee",
-      "Shadow\n        Strike",
+      "Shadow Strike",
       "Erosion",
       "Area",
       "Persistent",
@@ -1500,13 +1494,7 @@
   {
     "type": "Passive",
     "name": "Summon Erosion Magus",
-    "tags": [
-      "Spell",
-      "Summon",
-      "Erosion",
-      "Spirit\n        Magus",
-      "Intelligence"
-    ]
+    "tags": ["Spell", "Summon", "Erosion", "Spirit Magus", "Intelligence"]
   },
   {
     "type": "Passive",
@@ -1515,7 +1503,7 @@
       "Spell",
       "Summon",
       "Fire",
-      "Spirit\n        Magus",
+      "Spirit Magus",
       "Strength",
       "Intelligence"
     ]
@@ -1523,7 +1511,7 @@
   {
     "type": "Passive",
     "name": "Summon Frost Magus",
-    "tags": ["Spell", "Summon", "Cold", "Spirit\n        Magus", "Intelligence"]
+    "tags": ["Spell", "Summon", "Cold", "Spirit Magus", "Intelligence"]
   },
   {
     "type": "Passive",
@@ -1532,7 +1520,7 @@
       "Spell",
       "Summon",
       "Physical",
-      "Spirit\n        Magus",
+      "Spirit Magus",
       "Strength",
       "Intelligence"
     ]
@@ -1544,7 +1532,7 @@
       "Spell",
       "Summon",
       "Lightning",
-      "Spirit\n        Magus",
+      "Spirit Magus",
       "Dexterity",
       "Intelligence"
     ]
@@ -1807,7 +1795,7 @@
   {
     "type": "Support",
     "name": "Haunt",
-    "tags": ["Attack", "Melee", "Shadow\n        Strike"]
+    "tags": ["Attack", "Melee", "Shadow Strike"]
   },
   {
     "type": "Support",

@@ -29,7 +29,7 @@ const extractSkillData = (html: string): Skill[] => {
     $(tds[2])
       .find("span.multiVal")
       .each((_, elem) => {
-        tags.push($(elem).text().trim());
+        tags.push($(elem).text().replace(/\s+/g, " ").trim());
       });
 
     const skill: Skill = {

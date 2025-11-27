@@ -96,7 +96,7 @@ export const ActiveSkills = [
     type: "Active",
     name: "Blazing Incineration",
     tags: [
-      "Enhanced\n        Skill",
+      "Enhanced Skill",
       "Spell",
       "Fire",
       "Area",
@@ -120,13 +120,7 @@ export const ActiveSkills = [
   {
     type: "Active",
     name: "Bleak Grass",
-    tags: [
-      "Enhanced\n        Skill",
-      "Spell",
-      "Erosion",
-      "Area",
-      "Intelligence",
-    ],
+    tags: ["Enhanced Skill", "Spell", "Erosion", "Area", "Intelligence"],
   },
   {
     type: "Active",
@@ -326,14 +320,7 @@ export const ActiveSkills = [
   {
     type: "Active",
     name: "Double Thrusts",
-    tags: [
-      "Attack",
-      "Melee",
-      "Physical",
-      "Shadow\n        Strike",
-      "Area",
-      "Dexterity",
-    ],
+    tags: ["Attack", "Melee", "Physical", "Shadow Strike", "Area", "Dexterity"],
   },
   {
     type: "Active",
@@ -484,7 +471,7 @@ export const ActiveSkills = [
       "Attack",
       "Melee",
       "Projectile",
-      "Shadow\n        Strike",
+      "Shadow Strike",
       "Cold",
       "Area",
       "Horizontal",
@@ -797,7 +784,7 @@ export const ActiveSkills = [
   {
     type: "Active",
     name: "Permafrost Cast",
-    tags: ["Enhanced\n        Skill", "Spell", "Cold", "Area", "Intelligence"],
+    tags: ["Enhanced Skill", "Spell", "Cold", "Area", "Intelligence"],
   },
   {
     type: "Active",
@@ -860,7 +847,7 @@ export const ActiveSkills = [
     type: "Active",
     name: "Rock Blast",
     tags: [
-      "Enhanced\n        Skill",
+      "Enhanced Skill",
       "Attack",
       "Melee",
       "Physical",
@@ -1028,7 +1015,7 @@ export const ActiveSkills = [
       "Persistent",
       "Lightning",
       "Summon",
-      "Synthetic\n        Troop",
+      "Synthetic Troop",
       "Intelligence",
     ],
   },
@@ -1040,7 +1027,7 @@ export const ActiveSkills = [
       "Summon",
       "Persistent",
       "Physical",
-      "Synthetic\n        Troop",
+      "Synthetic Troop",
       "Strength",
       "Intelligence",
     ],
@@ -1053,7 +1040,7 @@ export const ActiveSkills = [
       "Summon",
       "Persistent",
       "Physical",
-      "Synthetic\n        Troop",
+      "Synthetic Troop",
       "Dexterity",
       "Intelligence",
     ],
@@ -1089,7 +1076,7 @@ export const ActiveSkills = [
       "Lightning",
       "Area",
       "Melee",
-      "Shadow\n        Strike",
+      "Shadow Strike",
       "Dexterity",
     ],
   },
@@ -1136,7 +1123,7 @@ export const ActiveSkills = [
     type: "Active",
     name: "Thunderlight Arrow",
     tags: [
-      "Enhanced\n        Skill",
+      "Enhanced Skill",
       "Attack",
       "Lightning",
       "Projectile",
@@ -1207,7 +1194,7 @@ export const ActiveSkills = [
     tags: [
       "Attack",
       "Melee",
-      "Shadow\n        Strike",
+      "Shadow Strike",
       "Erosion",
       "Area",
       "Persistent",

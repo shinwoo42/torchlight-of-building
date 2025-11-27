@@ -245,13 +245,7 @@ export const PassiveSkills = [
   {
     type: "Passive",
     name: "Summon Erosion Magus",
-    tags: [
-      "Spell",
-      "Summon",
-      "Erosion",
-      "Spirit\n        Magus",
-      "Intelligence",
-    ],
+    tags: ["Spell", "Summon", "Erosion", "Spirit Magus", "Intelligence"],
   },
   {
     type: "Passive",
@@ -260,7 +254,7 @@ export const PassiveSkills = [
       "Spell",
       "Summon",
       "Fire",
-      "Spirit\n        Magus",
+      "Spirit Magus",
       "Strength",
       "Intelligence",
     ],
@@ -268,7 +262,7 @@ export const PassiveSkills = [
   {
     type: "Passive",
     name: "Summon Frost Magus",
-    tags: ["Spell", "Summon", "Cold", "Spirit\n        Magus", "Intelligence"],
+    tags: ["Spell", "Summon", "Cold", "Spirit Magus", "Intelligence"],
   },
   {
     type: "Passive",
@@ -277,7 +271,7 @@ export const PassiveSkills = [
       "Spell",
       "Summon",
       "Physical",
-      "Spirit\n        Magus",
+      "Spirit Magus",
       "Strength",
       "Intelligence",
     ],
@@ -289,7 +283,7 @@ export const PassiveSkills = [
       "Spell",
       "Summon",
       "Lightning",
-      "Spirit\n        Magus",
+      "Spirit Magus",
       "Dexterity",
       "Intelligence",
     ],

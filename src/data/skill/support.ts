@@ -244,7 +244,7 @@ export const SupportSkills = [
   {
     type: "Support",
     name: "Haunt",
-    tags: ["Attack", "Melee", "Shadow\n        Strike"],
+    tags: ["Attack", "Melee", "Shadow Strike"],
   },
   {
     type: "Support",
