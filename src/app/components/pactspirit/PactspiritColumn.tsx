@@ -15,6 +15,7 @@ import {
 } from "../../lib/pactspirit-utils";
 import { RingSlot } from "./RingSlot";
 import { DestinySelectionModal } from "./DestinySelectionModal";
+import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
 
 interface InstalledDestinyResult {
   destinyName: string;
@@ -82,37 +83,31 @@ export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
       {/* Pactspirit Selector */}
       <div className="mb-4">
         <label className="block text-sm text-zinc-400 mb-1">Pactspirit</label>
-        <select
-          value={slot.pactspiritName ?? ""}
-          onChange={(e) =>
-            onPactspiritSelect(e.target.value || undefined)
-          }
-          className="w-full px-3 py-2 border border-zinc-700 rounded-lg bg-zinc-800 text-zinc-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
-        >
-          <option value="">&lt;Select Pactspirit&gt;</option>
-          {Pactspirits.map((p) => (
-            <option key={p.name} value={p.name}>
-              {p.name} ({p.type}, {p.rarity})
-            </option>
-          ))}
-        </select>
+        <SearchableSelect
+          value={slot.pactspiritName}
+          onChange={onPactspiritSelect}
+          options={Pactspirits.map((p) => ({
+            value: p.name,
+            label: p.name,
+            sublabel: `${p.type}, ${p.rarity}`,
+          }))}
+          placeholder="<Select Pactspirit>"
+        />
       </div>
 
       {/* Level Selector */}
       {selectedPactspirit && (
         <div className="mb-4">
           <label className="block text-sm text-zinc-400 mb-1">Level</label>
-          <select
+          <SearchableSelect
             value={slot.level}
-            onChange={(e) => onLevelChange(parseInt(e.target.value))}
-            className="w-full px-3 py-2 border border-zinc-700 rounded-lg bg-zinc-800 text-zinc-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
-          >
-            {[1, 2, 3, 4, 5, 6].map((level) => (
-              <option key={level} value={level}>
-                Level {level}
-              </option>
-            ))}
-          </select>
+            onChange={(level) => level !== undefined && onLevelChange(level)}
+            options={[1, 2, 3, 4, 5, 6].map((level) => ({
+              value: level,
+              label: `Level ${level}`,
+            }))}
+            placeholder="Select Level"
+          />
         </div>
       )}
 

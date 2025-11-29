@@ -1,4 +1,8 @@
 import { SupportSkills } from "@/src/data/skill";
+import {
+  SearchableSelect,
+  SearchableSelectOption,
+} from "@/src/app/components/ui/SearchableSelect";
 
 interface SupportSkillSelectorProps {
   selectedSkill?: string;
@@ -16,24 +20,20 @@ export const SupportSkillSelector: React.FC<SupportSkillSelectorProps> = ({
       skill.name === selectedSkill || !excludedSkills.includes(skill.name),
   );
 
-  const isEmpty = selectedSkill === undefined;
+  const options: SearchableSelectOption<string>[] = availableSkills.map(
+    (skill) => ({
+      value: skill.name,
+      label: skill.name,
+    }),
+  );
 
   return (
-    <select
-      className={`w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 ${
-        isEmpty ? "text-zinc-500" : "text-zinc-50"
-      }`}
-      value={selectedSkill ?? ""}
-      onChange={(e) => onChange(e.target.value || undefined)}
-    >
-      <option value="" className="text-zinc-500">
-        &lt;Empty slot&gt;
-      </option>
-      {availableSkills.map((skill) => (
-        <option key={skill.name} value={skill.name}>
-          {skill.name}
-        </option>
-      ))}
-    </select>
+    <SearchableSelect
+      value={selectedSkill}
+      onChange={onChange}
+      options={options}
+      placeholder="<Empty slot>"
+      size="sm"
+    />
   );
 };

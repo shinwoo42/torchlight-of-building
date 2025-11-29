@@ -2,6 +2,7 @@ import { BaseGearAffix } from "@/src/tli/gear_data_types";
 import { craft } from "@/src/tli/crafting/craft";
 import { AffixSlotState } from "../../lib/types";
 import { formatAffixOption } from "../../lib/affix-utils";
+import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
 
 interface AffixSlotProps {
   slotIndex: number;
@@ -31,18 +32,16 @@ export const AffixSlotComponent: React.FC<AffixSlotProps> = ({
   return (
     <div className="bg-zinc-800 p-4 rounded-lg">
       {/* Affix Dropdown */}
-      <select
-        value={selection.affixIndex !== null ? selection.affixIndex : ""}
-        onChange={(e) => onAffixSelect(slotIndex, e.target.value)}
-        className="w-full px-3 py-2 mb-3 border border-zinc-700 rounded bg-zinc-900 text-zinc-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
-      >
-        <option value="">&lt;Select {affixType}&gt;</option>
-        {affixes.map((affix, idx) => (
-          <option key={idx} value={idx}>
-            {formatAffixOption(affix)}
-          </option>
-        ))}
-      </select>
+      <SearchableSelect
+        value={selection.affixIndex ?? undefined}
+        onChange={(value) => onAffixSelect(slotIndex, value?.toString() ?? "")}
+        options={affixes.map((affix, idx) => ({
+          value: idx,
+          label: formatAffixOption(affix),
+        }))}
+        placeholder={`<Select ${affixType}>`}
+        className="mb-3"
+      />
 
       {/* Slider and Preview (only show if affix selected) */}
       {selectedAffix && (

@@ -24,6 +24,7 @@ import {
 } from "../../lib/hero-utils";
 import { generateItemId } from "../../lib/storage";
 import { HeroMemoryItem } from "./HeroMemoryItem";
+import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
 
 interface HeroTabProps {
   heroPage: RawHeroPage;
@@ -300,20 +301,16 @@ export const HeroTab: React.FC<HeroTabProps> = ({
           {!isLevel1 && slot && (
             <div className="w-48 flex-shrink-0">
               <div className="text-xs text-zinc-500 mb-2">{memoryType}</div>
-              <select
-                value={equippedMemory?.id || ""}
-                onChange={(e) =>
-                  onMemoryEquip(slot, e.target.value || undefined)
-                }
-                className="w-full px-2 py-1 border border-zinc-700 rounded bg-zinc-900 text-zinc-50 text-xs"
-              >
-                <option value="">No memory</option>
-                {compatibleMemories.map((memory) => (
-                  <option key={memory.id} value={memory.id}>
-                    {memory.baseStat.substring(0, 30)}...
-                  </option>
-                ))}
-              </select>
+              <SearchableSelect
+                value={equippedMemory?.id}
+                onChange={(value) => onMemoryEquip(slot, value)}
+                options={compatibleMemories.map((memory) => ({
+                  value: memory.id,
+                  label: memory.baseStat.substring(0, 30) + "...",
+                }))}
+                placeholder="No memory"
+                size="sm"
+              />
             </div>
           )}
 
@@ -378,27 +375,17 @@ export const HeroTab: React.FC<HeroTabProps> = ({
 
     return (
       <div key={`${type}-${slotIndex}`} className="bg-zinc-800 p-3 rounded-lg">
-        <select
-          value={
-            selection.effectIndex !== undefined ? selection.effectIndex : ""
-          }
-          onChange={(e) =>
-            onSelect(
-              slotIndex,
-              e.target.value === "" ? undefined : parseInt(e.target.value),
-            )
-          }
-          className="w-full px-2 py-1 mb-2 border border-zinc-700 rounded bg-zinc-900 text-zinc-50 text-xs"
-        >
-          <option value="">
-            Select {type === "fixed" ? "Fixed" : "Random"} Affix {slotIndex + 1}
-          </option>
-          {affixes.map((affix, idx) => (
-            <option key={idx} value={idx}>
-              {affix.replace(/\n/g, " ").substring(0, 50)}...
-            </option>
-          ))}
-        </select>
+        <SearchableSelect
+          value={selection.effectIndex}
+          onChange={(value) => onSelect(slotIndex, value)}
+          options={affixes.map((affix, idx) => ({
+            value: idx,
+            label: affix.replace(/\n/g, " ").substring(0, 50) + "...",
+          }))}
+          placeholder={`Select ${type === "fixed" ? "Fixed" : "Random"} Affix ${slotIndex + 1}`}
+          size="sm"
+          className="mb-2"
+        />
 
         {selectedAffix && (
           <>
@@ -436,18 +423,16 @@ export const HeroTab: React.FC<HeroTabProps> = ({
           <h2 className="text-xl font-semibold mb-4 text-zinc-50">
             Select Hero
           </h2>
-          <select
-            value={heroPage.selectedHero || ""}
-            onChange={(e) => onHeroChange(e.target.value || undefined)}
-            className="w-full px-4 py-2 border border-zinc-700 rounded-lg bg-zinc-800 text-zinc-50 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
-          >
-            <option value="">Select a hero...</option>
-            {uniqueHeroes.map((hero) => (
-              <option key={hero} value={hero}>
-                {hero}
-              </option>
-            ))}
-          </select>
+          <SearchableSelect
+            value={heroPage.selectedHero}
+            onChange={onHeroChange}
+            options={uniqueHeroes.map((hero) => ({
+              value: hero,
+              label: hero,
+            }))}
+            placeholder="Select a hero..."
+            size="lg"
+          />
         </div>
 
         {/* Hero Traits by Level */}
@@ -472,22 +457,18 @@ export const HeroTab: React.FC<HeroTabProps> = ({
             <label className="block text-sm font-medium mb-2 text-zinc-50">
               Memory Type
             </label>
-            <select
-              value={selectedMemoryType || ""}
-              onChange={(e) =>
-                handleMemoryTypeChange(
-                  (e.target.value as HeroMemoryType) || undefined,
-                )
+            <SearchableSelect
+              value={selectedMemoryType}
+              onChange={(value) =>
+                handleMemoryTypeChange(value as HeroMemoryType | undefined)
               }
-              className="w-full px-4 py-2 border border-zinc-700 rounded-lg bg-zinc-800 text-zinc-50 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
-            >
-              <option value="">Select memory type...</option>
-              {HERO_MEMORY_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+              options={HERO_MEMORY_TYPES.map((type) => ({
+                value: type,
+                label: type,
+              }))}
+              placeholder="Select memory type..."
+              size="lg"
+            />
           </div>
 
           {selectedMemoryType && (
@@ -497,20 +478,16 @@ export const HeroTab: React.FC<HeroTabProps> = ({
                 <label className="block text-sm font-medium mb-2 text-zinc-50">
                   Base Stat
                 </label>
-                <select
-                  value={selectedBaseStat || ""}
-                  onChange={(e) =>
-                    setSelectedBaseStat(e.target.value || undefined)
-                  }
-                  className="w-full px-4 py-2 border border-zinc-700 rounded-lg bg-zinc-800 text-zinc-50"
-                >
-                  <option value="">Select base stat...</option>
-                  {baseStats.map((stat, idx) => (
-                    <option key={idx} value={stat}>
-                      {stat}
-                    </option>
-                  ))}
-                </select>
+                <SearchableSelect
+                  value={selectedBaseStat}
+                  onChange={setSelectedBaseStat}
+                  options={baseStats.map((stat) => ({
+                    value: stat,
+                    label: stat,
+                  }))}
+                  placeholder="Select base stat..."
+                  size="lg"
+                />
               </div>
 
               {/* Fixed Affixes */}

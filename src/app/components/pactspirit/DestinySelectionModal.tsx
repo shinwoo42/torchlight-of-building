@@ -10,6 +10,7 @@ import {
   hasRanges,
   craftDestinyAffix,
 } from "../../lib/pactspirit-utils";
+import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
 
 interface InstalledDestinyResult {
   destinyName: string;
@@ -106,18 +107,15 @@ export const DestinySelectionModal: React.FC<DestinySelectionModalProps> = ({
         {/* Destiny Dropdown */}
         <div className="mb-4">
           <label className="block text-sm text-zinc-400 mb-1">Destiny</label>
-          <select
-            value={selectedDestiny?.name ?? ""}
-            onChange={(e) => handleDestinySelect(e.target.value)}
-            className="w-full px-3 py-2 border border-zinc-700 rounded-lg bg-zinc-800 text-zinc-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500"
-          >
-            <option value="">&lt;Select Destiny&gt;</option>
-            {availableDestinies.map((destiny) => (
-              <option key={destiny.name} value={destiny.name}>
-                {formatDestinyOption(destiny)}
-              </option>
-            ))}
-          </select>
+          <SearchableSelect
+            value={selectedDestiny?.name}
+            onChange={(name) => name && handleDestinySelect(name)}
+            options={availableDestinies.map((destiny) => ({
+              value: destiny.name,
+              label: formatDestinyOption(destiny),
+            }))}
+            placeholder="<Select Destiny>"
+          />
         </div>
 
         {/* Range Slider (only if destiny has ranges) */}

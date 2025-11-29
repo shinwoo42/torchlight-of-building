@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { RawSkillWithSupports, RawSupportSkills } from "@/src/tli/core";
 import { SupportSkillSelector } from "./SupportSkillSelector";
+import {
+  SearchableSelect,
+  SearchableSelectOption,
+} from "@/src/app/components/ui/SearchableSelect";
 
 type SupportSkillKey = keyof RawSupportSkills;
 
@@ -62,26 +66,19 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
             className="w-5 h-5 disabled:opacity-50 accent-amber-500"
           />
           <span className="text-xs text-zinc-500 w-16">{slotLabel}</span>
-          <select
-            className={`flex-1 bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 ${
-              hasSkill
-                ? skill.enabled
-                  ? "text-zinc-50"
-                  : "text-zinc-500"
-                : "text-zinc-500"
-            }`}
-            value={skill.skillName ?? ""}
-            onChange={(e) => onSkillChange(e.target.value || undefined)}
-          >
-            <option value="" className="text-zinc-500">
-              &lt;Empty slot&gt;
-            </option>
-            {filteredSkills.map((s) => (
-              <option key={s.name} value={s.name}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+          <SearchableSelect
+            value={skill.skillName}
+            onChange={onSkillChange}
+            options={filteredSkills.map(
+              (s): SearchableSelectOption<string> => ({
+                value: s.name,
+                label: s.name,
+              }),
+            )}
+            placeholder="<Empty slot>"
+            size="sm"
+            className="flex-1"
+          />
         </div>
         <div className="flex items-center gap-2">
           {hasSkill && (
