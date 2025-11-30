@@ -186,7 +186,7 @@ describe("build-code", () => {
     const loadout = createEmptyLoadout();
     const code = encodeBuildCode(loadout);
 
-    // lz-string's compressToEncodedURIComponent produces URL-safe output
+    // fflate + base64url produces URL-safe output
     // It should not contain characters that need URL encoding
     expect(encodeURIComponent(code)).toBe(code);
   });
