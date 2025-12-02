@@ -2,7 +2,7 @@ import * as cheerio from "cheerio";
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { execSync } from "child_process";
-import type { EtherealPrism } from "../data/ethereal_prism/types";
+import type { Prism } from "../data/prism/types";
 
 const cleanEffectText = (html: string): string => {
   // Replace <br> tags with placeholder to preserve intentional line breaks
@@ -33,12 +33,12 @@ const cleanEffectText = (html: string): string => {
   return text.trim();
 };
 
-const extractEtherealPrismData = (html: string): EtherealPrism[] => {
+const extractPrismData = (html: string): Prism[] => {
   const $ = cheerio.load(html);
-  const items: EtherealPrism[] = [];
+  const items: Prism[] = [];
 
-  const rows = $('#etherealPrism tbody tr[class*="thing"]');
-  console.log(`Found ${rows.length} ethereal prism rows`);
+  const rows = $('#prism tbody tr[class*="thing"]');
+  console.log(`Found ${rows.length} prism rows`);
 
   rows.each((_, row) => {
     const tds = $(row).find("td");
@@ -48,7 +48,7 @@ const extractEtherealPrismData = (html: string): EtherealPrism[] => {
       return;
     }
 
-    const item: EtherealPrism = {
+    const item: Prism = {
       type: $(tds[0]).text().trim(),
       rarity: $(tds[1]).text().trim(),
       effect: cleanEffectText($(tds[2]).html() || ""),
@@ -60,10 +60,10 @@ const extractEtherealPrismData = (html: string): EtherealPrism[] => {
   return items;
 };
 
-const generateDataFile = (items: EtherealPrism[]): string => {
-  return `import type { EtherealPrism } from "./types";
+const generateDataFile = (items: Prism[]): string => {
+  return `import type { Prism } from "./types";
 
-export const EtherealPrisms: readonly EtherealPrism[] = ${JSON.stringify(items, null, 2)};
+export const Prisms: readonly Prism[] = ${JSON.stringify(items, null, 2)};
 `;
 };
 
@@ -72,16 +72,16 @@ const main = async (): Promise<void> => {
   const htmlPath = join(process.cwd(), ".garbage", "codex.html");
   const html = await readFile(htmlPath, "utf-8");
 
-  console.log("Extracting ethereal prism data...");
-  const items = extractEtherealPrismData(html);
-  console.log(`Extracted ${items.length} ethereal prisms`);
+  console.log("Extracting prism data...");
+  const items = extractPrismData(html);
+  console.log(`Extracted ${items.length} prisms`);
 
-  const outDir = join(process.cwd(), "src", "data", "ethereal_prism");
+  const outDir = join(process.cwd(), "src", "data", "prism");
   await mkdir(outDir, { recursive: true });
 
-  const dataPath = join(outDir, "ethereal_prisms.ts");
+  const dataPath = join(outDir, "prisms.ts");
   await writeFile(dataPath, generateDataFile(items), "utf-8");
-  console.log(`Generated ethereal_prisms.ts (${items.length} items)`);
+  console.log(`Generated prisms.ts (${items.length} items)`);
 
   console.log("\nCode generation complete!");
   execSync("pnpm format", { stdio: "inherit" });
@@ -96,4 +96,4 @@ if (require.main === module) {
     });
 }
 
-export { main as generateEtherealPrismData };
+export { main as generatePrismData };

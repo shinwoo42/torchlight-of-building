@@ -1,6 +1,6 @@
-import type { EtherealPrism } from "./types";
+import type { Prism } from "./types";
 
-export const EtherealPrisms: readonly EtherealPrism[] = [
+export const Prisms: readonly Prism[] = [
   {
     type: "Base Affix",
     rarity: "",
