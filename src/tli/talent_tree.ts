@@ -194,6 +194,31 @@ export const canDeallocateNode = (
   return true;
 };
 
+// Check if a prism can be removed without causing invalid state
+// A prism cannot be removed if any dependent node has allocated points
+export const canRemovePrism = (
+  placedPrism: PlacedPrism,
+  allocatedNodes: AllocatedTalentNode[],
+  treeData: TalentTreeData,
+): boolean => {
+  const { x, y } = placedPrism.position;
+
+  // Find all nodes that depend on the prism's position
+  const hasDependentsWithPoints = treeData.nodes.some((node) => {
+    if (!node.prerequisite) return false;
+    if (node.prerequisite.x !== x || node.prerequisite.y !== y) return false;
+
+    // Check if this dependent node has allocated points
+    const allocation = allocatedNodes.find(
+      (n) => n.x === node.position.x && n.y === node.position.y,
+    );
+    return allocation !== undefined && allocation.points > 0;
+  });
+
+  // Cannot remove if there are dependents with allocated points
+  return !hasDependentsWithPoints;
+};
+
 // Tree loading function - now synchronous since data is imported
 export const loadTalentTree = (treeName: TreeName): TalentTreeData => {
   return TALENT_TREES[treeName];

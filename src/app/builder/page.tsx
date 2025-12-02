@@ -22,6 +22,7 @@ import {
   TreeName,
   isGodGoddessTree,
   loadTalentTree,
+  canRemovePrism,
 } from "@/src/tli/talent_tree";
 import { CoreTalentSelector } from "../components/talents/CoreTalentSelector";
 import { EquipmentType } from "@/src/tli/gear_data_types";
@@ -984,6 +985,15 @@ export default function BuilderPage() {
   const handleRemovePrism = () => {
     const placedPrism = loadout.talentPage.placedPrism;
     if (!placedPrism) return;
+
+    // Validate that prism can be removed
+    const tree = loadout.talentPage[placedPrism.treeSlot];
+    const prismTreeData = treeData[placedPrism.treeSlot];
+    if (!tree || !prismTreeData) return;
+
+    if (!canRemovePrism(placedPrism, tree.allocatedNodes, prismTreeData)) {
+      return;
+    }
 
     updateLoadout((prev) => ({
       ...prev,

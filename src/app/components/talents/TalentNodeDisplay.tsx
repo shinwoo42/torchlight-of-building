@@ -15,6 +15,7 @@ interface TalentNodeDisplayProps {
   isSelectingPrism?: boolean;
   onPlacePrism?: () => void;
   onRemovePrism?: () => void;
+  canRemovePrism?: boolean;
 }
 
 export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
@@ -29,6 +30,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
   isSelectingPrism = false,
   onPlacePrism,
   onRemovePrism,
+  canRemovePrism = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -95,9 +97,18 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         {isHovered && onRemovePrism && (
           <div className="absolute -top-2 -right-2 flex gap-1">
             <button
-              onClick={onRemovePrism}
-              className="w-5 h-5 rounded-full text-white text-xs font-bold bg-red-500 hover:bg-red-600"
-              title="Remove prism"
+              onClick={canRemovePrism ? onRemovePrism : undefined}
+              disabled={!canRemovePrism}
+              className={`w-5 h-5 rounded-full text-white text-xs font-bold ${
+                canRemovePrism
+                  ? "bg-red-500 hover:bg-red-600"
+                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+              }`}
+              title={
+                canRemovePrism
+                  ? "Remove prism"
+                  : "Cannot remove: dependent nodes have points allocated"
+              }
             >
               ×
             </button>

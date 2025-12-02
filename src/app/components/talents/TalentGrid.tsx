@@ -4,6 +4,7 @@ import {
   canDeallocateNode,
   isPrerequisiteSatisfied,
   hasPrismAtPosition,
+  canRemovePrism,
 } from "@/src/tli/talent_tree";
 import {
   AllocatedTalentNode,
@@ -131,6 +132,12 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                 y,
               );
 
+              // Check if prism can be removed (only relevant if this node has the prism)
+              const prismCanBeRemoved =
+                nodeHasPrism && placedPrism
+                  ? canRemovePrism(placedPrism, allocatedNodes, treeData)
+                  : false;
+
               return (
                 <TalentNodeDisplay
                   key={`${x}-${y}`}
@@ -159,6 +166,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                     onPlacePrism ? () => onPlacePrism(x, y) : undefined
                   }
                   onRemovePrism={nodeHasPrism ? onRemovePrism : undefined}
+                  canRemovePrism={prismCanBeRemoved}
                 />
               );
             }),
