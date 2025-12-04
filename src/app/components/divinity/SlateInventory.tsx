@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { DivinitySlate } from "@/src/app/lib/save-data";
-import { SlateInventoryItem } from "./SlateInventoryItem";
+import { DivinitySlate } from '@/src/app/lib/save-data'
+import { SlateInventoryItem } from './SlateInventoryItem'
 
 interface SlateInventoryProps {
-  slates: DivinitySlate[];
-  placedSlateIds: string[];
-  onPlace: (slateId: string) => void;
-  onEdit: (slate: DivinitySlate) => void;
-  onCopy: (slate: DivinitySlate) => void;
-  onDelete: (slateId: string) => void;
+  slates: DivinitySlate[]
+  placedSlateIds: string[]
+  onPlace: (slateId: string) => void
+  onEdit: (slate: DivinitySlate) => void
+  onCopy: (slate: DivinitySlate) => void
+  onDelete: (slateId: string) => void
 }
 
 export const SlateInventory: React.FC<SlateInventoryProps> = ({
@@ -46,5 +46,5 @@ export const SlateInventory: React.FC<SlateInventoryProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

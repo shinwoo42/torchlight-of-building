@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { useCallback } from "react";
-import { useBuilderStore } from "../../stores/builderStore";
-import { DivinityTab } from "../divinity/DivinityTab";
-import { DivinitySlate, PlacedSlate } from "../../lib/save-data";
-import { generateItemId } from "../../lib/storage";
+import { useCallback } from 'react'
+import { useBuilderStore } from '../../stores/builderStore'
+import { DivinityTab } from '../divinity/DivinityTab'
+import { DivinitySlate, PlacedSlate } from '../../lib/save-data'
+import { generateItemId } from '../../lib/storage'
 
 export const DivinitySection = () => {
-  const loadout = useBuilderStore((state) => state.loadout);
-  const updateLoadout = useBuilderStore((state) => state.updateLoadout);
+  const loadout = useBuilderStore((state) => state.loadout)
+  const updateLoadout = useBuilderStore((state) => state.updateLoadout)
 
   const handleSaveSlate = useCallback(
     (slate: DivinitySlate) => {
       updateLoadout((prev) => ({
         ...prev,
         divinitySlateList: [...prev.divinitySlateList, slate],
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleUpdateSlate = useCallback(
     (slate: DivinitySlate) => {
@@ -27,21 +27,21 @@ export const DivinitySection = () => {
         divinitySlateList: prev.divinitySlateList.map((s) =>
           s.id === slate.id ? slate : s,
         ),
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleCopySlate = useCallback(
     (slate: DivinitySlate) => {
-      const newSlate = { ...slate, id: generateItemId() };
+      const newSlate = { ...slate, id: generateItemId() }
       updateLoadout((prev) => ({
         ...prev,
         divinitySlateList: [...prev.divinitySlateList, newSlate],
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleDeleteSlate = useCallback(
     (slateId: string) => {
@@ -56,10 +56,10 @@ export const DivinitySection = () => {
             (p) => p.slateId !== slateId,
           ),
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handlePlaceSlate = useCallback(
     (placement: PlacedSlate) => {
@@ -69,10 +69,10 @@ export const DivinitySection = () => {
           ...prev.divinityPage,
           placedSlates: [...prev.divinityPage.placedSlates, placement],
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleRemovePlacedSlate = useCallback(
     (slateId: string) => {
@@ -84,10 +84,10 @@ export const DivinitySection = () => {
             (p) => p.slateId !== slateId,
           ),
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleMoveSlate = useCallback(
     (slateId: string, position: { row: number; col: number }) => {
@@ -99,10 +99,10 @@ export const DivinitySection = () => {
             p.slateId === slateId ? { ...p, position } : p,
           ),
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   return (
     <DivinityTab
@@ -116,5 +116,5 @@ export const DivinitySection = () => {
       onRemovePlacedSlate={handleRemovePlacedSlate}
       onMoveSlate={handleMoveSlate}
     />
-  );
-};
+  )
+}

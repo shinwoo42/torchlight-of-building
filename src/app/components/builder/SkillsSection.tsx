@@ -1,53 +1,53 @@
-"use client";
+'use client'
 
-import { useCallback, useMemo } from "react";
-import { useBuilderStore } from "../../stores/builderStore";
-import { SkillSlot } from "../skills/SkillSlot";
-import { ActiveSkills, PassiveSkills } from "@/src/data/skill";
-import { SupportSkills } from "../../lib/save-data";
+import { useCallback, useMemo } from 'react'
+import { useBuilderStore } from '../../stores/builderStore'
+import { SkillSlot } from '../skills/SkillSlot'
+import { ActiveSkills, PassiveSkills } from '@/src/data/skill'
+import { SupportSkills } from '../../lib/save-data'
 
 type ActiveSkillSlot =
-  | "activeSkill1"
-  | "activeSkill2"
-  | "activeSkill3"
-  | "activeSkill4";
+  | 'activeSkill1'
+  | 'activeSkill2'
+  | 'activeSkill3'
+  | 'activeSkill4'
 type PassiveSkillSlot =
-  | "passiveSkill1"
-  | "passiveSkill2"
-  | "passiveSkill3"
-  | "passiveSkill4";
-type SkillSlotKey = ActiveSkillSlot | PassiveSkillSlot;
-type SupportSkillKey = keyof SupportSkills;
+  | 'passiveSkill1'
+  | 'passiveSkill2'
+  | 'passiveSkill3'
+  | 'passiveSkill4'
+type SkillSlotKey = ActiveSkillSlot | PassiveSkillSlot
+type SupportSkillKey = keyof SupportSkills
 
 const ACTIVE_SKILL_SLOTS: ActiveSkillSlot[] = [
-  "activeSkill1",
-  "activeSkill2",
-  "activeSkill3",
-  "activeSkill4",
-];
+  'activeSkill1',
+  'activeSkill2',
+  'activeSkill3',
+  'activeSkill4',
+]
 
 const PASSIVE_SKILL_SLOTS: PassiveSkillSlot[] = [
-  "passiveSkill1",
-  "passiveSkill2",
-  "passiveSkill3",
-  "passiveSkill4",
-];
+  'passiveSkill1',
+  'passiveSkill2',
+  'passiveSkill3',
+  'passiveSkill4',
+]
 
 export const SkillsSection = () => {
-  const loadout = useBuilderStore((state) => state.loadout);
-  const updateLoadout = useBuilderStore((state) => state.updateLoadout);
+  const loadout = useBuilderStore((state) => state.loadout)
+  const updateLoadout = useBuilderStore((state) => state.updateLoadout)
 
   const getSelectedActiveSkillNames = useMemo((): string[] => {
     return ACTIVE_SKILL_SLOTS.map(
       (slot) => loadout.skillPage[slot].skillName,
-    ).filter((name): name is string => name !== undefined);
-  }, [loadout.skillPage]);
+    ).filter((name): name is string => name !== undefined)
+  }, [loadout.skillPage])
 
   const getSelectedPassiveSkillNames = useMemo((): string[] => {
     return PASSIVE_SKILL_SLOTS.map(
       (slot) => loadout.skillPage[slot].skillName,
-    ).filter((name): name is string => name !== undefined);
-  }, [loadout.skillPage]);
+    ).filter((name): name is string => name !== undefined)
+  }, [loadout.skillPage])
 
   const handleSkillChange = useCallback(
     (slotKey: SkillSlotKey, skillName: string | undefined): void => {
@@ -61,10 +61,10 @@ export const SkillsSection = () => {
             supportSkills: {},
           },
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleToggleSkill = useCallback(
     (slotKey: SkillSlotKey): void => {
@@ -77,10 +77,10 @@ export const SkillsSection = () => {
             enabled: !prev.skillPage[slotKey].enabled,
           },
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleUpdateSkillSupport = useCallback(
     (
@@ -100,10 +100,10 @@ export const SkillsSection = () => {
             },
           },
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   return (
     <div className="space-y-8">
@@ -153,5 +153,5 @@ export const SkillsSection = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

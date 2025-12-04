@@ -1,27 +1,27 @@
-"use client";
+'use client'
 
-import { create } from "zustand";
+import { create } from 'zustand'
 
-type SkillSlotType = "active" | "passive";
-type SkillSlotNumber = 1 | 2 | 3 | 4;
+type SkillSlotType = 'active' | 'passive'
+type SkillSlotNumber = 1 | 2 | 3 | 4
 
 interface SkillsUIState {
   // Expanded skill slots (for showing support skills)
-  expandedSlots: Set<string>;
+  expandedSlots: Set<string>
 
   // Actions
-  toggleSlotExpanded: (type: SkillSlotType, slot: SkillSlotNumber) => void;
+  toggleSlotExpanded: (type: SkillSlotType, slot: SkillSlotNumber) => void
   setSlotExpanded: (
     type: SkillSlotType,
     slot: SkillSlotNumber,
     expanded: boolean,
-  ) => void;
-  isSlotExpanded: (type: SkillSlotType, slot: SkillSlotNumber) => boolean;
-  collapseAllSlots: () => void;
+  ) => void
+  isSlotExpanded: (type: SkillSlotType, slot: SkillSlotNumber) => boolean
+  collapseAllSlots: () => void
 }
 
 const getSlotKey = (type: SkillSlotType, slot: SkillSlotNumber): string =>
-  `${type}-${slot}`;
+  `${type}-${slot}`
 
 export const useSkillsUIStore = create<SkillsUIState>((set, get) => ({
   // Initial state
@@ -30,32 +30,32 @@ export const useSkillsUIStore = create<SkillsUIState>((set, get) => ({
   // Actions
   toggleSlotExpanded: (type, slot) =>
     set((state) => {
-      const key = getSlotKey(type, slot);
-      const newSet = new Set(state.expandedSlots);
+      const key = getSlotKey(type, slot)
+      const newSet = new Set(state.expandedSlots)
       if (newSet.has(key)) {
-        newSet.delete(key);
+        newSet.delete(key)
       } else {
-        newSet.add(key);
+        newSet.add(key)
       }
-      return { expandedSlots: newSet };
+      return { expandedSlots: newSet }
     }),
 
   setSlotExpanded: (type, slot, expanded) =>
     set((state) => {
-      const key = getSlotKey(type, slot);
-      const newSet = new Set(state.expandedSlots);
+      const key = getSlotKey(type, slot)
+      const newSet = new Set(state.expandedSlots)
       if (expanded) {
-        newSet.add(key);
+        newSet.add(key)
       } else {
-        newSet.delete(key);
+        newSet.delete(key)
       }
-      return { expandedSlots: newSet };
+      return { expandedSlots: newSet }
     }),
 
   isSlotExpanded: (type, slot) => {
-    const key = getSlotKey(type, slot);
-    return get().expandedSlots.has(key);
+    const key = getSlotKey(type, slot)
+    return get().expandedSlots.has(key)
   },
 
   collapseAllSlots: () => set({ expandedSlots: new Set() }),
-}));
+}))

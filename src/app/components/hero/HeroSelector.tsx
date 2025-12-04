@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { useMemo } from "react";
-import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
-import { getUniqueHeroes } from "../../lib/hero-utils";
+import { useMemo } from 'react'
+import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
+import { getUniqueHeroes } from '../../lib/hero-utils'
 
 interface HeroSelectorProps {
-  selectedHero: string | undefined;
-  onHeroChange: (hero: string | undefined) => void;
+  selectedHero: string | undefined
+  onHeroChange: (hero: string | undefined) => void
 }
 
 export const HeroSelector = ({
   selectedHero,
   onHeroChange,
 }: HeroSelectorProps) => {
-  const uniqueHeroes = useMemo(() => getUniqueHeroes(), []);
+  const uniqueHeroes = useMemo(() => getUniqueHeroes(), [])
 
   return (
     <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-700">
@@ -29,5 +29,5 @@ export const HeroSelector = ({
         size="lg"
       />
     </div>
-  );
-};
+  )
+}

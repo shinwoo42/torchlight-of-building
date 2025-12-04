@@ -1,23 +1,23 @@
-"use client";
+'use client'
 
-import { useCallback } from "react";
-import { useBuilderStore } from "../../stores/builderStore";
-import { PactspiritTab } from "../pactspirit/PactspiritTab";
-import { PactspiritPage } from "../../lib/save-data";
+import { useCallback } from 'react'
+import { useBuilderStore } from '../../stores/builderStore'
+import { PactspiritTab } from '../pactspirit/PactspiritTab'
+import { PactspiritPage } from '../../lib/save-data'
 import {
   RingSlotKey,
   PactspiritSlotIndex,
   InstalledDestinyResult,
-} from "../../lib/types";
-import { createEmptyPactspiritSlot } from "../../lib/storage";
+} from '../../lib/types'
+import { createEmptyPactspiritSlot } from '../../lib/storage'
 
 export const PactspiritSection = () => {
-  const loadout = useBuilderStore((state) => state.loadout);
-  const updateLoadout = useBuilderStore((state) => state.updateLoadout);
+  const loadout = useBuilderStore((state) => state.loadout)
+  const updateLoadout = useBuilderStore((state) => state.updateLoadout)
 
   const handlePactspiritSelect = useCallback(
     (slotIndex: PactspiritSlotIndex, pactspiritName: string | undefined) => {
-      const slotKey = `slot${slotIndex}` as keyof PactspiritPage;
+      const slotKey = `slot${slotIndex}` as keyof PactspiritPage
       updateLoadout((prev) => ({
         ...prev,
         pactspiritPage: {
@@ -27,14 +27,14 @@ export const PactspiritSection = () => {
             pactspiritName,
           },
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleLevelChange = useCallback(
     (slotIndex: PactspiritSlotIndex, level: number) => {
-      const slotKey = `slot${slotIndex}` as keyof PactspiritPage;
+      const slotKey = `slot${slotIndex}` as keyof PactspiritPage
       updateLoadout((prev) => ({
         ...prev,
         pactspiritPage: {
@@ -44,10 +44,10 @@ export const PactspiritSection = () => {
             level,
           },
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleInstallDestiny = useCallback(
     (
@@ -55,7 +55,7 @@ export const PactspiritSection = () => {
       ringSlot: RingSlotKey,
       destiny: InstalledDestinyResult,
     ) => {
-      const slotKey = `slot${slotIndex}` as keyof PactspiritPage;
+      const slotKey = `slot${slotIndex}` as keyof PactspiritPage
       updateLoadout((prev) => ({
         ...prev,
         pactspiritPage: {
@@ -70,14 +70,14 @@ export const PactspiritSection = () => {
             },
           },
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleRevertRing = useCallback(
     (slotIndex: PactspiritSlotIndex, ringSlot: RingSlotKey) => {
-      const slotKey = `slot${slotIndex}` as keyof PactspiritPage;
+      const slotKey = `slot${slotIndex}` as keyof PactspiritPage
       updateLoadout((prev) => ({
         ...prev,
         pactspiritPage: {
@@ -90,10 +90,10 @@ export const PactspiritSection = () => {
             },
           },
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   return (
     <PactspiritTab
@@ -103,5 +103,5 @@ export const PactspiritSection = () => {
       onInstallDestiny={handleInstallDestiny}
       onRevertRing={handleRevertRing}
     />
-  );
-};
+  )
+}

@@ -1,39 +1,39 @@
-"use client";
+'use client'
 
-import type { HeroTrait } from "@/src/data/hero_trait/types";
+import type { HeroTrait } from '@/src/data/hero_trait/types'
 import type {
   HeroPage,
   HeroMemory,
   HeroMemorySlot,
-} from "@/src/app/lib/save-data";
+} from '@/src/app/lib/save-data'
 import {
   getTraitsForHeroAtLevel,
   MEMORY_SLOT_TYPE_MAP,
   getCompatibleMemoriesForSlot,
-} from "../../lib/hero-utils";
-import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
-import { useTooltip } from "@/src/app/hooks/useTooltip";
+} from '../../lib/hero-utils'
+import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
+import { useTooltip } from '@/src/app/hooks/useTooltip'
 import {
   Tooltip,
   TooltipTitle,
   TooltipContent,
-} from "@/src/app/components/ui/Tooltip";
+} from '@/src/app/components/ui/Tooltip'
 
 interface TraitSelectorProps {
-  heroPage: HeroPage;
-  heroMemoryList: HeroMemory[];
-  onTraitSelect: (level: 45 | 60 | 75, traitName: string | undefined) => void;
-  onMemoryEquip: (slot: HeroMemorySlot, memoryId: string | undefined) => void;
+  heroPage: HeroPage
+  heroMemoryList: HeroMemory[]
+  onTraitSelect: (level: 45 | 60 | 75, traitName: string | undefined) => void
+  onMemoryEquip: (slot: HeroMemorySlot, memoryId: string | undefined) => void
 }
 
-const TRAIT_LEVELS = [1, 45, 60, 75] as const;
+const TRAIT_LEVELS = [1, 45, 60, 75] as const
 
 interface TraitItemProps {
-  trait: HeroTrait;
-  isSelected: boolean;
-  isLevel1: boolean;
-  level: number;
-  onSelect?: () => void;
+  trait: HeroTrait
+  isSelected: boolean
+  isLevel1: boolean
+  level: number
+  onSelect?: () => void
 }
 
 const TraitItem = ({
@@ -43,13 +43,13 @@ const TraitItem = ({
   level,
   onSelect,
 }: TraitItemProps) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isHovered, mousePos, handlers } = useTooltip()
 
   const content = (
     <div className="flex-1">
       <div className="font-medium text-zinc-50 text-sm">{trait.name}</div>
     </div>
-  );
+  )
 
   const tooltip = (
     <Tooltip isVisible={isHovered} mousePos={mousePos} width="lg">
@@ -58,7 +58,7 @@ const TraitItem = ({
         <div className="max-h-64 overflow-y-auto">{trait.affix}</div>
       </TooltipContent>
     </Tooltip>
-  );
+  )
 
   if (isLevel1) {
     return (
@@ -69,15 +69,15 @@ const TraitItem = ({
         {content}
         {tooltip}
       </div>
-    );
+    )
   }
 
   return (
     <label
       className={`flex items-start gap-2 p-3 rounded border cursor-pointer transition-colors ${
         isSelected
-          ? "bg-amber-500/10 border-amber-500"
-          : "bg-zinc-900 border-zinc-700 hover:border-zinc-600"
+          ? 'bg-amber-500/10 border-amber-500'
+          : 'bg-zinc-900 border-zinc-700 hover:border-zinc-600'
       }`}
       {...handlers}
     >
@@ -91,15 +91,15 @@ const TraitItem = ({
       {content}
       {tooltip}
     </label>
-  );
-};
+  )
+}
 
 interface TraitRowProps {
-  level: (typeof TRAIT_LEVELS)[number];
-  heroPage: HeroPage;
-  heroMemoryList: HeroMemory[];
-  onTraitSelect: (level: 45 | 60 | 75, traitName: string | undefined) => void;
-  onMemoryEquip: (slot: HeroMemorySlot, memoryId: string | undefined) => void;
+  level: (typeof TRAIT_LEVELS)[number]
+  heroPage: HeroPage
+  heroMemoryList: HeroMemory[]
+  onTraitSelect: (level: 45 | 60 | 75, traitName: string | undefined) => void
+  onMemoryEquip: (slot: HeroMemorySlot, memoryId: string | undefined) => void
 }
 
 const TraitRow = ({
@@ -112,25 +112,25 @@ const TraitRow = ({
   const traits =
     heroPage.selectedHero !== undefined
       ? getTraitsForHeroAtLevel(heroPage.selectedHero, level)
-      : [];
+      : []
 
-  const traitLevelKey = `level${level}` as keyof typeof heroPage.traits;
-  const selectedTrait = heroPage.traits[traitLevelKey];
-  const isLevel1 = level === 1;
+  const traitLevelKey = `level${level}` as keyof typeof heroPage.traits
+  const selectedTrait = heroPage.traits[traitLevelKey]
+  const isLevel1 = level === 1
 
   const slot: HeroMemorySlot | undefined =
     level === 45
-      ? "slot45"
+      ? 'slot45'
       : level === 60
-        ? "slot60"
+        ? 'slot60'
         : level === 75
-          ? "slot75"
-          : undefined;
-  const memoryType = slot ? MEMORY_SLOT_TYPE_MAP[slot] : undefined;
-  const equippedMemory = slot ? heroPage.memorySlots[slot] : undefined;
+          ? 'slot75'
+          : undefined
+  const memoryType = slot ? MEMORY_SLOT_TYPE_MAP[slot] : undefined
+  const equippedMemory = slot ? heroPage.memorySlots[slot] : undefined
   const compatibleMemories = slot
     ? getCompatibleMemoriesForSlot(heroMemoryList, slot)
-    : [];
+    : []
 
   return (
     <div className="bg-zinc-800 rounded-lg p-4">
@@ -143,7 +143,7 @@ const TraitRow = ({
               onChange={(value) => onMemoryEquip(slot, value)}
               options={compatibleMemories.map((memory) => ({
                 value: memory.id,
-                label: memory.baseStat.substring(0, 30) + "...",
+                label: memory.baseStat.substring(0, 30) + '...',
               }))}
               placeholder="No memory"
               size="sm"
@@ -153,14 +153,14 @@ const TraitRow = ({
 
         <div className="flex-1">
           <div className="text-sm font-semibold text-amber-400 mb-2">
-            Level {level} {isLevel1 && "(Auto-selected)"}
+            Level {level} {isLevel1 && '(Auto-selected)'}
           </div>
 
           {traits.length === 0 ? (
             <p className="text-zinc-500 text-sm italic">
               {heroPage.selectedHero
-                ? "No traits available at this level"
-                : "Select a hero to view traits"}
+                ? 'No traits available at this level'
+                : 'Select a hero to view traits'}
             </p>
           ) : isLevel1 ? (
             <TraitItem
@@ -188,8 +188,8 @@ const TraitRow = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const TraitSelector = ({
   heroPage,
@@ -213,5 +213,5 @@ export const TraitSelector = ({
         ))}
       </div>
     </div>
-  );
-};
+  )
+}

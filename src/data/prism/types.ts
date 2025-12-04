@@ -1,5 +1,5 @@
 export interface Prism {
-  type: string;
-  rarity: string;
-  affix: string;
+  type: string
+  rarity: string
+  affix: string
 }

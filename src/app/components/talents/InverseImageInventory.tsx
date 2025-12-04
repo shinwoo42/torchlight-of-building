@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { CraftedInverseImage } from "@/src/app/lib/save-data";
-import { InverseImageInventoryItem } from "./InverseImageInventoryItem";
+import { CraftedInverseImage } from '@/src/app/lib/save-data'
+import { InverseImageInventoryItem } from './InverseImageInventoryItem'
 
 interface InverseImageInventoryProps {
-  inverseImages: CraftedInverseImage[];
-  onEdit: (inverseImage: CraftedInverseImage) => void;
-  onCopy: (inverseImage: CraftedInverseImage) => void;
-  onDelete: (inverseImageId: string) => void;
-  selectedInverseImageId?: string;
-  onSelectInverseImage?: (inverseImageId: string | undefined) => void;
-  hasInverseImagePlaced?: boolean;
-  hasPrismPlaced?: boolean;
-  isOnGodGoddessTree?: boolean;
-  treeHasPoints?: boolean;
+  inverseImages: CraftedInverseImage[]
+  onEdit: (inverseImage: CraftedInverseImage) => void
+  onCopy: (inverseImage: CraftedInverseImage) => void
+  onDelete: (inverseImageId: string) => void
+  selectedInverseImageId?: string
+  onSelectInverseImage?: (inverseImageId: string | undefined) => void
+  hasInverseImagePlaced?: boolean
+  hasPrismPlaced?: boolean
+  isOnGodGoddessTree?: boolean
+  treeHasPoints?: boolean
 }
 
 export const InverseImageInventory: React.FC<InverseImageInventoryProps> = ({
@@ -28,37 +28,37 @@ export const InverseImageInventory: React.FC<InverseImageInventoryProps> = ({
   isOnGodGoddessTree = false,
   treeHasPoints = false,
 }) => {
-  const selectionMode = !!onSelectInverseImage;
+  const selectionMode = !!onSelectInverseImage
 
   const handleSelect = (inverseImageId: string) => {
-    if (!onSelectInverseImage) return;
+    if (!onSelectInverseImage) return
     if (selectedInverseImageId === inverseImageId) {
-      onSelectInverseImage(undefined);
+      onSelectInverseImage(undefined)
     } else {
-      onSelectInverseImage(inverseImageId);
+      onSelectInverseImage(inverseImageId)
     }
-  };
+  }
 
   const getStatusMessage = (): string => {
     if (hasInverseImagePlaced) {
-      return "An inverse image is already placed. Remove it first to place a different one.";
+      return 'An inverse image is already placed. Remove it first to place a different one.'
     }
     if (hasPrismPlaced) {
-      return "A prism is already placed. Remove it first to place an inverse image.";
+      return 'A prism is already placed. Remove it first to place an inverse image.'
     }
     if (selectedInverseImageId) {
       if (isOnGodGoddessTree) {
-        return "Switch to a Profession Tree (Slots 2-4) to place the inverse image.";
+        return 'Switch to a Profession Tree (Slots 2-4) to place the inverse image.'
       }
       if (treeHasPoints) {
-        return "Reset the tree's points to 0 before placing an inverse image.";
+        return "Reset the tree's points to 0 before placing an inverse image."
       }
-      return "Click on an empty talent node (not in center column) to place the inverse image, or click it again to deselect.";
+      return 'Click on an empty talent node (not in center column) to place the inverse image, or click it again to deselect.'
     }
-    return "Click an inverse image to select it for placement.";
-  };
+    return 'Click an inverse image to select it for placement.'
+  }
 
-  const canSelect = !hasInverseImagePlaced && !hasPrismPlaced && selectionMode;
+  const canSelect = !hasInverseImagePlaced && !hasPrismPlaced && selectionMode
 
   return (
     <div className="rounded-lg border border-zinc-700 bg-zinc-800 p-4">
@@ -95,5 +95,5 @@ export const InverseImageInventory: React.FC<InverseImageInventoryProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

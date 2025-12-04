@@ -1,4 +1,4 @@
-import { Mod, ModOfType } from "./mod";
+import { Mod, ModOfType } from './mod'
 import {
   DmgModType,
   DMG_MOD_TYPES,
@@ -6,438 +6,437 @@ import {
   CRIT_RATING_MOD_TYPES,
   CritDmgModType,
   CRIT_DMG_MOD_TYPES,
-} from "./constants";
+} from './constants'
 
-type ParseResult = "unrecognized" | "unimplemented" | Mod;
+type ParseResult = 'unrecognized' | 'unimplemented' | Mod
 
 const isValidDmgModType = (value: string): value is DmgModType => {
-  return DMG_MOD_TYPES.includes(value as DmgModType);
-};
+  return DMG_MOD_TYPES.includes(value as DmgModType)
+}
 
 const isValidCritRatingModType = (
   value: string,
 ): value is CritRatingModType => {
-  return CRIT_RATING_MOD_TYPES.includes(value as CritRatingModType);
-};
+  return CRIT_RATING_MOD_TYPES.includes(value as CritRatingModType)
+}
 
 const isValidCritDmgModType = (value: string): value is CritDmgModType => {
-  return CRIT_DMG_MOD_TYPES.includes(value as CritDmgModType);
-};
+  return CRIT_DMG_MOD_TYPES.includes(value as CritDmgModType)
+}
 
-const parseDmgPct = (input: string): ModOfType<"DmgPct"> | undefined => {
+const parseDmgPct = (input: string): ModOfType<'DmgPct'> | undefined => {
   // Regex to parse: +9% [additional] [fire] damage
   const pattern =
-    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?(?:(\w+) )?damage$/i;
-  const match = input.match(pattern);
+    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?(?:(\w+) )?damage$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const percentageStr = match[2];
-  const hasAdditional = match[3] !== undefined;
-  const damageTypeWord = match[4];
+  const percentageStr = match[2]
+  const hasAdditional = match[3] !== undefined
+  const damageTypeWord = match[4]
 
-  const value = parseFloat(percentageStr) / 100;
-  const addn = hasAdditional;
+  const value = parseFloat(percentageStr) / 100
+  const addn = hasAdditional
 
-  let modType: DmgModType = "global";
+  let modType: DmgModType = 'global'
   if (damageTypeWord !== undefined) {
     if (isValidDmgModType(damageTypeWord)) {
-      modType = damageTypeWord;
+      modType = damageTypeWord
     } else {
-      return undefined;
+      return undefined
     }
   }
 
   return {
-    type: "DmgPct",
+    type: 'DmgPct',
     value,
     modType,
     addn,
-  };
-};
+  }
+}
 
 const parseCritRatingPct = (
   input: string,
-): ModOfType<"CritRatingPct"> | undefined => {
+): ModOfType<'CritRatingPct'> | undefined => {
   // Regex to parse: +10% [Attack] Critical Strike Rating
   // The type word comes before "Critical Strike Rating"
-  const pattern =
-    /^([+-])?(\d+(?:\.\d+)?)% (?:(\w+) )?critical strike rating$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% (?:(\w+) )?critical strike rating$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const percentageStr = match[2];
-  const modTypeWord = match[3];
+  const percentageStr = match[2]
+  const modTypeWord = match[3]
 
-  const value = parseFloat(percentageStr) / 100;
+  const value = parseFloat(percentageStr) / 100
 
-  let modType: CritRatingModType = "global";
+  let modType: CritRatingModType = 'global'
   if (modTypeWord !== undefined) {
     if (isValidCritRatingModType(modTypeWord)) {
-      modType = modTypeWord;
+      modType = modTypeWord
     } else {
-      return undefined;
+      return undefined
     }
   }
 
   return {
-    type: "CritRatingPct",
+    type: 'CritRatingPct',
     value,
     modType,
-  };
-};
+  }
+}
 
 const parseCritDmgPct = (
   input: string,
-): ModOfType<"CritDmgPct"> | undefined => {
+): ModOfType<'CritDmgPct'> | undefined => {
   // Regex to parse: +5% [additional] [Attack] Critical Strike Damage
   // The type word comes before "Critical Strike Damage"
   const pattern =
-    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?(?:(\w+) )?critical strike damage$/i;
-  const match = input.match(pattern);
+    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?(?:(\w+) )?critical strike damage$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const percentageStr = match[2];
-  const hasAdditional = match[3] !== undefined;
-  const modTypeWord = match[4];
+  const percentageStr = match[2]
+  const hasAdditional = match[3] !== undefined
+  const modTypeWord = match[4]
 
-  const value = parseFloat(percentageStr) / 100;
-  const addn = hasAdditional;
+  const value = parseFloat(percentageStr) / 100
+  const addn = hasAdditional
 
-  let modType: CritDmgModType = "global";
+  let modType: CritDmgModType = 'global'
   if (modTypeWord !== undefined) {
     if (isValidCritDmgModType(modTypeWord)) {
-      modType = modTypeWord;
+      modType = modTypeWord
     } else {
-      return undefined;
+      return undefined
     }
   }
 
   return {
-    type: "CritDmgPct",
+    type: 'CritDmgPct',
     value,
     modType,
     addn,
-  };
-};
+  }
+}
 
-const parseAspdPct = (input: string): ModOfType<"AspdPct"> | undefined => {
+const parseAspdPct = (input: string): ModOfType<'AspdPct'> | undefined => {
   // Regex to parse: +6% [additional] attack speed
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?attack speed$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?attack speed$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const percentageStr = match[2];
-  const hasAdditional = match[3] !== undefined;
+  const percentageStr = match[2]
+  const hasAdditional = match[3] !== undefined
 
-  const value = parseFloat(percentageStr) / 100;
-  const addn = hasAdditional;
+  const value = parseFloat(percentageStr) / 100
+  const addn = hasAdditional
 
   return {
-    type: "AspdPct",
+    type: 'AspdPct',
     value,
     addn,
-  };
-};
+  }
+}
 
-const parseCspdPct = (input: string): ModOfType<"CspdPct"> | undefined => {
+const parseCspdPct = (input: string): ModOfType<'CspdPct'> | undefined => {
   // Regex to parse: +6% [additional] cast speed
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?cast speed$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?cast speed$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const percentageStr = match[2];
-  const hasAdditional = match[3] !== undefined;
+  const percentageStr = match[2]
+  const hasAdditional = match[3] !== undefined
 
-  const value = parseFloat(percentageStr) / 100;
-  const addn = hasAdditional;
+  const value = parseFloat(percentageStr) / 100
+  const addn = hasAdditional
 
   return {
-    type: "CspdPct",
+    type: 'CspdPct',
     value,
     addn,
-  };
-};
+  }
+}
 
 const parseAspdAndCspdPct = (
   input: string,
-): ModOfType<"AspdAndCspdPct"> | undefined => {
+): ModOfType<'AspdAndCspdPct'> | undefined => {
   // Regex to parse: +6% [additional] attack and cast speed
   const pattern =
-    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?attack and cast speed$/i;
-  const match = input.match(pattern);
+    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?attack and cast speed$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const percentageStr = match[2];
-  const hasAdditional = match[3] !== undefined;
+  const percentageStr = match[2]
+  const hasAdditional = match[3] !== undefined
 
-  const value = parseFloat(percentageStr) / 100;
-  const addn = hasAdditional;
+  const value = parseFloat(percentageStr) / 100
+  const addn = hasAdditional
 
   return {
-    type: "AspdAndCspdPct",
+    type: 'AspdAndCspdPct',
     value,
     addn,
-  };
-};
+  }
+}
 
 const parseMinionAspdAndCspdPct = (
   input: string,
-): ModOfType<"MinionAspdAndCspdPct"> | undefined => {
+): ModOfType<'MinionAspdAndCspdPct'> | undefined => {
   // Regex to parse: +6% [additional] minion attack and cast speed
   const pattern =
-    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?minion attack and cast speed$/i;
-  const match = input.match(pattern);
+    /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?minion attack and cast speed$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const percentageStr = match[2];
-  const hasAdditional = match[3] !== undefined;
+  const percentageStr = match[2]
+  const hasAdditional = match[3] !== undefined
 
-  const value = parseFloat(percentageStr) / 100;
-  const addn = hasAdditional;
+  const value = parseFloat(percentageStr) / 100
+  const addn = hasAdditional
 
   return {
-    type: "MinionAspdAndCspdPct",
+    type: 'MinionAspdAndCspdPct',
     value,
     addn,
-  };
-};
+  }
+}
 
 const parseAttackBlockChancePct = (
   input: string,
-): ModOfType<"AttackBlockChancePct"> | undefined => {
+): ModOfType<'AttackBlockChancePct'> | undefined => {
   // Regex to parse: +4% Attack Block Chance
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% attack block chance$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% attack block chance$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "AttackBlockChancePct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'AttackBlockChancePct', value }
+}
 
 const parseSpellBlockChancePct = (
   input: string,
-): ModOfType<"SpellBlockChancePct"> | undefined => {
+): ModOfType<'SpellBlockChancePct'> | undefined => {
   // Regex to parse: +4% Spell Block Chance
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% spell block chance$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% spell block chance$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "SpellBlockChancePct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'SpellBlockChancePct', value }
+}
 
 const parseMaxLifePct = (
   input: string,
-): ModOfType<"MaxLifePct"> | undefined => {
+): ModOfType<'MaxLifePct'> | undefined => {
   // Regex to parse: +3% Max Life
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% max life$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% max life$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "MaxLifePct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'MaxLifePct', value }
+}
 
 const parseMaxEnergyShieldPct = (
   input: string,
-): ModOfType<"MaxEnergyShieldPct"> | undefined => {
+): ModOfType<'MaxEnergyShieldPct'> | undefined => {
   // Regex to parse: +3% Max Energy Shield
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% max energy shield$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% max energy shield$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "MaxEnergyShieldPct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'MaxEnergyShieldPct', value }
+}
 
-const parseArmorPct = (input: string): ModOfType<"ArmorPct"> | undefined => {
+const parseArmorPct = (input: string): ModOfType<'ArmorPct'> | undefined => {
   // Regex to parse: +5% Armor
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% armor$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% armor$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "ArmorPct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'ArmorPct', value }
+}
 
 const parseEvasionPct = (
   input: string,
-): ModOfType<"EvasionPct"> | undefined => {
+): ModOfType<'EvasionPct'> | undefined => {
   // Regex to parse: +5% Evasion
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% evasion$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% evasion$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "EvasionPct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'EvasionPct', value }
+}
 
 const parseLifeRegainPct = (
   input: string,
-): ModOfType<"LifeRegainPct"> | undefined => {
+): ModOfType<'LifeRegainPct'> | undefined => {
   // Regex to parse: 1.5% Life Regain
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% life regain$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% life regain$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "LifeRegainPct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'LifeRegainPct', value }
+}
 
 const parseEnergyShieldRegainPct = (
   input: string,
-): ModOfType<"EnergyShieldRegainPct"> | undefined => {
+): ModOfType<'EnergyShieldRegainPct'> | undefined => {
   // Regex to parse: 1.5% Energy Shield Regain
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% energy shield regain$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% energy shield regain$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "EnergyShieldRegainPct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'EnergyShieldRegainPct', value }
+}
 
 const parseMultistrikeChancePct = (
   input: string,
-): ModOfType<"MultistrikeChancePct"> | undefined => {
+): ModOfType<'MultistrikeChancePct'> | undefined => {
   // Regex to parse: +32% chance to Multistrike
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% chance to multistrike$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% chance to multistrike$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "MultistrikeChancePct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'MultistrikeChancePct', value }
+}
 
-const parseStr = (input: string): ModOfType<"Str"> | undefined => {
+const parseStr = (input: string): ModOfType<'Str'> | undefined => {
   // Regex to parse: +6 Strength
-  const pattern = /^([+-])?(\d+(?:\.\d+)?) strength$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?) strength$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]);
-  return { type: "Str", value };
-};
+  const value = parseFloat(match[2])
+  return { type: 'Str', value }
+}
 
-const parseDex = (input: string): ModOfType<"Dex"> | undefined => {
+const parseDex = (input: string): ModOfType<'Dex'> | undefined => {
   // Regex to parse: +6 Dexterity
-  const pattern = /^([+-])?(\d+(?:\.\d+)?) dexterity$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?) dexterity$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]);
-  return { type: "Dex", value };
-};
+  const value = parseFloat(match[2])
+  return { type: 'Dex', value }
+}
 
-const parseStrPct = (input: string): ModOfType<"StrPct"> | undefined => {
+const parseStrPct = (input: string): ModOfType<'StrPct'> | undefined => {
   // Regex to parse: +4% Strength
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% strength$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% strength$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "StrPct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'StrPct', value }
+}
 
-const parseDexPct = (input: string): ModOfType<"DexPct"> | undefined => {
+const parseDexPct = (input: string): ModOfType<'DexPct'> | undefined => {
   // Regex to parse: +4% Dexterity
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% dexterity$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% dexterity$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "DexPct", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'DexPct', value }
+}
 
-const parseFervorEff = (input: string): ModOfType<"FervorEff"> | undefined => {
+const parseFervorEff = (input: string): ModOfType<'FervorEff'> | undefined => {
   // Regex to parse: +4% Fervor effect
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% fervor effect$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% fervor effect$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "FervorEff", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'FervorEff', value }
+}
 
 const parseSteepStrikeChance = (
   input: string,
-): ModOfType<"SteepStrikeChance"> | undefined => {
+): ModOfType<'SteepStrikeChance'> | undefined => {
   // Regex to parse: +12% Steep Strike chance
-  const pattern = /^([+-])?(\d+(?:\.\d+)?)% steep strike chance$/i;
-  const match = input.match(pattern);
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% steep strike chance$/i
+  const match = input.match(pattern)
 
   if (!match) {
-    return undefined;
+    return undefined
   }
 
-  const value = parseFloat(match[2]) / 100;
-  return { type: "SteepStrikeChance", value };
-};
+  const value = parseFloat(match[2]) / 100
+  return { type: 'SteepStrikeChance', value }
+}
 
 export const parseMod = (input: string): ParseResult => {
-  const normalized = input.trim().toLowerCase();
+  const normalized = input.trim().toLowerCase()
 
   const parsers = [
     // Offense
@@ -467,15 +466,15 @@ export const parseMod = (input: string): ParseResult => {
     parseSteepStrikeChance,
     parseMultistrikeChancePct,
     // Add more parsers here as they're implemented
-  ];
+  ]
 
   for (const parser of parsers) {
-    const result = parser(normalized);
+    const result = parser(normalized)
     if (result !== undefined) {
-      return result;
+      return result
     }
   }
 
   // No parser matched
-  return "unrecognized";
-};
+  return 'unrecognized'
+}

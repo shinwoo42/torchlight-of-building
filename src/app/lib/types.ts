@@ -1,49 +1,49 @@
-import { GearPage, PactspiritSlot } from "./save-data";
+import { GearPage, PactspiritSlot } from './save-data'
 
-export type GearSlot = keyof GearPage;
+export type GearSlot = keyof GearPage
 
-export type TreeSlot = "tree1" | "tree2" | "tree3" | "tree4";
+export type TreeSlot = 'tree1' | 'tree2' | 'tree3' | 'tree4'
 
 export type ActivePage =
-  | "equipment"
-  | "talents"
-  | "skills"
-  | "hero"
-  | "pactspirit"
-  | "divinity";
+  | 'equipment'
+  | 'talents'
+  | 'skills'
+  | 'hero'
+  | 'pactspirit'
+  | 'divinity'
 
 export interface AffixSlotState {
-  affixIndex: number | undefined;
-  percentage: number;
+  affixIndex: number | undefined
+  percentage: number
 }
 
 export type InnerRingSlot =
-  | "innerRing1"
-  | "innerRing2"
-  | "innerRing3"
-  | "innerRing4"
-  | "innerRing5"
-  | "innerRing6";
-export type MidRingSlot = "midRing1" | "midRing2" | "midRing3";
-export type RingSlotKey = InnerRingSlot | MidRingSlot;
+  | 'innerRing1'
+  | 'innerRing2'
+  | 'innerRing3'
+  | 'innerRing4'
+  | 'innerRing5'
+  | 'innerRing6'
+export type MidRingSlot = 'midRing1' | 'midRing2' | 'midRing3'
+export type RingSlotKey = InnerRingSlot | MidRingSlot
 
 export const RING_DISPLAY_ORDER: RingSlotKey[] = [
-  "innerRing1",
-  "innerRing2",
-  "midRing1",
-  "innerRing3",
-  "innerRing4",
-  "midRing2",
-  "innerRing5",
-  "innerRing6",
-  "midRing3",
-];
+  'innerRing1',
+  'innerRing2',
+  'midRing1',
+  'innerRing3',
+  'innerRing4',
+  'midRing2',
+  'innerRing5',
+  'innerRing6',
+  'midRing3',
+]
 
-export type PactspiritSlotIndex = 1 | 2 | 3;
-export type PactspiritSlotKey = keyof PactspiritSlot["rings"];
+export type PactspiritSlotIndex = 1 | 2 | 3
+export type PactspiritSlotKey = keyof PactspiritSlot['rings']
 
 export interface InstalledDestinyResult {
-  destinyName: string;
-  destinyType: string;
-  resolvedAffix: string;
+  destinyName: string
+  destinyType: string
+  resolvedAffix: string
 }

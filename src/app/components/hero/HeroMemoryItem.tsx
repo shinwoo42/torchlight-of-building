@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import type { HeroMemory } from "@/src/app/lib/save-data";
-import { formatCraftedMemoryAffixes } from "../../lib/hero-utils";
-import { useTooltip } from "@/src/app/hooks/useTooltip";
-import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
+import type { HeroMemory } from '@/src/app/lib/save-data'
+import { formatCraftedMemoryAffixes } from '../../lib/hero-utils'
+import { useTooltip } from '@/src/app/hooks/useTooltip'
+import { Tooltip, TooltipTitle } from '@/src/app/components/ui/Tooltip'
 
 interface HeroMemoryItemProps {
-  memory: HeroMemory;
-  isEquipped: boolean;
-  onCopy: (memory: HeroMemory) => void;
-  onDelete: (id: string) => void;
+  memory: HeroMemory
+  isEquipped: boolean
+  onCopy: (memory: HeroMemory) => void
+  onDelete: (id: string) => void
 }
 
 export const HeroMemoryItem: React.FC<HeroMemoryItemProps> = ({
@@ -18,9 +18,9 @@ export const HeroMemoryItem: React.FC<HeroMemoryItemProps> = ({
   onCopy,
   onDelete,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isHovered, mousePos, handlers } = useTooltip()
 
-  const craftedAffixes = formatCraftedMemoryAffixes(memory);
+  const craftedAffixes = formatCraftedMemoryAffixes(memory)
 
   return (
     <div
@@ -73,5 +73,5 @@ export const HeroMemoryItem: React.FC<HeroMemoryItemProps> = ({
         )}
       </Tooltip>
     </div>
-  );
-};
+  )
+}

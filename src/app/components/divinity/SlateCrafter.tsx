@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from 'react'
 import {
   DivinitySlate,
   DIVINITY_GODS,
@@ -9,27 +9,27 @@ import {
   SlateShape,
   Rotation,
   ROTATIONS,
-} from "@/src/app/lib/save-data";
-import { generateItemId } from "@/src/app/lib/storage";
+} from '@/src/app/lib/save-data'
+import { generateItemId } from '@/src/app/lib/storage'
 import {
   getDivinityAffixes,
   DivinityAffix,
   GOD_COLORS,
   GOD_BORDER_COLORS,
-} from "@/src/app/lib/divinity-utils";
-import { MAX_SLATE_AFFIXES } from "@/src/app/lib/constants";
-import { SlatePreview } from "./SlatePreview";
+} from '@/src/app/lib/divinity-utils'
+import { MAX_SLATE_AFFIXES } from '@/src/app/lib/constants'
+import { SlatePreview } from './SlatePreview'
 import {
   SearchableSelect,
   SearchableSelectOption,
-} from "@/src/app/components/ui/SearchableSelect";
+} from '@/src/app/components/ui/SearchableSelect'
 
 interface SlateCrafterProps {
-  editingSlate: DivinitySlate | undefined;
-  isPlaced?: boolean;
-  onSave: (slate: DivinitySlate) => void;
-  onCancel?: () => void;
-  onRemoveFromGrid?: () => void;
+  editingSlate: DivinitySlate | undefined
+  isPlaced?: boolean
+  onSave: (slate: DivinitySlate) => void
+  onCancel?: () => void
+  onRemoveFromGrid?: () => void
 }
 
 export const SlateCrafter: React.FC<SlateCrafterProps> = ({
@@ -39,40 +39,40 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
   onCancel,
   onRemoveFromGrid,
 }) => {
-  const [god, setGod] = useState<DivinityGod>(editingSlate?.god ?? "Hunting");
-  const [shape, setShape] = useState<SlateShape>(editingSlate?.shape ?? "O");
+  const [god, setGod] = useState<DivinityGod>(editingSlate?.god ?? 'Hunting')
+  const [shape, setShape] = useState<SlateShape>(editingSlate?.shape ?? 'O')
   const [rotation, setRotation] = useState<Rotation>(
     editingSlate?.rotation ?? 0,
-  );
-  const [flippedH, setFlippedH] = useState(editingSlate?.flippedH ?? false);
-  const [flippedV, setFlippedV] = useState(editingSlate?.flippedV ?? false);
-  const [selectedAffixes, setSelectedAffixes] = useState<DivinityAffix[]>([]);
+  )
+  const [flippedH, setFlippedH] = useState(editingSlate?.flippedH ?? false)
+  const [flippedV, setFlippedV] = useState(editingSlate?.flippedV ?? false)
+  const [selectedAffixes, setSelectedAffixes] = useState<DivinityAffix[]>([])
 
   /* eslint-disable react-hooks/set-state-in-effect -- sync state with prop changes */
   useEffect(() => {
     if (editingSlate) {
-      setGod(editingSlate.god);
-      setShape(editingSlate.shape);
-      setRotation(editingSlate.rotation);
-      setFlippedH(editingSlate.flippedH);
-      setFlippedV(editingSlate.flippedV);
+      setGod(editingSlate.god)
+      setShape(editingSlate.shape)
+      setRotation(editingSlate.rotation)
+      setFlippedH(editingSlate.flippedH)
+      setFlippedV(editingSlate.flippedV)
       const affixes: DivinityAffix[] = editingSlate.affixes.map(
         (effect: string, i: number) => ({
           effect,
           type: editingSlate.affixTypes[i],
         }),
-      );
-      setSelectedAffixes(affixes);
+      )
+      setSelectedAffixes(affixes)
     } else {
-      setSelectedAffixes([]);
-      setRotation(0);
-      setFlippedH(false);
-      setFlippedV(false);
+      setSelectedAffixes([])
+      setRotation(0)
+      setFlippedH(false)
+      setFlippedV(false)
     }
-  }, [editingSlate]);
+  }, [editingSlate])
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  const availableAffixes = getDivinityAffixes(god);
+  const availableAffixes = getDivinityAffixes(god)
 
   const affixOptions = useMemo((): SearchableSelectOption<string>[] => {
     return availableAffixes
@@ -81,34 +81,34 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
       )
       .map((affix) => ({
         value: affix.effect,
-        label: affix.effect.split("\n")[0],
-        sublabel: affix.type === "Legendary Medium" ? "Legendary" : "Medium",
-      }));
-  }, [availableAffixes, selectedAffixes]);
+        label: affix.effect.split('\n')[0],
+        sublabel: affix.type === 'Legendary Medium' ? 'Legendary' : 'Medium',
+      }))
+  }, [availableAffixes, selectedAffixes])
 
   const handleGodChange = (newGod: DivinityGod) => {
-    setGod(newGod);
-    setSelectedAffixes([]);
-  };
+    setGod(newGod)
+    setSelectedAffixes([])
+  }
 
   const handleRotate = () => {
-    const currentIndex = ROTATIONS.indexOf(rotation);
-    const nextIndex = (currentIndex + 1) % ROTATIONS.length;
-    setRotation(ROTATIONS[nextIndex]);
-  };
+    const currentIndex = ROTATIONS.indexOf(rotation)
+    const nextIndex = (currentIndex + 1) % ROTATIONS.length
+    setRotation(ROTATIONS[nextIndex])
+  }
 
   const handleAddAffix = (effectValue: string | undefined) => {
-    if (!effectValue) return;
-    if (selectedAffixes.length >= MAX_SLATE_AFFIXES) return;
-    const affix = availableAffixes.find((a) => a.effect === effectValue);
-    if (!affix) return;
-    if (selectedAffixes.some((a) => a.effect === affix.effect)) return;
-    setSelectedAffixes([...selectedAffixes, affix]);
-  };
+    if (!effectValue) return
+    if (selectedAffixes.length >= MAX_SLATE_AFFIXES) return
+    const affix = availableAffixes.find((a) => a.effect === effectValue)
+    if (!affix) return
+    if (selectedAffixes.some((a) => a.effect === affix.effect)) return
+    setSelectedAffixes([...selectedAffixes, affix])
+  }
 
   const handleRemoveAffix = (index: number) => {
-    setSelectedAffixes(selectedAffixes.filter((_, i) => i !== index));
-  };
+    setSelectedAffixes(selectedAffixes.filter((_, i) => i !== index))
+  }
 
   const handleSave = () => {
     const slate: DivinitySlate = {
@@ -120,21 +120,21 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
       flippedV,
       affixes: selectedAffixes.map((a) => a.effect),
       affixTypes: selectedAffixes.map((a) => a.type),
-    };
-    onSave(slate);
+    }
+    onSave(slate)
 
     if (!editingSlate) {
-      setSelectedAffixes([]);
-      setRotation(0);
-      setFlippedH(false);
-      setFlippedV(false);
+      setSelectedAffixes([])
+      setRotation(0)
+      setFlippedH(false)
+      setFlippedV(false)
     }
-  };
+  }
 
   return (
     <div className="rounded-lg border border-zinc-700 bg-zinc-800 p-4">
       <h3 className="mb-4 text-lg font-medium text-zinc-200">
-        {editingSlate ? "Edit Slate" : "Craft Slate"}
+        {editingSlate ? 'Edit Slate' : 'Craft Slate'}
       </h3>
 
       <div className="mb-4">
@@ -147,7 +147,7 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
               className={`rounded px-3 py-1 text-sm transition-colors ${
                 god === g
                   ? `${GOD_COLORS[g]} text-white`
-                  : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
+                  : 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'
               }`}
             >
               {g}
@@ -169,7 +169,7 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
                 className={`flex h-12 w-12 items-center justify-center rounded border-2 transition-colors ${
                   shape === s
                     ? `${GOD_BORDER_COLORS[god]} ${GOD_COLORS[god]}`
-                    : "border-zinc-600 bg-zinc-700 hover:border-zinc-500"
+                    : 'border-zinc-600 bg-zinc-700 hover:border-zinc-500'
                 }`}
               >
                 <SlatePreview shape={s} god={god} size="small" />
@@ -200,8 +200,8 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
                 onClick={() => setFlippedH((v) => !v)}
                 className={`rounded px-2 py-1 text-xs ${
                   flippedH
-                    ? "bg-amber-600 text-white"
-                    : "bg-zinc-700 text-zinc-200 hover:bg-zinc-600"
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-zinc-700 text-zinc-200 hover:bg-zinc-600'
                 }`}
                 title="Flip Horizontal"
               >
@@ -211,8 +211,8 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
                 onClick={() => setFlippedV((v) => !v)}
                 className={`rounded px-2 py-1 text-xs ${
                   flippedV
-                    ? "bg-amber-600 text-white"
-                    : "bg-zinc-700 text-zinc-200 hover:bg-zinc-600"
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-zinc-700 text-zinc-200 hover:bg-zinc-600'
                 }`}
                 title="Flip Vertical"
               >
@@ -235,13 +235,13 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
             >
               <span
                 className={`h-3 w-3 rounded-sm ${
-                  affix.type === "Legendary Medium"
-                    ? "bg-orange-500"
-                    : "bg-purple-500"
+                  affix.type === 'Legendary Medium'
+                    ? 'bg-orange-500'
+                    : 'bg-purple-500'
                 }`}
               />
               <span className="flex-1 text-sm text-zinc-200 truncate">
-                {affix.effect.split("\n")[0]}
+                {affix.effect.split('\n')[0]}
               </span>
               <button
                 onClick={() => handleRemoveAffix(index)}
@@ -265,8 +265,8 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
           options={affixOptions}
           placeholder={
             selectedAffixes.length >= MAX_SLATE_AFFIXES
-              ? "Max affixes reached"
-              : "Search affixes..."
+              ? 'Max affixes reached'
+              : 'Search affixes...'
           }
           disabled={selectedAffixes.length >= MAX_SLATE_AFFIXES}
         />
@@ -278,7 +278,7 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
           disabled={selectedAffixes.length === 0}
           className="flex-1 rounded bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-500 disabled:bg-zinc-600 disabled:cursor-not-allowed"
         >
-          {editingSlate ? "Update Slate" : "Save to Inventory"}
+          {editingSlate ? 'Update Slate' : 'Save to Inventory'}
         </button>
         {isPlaced && onRemoveFromGrid && (
           <button
@@ -298,5 +298,5 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}

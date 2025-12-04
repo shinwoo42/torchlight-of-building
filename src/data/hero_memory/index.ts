@@ -1,2 +1,2 @@
-export * from "./types";
-export * from "./hero_memories";
+export * from './types'
+export * from './hero_memories'

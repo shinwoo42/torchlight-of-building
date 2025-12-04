@@ -1,20 +1,20 @@
-import { BaseGearAffix } from "@/src/tli/gear_data_types";
-import { craft } from "@/src/tli/crafting/craft";
-import { AffixSlotState } from "../../lib/types";
-import { formatAffixOption } from "../../lib/affix-utils";
-import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
+import { BaseGearAffix } from '@/src/tli/gear_data_types'
+import { craft } from '@/src/tli/crafting/craft'
+import { AffixSlotState } from '../../lib/types'
+import { formatAffixOption } from '../../lib/affix-utils'
+import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
 
 interface AffixSlotProps {
-  slotIndex: number;
-  affixType: "Prefix" | "Suffix" | "Blend";
-  affixes: BaseGearAffix[];
-  selection: AffixSlotState;
-  onAffixSelect: (slotIndex: number, value: string) => void;
-  onSliderChange: (slotIndex: number, value: string) => void;
-  onClear: (slotIndex: number) => void;
-  hideQualitySlider?: boolean;
-  formatOption?: (affix: BaseGearAffix) => string;
-  formatCraftedText?: (affix: BaseGearAffix) => string;
+  slotIndex: number
+  affixType: 'Prefix' | 'Suffix' | 'Blend'
+  affixes: BaseGearAffix[]
+  selection: AffixSlotState
+  onAffixSelect: (slotIndex: number, value: string) => void
+  onSliderChange: (slotIndex: number, value: string) => void
+  onClear: (slotIndex: number) => void
+  hideQualitySlider?: boolean
+  formatOption?: (affix: BaseGearAffix) => string
+  formatCraftedText?: (affix: BaseGearAffix) => string
 }
 
 export const AffixSlotComponent: React.FC<AffixSlotProps> = ({
@@ -32,19 +32,19 @@ export const AffixSlotComponent: React.FC<AffixSlotProps> = ({
   const selectedAffix =
     selection.affixIndex !== undefined
       ? affixes[selection.affixIndex]
-      : undefined;
+      : undefined
   const craftedText = selectedAffix
     ? formatCraftedText
       ? formatCraftedText(selectedAffix)
       : craft(selectedAffix, selection.percentage)
-    : "";
+    : ''
 
   return (
     <div className="bg-zinc-800 p-4 rounded-lg">
       {/* Affix Dropdown */}
       <SearchableSelect
         value={selection.affixIndex ?? undefined}
-        onChange={(value) => onAffixSelect(slotIndex, value?.toString() ?? "")}
+        onChange={(value) => onAffixSelect(slotIndex, value?.toString() ?? '')}
         options={affixes.map((affix, idx) => ({
           value: idx,
           label: formatOption ? formatOption(affix) : formatAffixOption(affix),
@@ -79,7 +79,7 @@ export const AffixSlotComponent: React.FC<AffixSlotProps> = ({
           {/* Crafted Preview */}
           <div className="bg-zinc-900 p-3 rounded border border-zinc-700">
             <div
-              className={`text-sm font-medium mb-1 whitespace-pre-line ${hideQualitySlider ? "text-purple-400" : "text-amber-400"}`}
+              className={`text-sm font-medium mb-1 whitespace-pre-line ${hideQualitySlider ? 'text-purple-400' : 'text-amber-400'}`}
             >
               {craftedText}
             </div>
@@ -102,5 +102,5 @@ export const AffixSlotComponent: React.FC<AffixSlotProps> = ({
         </>
       )}
     </div>
-  );
-};
+  )
+}

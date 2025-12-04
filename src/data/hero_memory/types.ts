@@ -1,5 +1,5 @@
 export interface HeroMemory {
-  type: string;
-  item: string;
-  affix: string;
+  type: string
+  item: string
+  affix: string
 }

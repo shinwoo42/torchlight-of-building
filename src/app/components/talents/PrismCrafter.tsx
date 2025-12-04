@@ -1,33 +1,33 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from 'react'
 import {
   CraftedPrism,
   PrismRarity,
   PRISM_RARITIES,
-} from "@/src/app/lib/save-data";
-import { generateItemId } from "@/src/app/lib/storage";
+} from '@/src/app/lib/save-data'
+import { generateItemId } from '@/src/app/lib/storage'
 import {
   getBaseAffixes,
   getRareGaugeAffixes,
   getLegendaryGaugeAffixes,
   getMaxRareGaugeAffixes,
   getMaxLegendaryGaugeAffixes,
-} from "@/src/app/lib/prism-utils";
+} from '@/src/app/lib/prism-utils'
 import {
   SearchableSelect,
   SearchableSelectOption,
-} from "@/src/app/components/ui/SearchableSelect";
+} from '@/src/app/components/ui/SearchableSelect'
 
 interface PrismCrafterProps {
-  editingPrism: CraftedPrism | undefined;
-  onSave: (prism: CraftedPrism) => void;
-  onCancel?: () => void;
+  editingPrism: CraftedPrism | undefined
+  onSave: (prism: CraftedPrism) => void
+  onCancel?: () => void
 }
 
 interface SelectedGaugeAffix {
-  affix: string;
-  isLegendary: boolean;
+  affix: string
+  isLegendary: boolean
 }
 
 export const PrismCrafter: React.FC<PrismCrafterProps> = ({
@@ -36,120 +36,120 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
   onCancel,
 }) => {
   const [rarity, setRarity] = useState<PrismRarity>(
-    editingPrism?.rarity ?? "rare",
-  );
+    editingPrism?.rarity ?? 'rare',
+  )
   const [baseAffix, setBaseAffix] = useState<string | undefined>(
     editingPrism?.baseAffix,
-  );
+  )
   const [selectedGaugeAffixes, setSelectedGaugeAffixes] = useState<
     SelectedGaugeAffix[]
-  >([]);
+  >([])
 
   /* eslint-disable react-hooks/set-state-in-effect -- sync state with prop changes */
   useEffect(() => {
     if (editingPrism) {
-      setRarity(editingPrism.rarity);
-      setBaseAffix(editingPrism.baseAffix);
+      setRarity(editingPrism.rarity)
+      setBaseAffix(editingPrism.baseAffix)
 
-      const legendaryGauges = getLegendaryGaugeAffixes();
+      const legendaryGauges = getLegendaryGaugeAffixes()
 
       const gaugeAffixes: SelectedGaugeAffix[] = editingPrism.gaugeAffixes.map(
         (affix) => ({
           affix,
           isLegendary: legendaryGauges.some((g) => g.affix === affix),
         }),
-      );
-      setSelectedGaugeAffixes(gaugeAffixes);
+      )
+      setSelectedGaugeAffixes(gaugeAffixes)
     } else {
-      setSelectedGaugeAffixes([]);
-      setBaseAffix(undefined);
+      setSelectedGaugeAffixes([])
+      setBaseAffix(undefined)
     }
-  }, [editingPrism]);
+  }, [editingPrism])
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const baseAffixOptions = useMemo((): SearchableSelectOption<string>[] => {
     return getBaseAffixes(rarity).map((affix) => ({
       value: affix.affix,
-      label: affix.affix.split("\n")[0].slice(0, 80) + "...",
-    }));
-  }, [rarity]);
+      label: affix.affix.split('\n')[0].slice(0, 80) + '...',
+    }))
+  }, [rarity])
 
   const rareGaugeCount = selectedGaugeAffixes.filter(
     (a) => !a.isLegendary,
-  ).length;
+  ).length
   const legendaryGaugeCount = selectedGaugeAffixes.filter(
     (a) => a.isLegendary,
-  ).length;
+  ).length
 
-  const maxRare = getMaxRareGaugeAffixes();
-  const maxLegendary = getMaxLegendaryGaugeAffixes(rarity);
+  const maxRare = getMaxRareGaugeAffixes()
+  const maxLegendary = getMaxLegendaryGaugeAffixes(rarity)
 
   const rareGaugeOptions = useMemo((): SearchableSelectOption<string>[] => {
-    if (rareGaugeCount >= maxRare) return [];
+    if (rareGaugeCount >= maxRare) return []
     return getRareGaugeAffixes().map((affix) => ({
       value: affix.affix,
-      label: affix.affix.split("\n")[0],
-      sublabel: "Rare",
-    }));
-  }, [rareGaugeCount, maxRare]);
+      label: affix.affix.split('\n')[0],
+      sublabel: 'Rare',
+    }))
+  }, [rareGaugeCount, maxRare])
 
   const legendaryGaugeOptions =
     useMemo((): SearchableSelectOption<string>[] => {
-      if (legendaryGaugeCount >= maxLegendary) return [];
+      if (legendaryGaugeCount >= maxLegendary) return []
       return getLegendaryGaugeAffixes().map((affix) => ({
         value: affix.affix,
-        label: affix.affix.split("\n")[0],
-        sublabel: "Legendary",
-      }));
-    }, [legendaryGaugeCount, maxLegendary]);
+        label: affix.affix.split('\n')[0],
+        sublabel: 'Legendary',
+      }))
+    }, [legendaryGaugeCount, maxLegendary])
 
   const handleRarityChange = (newRarity: PrismRarity) => {
-    if (newRarity === rarity) return;
-    setRarity(newRarity);
-    setBaseAffix(undefined);
-    if (newRarity === "rare") {
-      setSelectedGaugeAffixes((prev) => prev.filter((a) => !a.isLegendary));
+    if (newRarity === rarity) return
+    setRarity(newRarity)
+    setBaseAffix(undefined)
+    if (newRarity === 'rare') {
+      setSelectedGaugeAffixes((prev) => prev.filter((a) => !a.isLegendary))
     }
-  };
+  }
 
   const handleAddGaugeAffix = (
     affixValue: string | undefined,
     isLegendary: boolean,
   ) => {
-    if (!affixValue) return;
+    if (!affixValue) return
     setSelectedGaugeAffixes([
       ...selectedGaugeAffixes,
       { affix: affixValue, isLegendary },
-    ]);
-  };
+    ])
+  }
 
   const handleRemoveGaugeAffix = (index: number) => {
-    setSelectedGaugeAffixes(selectedGaugeAffixes.filter((_, i) => i !== index));
-  };
+    setSelectedGaugeAffixes(selectedGaugeAffixes.filter((_, i) => i !== index))
+  }
 
   const handleSave = () => {
-    if (!baseAffix) return;
+    if (!baseAffix) return
 
     const prism: CraftedPrism = {
       id: editingPrism?.id ?? generateItemId(),
       rarity,
       baseAffix,
       gaugeAffixes: selectedGaugeAffixes.map((a) => a.affix),
-    };
-    onSave(prism);
+    }
+    onSave(prism)
 
     if (!editingPrism) {
-      setSelectedGaugeAffixes([]);
-      setBaseAffix(undefined);
+      setSelectedGaugeAffixes([])
+      setBaseAffix(undefined)
     }
-  };
+  }
 
-  const canSave = baseAffix !== undefined;
+  const canSave = baseAffix !== undefined
 
   return (
     <div className="rounded-lg border border-zinc-700 bg-zinc-800 p-4">
       <h3 className="mb-4 text-lg font-medium text-zinc-200">
-        {editingPrism ? "Edit Prism" : "Craft Prism"}
+        {editingPrism ? 'Edit Prism' : 'Craft Prism'}
       </h3>
 
       <div className="mb-4">
@@ -161,10 +161,10 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
               onClick={() => handleRarityChange(r)}
               className={`rounded px-3 py-1 text-sm capitalize transition-colors ${
                 rarity === r
-                  ? r === "legendary"
-                    ? "bg-orange-600 text-white"
-                    : "bg-purple-600 text-white"
-                  : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
+                  ? r === 'legendary'
+                    ? 'bg-orange-600 text-white'
+                    : 'bg-purple-600 text-white'
+                  : 'bg-zinc-700 text-zinc-300 hover:bg-zinc-600'
               }`}
             >
               {r}
@@ -200,11 +200,11 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
             >
               <span
                 className={`h-3 w-3 rounded-sm ${
-                  gauge.isLegendary ? "bg-orange-500" : "bg-purple-500"
+                  gauge.isLegendary ? 'bg-orange-500' : 'bg-purple-500'
                 }`}
               />
               <span className="flex-1 text-sm text-zinc-200 truncate">
-                {gauge.affix.split("\n")[0]}
+                {gauge.affix.split('\n')[0]}
               </span>
               <button
                 onClick={() => handleRemoveGaugeAffix(index)}
@@ -234,7 +234,7 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
         </div>
       )}
 
-      {rarity === "legendary" && legendaryGaugeCount < maxLegendary && (
+      {rarity === 'legendary' && legendaryGaugeCount < maxLegendary && (
         <div className="mb-4">
           <label className="mb-2 block text-sm text-zinc-400">
             Add Legendary Gauge ({legendaryGaugeCount}/{maxLegendary})
@@ -254,7 +254,7 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
           disabled={!canSave}
           className="flex-1 rounded bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-500 disabled:cursor-not-allowed disabled:bg-zinc-600"
         >
-          {editingPrism ? "Update Prism" : "Save to Inventory"}
+          {editingPrism ? 'Update Prism' : 'Save to Inventory'}
         </button>
         {onCancel && (
           <button
@@ -266,5 +266,5 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}

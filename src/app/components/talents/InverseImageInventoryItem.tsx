@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { CraftedInverseImage } from "@/src/app/lib/save-data";
-import { formatEffectModifier } from "@/src/app/lib/inverse-image-utils";
-import { useTooltip } from "@/src/app/hooks/useTooltip";
-import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
+import { CraftedInverseImage } from '@/src/app/lib/save-data'
+import { formatEffectModifier } from '@/src/app/lib/inverse-image-utils'
+import { useTooltip } from '@/src/app/hooks/useTooltip'
+import { Tooltip, TooltipTitle } from '@/src/app/components/ui/Tooltip'
 
 interface InverseImageInventoryItemProps {
-  inverseImage: CraftedInverseImage;
-  onEdit: () => void;
-  onCopy: () => void;
-  onDelete: () => void;
-  isSelected?: boolean;
-  onSelect?: () => void;
-  selectionMode?: boolean;
+  inverseImage: CraftedInverseImage
+  onEdit: () => void
+  onCopy: () => void
+  onDelete: () => void
+  isSelected?: boolean
+  onSelect?: () => void
+  selectionMode?: boolean
 }
 
 export const InverseImageInventoryItem: React.FC<
@@ -26,22 +26,22 @@ export const InverseImageInventoryItem: React.FC<
   onSelect,
   selectionMode = false,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isHovered, mousePos, handlers } = useTooltip()
 
   const handleClick = () => {
     if (selectionMode && onSelect) {
-      onSelect();
+      onSelect()
     }
-  };
+  }
 
   return (
     <>
       <div
         className={`flex items-center gap-3 rounded border p-2 transition-colors ${
           isSelected
-            ? "border-cyan-500 bg-cyan-500/20 ring-1 ring-cyan-500"
-            : "border-zinc-700 bg-zinc-900 hover:border-zinc-600"
-        } ${selectionMode ? "cursor-pointer" : ""}`}
+            ? 'border-cyan-500 bg-cyan-500/20 ring-1 ring-cyan-500'
+            : 'border-zinc-700 bg-zinc-900 hover:border-zinc-600'
+        } ${selectionMode ? 'cursor-pointer' : ''}`}
         onClick={handleClick}
         {...handlers}
       >
@@ -58,7 +58,7 @@ export const InverseImageInventoryItem: React.FC<
           <div className="text-xs text-zinc-400 truncate">
             Micro: {formatEffectModifier(inverseImage.microTalentEffect)} |
             Medium: {formatEffectModifier(inverseImage.mediumTalentEffect)} |
-            Legendary:{" "}
+            Legendary:{' '}
             {formatEffectModifier(inverseImage.legendaryTalentEffect)}
           </div>
         </div>
@@ -66,8 +66,8 @@ export const InverseImageInventoryItem: React.FC<
         <div className="flex items-center gap-1">
           <button
             onClick={(e) => {
-              e.stopPropagation();
-              onEdit();
+              e.stopPropagation()
+              onEdit()
             }}
             className="rounded bg-zinc-700 px-2 py-1 text-xs text-zinc-300 hover:bg-zinc-600"
           >
@@ -75,8 +75,8 @@ export const InverseImageInventoryItem: React.FC<
           </button>
           <button
             onClick={(e) => {
-              e.stopPropagation();
-              onCopy();
+              e.stopPropagation()
+              onCopy()
             }}
             className="rounded bg-zinc-700 px-2 py-1 text-xs text-zinc-300 hover:bg-zinc-600"
           >
@@ -84,8 +84,8 @@ export const InverseImageInventoryItem: React.FC<
           </button>
           <button
             onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
+              e.stopPropagation()
+              onDelete()
             }}
             className="rounded bg-zinc-700 px-2 py-1 text-xs text-red-400 hover:bg-red-900"
           >
@@ -123,5 +123,5 @@ export const InverseImageInventoryItem: React.FC<
         </div>
       </Tooltip>
     </>
-  );
-};
+  )
+}

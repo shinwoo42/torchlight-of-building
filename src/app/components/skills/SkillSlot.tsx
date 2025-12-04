@@ -1,34 +1,34 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { SkillWithSupports, SupportSkills } from "@/src/app/lib/save-data";
-import { SupportSkillSelector } from "./SupportSkillSelector";
+import { useState } from 'react'
+import { SkillWithSupports, SupportSkills } from '@/src/app/lib/save-data'
+import { SupportSkillSelector } from './SupportSkillSelector'
 import {
   SearchableSelect,
   SearchableSelectOption,
-} from "@/src/app/components/ui/SearchableSelect";
+} from '@/src/app/components/ui/SearchableSelect'
 
-type SupportSkillKey = keyof SupportSkills;
+type SupportSkillKey = keyof SupportSkills
 
 const SUPPORT_SKILL_KEYS: SupportSkillKey[] = [
-  "supportSkill1",
-  "supportSkill2",
-  "supportSkill3",
-  "supportSkill4",
-  "supportSkill5",
-];
+  'supportSkill1',
+  'supportSkill2',
+  'supportSkill3',
+  'supportSkill4',
+  'supportSkill5',
+]
 
 interface SkillSlotProps {
-  slotLabel: string;
-  skill: SkillWithSupports;
-  availableSkills: readonly { name: string }[];
-  excludedSkillNames: string[];
-  onSkillChange: (skillName: string | undefined) => void;
-  onToggle: () => void;
+  slotLabel: string
+  skill: SkillWithSupports
+  availableSkills: readonly { name: string }[]
+  excludedSkillNames: string[]
+  onSkillChange: (skillName: string | undefined) => void
+  onToggle: () => void
   onUpdateSupport: (
     supportKey: SupportSkillKey,
     supportName: string | undefined,
-  ) => void;
+  ) => void
 }
 
 export const SkillSlot: React.FC<SkillSlotProps> = ({
@@ -40,19 +40,19 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
   onToggle,
   onUpdateSupport,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false)
 
   const selectedSupports = SUPPORT_SKILL_KEYS.map(
     (key) => skill.supportSkills[key],
-  ).filter((s): s is string => s !== undefined);
+  ).filter((s): s is string => s !== undefined)
 
-  const supportCount = selectedSupports.length;
-  const hasSkill = skill.skillName !== undefined;
+  const supportCount = selectedSupports.length
+  const hasSkill = skill.skillName !== undefined
 
   // Filter available skills to exclude already-selected ones (but keep current selection)
   const filteredSkills = availableSkills.filter(
     (s) => s.name === skill.skillName || !excludedSkillNames.includes(s.name),
-  );
+  )
 
   return (
     <div className="bg-zinc-900 rounded-lg border border-zinc-700">
@@ -86,7 +86,7 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
               onClick={() => setExpanded(!expanded)}
               className="px-3 py-1 bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 hover:border-amber-500 rounded text-sm text-zinc-400"
             >
-              {expanded ? "Hide" : "Supports"} ({supportCount}/5)
+              {expanded ? 'Hide' : 'Supports'} ({supportCount}/5)
             </button>
           )}
         </div>
@@ -111,5 +111,5 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

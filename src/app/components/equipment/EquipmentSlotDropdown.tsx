@@ -1,13 +1,13 @@
-import { Gear } from "@/src/app/lib/save-data";
-import { GearSlot } from "../../lib/types";
-import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
+import { Gear } from '@/src/app/lib/save-data'
+import { GearSlot } from '../../lib/types'
+import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
 
 interface EquipmentSlotDropdownProps {
-  slot: GearSlot;
-  label: string;
-  selectedItemId: string | null;
-  compatibleItems: Gear[];
-  onSelectItem: (slot: GearSlot, itemId: string | null) => void;
+  slot: GearSlot
+  label: string
+  selectedItemId: string | null
+  compatibleItems: Gear[]
+  onSelectItem: (slot: GearSlot, itemId: string | null) => void
 }
 
 export const EquipmentSlotDropdown: React.FC<EquipmentSlotDropdownProps> = ({
@@ -32,5 +32,5 @@ export const EquipmentSlotDropdown: React.FC<EquipmentSlotDropdownProps> = ({
         className="flex-1"
       />
     </div>
-  );
-};
+  )
+}

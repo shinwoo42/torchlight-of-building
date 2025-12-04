@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { CraftedPrism } from "@/src/app/lib/save-data";
-import { PrismCrafter } from "./PrismCrafter";
-import { PrismInventory } from "./PrismInventory";
+import { useState } from 'react'
+import { CraftedPrism } from '@/src/app/lib/save-data'
+import { PrismCrafter } from './PrismCrafter'
+import { PrismInventory } from './PrismInventory'
 
 interface PrismSectionProps {
-  prisms: CraftedPrism[];
-  onSave: (prism: CraftedPrism) => void;
-  onUpdate: (prism: CraftedPrism) => void;
-  onCopy: (prism: CraftedPrism) => void;
-  onDelete: (prismId: string) => void;
-  selectedPrismId?: string;
-  onSelectPrism?: (prismId: string | undefined) => void;
-  hasPrismPlaced?: boolean;
-  isOnGodGoddessTree?: boolean;
+  prisms: CraftedPrism[]
+  onSave: (prism: CraftedPrism) => void
+  onUpdate: (prism: CraftedPrism) => void
+  onCopy: (prism: CraftedPrism) => void
+  onDelete: (prismId: string) => void
+  selectedPrismId?: string
+  onSelectPrism?: (prismId: string | undefined) => void
+  hasPrismPlaced?: boolean
+  isOnGodGoddessTree?: boolean
 }
 
 export const PrismSection: React.FC<PrismSectionProps> = ({
@@ -30,24 +30,24 @@ export const PrismSection: React.FC<PrismSectionProps> = ({
 }) => {
   const [editingPrism, setEditingPrism] = useState<CraftedPrism | undefined>(
     undefined,
-  );
+  )
 
   const handleSave = (prism: CraftedPrism) => {
     if (editingPrism) {
-      onUpdate(prism);
-      setEditingPrism(undefined);
+      onUpdate(prism)
+      setEditingPrism(undefined)
     } else {
-      onSave(prism);
+      onSave(prism)
     }
-  };
+  }
 
   const handleEdit = (prism: CraftedPrism) => {
-    setEditingPrism(prism);
-  };
+    setEditingPrism(prism)
+  }
 
   const handleCancel = () => {
-    setEditingPrism(undefined);
-  };
+    setEditingPrism(undefined)
+  }
 
   return (
     <div className="mt-8">
@@ -74,5 +74,5 @@ export const PrismSection: React.FC<PrismSectionProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

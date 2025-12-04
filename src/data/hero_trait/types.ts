@@ -1,6 +1,6 @@
 export interface HeroTrait {
-  hero: string;
-  name: string;
-  level: number;
-  affix: string;
+  hero: string
+  name: string
+  level: number
+  affix: string
 }

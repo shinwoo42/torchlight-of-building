@@ -1,33 +1,33 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Pactspirits } from "@/src/data/pactspirit/pactspirits";
-import { PactspiritSlot } from "@/src/app/lib/save-data";
+import { useState } from 'react'
+import { Pactspirits } from '@/src/data/pactspirit/pactspirits'
+import { PactspiritSlot } from '@/src/app/lib/save-data'
 import {
   RingSlotKey,
   RING_DISPLAY_ORDER,
   PactspiritSlotIndex,
   InstalledDestinyResult,
-} from "../../lib/types";
+} from '../../lib/types'
 import {
   getPactspiritByName,
   getPactspiritLevelAffix,
   getPactspiritRing,
-} from "../../lib/pactspirit-utils";
-import { RingSlot } from "./RingSlot";
-import { DestinySelectionModal } from "../modals/DestinySelectionModal";
-import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
+} from '../../lib/pactspirit-utils'
+import { RingSlot } from './RingSlot'
+import { DestinySelectionModal } from '../modals/DestinySelectionModal'
+import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
 
 interface PactspiritColumnProps {
-  slotIndex: PactspiritSlotIndex;
-  slot: PactspiritSlot;
-  onPactspiritSelect: (pactspiritName: string | undefined) => void;
-  onLevelChange: (level: number) => void;
+  slotIndex: PactspiritSlotIndex
+  slot: PactspiritSlot
+  onPactspiritSelect: (pactspiritName: string | undefined) => void
+  onLevelChange: (level: number) => void
   onInstallDestiny: (
     ringSlot: RingSlotKey,
     destiny: InstalledDestinyResult,
-  ) => void;
-  onRevertRing: (ringSlot: RingSlotKey) => void;
+  ) => void
+  onRevertRing: (ringSlot: RingSlotKey) => void
 }
 
 export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
@@ -38,36 +38,36 @@ export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
   onInstallDestiny,
   onRevertRing,
 }) => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false)
   const [activeRingSlot, setActiveRingSlot] = useState<RingSlotKey | undefined>(
     undefined,
-  );
+  )
 
   const selectedPactspirit = slot.pactspiritName
     ? getPactspiritByName(slot.pactspiritName)
-    : undefined;
+    : undefined
 
   const levelAffix = selectedPactspirit
     ? getPactspiritLevelAffix(selectedPactspirit, slot.level)
-    : "";
+    : ''
 
   const handleInstallClick = (ringSlot: RingSlotKey) => {
-    setActiveRingSlot(ringSlot);
-    setModalOpen(true);
-  };
+    setActiveRingSlot(ringSlot)
+    setModalOpen(true)
+  }
 
   const handleConfirmDestiny = (destiny: InstalledDestinyResult) => {
     if (activeRingSlot) {
-      onInstallDestiny(activeRingSlot, destiny);
+      onInstallDestiny(activeRingSlot, destiny)
     }
-    setModalOpen(false);
-    setActiveRingSlot(undefined);
-  };
+    setModalOpen(false)
+    setActiveRingSlot(undefined)
+  }
 
   const handleCloseModal = () => {
-    setModalOpen(false);
-    setActiveRingSlot(undefined);
-  };
+    setModalOpen(false)
+    setActiveRingSlot(undefined)
+  }
 
   return (
     <div className="flex-1 bg-zinc-900 rounded-lg p-4 border border-zinc-800">
@@ -123,10 +123,7 @@ export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-zinc-400 mb-2">Ring Slots</h4>
           {RING_DISPLAY_ORDER.map((ringSlot) => {
-            const originalRing = getPactspiritRing(
-              selectedPactspirit,
-              ringSlot,
-            );
+            const originalRing = getPactspiritRing(selectedPactspirit, ringSlot)
             return (
               <RingSlot
                 key={ringSlot}
@@ -136,7 +133,7 @@ export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
                 onInstallClick={() => handleInstallClick(ringSlot)}
                 onRevert={() => onRevertRing(ringSlot)}
               />
-            );
+            )
           })}
         </div>
       )}
@@ -158,5 +155,5 @@ export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
         />
       )}
     </div>
-  );
-};
+  )
+}

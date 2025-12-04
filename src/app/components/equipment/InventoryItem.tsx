@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { Gear } from "@/src/app/lib/save-data";
-import { useTooltip } from "@/src/app/hooks/useTooltip";
-import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
+import { Gear } from '@/src/app/lib/save-data'
+import { useTooltip } from '@/src/app/hooks/useTooltip'
+import { Tooltip, TooltipTitle } from '@/src/app/components/ui/Tooltip'
 
 interface InventoryItemProps {
-  item: Gear;
-  isEquipped: boolean;
-  onCopy: (item: Gear) => void;
-  onDelete: (id: string) => void;
+  item: Gear
+  isEquipped: boolean
+  onCopy: (item: Gear) => void
+  onDelete: (id: string) => void
 }
 
 export const InventoryItem: React.FC<InventoryItemProps> = ({
@@ -17,14 +17,14 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
   onCopy,
   onDelete,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isHovered, mousePos, handlers } = useTooltip()
 
-  const isLegendary = item.rarity === "legendary";
+  const isLegendary = item.rarity === 'legendary'
 
   return (
     <div
       className={`group relative flex items-center justify-between p-3 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors border ${
-        isLegendary ? "border-amber-500/50" : "border-transparent"
+        isLegendary ? 'border-amber-500/50' : 'border-transparent'
       }`}
       {...handlers}
     >
@@ -62,7 +62,7 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
       <Tooltip
         isVisible={isHovered}
         mousePos={mousePos}
-        variant={isLegendary ? "legendary" : "default"}
+        variant={isLegendary ? 'legendary' : 'default'}
       >
         <TooltipTitle>{item.legendaryName ?? item.equipmentType}</TooltipTitle>
         {isLegendary && (
@@ -84,5 +84,5 @@ export const InventoryItem: React.FC<InventoryItemProps> = ({
         )}
       </Tooltip>
     </div>
-  );
-};
+  )
+}

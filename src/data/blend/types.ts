@@ -1,4 +1,4 @@
 export interface Blend {
-  type: string;
-  affix: string;
+  type: string
+  affix: string
 }

@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { create } from "zustand";
-import { PactspiritSlotIndex, RingSlotKey } from "../lib/types";
+import { create } from 'zustand'
+import { PactspiritSlotIndex, RingSlotKey } from '../lib/types'
 
 interface PactspiritUIState {
   // Destiny selection modal state
-  isDestinyModalOpen: boolean;
-  destinyModalSlotIndex: PactspiritSlotIndex | undefined;
-  destinyModalRingSlot: RingSlotKey | undefined;
+  isDestinyModalOpen: boolean
+  destinyModalSlotIndex: PactspiritSlotIndex | undefined
+  destinyModalRingSlot: RingSlotKey | undefined
 
   // Actions
   openDestinyModal: (
     slotIndex: PactspiritSlotIndex,
     ringSlot: RingSlotKey,
-  ) => void;
-  closeDestinyModal: () => void;
+  ) => void
+  closeDestinyModal: () => void
 }
 
 export const usePactspiritUIStore = create<PactspiritUIState>((set) => ({
@@ -37,4 +37,4 @@ export const usePactspiritUIStore = create<PactspiritUIState>((set) => ({
       destinyModalSlotIndex: undefined,
       destinyModalRingSlot: undefined,
     }),
-}));
+}))

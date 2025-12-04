@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
 interface ToastProps {
-  message: string;
-  isVisible: boolean;
-  onDismiss: () => void;
-  duration?: number;
-  variant?: "warning" | "success";
+  message: string
+  isVisible: boolean
+  onDismiss: () => void
+  duration?: number
+  variant?: 'warning' | 'success'
 }
 
 export const Toast: React.FC<ToastProps> = ({
@@ -15,20 +15,20 @@ export const Toast: React.FC<ToastProps> = ({
   isVisible,
   onDismiss,
   duration = 5000,
-  variant = "warning",
+  variant = 'warning',
 }) => {
   useEffect(() => {
     if (isVisible && duration > 0) {
-      const timer = setTimeout(onDismiss, duration);
-      return () => clearTimeout(timer);
+      const timer = setTimeout(onDismiss, duration)
+      return () => clearTimeout(timer)
     }
-  }, [isVisible, duration, onDismiss]);
+  }, [isVisible, duration, onDismiss])
 
-  if (!isVisible) return null;
+  if (!isVisible) return null
 
-  const iconColor = variant === "success" ? "text-green-500" : "text-amber-500";
+  const iconColor = variant === 'success' ? 'text-green-500' : 'text-amber-500'
   const borderColor =
-    variant === "success" ? "border-green-600/50" : "border-zinc-600";
+    variant === 'success' ? 'border-green-600/50' : 'border-zinc-600'
 
   return (
     <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-4 fade-in duration-300">
@@ -36,7 +36,7 @@ export const Toast: React.FC<ToastProps> = ({
         className={`bg-zinc-800 border ${borderColor} rounded-lg shadow-lg p-4 flex items-center gap-3 max-w-md`}
       >
         <div className={iconColor}>
-          {variant === "success" ? (
+          {variant === 'success' ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -84,5 +84,5 @@ export const Toast: React.FC<ToastProps> = ({
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

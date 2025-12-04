@@ -1,14 +1,14 @@
-import React from "react";
-import type { PlacedPrism } from "@/src/app/lib/save-data";
-import type { TreeSlot } from "@/src/app/lib/types";
+import React from 'react'
+import type { PlacedPrism } from '@/src/app/lib/save-data'
+import type { TreeSlot } from '@/src/app/lib/types'
 import {
   getPrismCoreTalentEffect,
   getPrismReplacedCoreTalent,
-} from "@/src/app/lib/prism-utils";
+} from '@/src/app/lib/prism-utils'
 
 interface PrismCoreTalentEffectProps {
-  placedPrism: PlacedPrism | undefined;
-  activeTreeSlot: TreeSlot;
+  placedPrism: PlacedPrism | undefined
+  activeTreeSlot: TreeSlot
 }
 
 const PrismIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -22,21 +22,21 @@ const PrismIcon: React.FC<{ className?: string }> = ({ className }) => (
       strokeLinejoin="round"
     />
   </svg>
-);
+)
 
 export const PrismCoreTalentEffect: React.FC<PrismCoreTalentEffectProps> = ({
   placedPrism,
   activeTreeSlot,
 }) => {
   if (!placedPrism || placedPrism.treeSlot !== activeTreeSlot) {
-    return null;
+    return null
   }
 
   // Check for "Adds" effect (rare prisms)
-  const addedEffect = getPrismCoreTalentEffect(placedPrism.prism);
+  const addedEffect = getPrismCoreTalentEffect(placedPrism.prism)
 
   // Check for "Replaces" effect (legendary prisms)
-  const replacedTalent = getPrismReplacedCoreTalent(placedPrism.prism);
+  const replacedTalent = getPrismReplacedCoreTalent(placedPrism.prism)
 
   // Display "Adds" effect
   if (addedEffect) {
@@ -52,7 +52,7 @@ export const PrismCoreTalentEffect: React.FC<PrismCoreTalentEffectProps> = ({
           {addedEffect}
         </div>
       </div>
-    );
+    )
   }
 
   // Display "Replaces" ethereal talent
@@ -69,8 +69,8 @@ export const PrismCoreTalentEffect: React.FC<PrismCoreTalentEffectProps> = ({
           {replacedTalent}
         </div>
       </div>
-    );
+    )
   }
 
-  return null;
-};
+  return null
+}

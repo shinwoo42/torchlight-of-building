@@ -1,41 +1,41 @@
-"use client";
+'use client'
 
-import { create } from "zustand";
-import { DivinityGod, SlateShape, DivinityAffixType } from "../lib/save-data";
-import { MAX_SLATE_AFFIXES } from "../lib/constants";
+import { create } from 'zustand'
+import { DivinityGod, SlateShape, DivinityAffixType } from '../lib/save-data'
+import { MAX_SLATE_AFFIXES } from '../lib/constants'
 
 interface SelectedSlateAffix {
-  effect: string;
-  affixType: DivinityAffixType;
+  effect: string
+  affixType: DivinityAffixType
 }
 
 interface DivinityUIState {
   // Slate crafting state
-  craftingGod: DivinityGod | undefined;
-  craftingShape: SlateShape;
-  craftingAffixes: SelectedSlateAffix[];
+  craftingGod: DivinityGod | undefined
+  craftingShape: SlateShape
+  craftingAffixes: SelectedSlateAffix[]
 
   // Dragging state
-  draggingSlateId: string | undefined;
-  previewPosition: { row: number; col: number } | undefined;
+  draggingSlateId: string | undefined
+  previewPosition: { row: number; col: number } | undefined
 
   // Actions
-  setCraftingGod: (god: DivinityGod | undefined) => void;
-  setCraftingShape: (shape: SlateShape) => void;
-  addCraftingAffix: (affix: SelectedSlateAffix) => void;
-  removeCraftingAffix: (index: number) => void;
-  resetSlateCrafting: () => void;
+  setCraftingGod: (god: DivinityGod | undefined) => void
+  setCraftingShape: (shape: SlateShape) => void
+  addCraftingAffix: (affix: SelectedSlateAffix) => void
+  removeCraftingAffix: (index: number) => void
+  resetSlateCrafting: () => void
 
-  setDraggingSlateId: (id: string | undefined) => void;
+  setDraggingSlateId: (id: string | undefined) => void
   setPreviewPosition: (
     position: { row: number; col: number } | undefined,
-  ) => void;
+  ) => void
 }
 
 export const useDivinityUIStore = create<DivinityUIState>((set) => ({
   // Initial state
   craftingGod: undefined,
-  craftingShape: "O",
+  craftingShape: 'O',
   craftingAffixes: [],
   draggingSlateId: undefined,
   previewPosition: undefined,
@@ -51,12 +51,12 @@ export const useDivinityUIStore = create<DivinityUIState>((set) => ({
 
   addCraftingAffix: (affix) =>
     set((state) => {
-      if (state.craftingAffixes.length >= MAX_SLATE_AFFIXES) return state;
+      if (state.craftingAffixes.length >= MAX_SLATE_AFFIXES) return state
       if (state.craftingAffixes.some((a) => a.effect === affix.effect))
-        return state;
+        return state
       return {
         craftingAffixes: [...state.craftingAffixes, affix],
-      };
+      }
     }),
 
   removeCraftingAffix: (index) =>
@@ -67,11 +67,11 @@ export const useDivinityUIStore = create<DivinityUIState>((set) => ({
   resetSlateCrafting: () =>
     set({
       craftingGod: undefined,
-      craftingShape: "O",
+      craftingShape: 'O',
       craftingAffixes: [],
     }),
 
   setDraggingSlateId: (id) => set({ draggingSlateId: id }),
 
   setPreviewPosition: (position) => set({ previewPosition: position }),
-}));
+}))

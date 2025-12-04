@@ -1,39 +1,39 @@
-"use client";
+'use client'
 
-import { create } from "zustand";
-import { HeroMemoryType } from "../lib/save-data";
-import { DEFAULT_QUALITY } from "../lib/constants";
+import { create } from 'zustand'
+import { HeroMemoryType } from '../lib/save-data'
+import { DEFAULT_QUALITY } from '../lib/constants'
 
 interface MemoryAffixSlotState {
-  effectIndex: number | undefined;
-  quality: number;
+  effectIndex: number | undefined
+  quality: number
 }
 
 interface HeroUIState {
   // Memory crafting state
-  craftingMemoryType: HeroMemoryType | undefined;
-  craftingBaseStat: string | undefined;
-  fixedAffixSlots: MemoryAffixSlotState[];
-  randomAffixSlots: MemoryAffixSlotState[];
+  craftingMemoryType: HeroMemoryType | undefined
+  craftingBaseStat: string | undefined
+  fixedAffixSlots: MemoryAffixSlotState[]
+  randomAffixSlots: MemoryAffixSlotState[]
 
   // Actions
-  setCraftingMemoryType: (type: HeroMemoryType | undefined) => void;
-  setCraftingBaseStat: (stat: string | undefined) => void;
+  setCraftingMemoryType: (type: HeroMemoryType | undefined) => void
+  setCraftingBaseStat: (stat: string | undefined) => void
   setFixedAffixSlot: (
     index: number,
     update: Partial<MemoryAffixSlotState>,
-  ) => void;
+  ) => void
   setRandomAffixSlot: (
     index: number,
     update: Partial<MemoryAffixSlotState>,
-  ) => void;
-  resetMemoryCrafting: () => void;
+  ) => void
+  resetMemoryCrafting: () => void
 }
 
 const createEmptyAffixSlots = (count: number): MemoryAffixSlotState[] =>
   Array(count)
     .fill(null)
-    .map(() => ({ effectIndex: undefined, quality: DEFAULT_QUALITY }));
+    .map(() => ({ effectIndex: undefined, quality: DEFAULT_QUALITY }))
 
 export const useHeroUIStore = create<HeroUIState>((set) => ({
   // Initial state
@@ -74,4 +74,4 @@ export const useHeroUIStore = create<HeroUIState>((set) => ({
       fixedAffixSlots: createEmptyAffixSlots(2),
       randomAffixSlots: createEmptyAffixSlots(4),
     }),
-}));
+}))

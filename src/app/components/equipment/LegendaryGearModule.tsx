@@ -1,102 +1,102 @@
-"use client";
+'use client'
 
-import { useState, useMemo } from "react";
-import { Gear } from "@/src/app/lib/save-data";
-import { Legendaries } from "@/src/data/legendary/legendaries";
-import { craft } from "@/src/tli/crafting/craft";
-import { generateItemId } from "../../lib/storage";
-import { getGearTypeFromEquipmentType } from "../../lib/equipment-utils";
-import { DEFAULT_QUALITY } from "../../lib/constants";
-import { SearchableSelect } from "../ui/SearchableSelect";
-import { LegendaryAffixRow, LegendaryAffixState } from "./LegendaryAffixRow";
+import { useState, useMemo } from 'react'
+import { Gear } from '@/src/app/lib/save-data'
+import { Legendaries } from '@/src/data/legendary/legendaries'
+import { craft } from '@/src/tli/crafting/craft'
+import { generateItemId } from '../../lib/storage'
+import { getGearTypeFromEquipmentType } from '../../lib/equipment-utils'
+import { DEFAULT_QUALITY } from '../../lib/constants'
+import { SearchableSelect } from '../ui/SearchableSelect'
+import { LegendaryAffixRow, LegendaryAffixState } from './LegendaryAffixRow'
 
 interface LegendaryGearModuleProps {
-  onSaveToInventory: (item: Gear) => void;
+  onSaveToInventory: (item: Gear) => void
 }
 
 const craftAffix = (affix: string, percentage: number): string => {
-  return craft({ craftableAffix: affix }, percentage);
-};
+  return craft({ craftableAffix: affix }, percentage)
+}
 
 export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
   onSaveToInventory,
 }) => {
   const [selectedLegendaryIndex, setSelectedLegendaryIndex] = useState<
     number | undefined
-  >(undefined);
-  const [affixStates, setAffixStates] = useState<LegendaryAffixState[]>([]);
+  >(undefined)
+  const [affixStates, setAffixStates] = useState<LegendaryAffixState[]>([])
 
   const sortedLegendaries = useMemo(() => {
-    return [...Legendaries].sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
+    return [...Legendaries].sort((a, b) => a.name.localeCompare(b.name))
+  }, [])
 
   const legendaryOptions = useMemo(() => {
     return sortedLegendaries.map((legendary, idx) => ({
       value: idx,
       label: legendary.name,
       sublabel: legendary.equipmentType,
-    }));
-  }, [sortedLegendaries]);
+    }))
+  }, [sortedLegendaries])
 
   const selectedLegendary =
     selectedLegendaryIndex !== undefined
       ? sortedLegendaries[selectedLegendaryIndex]
-      : undefined;
+      : undefined
 
   const handleLegendarySelect = (index: number | undefined) => {
-    setSelectedLegendaryIndex(index);
+    setSelectedLegendaryIndex(index)
     if (index !== undefined) {
-      const legendary = sortedLegendaries[index];
+      const legendary = sortedLegendaries[index]
       setAffixStates(
         legendary.normalAffixes.map(() => ({
           isCorrupted: false,
           percentage: DEFAULT_QUALITY,
         })),
-      );
+      )
     } else {
-      setAffixStates([]);
+      setAffixStates([])
     }
-  };
+  }
 
   const handleToggleCorruption = (index: number) => {
     setAffixStates((prev) =>
       prev.map((state, i) =>
         i === index ? { ...state, isCorrupted: !state.isCorrupted } : state,
       ),
-    );
-  };
+    )
+  }
 
   const handlePercentageChange = (index: number, percentage: number) => {
     setAffixStates((prev) =>
       prev.map((state, i) => (i === index ? { ...state, percentage } : state)),
-    );
-  };
+    )
+  }
 
   const handleSaveToInventory = () => {
-    if (!selectedLegendary) return;
+    if (!selectedLegendary) return
 
     const affixes = affixStates.map((state, i) => {
       const affix = state.isCorrupted
         ? selectedLegendary.corruptionAffixes[i]
-        : selectedLegendary.normalAffixes[i];
-      return craftAffix(affix, state.percentage);
-    });
+        : selectedLegendary.normalAffixes[i]
+      return craftAffix(affix, state.percentage)
+    })
 
     const newItem: Gear = {
       id: generateItemId(),
       gearType: getGearTypeFromEquipmentType(selectedLegendary.equipmentType),
       affixes,
       equipmentType: selectedLegendary.equipmentType,
-      rarity: "legendary",
+      rarity: 'legendary',
       baseStats: selectedLegendary.baseStat,
       legendaryName: selectedLegendary.name,
-    };
+    }
 
-    onSaveToInventory(newItem);
+    onSaveToInventory(newItem)
 
-    setSelectedLegendaryIndex(undefined);
-    setAffixStates([]);
-  };
+    setSelectedLegendaryIndex(undefined)
+    setAffixStates([])
+  }
 
   return (
     <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-700">
@@ -163,5 +163,5 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
         </p>
       )}
     </div>
-  );
-};
+  )
+}

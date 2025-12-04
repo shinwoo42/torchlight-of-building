@@ -1,35 +1,35 @@
-"use client";
+'use client'
 
-import { useMemo } from "react";
+import { useMemo } from 'react'
 import type {
   HeroMemory,
   HeroMemoryType,
   HeroMemoryAffix,
-} from "@/src/app/lib/save-data";
-import { HERO_MEMORY_TYPES } from "@/src/app/lib/save-data";
+} from '@/src/app/lib/save-data'
+import { HERO_MEMORY_TYPES } from '@/src/app/lib/save-data'
 import {
   getBaseStatsForMemoryType,
   getFixedAffixesForMemoryType,
   getRandomAffixesForMemoryType,
   craftHeroMemoryAffix,
-} from "../../lib/hero-utils";
-import { generateItemId } from "../../lib/storage";
-import { DEFAULT_QUALITY } from "../../lib/constants";
-import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
-import { useHeroUIStore } from "@/src/app/stores/heroUIStore";
+} from '../../lib/hero-utils'
+import { generateItemId } from '../../lib/storage'
+import { DEFAULT_QUALITY } from '../../lib/constants'
+import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
+import { useHeroUIStore } from '@/src/app/stores/heroUIStore'
 
 interface MemoryCrafterProps {
-  onMemorySave: (memory: HeroMemory) => void;
+  onMemorySave: (memory: HeroMemory) => void
 }
 
 interface AffixSlotProps {
-  slotIndex: number;
-  type: "fixed" | "random";
-  affixes: string[];
-  effectIndex: number | undefined;
-  quality: number;
-  onSelect: (effectIndex: number | undefined) => void;
-  onQuality: (quality: number) => void;
+  slotIndex: number
+  type: 'fixed' | 'random'
+  affixes: string[]
+  effectIndex: number | undefined
+  quality: number
+  onSelect: (effectIndex: number | undefined) => void
+  onQuality: (quality: number) => void
 }
 
 const AffixSlot = ({
@@ -42,10 +42,10 @@ const AffixSlot = ({
   onQuality,
 }: AffixSlotProps) => {
   const selectedAffix =
-    effectIndex !== undefined ? affixes[effectIndex] : undefined;
+    effectIndex !== undefined ? affixes[effectIndex] : undefined
   const craftedText = selectedAffix
     ? craftHeroMemoryAffix(selectedAffix, quality)
-    : "";
+    : ''
 
   return (
     <div className="bg-zinc-800 p-3 rounded-lg">
@@ -54,9 +54,9 @@ const AffixSlot = ({
         onChange={onSelect}
         options={affixes.map((affix, idx) => ({
           value: idx,
-          label: affix.replace(/\n/g, " ").substring(0, 50) + "...",
+          label: affix.replace(/\n/g, ' ').substring(0, 50) + '...',
         }))}
-        placeholder={`Select ${type === "fixed" ? "Fixed" : "Random"} Affix ${slotIndex + 1}`}
+        placeholder={`Select ${type === 'fixed' ? 'Fixed' : 'Random'} Affix ${slotIndex + 1}`}
         size="sm"
         className="mb-2"
       />
@@ -83,25 +83,25 @@ const AffixSlot = ({
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
 export const MemoryCrafter = ({ onMemorySave }: MemoryCrafterProps) => {
-  const craftingMemoryType = useHeroUIStore((s) => s.craftingMemoryType);
-  const craftingBaseStat = useHeroUIStore((s) => s.craftingBaseStat);
-  const fixedAffixSlots = useHeroUIStore((s) => s.fixedAffixSlots);
-  const randomAffixSlots = useHeroUIStore((s) => s.randomAffixSlots);
-  const setCraftingMemoryType = useHeroUIStore((s) => s.setCraftingMemoryType);
-  const setCraftingBaseStat = useHeroUIStore((s) => s.setCraftingBaseStat);
-  const setFixedAffixSlot = useHeroUIStore((s) => s.setFixedAffixSlot);
-  const setRandomAffixSlot = useHeroUIStore((s) => s.setRandomAffixSlot);
-  const resetMemoryCrafting = useHeroUIStore((s) => s.resetMemoryCrafting);
+  const craftingMemoryType = useHeroUIStore((s) => s.craftingMemoryType)
+  const craftingBaseStat = useHeroUIStore((s) => s.craftingBaseStat)
+  const fixedAffixSlots = useHeroUIStore((s) => s.fixedAffixSlots)
+  const randomAffixSlots = useHeroUIStore((s) => s.randomAffixSlots)
+  const setCraftingMemoryType = useHeroUIStore((s) => s.setCraftingMemoryType)
+  const setCraftingBaseStat = useHeroUIStore((s) => s.setCraftingBaseStat)
+  const setFixedAffixSlot = useHeroUIStore((s) => s.setFixedAffixSlot)
+  const setRandomAffixSlot = useHeroUIStore((s) => s.setRandomAffixSlot)
+  const resetMemoryCrafting = useHeroUIStore((s) => s.resetMemoryCrafting)
 
   const baseStats = useMemo(
     () =>
       craftingMemoryType ? getBaseStatsForMemoryType(craftingMemoryType) : [],
     [craftingMemoryType],
-  );
+  )
 
   const fixedAffixes = useMemo(
     () =>
@@ -109,7 +109,7 @@ export const MemoryCrafter = ({ onMemorySave }: MemoryCrafterProps) => {
         ? getFixedAffixesForMemoryType(craftingMemoryType)
         : [],
     [craftingMemoryType],
-  );
+  )
 
   const randomAffixes = useMemo(
     () =>
@@ -117,24 +117,24 @@ export const MemoryCrafter = ({ onMemorySave }: MemoryCrafterProps) => {
         ? getRandomAffixesForMemoryType(craftingMemoryType)
         : [],
     [craftingMemoryType],
-  );
+  )
 
   const handleSaveMemory = () => {
-    if (!craftingMemoryType || !craftingBaseStat) return;
+    if (!craftingMemoryType || !craftingBaseStat) return
 
     const fixedAffixesData: HeroMemoryAffix[] = fixedAffixSlots
       .filter((slot) => slot.effectIndex !== undefined)
       .map((slot) => ({
         effect: fixedAffixes[slot.effectIndex!],
         quality: slot.quality,
-      }));
+      }))
 
     const randomAffixesData: HeroMemoryAffix[] = randomAffixSlots
       .filter((slot) => slot.effectIndex !== undefined)
       .map((slot) => ({
         effect: randomAffixes[slot.effectIndex!],
         quality: slot.quality,
-      }));
+      }))
 
     const newMemory: HeroMemory = {
       id: generateItemId(),
@@ -142,11 +142,11 @@ export const MemoryCrafter = ({ onMemorySave }: MemoryCrafterProps) => {
       baseStat: craftingBaseStat,
       fixedAffixes: fixedAffixesData,
       randomAffixes: randomAffixesData,
-    };
+    }
 
-    onMemorySave(newMemory);
-    resetMemoryCrafting();
-  };
+    onMemorySave(newMemory)
+    resetMemoryCrafting()
+  }
 
   return (
     <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-700">
@@ -262,5 +262,5 @@ export const MemoryCrafter = ({ onMemorySave }: MemoryCrafterProps) => {
         </p>
       )}
     </div>
-  );
-};
+  )
+}

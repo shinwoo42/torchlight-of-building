@@ -1,35 +1,35 @@
-"use client";
+'use client'
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef } from 'react'
 import {
   Combobox,
   ComboboxButton,
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
-} from "@headlessui/react";
+} from '@headlessui/react'
 
 export interface SearchableSelectOption<T = string> {
-  value: T;
-  label: string;
-  sublabel?: string;
+  value: T
+  label: string
+  sublabel?: string
 }
 
 interface SearchableSelectProps<T extends string | number> {
-  value: T | undefined;
-  onChange: (value: T | undefined) => void;
-  options: SearchableSelectOption<T>[];
-  placeholder?: string;
-  size?: "sm" | "default" | "lg";
-  disabled?: boolean;
-  className?: string;
+  value: T | undefined
+  onChange: (value: T | undefined) => void
+  options: SearchableSelectOption<T>[]
+  placeholder?: string
+  size?: 'sm' | 'default' | 'lg'
+  disabled?: boolean
+  className?: string
 }
 
 const SIZE_CLASSES = {
-  sm: "px-2 py-1 text-xs",
-  default: "px-3 py-2 text-sm",
-  lg: "px-4 py-2 text-sm",
-} as const;
+  sm: 'px-2 py-1 text-xs',
+  default: 'px-3 py-2 text-sm',
+  lg: 'px-4 py-2 text-sm',
+} as const
 
 const ChevronDownIcon = ({ className }: { className?: string }) => (
   <svg
@@ -45,41 +45,41 @@ const ChevronDownIcon = ({ className }: { className?: string }) => (
       d="M19 9l-7 7-7-7"
     />
   </svg>
-);
+)
 
 export const SearchableSelect = <T extends string | number>({
   value,
   onChange,
   options,
-  placeholder = "Select...",
-  size = "default",
+  placeholder = 'Select...',
+  size = 'default',
   disabled = false,
-  className = "",
+  className = '',
 }: SearchableSelectProps<T>) => {
-  const [query, setQuery] = useState("");
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [query, setQuery] = useState('')
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   const selectedOption = useMemo(
     () => options.find((opt) => opt.value === value),
     [options, value],
-  );
+  )
 
   const filteredOptions = useMemo(() => {
-    if (!query) return options;
-    const lowerQuery = query.toLowerCase();
+    if (!query) return options
+    const lowerQuery = query.toLowerCase()
     return options.filter(
       (opt) =>
         opt.label.toLowerCase().includes(lowerQuery) ||
         opt.sublabel?.toLowerCase().includes(lowerQuery),
-    );
-  }, [options, query]);
+    )
+  }, [options, query])
 
   const handleChange = (option: SearchableSelectOption<T> | null) => {
-    onChange(option?.value);
-    setQuery("");
-  };
+    onChange(option?.value)
+    setQuery('')
+  }
 
-  const isEmpty = value === undefined || value === "";
+  const isEmpty = value === undefined || value === ''
 
   return (
     <Combobox
@@ -94,11 +94,11 @@ export const SearchableSelect = <T extends string | number>({
               w-full bg-zinc-800 border border-zinc-700 rounded
               ${SIZE_CLASSES[size]}
               focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500
-              ${isEmpty ? "text-zinc-500" : "text-zinc-50"}
-              ${disabled ? "opacity-50 cursor-not-allowed" : ""}
+              ${isEmpty ? 'text-zinc-500' : 'text-zinc-50'}
+              ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             `}
             displayValue={(opt: SearchableSelectOption<T> | null) =>
-              opt?.label ?? ""
+              opt?.label ?? ''
             }
             onChange={(e) => setQuery(e.target.value)}
             onClick={() => buttonRef.current?.click()}
@@ -124,13 +124,13 @@ export const SearchableSelect = <T extends string | number>({
             value={null}
             className={({ active }) => `
               ${SIZE_CLASSES[size]} cursor-pointer text-zinc-500
-              ${active ? "bg-zinc-700" : ""}
+              ${active ? 'bg-zinc-700' : ''}
             `}
           >
             {placeholder}
           </ComboboxOption>
 
-          {filteredOptions.length === 0 && query !== "" ? (
+          {filteredOptions.length === 0 && query !== '' ? (
             <div className={`${SIZE_CLASSES[size]} text-zinc-500`}>
               No results found
             </div>
@@ -141,8 +141,8 @@ export const SearchableSelect = <T extends string | number>({
                 value={option}
                 className={({ active, selected }) => `
                   ${SIZE_CLASSES[size]} cursor-pointer
-                  ${active ? "bg-zinc-700" : ""}
-                  ${selected ? "text-amber-400" : "text-zinc-50"}
+                  ${active ? 'bg-zinc-700' : ''}
+                  ${selected ? 'text-amber-400' : 'text-zinc-50'}
                 `}
               >
                 <div>
@@ -159,5 +159,5 @@ export const SearchableSelect = <T extends string | number>({
         </ComboboxOptions>
       </div>
     </Combobox>
-  );
-};
+  )
+}

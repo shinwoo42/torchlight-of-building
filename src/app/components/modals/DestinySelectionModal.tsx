@@ -1,27 +1,22 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Destiny } from "@/src/data/destiny/types";
-import { RingSlotKey, InstalledDestinyResult } from "../../lib/types";
+import { useState, useEffect } from 'react'
+import { Destiny } from '@/src/data/destiny/types'
+import { RingSlotKey, InstalledDestinyResult } from '../../lib/types'
 import {
   getDestiniesForRingSlot,
   formatDestinyOption,
   hasRanges,
   craftDestinyAffix,
-} from "../../lib/pactspirit-utils";
-import { SearchableSelect } from "@/src/app/components/ui/SearchableSelect";
-import {
-  Modal,
-  ModalDescription,
-  ModalActions,
-  ModalButton,
-} from "../ui/Modal";
+} from '../../lib/pactspirit-utils'
+import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
+import { Modal, ModalDescription, ModalActions, ModalButton } from '../ui/Modal'
 
 interface DestinySelectionModalProps {
-  isOpen: boolean;
-  ringSlot: RingSlotKey;
-  onClose: () => void;
-  onConfirm: (destiny: InstalledDestinyResult) => void;
+  isOpen: boolean
+  ringSlot: RingSlotKey
+  onClose: () => void
+  onConfirm: (destiny: InstalledDestinyResult) => void
 }
 
 export const DestinySelectionModal = ({
@@ -30,41 +25,41 @@ export const DestinySelectionModal = ({
   onClose,
   onConfirm,
 }: DestinySelectionModalProps) => {
-  const [selectedDestiny, setSelectedDestiny] = useState<Destiny | undefined>();
-  const [percentage, setPercentage] = useState(50);
+  const [selectedDestiny, setSelectedDestiny] = useState<Destiny | undefined>()
+  const [percentage, setPercentage] = useState(50)
 
-  const availableDestinies = getDestiniesForRingSlot(ringSlot);
+  const availableDestinies = getDestiniesForRingSlot(ringSlot)
   const affixHasRanges = selectedDestiny
     ? hasRanges(selectedDestiny.affix)
-    : false;
+    : false
   const previewAffix = selectedDestiny
     ? craftDestinyAffix(selectedDestiny.affix, percentage)
-    : "";
+    : ''
 
   /* eslint-disable react-hooks/set-state-in-effect -- reset form state on modal open */
   useEffect(() => {
     if (isOpen) {
-      setSelectedDestiny(undefined);
-      setPercentage(50);
+      setSelectedDestiny(undefined)
+      setPercentage(50)
     }
-  }, [isOpen]);
+  }, [isOpen])
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleDestinySelect = (destinyName: string) => {
-    const destiny = availableDestinies.find((d) => d.name === destinyName);
-    setSelectedDestiny(destiny);
-    setPercentage(50);
-  };
+    const destiny = availableDestinies.find((d) => d.name === destinyName)
+    setSelectedDestiny(destiny)
+    setPercentage(50)
+  }
 
   const handleConfirm = () => {
-    if (!selectedDestiny) return;
+    if (!selectedDestiny) return
     onConfirm({
       destinyName: selectedDestiny.name,
       destinyType: selectedDestiny.type,
       resolvedAffix: previewAffix,
-    });
-    onClose();
-  };
+    })
+    onClose()
+  }
 
   return (
     <Modal
@@ -74,8 +69,8 @@ export const DestinySelectionModal = ({
       maxWidth="md"
     >
       <ModalDescription>
-        Select a destiny to install in this{" "}
-        {ringSlot.startsWith("innerRing") ? "inner" : "mid"} ring slot.
+        Select a destiny to install in this{' '}
+        {ringSlot.startsWith('innerRing') ? 'inner' : 'mid'} ring slot.
       </ModalDescription>
 
       <div className="mb-4">
@@ -134,5 +129,5 @@ export const DestinySelectionModal = ({
         </ModalButton>
       </ModalActions>
     </Modal>
-  );
-};
+  )
+}

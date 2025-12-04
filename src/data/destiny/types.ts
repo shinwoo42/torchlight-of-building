@@ -1,5 +1,5 @@
 export interface Destiny {
-  type: string;
-  name: string;
-  affix: string;
+  type: string
+  name: string
+  affix: string
 }

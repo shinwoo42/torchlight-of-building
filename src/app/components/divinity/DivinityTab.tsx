@@ -1,29 +1,26 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 import {
   DivinityPage,
   DivinitySlate,
   PlacedSlate,
-} from "@/src/app/lib/save-data";
-import { findGridCenter } from "@/src/app/lib/divinity-grid";
-import { DivinityGrid } from "./DivinityGrid";
-import { SlateCrafter } from "./SlateCrafter";
-import { SlateInventory } from "./SlateInventory";
+} from '@/src/app/lib/save-data'
+import { findGridCenter } from '@/src/app/lib/divinity-grid'
+import { DivinityGrid } from './DivinityGrid'
+import { SlateCrafter } from './SlateCrafter'
+import { SlateInventory } from './SlateInventory'
 
 interface DivinityTabProps {
-  divinityPage: DivinityPage;
-  divinitySlateList: DivinitySlate[];
-  onSaveSlate: (slate: DivinitySlate) => void;
-  onUpdateSlate: (slate: DivinitySlate) => void;
-  onCopySlate: (slate: DivinitySlate) => void;
-  onDeleteSlate: (slateId: string) => void;
-  onPlaceSlate: (placement: PlacedSlate) => void;
-  onRemovePlacedSlate: (slateId: string) => void;
-  onMoveSlate: (
-    slateId: string,
-    position: { row: number; col: number },
-  ) => void;
+  divinityPage: DivinityPage
+  divinitySlateList: DivinitySlate[]
+  onSaveSlate: (slate: DivinitySlate) => void
+  onUpdateSlate: (slate: DivinitySlate) => void
+  onCopySlate: (slate: DivinitySlate) => void
+  onDeleteSlate: (slateId: string) => void
+  onPlaceSlate: (placement: PlacedSlate) => void
+  onRemovePlacedSlate: (slateId: string) => void
+  onMoveSlate: (slateId: string, position: { row: number; col: number }) => void
 }
 
 export const DivinityTab: React.FC<DivinityTabProps> = ({
@@ -37,47 +34,47 @@ export const DivinityTab: React.FC<DivinityTabProps> = ({
   onRemovePlacedSlate,
   onMoveSlate,
 }) => {
-  const [editingSlate, setEditingSlate] = useState<DivinitySlate | undefined>();
+  const [editingSlate, setEditingSlate] = useState<DivinitySlate | undefined>()
 
-  const placedSlateIds = divinityPage.placedSlates.map((p) => p.slateId);
+  const placedSlateIds = divinityPage.placedSlates.map((p) => p.slateId)
   const editingSlateIsPlaced = editingSlate
     ? placedSlateIds.includes(editingSlate.id)
-    : false;
+    : false
 
   const handlePlaceSlate = (slateId: string) => {
-    const center = findGridCenter();
+    const center = findGridCenter()
     const placement: PlacedSlate = {
       slateId,
       position: center,
-    };
-    onPlaceSlate(placement);
-  };
+    }
+    onPlaceSlate(placement)
+  }
 
   const handleEditSlate = (slate: DivinitySlate) => {
-    setEditingSlate(slate);
-  };
+    setEditingSlate(slate)
+  }
 
   const handleCancelEdit = () => {
-    setEditingSlate(undefined);
-  };
+    setEditingSlate(undefined)
+  }
 
   const handleSaveEdit = (slate: DivinitySlate) => {
-    onUpdateSlate(slate);
-    setEditingSlate(undefined);
-  };
+    onUpdateSlate(slate)
+    setEditingSlate(undefined)
+  }
 
   const handleClickPlacedSlate = (slateId: string) => {
-    const slate = divinitySlateList.find((s) => s.id === slateId);
+    const slate = divinitySlateList.find((s) => s.id === slateId)
     if (slate) {
-      handleEditSlate(slate);
+      handleEditSlate(slate)
     }
-  };
+  }
 
   const handleRemoveFromGrid = () => {
     if (editingSlate) {
-      onRemovePlacedSlate(editingSlate.id);
+      onRemovePlacedSlate(editingSlate.id)
     }
-  };
+  }
 
   return (
     <div className="flex gap-8">
@@ -112,5 +109,5 @@ export const DivinityTab: React.FC<DivinityTabProps> = ({
         />
       </div>
     </div>
-  );
-};
+  )
+}

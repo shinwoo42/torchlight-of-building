@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
 import type {
   HeroPage,
   HeroMemory,
   HeroMemorySlot,
-} from "@/src/app/lib/save-data";
-import { HeroSelector } from "./HeroSelector";
-import { TraitSelector } from "./TraitSelector";
-import { MemoryCrafter } from "./MemoryCrafter";
-import { MemoryInventory } from "./MemoryInventory";
+} from '@/src/app/lib/save-data'
+import { HeroSelector } from './HeroSelector'
+import { TraitSelector } from './TraitSelector'
+import { MemoryCrafter } from './MemoryCrafter'
+import { MemoryInventory } from './MemoryInventory'
 
 interface HeroTabProps {
-  heroPage: HeroPage;
-  heroMemoryList: HeroMemory[];
-  onHeroChange: (hero: string | undefined) => void;
-  onTraitSelect: (level: 45 | 60 | 75, traitName: string | undefined) => void;
-  onMemoryEquip: (slot: HeroMemorySlot, memoryId: string | undefined) => void;
-  onMemorySave: (memory: HeroMemory) => void;
-  onMemoryCopy: (memory: HeroMemory) => void;
-  onMemoryDelete: (id: string) => void;
+  heroPage: HeroPage
+  heroMemoryList: HeroMemory[]
+  onHeroChange: (hero: string | undefined) => void
+  onTraitSelect: (level: 45 | 60 | 75, traitName: string | undefined) => void
+  onMemoryEquip: (slot: HeroMemorySlot, memoryId: string | undefined) => void
+  onMemorySave: (memory: HeroMemory) => void
+  onMemoryCopy: (memory: HeroMemory) => void
+  onMemoryDelete: (id: string) => void
 }
 
 export const HeroTab = ({
@@ -58,5 +58,5 @@ export const HeroTab = ({
         />
       </div>
     </div>
-  );
-};
+  )
+}

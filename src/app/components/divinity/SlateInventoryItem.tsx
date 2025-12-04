@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { DivinitySlate } from "@/src/app/lib/save-data";
-import { getSlateDisplayName } from "@/src/app/lib/divinity-utils";
-import { SlatePreview } from "./SlatePreview";
+import { DivinitySlate } from '@/src/app/lib/save-data'
+import { getSlateDisplayName } from '@/src/app/lib/divinity-utils'
+import { SlatePreview } from './SlatePreview'
 
 interface SlateInventoryItemProps {
-  slate: DivinitySlate;
-  isPlaced: boolean;
-  onPlace: () => void;
-  onEdit: () => void;
-  onCopy: () => void;
-  onDelete: () => void;
+  slate: DivinitySlate
+  isPlaced: boolean
+  onPlace: () => void
+  onEdit: () => void
+  onCopy: () => void
+  onDelete: () => void
 }
 
 export const SlateInventoryItem: React.FC<SlateInventoryItemProps> = ({
@@ -22,16 +22,16 @@ export const SlateInventoryItem: React.FC<SlateInventoryItemProps> = ({
   onDelete,
 }) => {
   const legendaryCount = slate.affixTypes.filter(
-    (t) => t === "Legendary Medium",
-  ).length;
-  const mediumCount = slate.affixTypes.filter((t) => t === "Medium").length;
+    (t) => t === 'Legendary Medium',
+  ).length
+  const mediumCount = slate.affixTypes.filter((t) => t === 'Medium').length
 
   return (
     <div
       className={`flex items-center gap-3 rounded border p-2 transition-colors ${
         isPlaced
-          ? "border-zinc-600 bg-zinc-700/50"
-          : "border-zinc-700 bg-zinc-900 hover:border-zinc-600"
+          ? 'border-zinc-600 bg-zinc-700/50'
+          : 'border-zinc-700 bg-zinc-900 hover:border-zinc-600'
       }`}
     >
       <div className="flex-shrink-0">
@@ -101,5 +101,5 @@ export const SlateInventoryItem: React.FC<SlateInventoryItemProps> = ({
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

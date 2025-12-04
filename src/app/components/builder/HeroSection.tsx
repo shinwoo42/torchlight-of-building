@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { useCallback } from "react";
-import { useBuilderStore } from "../../stores/builderStore";
-import { HeroTab } from "../hero/HeroTab";
-import { HeroMemory, HeroMemorySlot } from "../../lib/save-data";
-import { getBaseTraitForHero } from "../../lib/hero-utils";
-import { createEmptyHeroPage, generateItemId } from "../../lib/storage";
+import { useCallback } from 'react'
+import { useBuilderStore } from '../../stores/builderStore'
+import { HeroTab } from '../hero/HeroTab'
+import { HeroMemory, HeroMemorySlot } from '../../lib/save-data'
+import { getBaseTraitForHero } from '../../lib/hero-utils'
+import { createEmptyHeroPage, generateItemId } from '../../lib/storage'
 
 export const HeroSection = () => {
-  const loadout = useBuilderStore((state) => state.loadout);
-  const updateLoadout = useBuilderStore((state) => state.updateLoadout);
+  const loadout = useBuilderStore((state) => state.loadout)
+  const updateLoadout = useBuilderStore((state) => state.updateLoadout)
 
   const handleHeroChange = useCallback(
     (hero: string | undefined) => {
@@ -18,10 +18,10 @@ export const HeroSection = () => {
           return {
             ...prev,
             heroPage: createEmptyHeroPage(),
-          };
+          }
         }
 
-        const baseTrait = getBaseTraitForHero(hero);
+        const baseTrait = getBaseTraitForHero(hero)
 
         return {
           ...prev,
@@ -39,15 +39,15 @@ export const HeroSection = () => {
               slot75: undefined,
             },
           },
-        };
-      });
+        }
+      })
     },
     [updateLoadout],
-  );
+  )
 
   const handleTraitSelect = useCallback(
     (level: 45 | 60 | 75, traitName: string | undefined) => {
-      const traitKey = `level${level}` as "level45" | "level60" | "level75";
+      const traitKey = `level${level}` as 'level45' | 'level60' | 'level75'
       updateLoadout((prev) => ({
         ...prev,
         heroPage: {
@@ -57,17 +57,17 @@ export const HeroSection = () => {
             [traitKey]: traitName,
           },
         },
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleMemoryEquip = useCallback(
     (slot: HeroMemorySlot, memoryId: string | undefined) => {
       updateLoadout((prev) => {
         const memory = memoryId
           ? prev.heroMemoryList.find((m) => m.id === memoryId)
-          : undefined;
+          : undefined
 
         return {
           ...prev,
@@ -78,48 +78,48 @@ export const HeroSection = () => {
               [slot]: memory,
             },
           },
-        };
-      });
+        }
+      })
     },
     [updateLoadout],
-  );
+  )
 
   const handleMemorySave = useCallback(
     (memory: HeroMemory) => {
       updateLoadout((prev) => ({
         ...prev,
         heroMemoryList: [...prev.heroMemoryList, memory],
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleMemoryCopy = useCallback(
     (memory: HeroMemory) => {
-      const newMemory: HeroMemory = { ...memory, id: generateItemId() };
+      const newMemory: HeroMemory = { ...memory, id: generateItemId() }
       updateLoadout((prev) => ({
         ...prev,
         heroMemoryList: [...prev.heroMemoryList, newMemory],
-      }));
+      }))
     },
     [updateLoadout],
-  );
+  )
 
   const handleMemoryDelete = useCallback(
     (memoryId: string) => {
       updateLoadout((prev) => {
         const newMemoryList = prev.heroMemoryList.filter(
           (m) => m.id !== memoryId,
-        );
-        const newMemorySlots = { ...prev.heroPage.memorySlots };
+        )
+        const newMemorySlots = { ...prev.heroPage.memorySlots }
         if (newMemorySlots.slot45?.id === memoryId) {
-          newMemorySlots.slot45 = undefined;
+          newMemorySlots.slot45 = undefined
         }
         if (newMemorySlots.slot60?.id === memoryId) {
-          newMemorySlots.slot60 = undefined;
+          newMemorySlots.slot60 = undefined
         }
         if (newMemorySlots.slot75?.id === memoryId) {
-          newMemorySlots.slot75 = undefined;
+          newMemorySlots.slot75 = undefined
         }
 
         return {
@@ -129,11 +129,11 @@ export const HeroSection = () => {
             ...prev.heroPage,
             memorySlots: newMemorySlots,
           },
-        };
-      });
+        }
+      })
     },
     [updateLoadout],
-  );
+  )
 
   return (
     <HeroTab
@@ -146,5 +146,5 @@ export const HeroSection = () => {
       onMemoryCopy={handleMemoryCopy}
       onMemoryDelete={handleMemoryDelete}
     />
-  );
-};
+  )
+}

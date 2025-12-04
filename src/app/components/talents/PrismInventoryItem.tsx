@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { CraftedPrism } from "@/src/app/lib/save-data";
-import { getLegendaryGaugeAffixes } from "@/src/app/lib/prism-utils";
-import { useTooltip } from "@/src/app/hooks/useTooltip";
-import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
+import { CraftedPrism } from '@/src/app/lib/save-data'
+import { getLegendaryGaugeAffixes } from '@/src/app/lib/prism-utils'
+import { useTooltip } from '@/src/app/hooks/useTooltip'
+import { Tooltip, TooltipTitle } from '@/src/app/components/ui/Tooltip'
 
 interface PrismInventoryItemProps {
-  prism: CraftedPrism;
-  onEdit: () => void;
-  onCopy: () => void;
-  onDelete: () => void;
-  isSelected?: boolean;
-  onSelect?: () => void;
-  selectionMode?: boolean;
+  prism: CraftedPrism
+  onEdit: () => void
+  onCopy: () => void
+  onDelete: () => void
+  isSelected?: boolean
+  onSelect?: () => void
+  selectionMode?: boolean
 }
 
 export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
@@ -24,41 +24,41 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
   onSelect,
   selectionMode = false,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isHovered, mousePos, handlers } = useTooltip()
 
-  const legendaryGauges = getLegendaryGaugeAffixes();
+  const legendaryGauges = getLegendaryGaugeAffixes()
   const legendaryCount = prism.gaugeAffixes.filter((a) =>
     legendaryGauges.some((lg) => lg.affix === a),
-  ).length;
-  const rareCount = prism.gaugeAffixes.length - legendaryCount;
+  ).length
+  const rareCount = prism.gaugeAffixes.length - legendaryCount
 
-  const baseAffixFirstLine = prism.baseAffix.split("\n")[0];
+  const baseAffixFirstLine = prism.baseAffix.split('\n')[0]
   const displayText =
     baseAffixFirstLine.length > 60
-      ? baseAffixFirstLine.slice(0, 60) + "..."
-      : baseAffixFirstLine;
+      ? baseAffixFirstLine.slice(0, 60) + '...'
+      : baseAffixFirstLine
 
   const handleClick = () => {
     if (selectionMode && onSelect) {
-      onSelect();
+      onSelect()
     }
-  };
+  }
 
   return (
     <>
       <div
         className={`flex items-center gap-3 rounded border p-2 transition-colors ${
           isSelected
-            ? "border-purple-500 bg-purple-500/20 ring-1 ring-purple-500"
-            : "border-zinc-700 bg-zinc-900 hover:border-zinc-600"
-        } ${selectionMode ? "cursor-pointer" : ""}`}
+            ? 'border-purple-500 bg-purple-500/20 ring-1 ring-purple-500'
+            : 'border-zinc-700 bg-zinc-900 hover:border-zinc-600'
+        } ${selectionMode ? 'cursor-pointer' : ''}`}
         onClick={handleClick}
         {...handlers}
       >
         <div className="flex-shrink-0">
           <span
             className={`inline-block h-4 w-4 rounded ${
-              prism.rarity === "legendary" ? "bg-orange-500" : "bg-purple-500"
+              prism.rarity === 'legendary' ? 'bg-orange-500' : 'bg-purple-500'
             }`}
           />
         </div>
@@ -111,7 +111,7 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
       <Tooltip
         isVisible={isHovered}
         mousePos={mousePos}
-        variant={prism.rarity === "legendary" ? "legendary" : "prism"}
+        variant={prism.rarity === 'legendary' ? 'legendary' : 'prism'}
         width="lg"
       >
         <TooltipTitle>
@@ -127,23 +127,23 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
             {prism.gaugeAffixes.map((affix, i) => {
               const isLegendary = legendaryGauges.some(
                 (lg) => lg.affix === affix,
-              );
+              )
               return (
                 <div key={i} className="flex items-start gap-1">
                   <span
                     className={`mt-1 h-2 w-2 flex-shrink-0 rounded-sm ${
-                      isLegendary ? "bg-orange-500" : "bg-purple-500"
+                      isLegendary ? 'bg-orange-500' : 'bg-purple-500'
                     }`}
                   />
                   <span className="text-xs text-zinc-300 whitespace-pre-line">
                     {affix}
                   </span>
                 </div>
-              );
+              )
             })}
           </div>
         )}
       </Tooltip>
     </>
-  );
-};
+  )
+}

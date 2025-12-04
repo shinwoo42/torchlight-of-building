@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   SaveMetadata,
   SavesIndex,
@@ -11,25 +11,25 @@ import {
   saveSaveData,
   deleteSaveData,
   generateSaveId,
-} from "./lib/saves";
-import { createEmptyLoadout } from "./lib/storage";
+} from './lib/saves'
+import { createEmptyLoadout } from './lib/storage'
 
 const formatDate = (timestamp: number): string => {
-  return new Date(timestamp).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-};
+  return new Date(timestamp).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
 
 interface SaveCardProps {
-  save: SaveMetadata;
-  onOpen: () => void;
-  onRename: (newName: string) => void;
-  onCopy: () => void;
-  onDelete: () => void;
+  save: SaveMetadata
+  onOpen: () => void
+  onRename: (newName: string) => void
+  onCopy: () => void
+  onDelete: () => void
 }
 
 const SaveCard: React.FC<SaveCardProps> = ({
@@ -39,22 +39,22 @@ const SaveCard: React.FC<SaveCardProps> = ({
   onCopy,
   onDelete,
 }) => {
-  const [isRenaming, setIsRenaming] = useState(false);
-  const [renameValue, setRenameValue] = useState(save.name);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false)
+  const [renameValue, setRenameValue] = useState(save.name)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const handleRenameSubmit = () => {
-    const trimmed = renameValue.trim();
+    const trimmed = renameValue.trim()
     if (trimmed && trimmed !== save.name) {
-      onRename(trimmed);
+      onRename(trimmed)
     }
-    setIsRenaming(false);
-  };
+    setIsRenaming(false)
+  }
 
   const handleRenameCancel = () => {
-    setRenameValue(save.name);
-    setIsRenaming(false);
-  };
+    setRenameValue(save.name)
+    setIsRenaming(false)
+  }
 
   return (
     <div
@@ -71,8 +71,8 @@ const SaveCard: React.FC<SaveCardProps> = ({
                 onChange={(e) => setRenameValue(e.target.value)}
                 className="flex-1 px-2 py-1 bg-zinc-800 text-zinc-50 rounded border border-zinc-600 focus:outline-none focus:border-amber-500 text-sm"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") handleRenameSubmit();
-                  if (e.key === "Escape") handleRenameCancel();
+                  if (e.key === 'Enter') handleRenameSubmit()
+                  if (e.key === 'Escape') handleRenameCancel()
                 }}
                 autoFocus
               />
@@ -114,8 +114,8 @@ const SaveCard: React.FC<SaveCardProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => {
-                onDelete();
-                setShowDeleteConfirm(false);
+                onDelete()
+                setShowDeleteConfirm(false)
               }}
               className="px-3 py-1.5 bg-red-500 text-white rounded text-sm font-medium hover:bg-red-600 transition-colors"
             >
@@ -136,8 +136,8 @@ const SaveCard: React.FC<SaveCardProps> = ({
         >
           <button
             onClick={() => {
-              setRenameValue(save.name);
-              setIsRenaming(true);
+              setRenameValue(save.name)
+              setIsRenaming(true)
             }}
             className="px-3 py-1.5 bg-zinc-700 text-zinc-50 rounded text-sm hover:bg-zinc-600 transition-colors"
           >
@@ -158,89 +158,89 @@ const SaveCard: React.FC<SaveCardProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 export default function SavesPage() {
-  const router = useRouter();
+  const router = useRouter()
   const [savesIndex, setSavesIndex] = useState<SavesIndex>({
     currentSaveId: undefined,
     saves: [],
-  });
-  const [mounted, setMounted] = useState(false);
+  })
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true);
-    const index = loadSavesIndex();
-    setSavesIndex(index);
-  }, []);
+    setMounted(true)
+    const index = loadSavesIndex()
+    setSavesIndex(index)
+  }, [])
 
   const handleOpenSave = (saveId: string) => {
-    router.push(`/builder?id=${saveId}`);
-  };
+    router.push(`/builder?id=${saveId}`)
+  }
 
   const handleCreateNew = () => {
-    const now = Date.now();
-    const newSaveId = generateSaveId();
+    const now = Date.now()
+    const newSaveId = generateSaveId()
     const newMetadata: SaveMetadata = {
       id: newSaveId,
-      name: "Untitled",
+      name: 'Untitled',
       createdAt: now,
       updatedAt: now,
-    };
+    }
 
-    const success = saveSaveData(newSaveId, createEmptyLoadout());
+    const success = saveSaveData(newSaveId, createEmptyLoadout())
     if (success) {
       const newIndex: SavesIndex = {
         currentSaveId: newSaveId,
         saves: [...savesIndex.saves, newMetadata],
-      };
-      saveSavesIndex(newIndex);
-      setSavesIndex(newIndex);
-      router.push(`/builder?id=${newSaveId}`);
+      }
+      saveSavesIndex(newIndex)
+      setSavesIndex(newIndex)
+      router.push(`/builder?id=${newSaveId}`)
     }
-  };
+  }
 
   const handleRenameSave = (saveId: string, newName: string) => {
     const updatedSaves = savesIndex.saves.map((s) =>
       s.id === saveId ? { ...s, name: newName } : s,
-    );
-    const newIndex = { ...savesIndex, saves: updatedSaves };
-    saveSavesIndex(newIndex);
-    setSavesIndex(newIndex);
-  };
+    )
+    const newIndex = { ...savesIndex, saves: updatedSaves }
+    saveSavesIndex(newIndex)
+    setSavesIndex(newIndex)
+  }
 
   const handleCopySave = (saveId: string) => {
-    const original = savesIndex.saves.find((s) => s.id === saveId);
-    if (!original) return;
+    const original = savesIndex.saves.find((s) => s.id === saveId)
+    if (!original) return
 
-    const data = loadSaveData(saveId);
-    if (!data) return;
+    const data = loadSaveData(saveId)
+    if (!data) return
 
     // eslint-disable-next-line react-hooks/purity -- event handler, not render
-    const now = Date.now();
-    const newSaveId = generateSaveId();
+    const now = Date.now()
+    const newSaveId = generateSaveId()
     const newMetadata: SaveMetadata = {
       id: newSaveId,
       name: `${original.name} (Copy)`,
       createdAt: now,
       updatedAt: now,
-    };
+    }
 
-    const success = saveSaveData(newSaveId, data);
+    const success = saveSaveData(newSaveId, data)
     if (success) {
       const newIndex = {
         ...savesIndex,
         saves: [...savesIndex.saves, newMetadata],
-      };
-      saveSavesIndex(newIndex);
-      setSavesIndex(newIndex);
+      }
+      saveSavesIndex(newIndex)
+      setSavesIndex(newIndex)
     }
-  };
+  }
 
   const handleDeleteSave = (saveId: string) => {
-    deleteSaveData(saveId);
-    const remainingSaves = savesIndex.saves.filter((s) => s.id !== saveId);
+    deleteSaveData(saveId)
+    const remainingSaves = savesIndex.saves.filter((s) => s.id !== saveId)
     const newIndex = {
       ...savesIndex,
       currentSaveId:
@@ -248,18 +248,18 @@ export default function SavesPage() {
           ? undefined
           : savesIndex.currentSaveId,
       saves: remainingSaves,
-    };
-    saveSavesIndex(newIndex);
-    setSavesIndex(newIndex);
-  };
+    }
+    saveSavesIndex(newIndex)
+    setSavesIndex(newIndex)
+  }
 
   if (!mounted) {
-    return null;
+    return null
   }
 
   const sortedSaves = [...savesIndex.saves].sort(
     (a, b) => b.updatedAt - a.updatedAt,
-  );
+  )
 
   return (
     <div className="min-h-screen bg-zinc-950 p-6">
@@ -327,5 +327,5 @@ export default function SavesPage() {
         )}
       </div>
     </div>
-  );
+  )
 }

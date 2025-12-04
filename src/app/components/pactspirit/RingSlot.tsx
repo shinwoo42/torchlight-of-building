@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import { RingSlotState } from "@/src/app/lib/save-data";
-import { PactspiritRingDetails } from "@/src/data/pactspirit/types";
-import { RingSlotKey } from "../../lib/types";
-import { isInnerRing } from "../../lib/pactspirit-utils";
-import { useTooltip } from "@/src/app/hooks/useTooltip";
+import { RingSlotState } from '@/src/app/lib/save-data'
+import { PactspiritRingDetails } from '@/src/data/pactspirit/types'
+import { RingSlotKey } from '../../lib/types'
+import { isInnerRing } from '../../lib/pactspirit-utils'
+import { useTooltip } from '@/src/app/hooks/useTooltip'
 import {
   Tooltip,
   TooltipTitle,
   TooltipContent,
-} from "@/src/app/components/ui/Tooltip";
+} from '@/src/app/components/ui/Tooltip'
 
 interface RingSlotProps {
-  ringSlot: RingSlotKey;
-  originalRing: PactspiritRingDetails;
-  ringState: RingSlotState;
-  onInstallClick: () => void;
-  onRevert: () => void;
+  ringSlot: RingSlotKey
+  originalRing: PactspiritRingDetails
+  ringState: RingSlotState
+  onInstallClick: () => void
+  onRevert: () => void
 }
 
 export const RingSlot: React.FC<RingSlotProps> = ({
@@ -26,35 +26,35 @@ export const RingSlot: React.FC<RingSlotProps> = ({
   onInstallClick,
   onRevert,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isHovered, mousePos, handlers } = useTooltip()
 
-  const hasDestiny = !!ringState.installedDestiny;
-  const isInner = isInnerRing(ringSlot);
+  const hasDestiny = !!ringState.installedDestiny
+  const isInner = isInnerRing(ringSlot)
 
-  let displayName: string;
-  let displayAffix: string;
-  let destinyType: string | undefined;
+  let displayName: string
+  let displayAffix: string
+  let destinyType: string | undefined
 
   if (hasDestiny && ringState.installedDestiny) {
     const {
       destinyName,
       destinyType: dType,
       resolvedAffix,
-    } = ringState.installedDestiny;
-    destinyType = dType;
-    displayName = destinyName;
-    displayAffix = resolvedAffix;
+    } = ringState.installedDestiny
+    destinyType = dType
+    displayName = destinyName
+    displayAffix = resolvedAffix
   } else {
-    displayName = originalRing.name;
-    displayAffix = originalRing.affix;
+    displayName = originalRing.name
+    displayAffix = originalRing.affix
   }
 
   return (
     <div
       className={`p-2 rounded-lg border ${
         isInner
-          ? "bg-zinc-800 border-zinc-700"
-          : "bg-zinc-750 border-amber-700/50"
+          ? 'bg-zinc-800 border-zinc-700'
+          : 'bg-zinc-750 border-amber-700/50'
       }`}
       {...handlers}
     >
@@ -62,7 +62,7 @@ export const RingSlot: React.FC<RingSlotProps> = ({
         <div className="flex-1 min-w-0">
           <div
             className={`text-sm font-medium truncate ${
-              hasDestiny ? "text-amber-400" : "text-zinc-200"
+              hasDestiny ? 'text-amber-400' : 'text-zinc-200'
             }`}
           >
             {hasDestiny && destinyType
@@ -70,7 +70,7 @@ export const RingSlot: React.FC<RingSlotProps> = ({
               : displayName}
           </div>
           <div className="text-xs text-zinc-500">
-            {isInner ? "Inner Ring" : "Mid Ring"}
+            {isInner ? 'Inner Ring' : 'Mid Ring'}
           </div>
         </div>
         <div className="flex gap-1 flex-shrink-0">
@@ -101,5 +101,5 @@ export const RingSlot: React.FC<RingSlotProps> = ({
         <TooltipContent>{displayAffix}</TooltipContent>
       </Tooltip>
     </div>
-  );
-};
+  )
+}

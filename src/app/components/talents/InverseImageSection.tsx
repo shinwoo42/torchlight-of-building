@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { CraftedInverseImage } from "@/src/app/lib/save-data";
-import { InverseImageCrafter } from "./InverseImageCrafter";
-import { InverseImageInventory } from "./InverseImageInventory";
+import { useState } from 'react'
+import { CraftedInverseImage } from '@/src/app/lib/save-data'
+import { InverseImageCrafter } from './InverseImageCrafter'
+import { InverseImageInventory } from './InverseImageInventory'
 
 interface InverseImageSectionProps {
-  inverseImages: CraftedInverseImage[];
-  onSave: (inverseImage: CraftedInverseImage) => void;
-  onUpdate: (inverseImage: CraftedInverseImage) => void;
-  onCopy: (inverseImage: CraftedInverseImage) => void;
-  onDelete: (inverseImageId: string) => void;
-  selectedInverseImageId?: string;
-  onSelectInverseImage?: (inverseImageId: string | undefined) => void;
-  hasInverseImagePlaced?: boolean;
-  hasPrismPlaced?: boolean;
-  isOnGodGoddessTree?: boolean;
-  treeHasPoints?: boolean;
+  inverseImages: CraftedInverseImage[]
+  onSave: (inverseImage: CraftedInverseImage) => void
+  onUpdate: (inverseImage: CraftedInverseImage) => void
+  onCopy: (inverseImage: CraftedInverseImage) => void
+  onDelete: (inverseImageId: string) => void
+  selectedInverseImageId?: string
+  onSelectInverseImage?: (inverseImageId: string | undefined) => void
+  hasInverseImagePlaced?: boolean
+  hasPrismPlaced?: boolean
+  isOnGodGoddessTree?: boolean
+  treeHasPoints?: boolean
 }
 
 export const InverseImageSection: React.FC<InverseImageSectionProps> = ({
@@ -34,24 +34,24 @@ export const InverseImageSection: React.FC<InverseImageSectionProps> = ({
 }) => {
   const [editingInverseImage, setEditingInverseImage] = useState<
     CraftedInverseImage | undefined
-  >(undefined);
+  >(undefined)
 
   const handleSave = (inverseImage: CraftedInverseImage) => {
     if (editingInverseImage) {
-      onUpdate(inverseImage);
-      setEditingInverseImage(undefined);
+      onUpdate(inverseImage)
+      setEditingInverseImage(undefined)
     } else {
-      onSave(inverseImage);
+      onSave(inverseImage)
     }
-  };
+  }
 
   const handleEdit = (inverseImage: CraftedInverseImage) => {
-    setEditingInverseImage(inverseImage);
-  };
+    setEditingInverseImage(inverseImage)
+  }
 
   const handleCancel = () => {
-    setEditingInverseImage(undefined);
-  };
+    setEditingInverseImage(undefined)
+  }
 
   return (
     <div className="mt-8">
@@ -80,5 +80,5 @@ export const InverseImageSection: React.FC<InverseImageSectionProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

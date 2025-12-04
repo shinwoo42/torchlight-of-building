@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import {
   SaveData,
   Gear,
@@ -15,125 +15,125 @@ import {
   HeroMemorySlot,
   PactspiritSlot,
   RingSlotState,
-} from "../lib/save-data";
-import { createEmptyLoadout, generateItemId } from "../lib/storage";
+} from '../lib/save-data'
+import { createEmptyLoadout, generateItemId } from '../lib/storage'
 import {
   loadSaveData,
   saveSaveData,
   loadSavesIndex,
   saveSavesIndex,
   SavesIndex,
-} from "../lib/saves";
+} from '../lib/saves'
 import {
   GearSlot,
   TreeSlot,
   RingSlotKey,
   PactspiritSlotIndex,
-} from "../lib/types";
+} from '../lib/types'
 
 interface BuilderState {
   // Core data
-  loadout: SaveData;
-  hasUnsavedChanges: boolean;
+  loadout: SaveData
+  hasUnsavedChanges: boolean
 
   // Save metadata
-  currentSaveId: string | undefined;
-  currentSaveName: string | undefined;
-  savesIndex: SavesIndex;
+  currentSaveId: string | undefined
+  currentSaveName: string | undefined
+  savesIndex: SavesIndex
 
   // Actions - Core
-  setLoadout: (loadout: SaveData) => void;
-  updateLoadout: (updater: (prev: SaveData) => SaveData) => void;
-  loadFromSave: (saveId: string) => boolean;
-  save: () => boolean;
-  resetUnsavedChanges: () => void;
+  setLoadout: (loadout: SaveData) => void
+  updateLoadout: (updater: (prev: SaveData) => SaveData) => void
+  loadFromSave: (saveId: string) => boolean
+  save: () => boolean
+  resetUnsavedChanges: () => void
 
   // Actions - Equipment
-  addItemToInventory: (item: Gear) => void;
-  copyItem: (item: Gear) => void;
-  deleteItem: (itemId: string) => void;
-  selectItemForSlot: (slot: GearSlot, itemId: string | undefined) => void;
-  isItemEquipped: (itemId: string) => boolean;
+  addItemToInventory: (item: Gear) => void
+  copyItem: (item: Gear) => void
+  deleteItem: (itemId: string) => void
+  selectItemForSlot: (slot: GearSlot, itemId: string | undefined) => void
+  isItemEquipped: (itemId: string) => boolean
 
   // Actions - Talents
-  setTreeName: (slot: TreeSlot, treeName: string) => void;
-  clearTree: (slot: TreeSlot) => void;
-  setAllocatedNodes: (slot: TreeSlot, nodes: AllocatedTalentNode[]) => void;
-  setCoreTalents: (slot: TreeSlot, talents: string[]) => void;
-  addPrismToInventory: (prism: CraftedPrism) => void;
-  deletePrism: (prismId: string) => void;
+  setTreeName: (slot: TreeSlot, treeName: string) => void
+  clearTree: (slot: TreeSlot) => void
+  setAllocatedNodes: (slot: TreeSlot, nodes: AllocatedTalentNode[]) => void
+  setCoreTalents: (slot: TreeSlot, talents: string[]) => void
+  addPrismToInventory: (prism: CraftedPrism) => void
+  deletePrism: (prismId: string) => void
   placePrism: (
     prism: CraftedPrism,
     treeSlot: TreeSlot,
     position: { x: number; y: number },
-  ) => void;
-  removePlacedPrism: () => void;
-  addInverseImageToInventory: (inverseImage: CraftedInverseImage) => void;
-  deleteInverseImage: (inverseImageId: string) => void;
+  ) => void
+  removePlacedPrism: () => void
+  addInverseImageToInventory: (inverseImage: CraftedInverseImage) => void
+  deleteInverseImage: (inverseImageId: string) => void
   placeInverseImage: (
     inverseImage: CraftedInverseImage,
-    treeSlot: "tree2" | "tree3" | "tree4",
+    treeSlot: 'tree2' | 'tree3' | 'tree4',
     position: { x: number; y: number },
-  ) => void;
-  removePlacedInverseImage: () => void;
+  ) => void
+  removePlacedInverseImage: () => void
   allocateReflectedNode: (
     x: number,
     y: number,
     sourceX: number,
     sourceY: number,
-  ) => void;
-  deallocateReflectedNode: (x: number, y: number) => void;
-  setReflectedAllocatedNodes: (nodes: ReflectedAllocatedNode[]) => void;
+  ) => void
+  deallocateReflectedNode: (x: number, y: number) => void
+  setReflectedAllocatedNodes: (nodes: ReflectedAllocatedNode[]) => void
 
   // Actions - Hero
-  setHero: (hero: string | undefined) => void;
+  setHero: (hero: string | undefined) => void
   setTrait: (
-    level: "level1" | "level45" | "level60" | "level75",
+    level: 'level1' | 'level45' | 'level60' | 'level75',
     trait: string | undefined,
-  ) => void;
-  addHeroMemory: (memory: HeroMemory) => void;
-  deleteHeroMemory: (memoryId: string) => void;
+  ) => void
+  addHeroMemory: (memory: HeroMemory) => void
+  deleteHeroMemory: (memoryId: string) => void
   equipHeroMemory: (
     slot: HeroMemorySlot,
     memory: HeroMemory | undefined,
-  ) => void;
+  ) => void
 
   // Actions - Pactspirit
   setPactspirit: (
     slotIndex: PactspiritSlotIndex,
     name: string | undefined,
-  ) => void;
-  setPactspiritLevel: (slotIndex: PactspiritSlotIndex, level: number) => void;
+  ) => void
+  setPactspiritLevel: (slotIndex: PactspiritSlotIndex, level: number) => void
   setRingDestiny: (
     slotIndex: PactspiritSlotIndex,
     ringSlot: RingSlotKey,
-    destiny: RingSlotState["installedDestiny"],
-  ) => void;
+    destiny: RingSlotState['installedDestiny'],
+  ) => void
   updatePactspiritSlot: (
     slotIndex: PactspiritSlotIndex,
     slot: PactspiritSlot,
-  ) => void;
+  ) => void
 
   // Actions - Divinity
-  addSlateToInventory: (slate: DivinitySlate) => void;
-  deleteSlate: (slateId: string) => void;
-  placeSlate: (slateId: string, position: { row: number; col: number }) => void;
-  removeSlate: (slateId: string) => void;
-  updateSlate: (slateId: string, updates: Partial<DivinitySlate>) => void;
+  addSlateToInventory: (slate: DivinitySlate) => void
+  deleteSlate: (slateId: string) => void
+  placeSlate: (slateId: string, position: { row: number; col: number }) => void
+  removeSlate: (slateId: string) => void
+  updateSlate: (slateId: string, updates: Partial<DivinitySlate>) => void
 
   // Actions - Skills
-  setActiveSkill: (slot: 1 | 2 | 3 | 4, skillName: string | undefined) => void;
-  setPassiveSkill: (slot: 1 | 2 | 3 | 4, skillName: string | undefined) => void;
+  setActiveSkill: (slot: 1 | 2 | 3 | 4, skillName: string | undefined) => void
+  setPassiveSkill: (slot: 1 | 2 | 3 | 4, skillName: string | undefined) => void
   setSupportSkill: (
-    skillType: "active" | "passive",
+    skillType: 'active' | 'passive',
     skillSlot: 1 | 2 | 3 | 4,
     supportSlot: 1 | 2 | 3 | 4 | 5,
     supportName: string | undefined,
-  ) => void;
+  ) => void
   toggleSkillEnabled: (
-    skillType: "active" | "passive",
+    skillType: 'active' | 'passive',
     slot: 1 | 2 | 3 | 4,
-  ) => void;
+  ) => void
 }
 
 export const useBuilderStore = create<BuilderState>()(
@@ -156,15 +156,15 @@ export const useBuilderStore = create<BuilderState>()(
         })),
 
       loadFromSave: (saveId) => {
-        const index = loadSavesIndex();
-        const saveMeta = index.saves.find((s) => s.id === saveId);
-        if (!saveMeta) return false;
+        const index = loadSavesIndex()
+        const saveMeta = index.saves.find((s) => s.id === saveId)
+        if (!saveMeta) return false
 
-        const data = loadSaveData(saveId);
-        if (!data) return false;
+        const data = loadSaveData(saveId)
+        if (!data) return false
 
-        const updatedIndex = { ...index, currentSaveId: saveId };
-        saveSavesIndex(updatedIndex);
+        const updatedIndex = { ...index, currentSaveId: saveId }
+        saveSavesIndex(updatedIndex)
 
         set({
           loadout: data,
@@ -172,25 +172,25 @@ export const useBuilderStore = create<BuilderState>()(
           currentSaveName: saveMeta.name,
           savesIndex: updatedIndex,
           hasUnsavedChanges: false,
-        });
-        return true;
+        })
+        return true
       },
 
       save: () => {
-        const { currentSaveId, loadout, savesIndex } = get();
-        if (!currentSaveId) return false;
+        const { currentSaveId, loadout, savesIndex } = get()
+        if (!currentSaveId) return false
 
-        const success = saveSaveData(currentSaveId, loadout);
+        const success = saveSaveData(currentSaveId, loadout)
         if (success) {
-          const now = Date.now();
+          const now = Date.now()
           const updatedSaves = savesIndex.saves.map((s) =>
             s.id === currentSaveId ? { ...s, updatedAt: now } : s,
-          );
-          const newIndex = { ...savesIndex, saves: updatedSaves };
-          saveSavesIndex(newIndex);
-          set({ savesIndex: newIndex, hasUnsavedChanges: false });
+          )
+          const newIndex = { ...savesIndex, saves: updatedSaves }
+          saveSavesIndex(newIndex)
+          set({ savesIndex: newIndex, hasUnsavedChanges: false })
         }
-        return success;
+        return success
       },
 
       resetUnsavedChanges: () => set({ hasUnsavedChanges: false }),
@@ -206,39 +206,39 @@ export const useBuilderStore = create<BuilderState>()(
         })),
 
       copyItem: (item) => {
-        const newItem: Gear = { ...item, id: generateItemId() };
+        const newItem: Gear = { ...item, id: generateItemId() }
         set((state) => ({
           loadout: {
             ...state.loadout,
             itemsList: [...state.loadout.itemsList, newItem],
           },
           hasUnsavedChanges: true,
-        }));
+        }))
       },
 
       deleteItem: (itemId) =>
         set((state) => {
           const newItemsList = state.loadout.itemsList.filter(
             (item) => item.id !== itemId,
-          );
-          const newEquipmentPage = { ...state.loadout.equipmentPage };
+          )
+          const newEquipmentPage = { ...state.loadout.equipmentPage }
           const slots: GearSlot[] = [
-            "helmet",
-            "chest",
-            "neck",
-            "gloves",
-            "belt",
-            "boots",
-            "leftRing",
-            "rightRing",
-            "mainHand",
-            "offHand",
-          ];
+            'helmet',
+            'chest',
+            'neck',
+            'gloves',
+            'belt',
+            'boots',
+            'leftRing',
+            'rightRing',
+            'mainHand',
+            'offHand',
+          ]
           slots.forEach((slot) => {
             if (newEquipmentPage[slot]?.id === itemId) {
-              delete newEquipmentPage[slot];
+              delete newEquipmentPage[slot]
             }
-          });
+          })
           return {
             loadout: {
               ...state.loadout,
@@ -246,45 +246,45 @@ export const useBuilderStore = create<BuilderState>()(
               equipmentPage: newEquipmentPage,
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       selectItemForSlot: (slot, itemId) =>
         set((state) => {
           if (!itemId) {
-            const newEquipmentPage = { ...state.loadout.equipmentPage };
-            delete newEquipmentPage[slot];
+            const newEquipmentPage = { ...state.loadout.equipmentPage }
+            delete newEquipmentPage[slot]
             return {
               loadout: { ...state.loadout, equipmentPage: newEquipmentPage },
               hasUnsavedChanges: true,
-            };
+            }
           }
-          const item = state.loadout.itemsList.find((i) => i.id === itemId);
-          if (!item) return state;
+          const item = state.loadout.itemsList.find((i) => i.id === itemId)
+          if (!item) return state
           return {
             loadout: {
               ...state.loadout,
               equipmentPage: { ...state.loadout.equipmentPage, [slot]: item },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       isItemEquipped: (itemId) => {
-        const { loadout } = get();
+        const { loadout } = get()
         const slots: GearSlot[] = [
-          "helmet",
-          "chest",
-          "neck",
-          "gloves",
-          "belt",
-          "boots",
-          "leftRing",
-          "rightRing",
-          "mainHand",
-          "offHand",
-        ];
-        return slots.some((slot) => loadout.equipmentPage[slot]?.id === itemId);
+          'helmet',
+          'chest',
+          'neck',
+          'gloves',
+          'belt',
+          'boots',
+          'leftRing',
+          'rightRing',
+          'mainHand',
+          'offHand',
+        ]
+        return slots.some((slot) => loadout.equipmentPage[slot]?.id === itemId)
       },
 
       // Talent actions
@@ -306,18 +306,18 @@ export const useBuilderStore = create<BuilderState>()(
 
       clearTree: (slot) =>
         set((state) => {
-          const newTalentPage = { ...state.loadout.talentPage };
-          delete newTalentPage[slot];
+          const newTalentPage = { ...state.loadout.talentPage }
+          delete newTalentPage[slot]
           return {
             loadout: { ...state.loadout, talentPage: newTalentPage },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       setAllocatedNodes: (slot, nodes) =>
         set((state) => {
-          const tree = state.loadout.talentPage[slot];
-          if (!tree) return state;
+          const tree = state.loadout.talentPage[slot]
+          if (!tree) return state
           return {
             loadout: {
               ...state.loadout,
@@ -327,13 +327,13 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       setCoreTalents: (slot, talents) =>
         set((state) => {
-          const tree = state.loadout.talentPage[slot];
-          if (!tree) return state;
+          const tree = state.loadout.talentPage[slot]
+          if (!tree) return state
           return {
             loadout: {
               ...state.loadout,
@@ -343,7 +343,7 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       addPrismToInventory: (prism) =>
@@ -359,11 +359,11 @@ export const useBuilderStore = create<BuilderState>()(
         set((state) => {
           const newPrismList = state.loadout.prismList.filter(
             (p) => p.id !== prismId,
-          );
-          const placedPrism = state.loadout.talentPage.placedPrism;
-          const newTalentPage = { ...state.loadout.talentPage };
+          )
+          const placedPrism = state.loadout.talentPage.placedPrism
+          const newTalentPage = { ...state.loadout.talentPage }
           if (placedPrism?.prism.id === prismId) {
-            delete newTalentPage.placedPrism;
+            delete newTalentPage.placedPrism
           }
           return {
             loadout: {
@@ -372,7 +372,7 @@ export const useBuilderStore = create<BuilderState>()(
               talentPage: newTalentPage,
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       placePrism: (prism, treeSlot, position) =>
@@ -389,12 +389,12 @@ export const useBuilderStore = create<BuilderState>()(
 
       removePlacedPrism: () =>
         set((state) => {
-          const newTalentPage = { ...state.loadout.talentPage };
-          delete newTalentPage.placedPrism;
+          const newTalentPage = { ...state.loadout.talentPage }
+          delete newTalentPage.placedPrism
           return {
             loadout: { ...state.loadout, talentPage: newTalentPage },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       addInverseImageToInventory: (inverseImage) =>
@@ -410,12 +410,11 @@ export const useBuilderStore = create<BuilderState>()(
         set((state) => {
           const newInverseImageList = state.loadout.inverseImageList.filter(
             (ii) => ii.id !== inverseImageId,
-          );
-          const placedInverseImage =
-            state.loadout.talentPage.placedInverseImage;
-          const newTalentPage = { ...state.loadout.talentPage };
+          )
+          const placedInverseImage = state.loadout.talentPage.placedInverseImage
+          const newTalentPage = { ...state.loadout.talentPage }
           if (placedInverseImage?.inverseImage.id === inverseImageId) {
-            delete newTalentPage.placedInverseImage;
+            delete newTalentPage.placedInverseImage
           }
           return {
             loadout: {
@@ -424,7 +423,7 @@ export const useBuilderStore = create<BuilderState>()(
               talentPage: newTalentPage,
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       placeInverseImage: (inverseImage, treeSlot, position) =>
@@ -449,12 +448,11 @@ export const useBuilderStore = create<BuilderState>()(
 
       removePlacedInverseImage: () =>
         set((state) => {
-          const placedInverseImage =
-            state.loadout.talentPage.placedInverseImage;
-          if (!placedInverseImage) return state;
+          const placedInverseImage = state.loadout.talentPage.placedInverseImage
+          if (!placedInverseImage) return state
 
-          const newTalentPage = { ...state.loadout.talentPage };
-          delete newTalentPage.placedInverseImage;
+          const newTalentPage = { ...state.loadout.talentPage }
+          delete newTalentPage.placedInverseImage
 
           return {
             loadout: {
@@ -466,31 +464,30 @@ export const useBuilderStore = create<BuilderState>()(
               talentPage: newTalentPage,
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       allocateReflectedNode: (x, y, sourceX, sourceY) =>
         set((state) => {
-          const placedInverseImage =
-            state.loadout.talentPage.placedInverseImage;
-          if (!placedInverseImage) return state;
+          const placedInverseImage = state.loadout.talentPage.placedInverseImage
+          if (!placedInverseImage) return state
 
           const existingIdx =
             placedInverseImage.reflectedAllocatedNodes.findIndex(
               (n) => n.x === x && n.y === y,
-            );
+            )
 
-          let updatedNodes: ReflectedAllocatedNode[];
+          let updatedNodes: ReflectedAllocatedNode[]
           if (existingIdx >= 0) {
             updatedNodes = placedInverseImage.reflectedAllocatedNodes.map(
               (n, idx) =>
                 idx === existingIdx ? { ...n, points: n.points + 1 } : n,
-            );
+            )
           } else {
             updatedNodes = [
               ...placedInverseImage.reflectedAllocatedNodes,
               { x, y, sourceX, sourceY, points: 1 },
-            ];
+            ]
           }
 
           return {
@@ -505,30 +502,29 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       deallocateReflectedNode: (x, y) =>
         set((state) => {
-          const placedInverseImage =
-            state.loadout.talentPage.placedInverseImage;
-          if (!placedInverseImage) return state;
+          const placedInverseImage = state.loadout.talentPage.placedInverseImage
+          if (!placedInverseImage) return state
 
           const existing = placedInverseImage.reflectedAllocatedNodes.find(
             (n) => n.x === x && n.y === y,
-          );
-          if (!existing) return state;
+          )
+          if (!existing) return state
 
-          let updatedNodes: ReflectedAllocatedNode[];
+          let updatedNodes: ReflectedAllocatedNode[]
           if (existing.points > 1) {
             updatedNodes = placedInverseImage.reflectedAllocatedNodes.map(
               (n) =>
                 n.x === x && n.y === y ? { ...n, points: n.points - 1 } : n,
-            );
+            )
           } else {
             updatedNodes = placedInverseImage.reflectedAllocatedNodes.filter(
               (n) => !(n.x === x && n.y === y),
-            );
+            )
           }
 
           return {
@@ -543,14 +539,13 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       setReflectedAllocatedNodes: (nodes) =>
         set((state) => {
-          const placedInverseImage =
-            state.loadout.talentPage.placedInverseImage;
-          if (!placedInverseImage) return state;
+          const placedInverseImage = state.loadout.talentPage.placedInverseImage
+          if (!placedInverseImage) return state
 
           return {
             loadout: {
@@ -564,7 +559,7 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       // Hero actions
@@ -602,15 +597,15 @@ export const useBuilderStore = create<BuilderState>()(
         set((state) => {
           const newMemoryList = state.loadout.heroMemoryList.filter(
             (m) => m.id !== memoryId,
-          );
-          const newMemorySlots = { ...state.loadout.heroPage.memorySlots };
-          (["slot45", "slot60", "slot75"] as HeroMemorySlot[]).forEach(
+          )
+          const newMemorySlots = { ...state.loadout.heroPage.memorySlots }
+          ;(['slot45', 'slot60', 'slot75'] as HeroMemorySlot[]).forEach(
             (slot) => {
               if (newMemorySlots[slot]?.id === memoryId) {
-                newMemorySlots[slot] = undefined;
+                newMemorySlots[slot] = undefined
               }
             },
-          );
+          )
           return {
             loadout: {
               ...state.loadout,
@@ -621,7 +616,7 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       equipHeroMemory: (slot, memory) =>
@@ -643,7 +638,7 @@ export const useBuilderStore = create<BuilderState>()(
       setPactspirit: (slotIndex, name) =>
         set((state) => {
           const slotKey =
-            `slot${slotIndex}` as keyof typeof state.loadout.pactspiritPage;
+            `slot${slotIndex}` as keyof typeof state.loadout.pactspiritPage
           return {
             loadout: {
               ...state.loadout,
@@ -656,13 +651,13 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       setPactspiritLevel: (slotIndex, level) =>
         set((state) => {
           const slotKey =
-            `slot${slotIndex}` as keyof typeof state.loadout.pactspiritPage;
+            `slot${slotIndex}` as keyof typeof state.loadout.pactspiritPage
           return {
             loadout: {
               ...state.loadout,
@@ -675,14 +670,14 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       setRingDestiny: (slotIndex, ringSlot, destiny) =>
         set((state) => {
           const slotKey =
-            `slot${slotIndex}` as keyof typeof state.loadout.pactspiritPage;
-          const slot = state.loadout.pactspiritPage[slotKey];
+            `slot${slotIndex}` as keyof typeof state.loadout.pactspiritPage
+          const slot = state.loadout.pactspiritPage[slotKey]
           return {
             loadout: {
               ...state.loadout,
@@ -698,13 +693,13 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       updatePactspiritSlot: (slotIndex, slot) =>
         set((state) => {
           const slotKey =
-            `slot${slotIndex}` as keyof typeof state.loadout.pactspiritPage;
+            `slot${slotIndex}` as keyof typeof state.loadout.pactspiritPage
           return {
             loadout: {
               ...state.loadout,
@@ -714,7 +709,7 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       // Divinity actions
@@ -731,11 +726,11 @@ export const useBuilderStore = create<BuilderState>()(
         set((state) => {
           const newSlateList = state.loadout.divinitySlateList.filter(
             (s) => s.id !== slateId,
-          );
+          )
           const newPlacedSlates =
             state.loadout.divinityPage.placedSlates.filter(
               (p) => p.slateId !== slateId,
-            );
+            )
           return {
             loadout: {
               ...state.loadout,
@@ -746,7 +741,7 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       placeSlate: (slateId, position) =>
@@ -754,17 +749,17 @@ export const useBuilderStore = create<BuilderState>()(
           const existingIndex =
             state.loadout.divinityPage.placedSlates.findIndex(
               (p) => p.slateId === slateId,
-            );
-          let newPlacedSlates: PlacedSlate[];
+            )
+          let newPlacedSlates: PlacedSlate[]
           if (existingIndex >= 0) {
             newPlacedSlates = state.loadout.divinityPage.placedSlates.map(
               (p, i) => (i === existingIndex ? { slateId, position } : p),
-            );
+            )
           } else {
             newPlacedSlates = [
               ...state.loadout.divinityPage.placedSlates,
               { slateId, position },
-            ];
+            ]
           }
           return {
             loadout: {
@@ -775,7 +770,7 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       removeSlate: (slateId) =>
@@ -807,7 +802,7 @@ export const useBuilderStore = create<BuilderState>()(
       setActiveSkill: (slot, skillName) =>
         set((state) => {
           const skillKey =
-            `activeSkill${slot}` as keyof typeof state.loadout.skillPage;
+            `activeSkill${slot}` as keyof typeof state.loadout.skillPage
           return {
             loadout: {
               ...state.loadout,
@@ -820,13 +815,13 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       setPassiveSkill: (slot, skillName) =>
         set((state) => {
           const skillKey =
-            `passiveSkill${slot}` as keyof typeof state.loadout.skillPage;
+            `passiveSkill${slot}` as keyof typeof state.loadout.skillPage
           return {
             loadout: {
               ...state.loadout,
@@ -839,16 +834,16 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       setSupportSkill: (skillType, skillSlot, supportSlot, supportName) =>
         set((state) => {
           const skillKey =
-            `${skillType}Skill${skillSlot}` as keyof typeof state.loadout.skillPage;
+            `${skillType}Skill${skillSlot}` as keyof typeof state.loadout.skillPage
           const supportKey =
-            `supportSkill${supportSlot}` as keyof (typeof state.loadout.skillPage)[typeof skillKey]["supportSkills"];
-          const skill = state.loadout.skillPage[skillKey];
+            `supportSkill${supportSlot}` as keyof (typeof state.loadout.skillPage)[typeof skillKey]['supportSkills']
+          const skill = state.loadout.skillPage[skillKey]
           return {
             loadout: {
               ...state.loadout,
@@ -864,14 +859,14 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
 
       toggleSkillEnabled: (skillType, slot) =>
         set((state) => {
           const skillKey =
-            `${skillType}Skill${slot}` as keyof typeof state.loadout.skillPage;
-          const skill = state.loadout.skillPage[skillKey];
+            `${skillType}Skill${slot}` as keyof typeof state.loadout.skillPage
+          const skill = state.loadout.skillPage[skillKey]
           return {
             loadout: {
               ...state.loadout,
@@ -881,15 +876,15 @@ export const useBuilderStore = create<BuilderState>()(
               },
             },
             hasUnsavedChanges: true,
-          };
+          }
         }),
     }),
     {
-      name: "torchlight-builder-storage",
+      name: 'torchlight-builder-storage',
       partialize: (state) => ({
         loadout: state.loadout,
         currentSaveId: state.currentSaveId,
       }),
     },
   ),
-);
+)

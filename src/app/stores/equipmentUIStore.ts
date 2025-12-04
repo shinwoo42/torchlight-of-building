@@ -1,48 +1,48 @@
-"use client";
+'use client'
 
-import { create } from "zustand";
-import { EquipmentType } from "@/src/tli/gear_data_types";
-import { AffixSlotState, GearSlot } from "../lib/types";
-import { DEFAULT_QUALITY } from "../lib/constants";
+import { create } from 'zustand'
+import { EquipmentType } from '@/src/tli/gear_data_types'
+import { AffixSlotState, GearSlot } from '../lib/types'
+import { DEFAULT_QUALITY } from '../lib/constants'
 
 const createEmptyAffixSlots = (): AffixSlotState[] =>
   Array(6)
     .fill(undefined)
-    .map(() => ({ affixIndex: undefined, percentage: DEFAULT_QUALITY }));
+    .map(() => ({ affixIndex: undefined, percentage: DEFAULT_QUALITY }))
 
 interface LegendaryAffixSlotState {
-  affixIndex: number | undefined;
-  percentage: number;
+  affixIndex: number | undefined
+  percentage: number
 }
 
 interface EquipmentUIState {
   // Crafting state
-  selectedEquipmentType: EquipmentType | undefined;
-  affixSlots: AffixSlotState[];
-  blendAffixIndex: number | undefined;
+  selectedEquipmentType: EquipmentType | undefined
+  affixSlots: AffixSlotState[]
+  blendAffixIndex: number | undefined
 
   // Legendary crafting state
-  selectedLegendaryIndex: number | undefined;
-  legendaryAffixSlots: LegendaryAffixSlotState[];
+  selectedLegendaryIndex: number | undefined
+  legendaryAffixSlots: LegendaryAffixSlotState[]
 
   // Selected gear slot for equipping
-  selectedGearSlot: GearSlot;
+  selectedGearSlot: GearSlot
 
   // Actions
-  setSelectedEquipmentType: (type: EquipmentType | undefined) => void;
-  setAffixSlot: (index: number, update: Partial<AffixSlotState>) => void;
-  clearAffixSlot: (index: number) => void;
-  setBlendAffixIndex: (index: number | undefined) => void;
-  resetCrafting: () => void;
+  setSelectedEquipmentType: (type: EquipmentType | undefined) => void
+  setAffixSlot: (index: number, update: Partial<AffixSlotState>) => void
+  clearAffixSlot: (index: number) => void
+  setBlendAffixIndex: (index: number | undefined) => void
+  resetCrafting: () => void
 
-  setSelectedLegendaryIndex: (index: number | undefined) => void;
+  setSelectedLegendaryIndex: (index: number | undefined) => void
   setLegendaryAffixSlot: (
     index: number,
     update: Partial<LegendaryAffixSlotState>,
-  ) => void;
-  resetLegendaryCrafting: () => void;
+  ) => void
+  resetLegendaryCrafting: () => void
 
-  setSelectedGearSlot: (slot: GearSlot) => void;
+  setSelectedGearSlot: (slot: GearSlot) => void
 }
 
 export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
@@ -52,7 +52,7 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
   blendAffixIndex: undefined,
   selectedLegendaryIndex: undefined,
   legendaryAffixSlots: [],
-  selectedGearSlot: "helmet",
+  selectedGearSlot: 'helmet',
 
   // Actions
   setSelectedEquipmentType: (type) =>
@@ -107,4 +107,4 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
     }),
 
   setSelectedGearSlot: (slot) => set({ selectedGearSlot: slot }),
-}));
+}))

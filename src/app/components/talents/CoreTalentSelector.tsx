@@ -1,11 +1,11 @@
-import React from "react";
-import type { CoreTalent } from "@/src/data/core_talent";
-import { useTooltip } from "@/src/app/hooks/useTooltip";
+import React from 'react'
+import type { CoreTalent } from '@/src/data/core_talent'
+import { useTooltip } from '@/src/app/hooks/useTooltip'
 import {
   Tooltip,
   TooltipTitle,
   TooltipContent,
-} from "@/src/app/components/ui/Tooltip";
+} from '@/src/app/components/ui/Tooltip'
 import {
   type TreeSlot,
   getAvailableGodGoddessCoreTalents,
@@ -14,26 +14,26 @@ import {
   getMaxCoreTalentSlots,
   isGodGoddessTree,
   getCoreTalentsForTree,
-} from "@/src/app/lib/core-talent-utils";
+} from '@/src/app/lib/core-talent-utils'
 
 interface CoreTalentSelectorProps {
-  treeName: string;
-  treeSlot: TreeSlot;
-  pointsSpent: number;
-  selectedCoreTalents: string[];
+  treeName: string
+  treeSlot: TreeSlot
+  pointsSpent: number
+  selectedCoreTalents: string[]
   onSelectCoreTalent: (
     slotIndex: number,
     talentName: string | undefined,
-  ) => void;
-  replacedByPrism?: string; // Ethereal talent name if prism replaces core talents
+  ) => void
+  replacedByPrism?: string // Ethereal talent name if prism replaces core talents
 }
 
 interface SlotConfig {
-  index: number;
-  label: string;
-  unlocked: boolean;
-  available: CoreTalent[];
-  selected: string | undefined;
+  index: number
+  label: string
+  unlocked: boolean
+  available: CoreTalent[]
+  selected: string | undefined
 }
 
 export const CoreTalentSelector: React.FC<CoreTalentSelectorProps> = ({
@@ -44,48 +44,48 @@ export const CoreTalentSelector: React.FC<CoreTalentSelectorProps> = ({
   onSelectCoreTalent,
   replacedByPrism,
 }) => {
-  const isGodTree = isGodGoddessTree(treeName);
-  const maxSlots = getMaxCoreTalentSlots(treeSlot);
-  const allTalentsForTree = getCoreTalentsForTree(treeName);
+  const isGodTree = isGodGoddessTree(treeName)
+  const maxSlots = getMaxCoreTalentSlots(treeSlot)
+  const allTalentsForTree = getCoreTalentsForTree(treeName)
 
-  const slots: SlotConfig[] = [];
+  const slots: SlotConfig[] = []
 
   if (isGodTree) {
     const { firstSlot, secondSlot } = getAvailableGodGoddessCoreTalents(
       treeName,
       pointsSpent,
       selectedCoreTalents,
-    );
+    )
 
     slots.push({
       index: 0,
-      label: "Core Talent 1 (12 pts)",
+      label: 'Core Talent 1 (12 pts)',
       unlocked: isCoreTalentSlotUnlocked(treeSlot, 0, pointsSpent),
       available: firstSlot,
       selected: selectedCoreTalents[0],
-    });
+    })
 
     slots.push({
       index: 1,
-      label: "Core Talent 2 (24 pts)",
+      label: 'Core Talent 2 (24 pts)',
       unlocked: isCoreTalentSlotUnlocked(treeSlot, 1, pointsSpent),
       available: secondSlot,
       selected: selectedCoreTalents[1],
-    });
+    })
   } else {
     const available = getAvailableProfessionCoreTalents(
       treeName,
       pointsSpent,
       selectedCoreTalents,
-    );
+    )
 
     slots.push({
       index: 0,
-      label: "Core Talent (24 pts)",
+      label: 'Core Talent (24 pts)',
       unlocked: isCoreTalentSlotUnlocked(treeSlot, 0, pointsSpent),
       available,
       selected: selectedCoreTalents[0],
-    });
+    })
   }
 
   // If core talents are replaced by a prism, show disabled state
@@ -99,7 +99,7 @@ export const CoreTalentSelector: React.FC<CoreTalentSelectorProps> = ({
           Replaced by Prism Ethereal Talent
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -122,16 +122,16 @@ export const CoreTalentSelector: React.FC<CoreTalentSelectorProps> = ({
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
 interface CoreTalentSlotProps {
-  label: string;
-  unlocked: boolean;
-  available: CoreTalent[];
-  selected: string | undefined;
-  allTalentsForTree: CoreTalent[];
-  onSelect: (name: string | undefined) => void;
+  label: string
+  unlocked: boolean
+  available: CoreTalent[]
+  selected: string | undefined
+  allTalentsForTree: CoreTalent[]
+  onSelect: (name: string | undefined) => void
 }
 
 const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
@@ -142,37 +142,37 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
   allTalentsForTree,
   onSelect,
 }) => {
-  const { mousePos, handlers } = useTooltip();
+  const { mousePos, handlers } = useTooltip()
   const [hoveredTalent, setHoveredTalent] = React.useState<
     CoreTalent | undefined
-  >();
+  >()
 
   const handleMouseEnter = (
     e: React.MouseEvent,
     talent: CoreTalent | undefined,
   ) => {
-    handlers.onMouseEnter();
-    handlers.onMouseMove(e);
-    setHoveredTalent(talent);
-  };
+    handlers.onMouseEnter()
+    handlers.onMouseMove(e)
+    setHoveredTalent(talent)
+  }
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    handlers.onMouseMove(e);
-  };
+    handlers.onMouseMove(e)
+  }
 
   const handleMouseLeave = () => {
-    handlers.onMouseLeave();
-    setHoveredTalent(undefined);
-  };
+    handlers.onMouseLeave()
+    setHoveredTalent(undefined)
+  }
 
   return (
     <div
       className={`p-3 rounded-lg border ${
         unlocked
           ? selected
-            ? "border-amber-500 bg-amber-500/10"
-            : "border-zinc-600 bg-zinc-800"
-          : "border-zinc-800 bg-zinc-900 opacity-50"
+            ? 'border-amber-500 bg-amber-500/10'
+            : 'border-zinc-600 bg-zinc-800'
+          : 'border-zinc-800 bg-zinc-900 opacity-50'
       }`}
     >
       <div className="text-xs text-zinc-400 mb-2">{label}</div>
@@ -190,8 +190,8 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
               onMouseLeave={handleMouseLeave}
               className={`w-full px-3 py-2 border rounded-lg text-sm text-left transition-colors ${
                 selected === ct.name
-                  ? "border-amber-500 bg-amber-500/20 text-amber-400"
-                  : "border-zinc-700 bg-zinc-800 text-zinc-50 hover:border-amber-500/50"
+                  ? 'border-amber-500 bg-amber-500/20 text-amber-400'
+                  : 'border-zinc-700 bg-zinc-800 text-zinc-50 hover:border-amber-500/50'
               }`}
             >
               {ct.name}
@@ -202,7 +202,7 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
             (() => {
               const orphanedTalent = allTalentsForTree.find(
                 (ct) => ct.name === selected,
-              );
+              )
               return (
                 <button
                   onClick={() => onSelect(undefined)}
@@ -213,7 +213,7 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
                 >
                   {selected}
                 </button>
-              );
+              )
             })()}
         </div>
       ) : (
@@ -233,5 +233,5 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
         )}
       </Tooltip>
     </div>
-  );
-};
+  )
+}

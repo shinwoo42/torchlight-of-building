@@ -6,13 +6,13 @@ import {
   PactspiritSlot,
   RingSlotState,
   DivinityPage,
-} from "./save-data";
-import { DEBUG_MODE_STORAGE_KEY } from "./constants";
+} from './save-data'
+import { DEBUG_MODE_STORAGE_KEY } from './constants'
 
 const createEmptySkillSlot = (): SkillWithSupports => ({
   enabled: true,
   supportSkills: {},
-});
+})
 
 export const createEmptyHeroPage = (): HeroPage => ({
   selectedHero: undefined,
@@ -27,9 +27,9 @@ export const createEmptyHeroPage = (): HeroPage => ({
     slot60: undefined,
     slot75: undefined,
   },
-});
+})
 
-const createEmptyRingSlotState = (): RingSlotState => ({});
+const createEmptyRingSlotState = (): RingSlotState => ({})
 
 export const createEmptyPactspiritSlot = (): PactspiritSlot => ({
   pactspiritName: undefined,
@@ -45,39 +45,39 @@ export const createEmptyPactspiritSlot = (): PactspiritSlot => ({
     midRing2: createEmptyRingSlotState(),
     midRing3: createEmptyRingSlotState(),
   },
-});
+})
 
 export const createEmptyPactspiritPage = (): PactspiritPage => ({
   slot1: createEmptyPactspiritSlot(),
   slot2: createEmptyPactspiritSlot(),
   slot3: createEmptyPactspiritSlot(),
-});
+})
 
 export const createEmptyDivinityPage = (): DivinityPage => ({
   placedSlates: [],
-});
+})
 
-export const generateItemId = (): string => crypto.randomUUID();
+export const generateItemId = (): string => crypto.randomUUID()
 
 export const loadDebugModeFromStorage = (): boolean => {
-  if (typeof window === "undefined") return false;
+  if (typeof window === 'undefined') return false
   try {
-    const stored = localStorage.getItem(DEBUG_MODE_STORAGE_KEY);
-    return stored === "true";
+    const stored = localStorage.getItem(DEBUG_MODE_STORAGE_KEY)
+    return stored === 'true'
   } catch (error) {
-    console.error("Failed to load debug mode from localStorage:", error);
-    return false;
+    console.error('Failed to load debug mode from localStorage:', error)
+    return false
   }
-};
+}
 
 export const saveDebugModeToStorage = (enabled: boolean): void => {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return
   try {
-    localStorage.setItem(DEBUG_MODE_STORAGE_KEY, enabled.toString());
+    localStorage.setItem(DEBUG_MODE_STORAGE_KEY, enabled.toString())
   } catch (error) {
-    console.error("Failed to save debug mode to localStorage:", error);
+    console.error('Failed to save debug mode to localStorage:', error)
   }
-};
+}
 
 export const createEmptyLoadout = (): SaveData => ({
   equipmentPage: {},
@@ -100,4 +100,4 @@ export const createEmptyLoadout = (): SaveData => ({
   divinitySlateList: [],
   prismList: [],
   inverseImageList: [],
-});
+})

@@ -1,165 +1,165 @@
-"use client";
+'use client'
 
-import { useMemo, useCallback } from "react";
-import { useBuilderStore } from "../../stores/builderStore";
-import { useEquipmentUIStore } from "../../stores/equipmentUIStore";
-import { EquipmentSlotDropdown } from "../equipment/EquipmentSlotDropdown";
-import { AffixSlotComponent } from "../equipment/AffixSlotComponent";
-import { InventoryItem } from "../equipment/InventoryItem";
-import { LegendaryGearModule } from "../equipment/LegendaryGearModule";
-import { GEAR_SLOTS, SLOT_TO_VALID_EQUIPMENT_TYPES } from "../../lib/constants";
-import { GearSlot } from "../../lib/types";
-import { getFilteredAffixes } from "../../lib/affix-utils";
+import { useMemo, useCallback } from 'react'
+import { useBuilderStore } from '../../stores/builderStore'
+import { useEquipmentUIStore } from '../../stores/equipmentUIStore'
+import { EquipmentSlotDropdown } from '../equipment/EquipmentSlotDropdown'
+import { AffixSlotComponent } from '../equipment/AffixSlotComponent'
+import { InventoryItem } from '../equipment/InventoryItem'
+import { LegendaryGearModule } from '../equipment/LegendaryGearModule'
+import { GEAR_SLOTS, SLOT_TO_VALID_EQUIPMENT_TYPES } from '../../lib/constants'
+import { GearSlot } from '../../lib/types'
+import { getFilteredAffixes } from '../../lib/affix-utils'
 import {
   getBlendAffixes,
   formatBlendAffix,
   formatBlendOption,
   formatBlendPreview,
-} from "../../lib/blend-utils";
+} from '../../lib/blend-utils'
 import {
   getCompatibleItems,
   getGearTypeFromEquipmentType,
-} from "../../lib/equipment-utils";
-import { craft } from "@/src/tli/crafting/craft";
-import { Gear } from "../../lib/save-data";
-import { BaseGearAffix, EquipmentType } from "@/src/tli/gear_data_types";
-import { generateItemId } from "../../lib/storage";
+} from '../../lib/equipment-utils'
+import { craft } from '@/src/tli/crafting/craft'
+import { Gear } from '../../lib/save-data'
+import { BaseGearAffix, EquipmentType } from '@/src/tli/gear_data_types'
+import { generateItemId } from '../../lib/storage'
 
 export const EquipmentSection = () => {
   // Builder store - loadout data
-  const loadout = useBuilderStore((state) => state.loadout);
+  const loadout = useBuilderStore((state) => state.loadout)
   const addItemToInventory = useBuilderStore(
     (state) => state.addItemToInventory,
-  );
-  const copyItem = useBuilderStore((state) => state.copyItem);
-  const deleteItem = useBuilderStore((state) => state.deleteItem);
-  const selectItemForSlot = useBuilderStore((state) => state.selectItemForSlot);
-  const isItemEquipped = useBuilderStore((state) => state.isItemEquipped);
+  )
+  const copyItem = useBuilderStore((state) => state.copyItem)
+  const deleteItem = useBuilderStore((state) => state.deleteItem)
+  const selectItemForSlot = useBuilderStore((state) => state.selectItemForSlot)
+  const isItemEquipped = useBuilderStore((state) => state.isItemEquipped)
 
   // Equipment UI store - crafting state
   const selectedEquipmentType = useEquipmentUIStore(
     (state) => state.selectedEquipmentType,
-  );
-  const affixSlots = useEquipmentUIStore((state) => state.affixSlots);
+  )
+  const affixSlots = useEquipmentUIStore((state) => state.affixSlots)
   const setSelectedEquipmentType = useEquipmentUIStore(
     (state) => state.setSelectedEquipmentType,
-  );
-  const setAffixSlot = useEquipmentUIStore((state) => state.setAffixSlot);
-  const clearAffixSlot = useEquipmentUIStore((state) => state.clearAffixSlot);
-  const blendAffixIndex = useEquipmentUIStore((state) => state.blendAffixIndex);
+  )
+  const setAffixSlot = useEquipmentUIStore((state) => state.setAffixSlot)
+  const clearAffixSlot = useEquipmentUIStore((state) => state.clearAffixSlot)
+  const blendAffixIndex = useEquipmentUIStore((state) => state.blendAffixIndex)
   const setBlendAffixIndex = useEquipmentUIStore(
     (state) => state.setBlendAffixIndex,
-  );
-  const resetCrafting = useEquipmentUIStore((state) => state.resetCrafting);
+  )
+  const resetCrafting = useEquipmentUIStore((state) => state.resetCrafting)
 
   const prefixAffixes = useMemo(
     () =>
       selectedEquipmentType
-        ? getFilteredAffixes(selectedEquipmentType, "Prefix")
+        ? getFilteredAffixes(selectedEquipmentType, 'Prefix')
         : [],
     [selectedEquipmentType],
-  );
+  )
 
   const suffixAffixes = useMemo(
     () =>
       selectedEquipmentType
-        ? getFilteredAffixes(selectedEquipmentType, "Suffix")
+        ? getFilteredAffixes(selectedEquipmentType, 'Suffix')
         : [],
     [selectedEquipmentType],
-  );
+  )
 
   const blendAffixes = useMemo(
-    () => (selectedEquipmentType === "Belt" ? getBlendAffixes() : []),
+    () => (selectedEquipmentType === 'Belt' ? getBlendAffixes() : []),
     [selectedEquipmentType],
-  );
+  )
 
-  const isBelt = selectedEquipmentType === "Belt";
+  const isBelt = selectedEquipmentType === 'Belt'
 
   const allEquipmentTypes = useMemo(() => {
-    const types = new Set<EquipmentType>();
+    const types = new Set<EquipmentType>()
     Object.values(SLOT_TO_VALID_EQUIPMENT_TYPES).forEach((slotTypes) => {
-      slotTypes.forEach((type) => types.add(type));
-    });
-    return Array.from(types).sort();
-  }, []);
+      slotTypes.forEach((type) => types.add(type))
+    })
+    return Array.from(types).sort()
+  }, [])
 
   const handleEquipmentTypeChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const newType = e.target.value as EquipmentType;
-      setSelectedEquipmentType(newType || undefined);
+      const newType = e.target.value as EquipmentType
+      setSelectedEquipmentType(newType || undefined)
     },
     [setSelectedEquipmentType],
-  );
+  )
 
   const handleAffixSelect = useCallback(
     (slotIndex: number, value: string) => {
-      const affixIndex = value === "" ? undefined : parseInt(value);
+      const affixIndex = value === '' ? undefined : parseInt(value)
       setAffixSlot(slotIndex, {
         affixIndex,
         percentage:
           affixIndex === undefined ? 50 : affixSlots[slotIndex].percentage,
-      });
+      })
     },
     [setAffixSlot, affixSlots],
-  );
+  )
 
   const handleSliderChange = useCallback(
     (slotIndex: number, value: string) => {
-      const percentage = parseInt(value);
-      setAffixSlot(slotIndex, { percentage });
+      const percentage = parseInt(value)
+      setAffixSlot(slotIndex, { percentage })
     },
     [setAffixSlot],
-  );
+  )
 
   const handleClearAffix = useCallback(
     (slotIndex: number) => {
-      clearAffixSlot(slotIndex);
+      clearAffixSlot(slotIndex)
     },
     [clearAffixSlot],
-  );
+  )
 
   const handleBlendSelect = useCallback(
     (_slotIndex: number, value: string) => {
-      const index = value === "" ? undefined : parseInt(value);
-      setBlendAffixIndex(index);
+      const index = value === '' ? undefined : parseInt(value)
+      setBlendAffixIndex(index)
     },
     [setBlendAffixIndex],
-  );
+  )
 
   const handleClearBlend = useCallback(() => {
-    setBlendAffixIndex(undefined);
-  }, [setBlendAffixIndex]);
+    setBlendAffixIndex(undefined)
+  }, [setBlendAffixIndex])
 
   const handleSaveToInventory = useCallback(() => {
-    if (!selectedEquipmentType) return;
+    if (!selectedEquipmentType) return
 
-    const affixes: string[] = [];
+    const affixes: string[] = []
 
     // Add blend affix first if selected (belt only)
     if (isBelt && blendAffixIndex !== undefined) {
-      const selectedBlend = blendAffixes[blendAffixIndex];
-      affixes.push(formatBlendAffix(selectedBlend));
+      const selectedBlend = blendAffixes[blendAffixIndex]
+      affixes.push(formatBlendAffix(selectedBlend))
     }
 
     // Add prefix/suffix affixes
     affixSlots.forEach((selection, idx) => {
-      if (selection.affixIndex === undefined) return;
-      const affixType = idx < 3 ? "Prefix" : "Suffix";
+      if (selection.affixIndex === undefined) return
+      const affixType = idx < 3 ? 'Prefix' : 'Suffix'
       const filteredAffixes =
-        affixType === "Prefix" ? prefixAffixes : suffixAffixes;
-      const selectedAffix = filteredAffixes[selection.affixIndex];
-      affixes.push(craft(selectedAffix, selection.percentage));
-    });
+        affixType === 'Prefix' ? prefixAffixes : suffixAffixes
+      const selectedAffix = filteredAffixes[selection.affixIndex]
+      affixes.push(craft(selectedAffix, selection.percentage))
+    })
 
     const newItem: Gear = {
       id: generateItemId(),
       gearType: getGearTypeFromEquipmentType(selectedEquipmentType),
       affixes,
       equipmentType: selectedEquipmentType,
-    };
+    }
 
-    addItemToInventory(newItem);
-    resetCrafting();
+    addItemToInventory(newItem)
+    resetCrafting()
   }, [
     selectedEquipmentType,
     affixSlots,
@@ -170,21 +170,21 @@ export const EquipmentSection = () => {
     isBelt,
     blendAffixIndex,
     blendAffixes,
-  ]);
+  ])
 
   const handleSelectItemForSlot = useCallback(
     (slot: GearSlot, itemId: string | null) => {
-      selectItemForSlot(slot, itemId ?? undefined);
+      selectItemForSlot(slot, itemId ?? undefined)
     },
     [selectItemForSlot],
-  );
+  )
 
   const handleDeleteItem = useCallback(
     (itemId: string) => {
-      deleteItem(itemId);
+      deleteItem(itemId)
     },
     [deleteItem],
-  );
+  )
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -217,7 +217,7 @@ export const EquipmentSection = () => {
               Equipment Type
             </label>
             <select
-              value={selectedEquipmentType || ""}
+              value={selectedEquipmentType || ''}
               onChange={handleEquipmentTypeChange}
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-zinc-50 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/30"
             >
@@ -244,11 +244,11 @@ export const EquipmentSection = () => {
                     affixes={
                       blendAffixes.map((blend) => ({
                         craftableAffix: blend.affix,
-                        tier: "0",
-                        equipmentSlot: "Trinket",
-                        equipmentType: "Belt",
-                        affixType: "Prefix",
-                        craftingPool: "",
+                        tier: '0',
+                        equipmentSlot: 'Trinket',
+                        equipmentType: 'Belt',
+                        affixType: 'Prefix',
+                        craftingPool: '',
                       })) as BaseGearAffix[]
                     }
                     selection={{
@@ -262,18 +262,18 @@ export const EquipmentSection = () => {
                     formatOption={(affix) => {
                       const blend = blendAffixes.find(
                         (b) => b.affix === affix.craftableAffix,
-                      );
+                      )
                       return blend
                         ? formatBlendOption(blend)
-                        : affix.craftableAffix;
+                        : affix.craftableAffix
                     }}
                     formatCraftedText={(affix) => {
                       const blend = blendAffixes.find(
                         (b) => b.affix === affix.craftableAffix,
-                      );
+                      )
                       return blend
                         ? formatBlendPreview(blend)
-                        : affix.craftableAffix;
+                        : affix.craftableAffix
                     }}
                   />
                 </div>
@@ -358,5 +358,5 @@ export const EquipmentSection = () => {
         <LegendaryGearModule onSaveToInventory={addItemToInventory} />
       </div>
     </div>
-  );
-};
+  )
+}

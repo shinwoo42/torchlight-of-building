@@ -1,34 +1,34 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { SaveMetadata } from "../lib/saves";
+import { useState } from 'react'
+import { SaveMetadata } from '../lib/saves'
 
 interface SavesTabProps {
-  saves: SaveMetadata[];
-  currentSaveId: string | undefined;
-  onLoad: (saveId: string) => void;
-  onRename: (saveId: string, newName: string) => void;
-  onCopy: (saveId: string) => void;
-  onDelete: (saveId: string) => void;
+  saves: SaveMetadata[]
+  currentSaveId: string | undefined
+  onLoad: (saveId: string) => void
+  onRename: (saveId: string, newName: string) => void
+  onCopy: (saveId: string) => void
+  onDelete: (saveId: string) => void
 }
 
 const formatDate = (timestamp: number): string => {
-  return new Date(timestamp).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-};
+  return new Date(timestamp).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
 
 interface SaveCardProps {
-  save: SaveMetadata;
-  isCurrent: boolean;
-  onLoad: () => void;
-  onRename: (newName: string) => void;
-  onCopy: () => void;
-  onDelete: () => void;
+  save: SaveMetadata
+  isCurrent: boolean
+  onLoad: () => void
+  onRename: (newName: string) => void
+  onCopy: () => void
+  onDelete: () => void
 }
 
 const SaveCard: React.FC<SaveCardProps> = ({
@@ -39,27 +39,27 @@ const SaveCard: React.FC<SaveCardProps> = ({
   onCopy,
   onDelete,
 }) => {
-  const [isRenaming, setIsRenaming] = useState(false);
-  const [renameValue, setRenameValue] = useState(save.name);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false)
+  const [renameValue, setRenameValue] = useState(save.name)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const handleRenameSubmit = () => {
-    const trimmed = renameValue.trim();
+    const trimmed = renameValue.trim()
     if (trimmed && trimmed !== save.name) {
-      onRename(trimmed);
+      onRename(trimmed)
     }
-    setIsRenaming(false);
-  };
+    setIsRenaming(false)
+  }
 
   const handleRenameCancel = () => {
-    setRenameValue(save.name);
-    setIsRenaming(false);
-  };
+    setRenameValue(save.name)
+    setIsRenaming(false)
+  }
 
   return (
     <div
       className={`bg-zinc-900 rounded-lg p-4 border ${
-        isCurrent ? "border-amber-500" : "border-zinc-700"
+        isCurrent ? 'border-amber-500' : 'border-zinc-700'
       }`}
     >
       <div className="flex items-start justify-between gap-4">
@@ -72,8 +72,8 @@ const SaveCard: React.FC<SaveCardProps> = ({
                 onChange={(e) => setRenameValue(e.target.value)}
                 className="flex-1 px-2 py-1 bg-zinc-800 text-zinc-50 rounded border border-zinc-600 focus:outline-none focus:border-amber-500 text-sm"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") handleRenameSubmit();
-                  if (e.key === "Escape") handleRenameCancel();
+                  if (e.key === 'Enter') handleRenameSubmit()
+                  if (e.key === 'Escape') handleRenameCancel()
                 }}
                 autoFocus
               />
@@ -119,8 +119,8 @@ const SaveCard: React.FC<SaveCardProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => {
-                onDelete();
-                setShowDeleteConfirm(false);
+                onDelete()
+                setShowDeleteConfirm(false)
               }}
               className="px-3 py-1.5 bg-red-500 text-white rounded text-sm font-medium hover:bg-red-600 transition-colors"
             >
@@ -146,8 +146,8 @@ const SaveCard: React.FC<SaveCardProps> = ({
           )}
           <button
             onClick={() => {
-              setRenameValue(save.name);
-              setIsRenaming(true);
+              setRenameValue(save.name)
+              setIsRenaming(true)
             }}
             className="px-3 py-1.5 bg-zinc-700 text-zinc-50 rounded text-sm hover:bg-zinc-600 transition-colors"
           >
@@ -168,8 +168,8 @@ const SaveCard: React.FC<SaveCardProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 export const SavesTab: React.FC<SavesTabProps> = ({
   saves,
@@ -179,7 +179,7 @@ export const SavesTab: React.FC<SavesTabProps> = ({
   onCopy,
   onDelete,
 }) => {
-  const sortedSaves = [...saves].sort((a, b) => b.updatedAt - a.updatedAt);
+  const sortedSaves = [...saves].sort((a, b) => b.updatedAt - a.updatedAt)
 
   return (
     <div className="space-y-6">
@@ -211,5 +211,5 @@ export const SavesTab: React.FC<SavesTabProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

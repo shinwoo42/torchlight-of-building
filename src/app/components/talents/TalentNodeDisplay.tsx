@@ -1,40 +1,40 @@
-import { TalentNodeData } from "@/src/tli/talent_tree";
-import { CraftedPrism, CraftedInverseImage } from "@/src/app/lib/save-data";
-import type { NodeBonusAffix } from "@/src/app/lib/prism-utils";
-import type { InverseImageBonusAffix } from "@/src/app/lib/inverse-image-utils";
-import { formatEffectModifier } from "@/src/app/lib/inverse-image-utils";
-import { useTooltip } from "@/src/app/hooks/useTooltip";
+import { TalentNodeData } from '@/src/tli/talent_tree'
+import { CraftedPrism, CraftedInverseImage } from '@/src/app/lib/save-data'
+import type { NodeBonusAffix } from '@/src/app/lib/prism-utils'
+import type { InverseImageBonusAffix } from '@/src/app/lib/inverse-image-utils'
+import { formatEffectModifier } from '@/src/app/lib/inverse-image-utils'
+import { useTooltip } from '@/src/app/hooks/useTooltip'
 import {
   Tooltip,
   TooltipTitle,
   TooltipContent,
-} from "@/src/app/components/ui/Tooltip";
+} from '@/src/app/components/ui/Tooltip'
 
-type BonusAffix = NodeBonusAffix | InverseImageBonusAffix;
+type BonusAffix = NodeBonusAffix | InverseImageBonusAffix
 
 interface TalentNodeDisplayProps {
-  node: TalentNodeData;
-  allocated: number;
-  canAllocate: boolean;
-  canDeallocate: boolean;
-  onAllocate: () => void;
-  onDeallocate: () => void;
-  hasPrism?: boolean;
-  prism?: CraftedPrism;
-  isSelectingPrism?: boolean;
-  onPlacePrism?: () => void;
-  onRemovePrism?: () => void;
-  canRemovePrism?: boolean;
-  bonusAffixes?: BonusAffix[];
-  hasInverseImage?: boolean;
-  inverseImage?: CraftedInverseImage;
-  isSelectingInverseImage?: boolean;
-  onPlaceInverseImage?: () => void;
-  onRemoveInverseImage?: () => void;
-  canRemoveInverseImage?: boolean;
-  isInSourceArea?: boolean;
-  isInTargetArea?: boolean;
-  reflectedNodeData?: TalentNodeData;
+  node: TalentNodeData
+  allocated: number
+  canAllocate: boolean
+  canDeallocate: boolean
+  onAllocate: () => void
+  onDeallocate: () => void
+  hasPrism?: boolean
+  prism?: CraftedPrism
+  isSelectingPrism?: boolean
+  onPlacePrism?: () => void
+  onRemovePrism?: () => void
+  canRemovePrism?: boolean
+  bonusAffixes?: BonusAffix[]
+  hasInverseImage?: boolean
+  inverseImage?: CraftedInverseImage
+  isSelectingInverseImage?: boolean
+  onPlaceInverseImage?: () => void
+  onRemoveInverseImage?: () => void
+  canRemoveInverseImage?: boolean
+  isInSourceArea?: boolean
+  isInTargetArea?: boolean
+  reflectedNodeData?: TalentNodeData
 }
 
 export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
@@ -62,34 +62,34 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
   isInTargetArea = false,
   reflectedNodeData,
 }) => {
-  const { isHovered, mousePos, handlers } = useTooltip();
+  const { isHovered, mousePos, handlers } = useTooltip()
 
-  const isFullyAllocated = allocated >= node.maxPoints;
-  const isLocked = !canAllocate && allocated === 0;
-  const isLegendary = node.nodeType === "legendary";
+  const isFullyAllocated = allocated >= node.maxPoints
+  const isLocked = !canAllocate && allocated === 0
+  const isLegendary = node.nodeType === 'legendary'
   const canPlacePrism =
-    isSelectingPrism && allocated === 0 && !hasPrism && !hasInverseImage;
+    isSelectingPrism && allocated === 0 && !hasPrism && !hasInverseImage
   const canPlaceInverseImage =
     isSelectingInverseImage &&
     allocated === 0 &&
     !hasInverseImage &&
     !hasPrism &&
-    node.position.x !== 3; // Not in center column
+    node.position.x !== 3 // Not in center column
 
   const talentTypeName =
-    node.nodeType === "micro"
-      ? "Micro Talent"
-      : node.nodeType === "medium"
-        ? "Medium Talent"
-        : "Legendary Talent";
+    node.nodeType === 'micro'
+      ? 'Micro Talent'
+      : node.nodeType === 'medium'
+        ? 'Medium Talent'
+        : 'Legendary Talent'
 
   const handleClick = () => {
     if (canPlacePrism && onPlacePrism) {
-      onPlacePrism();
+      onPlacePrism()
     } else if (canPlaceInverseImage && onPlaceInverseImage) {
-      onPlaceInverseImage();
+      onPlaceInverseImage()
     }
-  };
+  }
 
   // Prism node rendering
   if (hasPrism && prism) {
@@ -137,13 +137,13 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               disabled={!canRemovePrism}
               className={`w-5 h-5 rounded-full text-white text-xs font-bold ${
                 canRemovePrism
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                  ? 'bg-red-500 hover:bg-red-600'
+                  : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
               }`}
               title={
                 canRemovePrism
-                  ? "Remove prism"
-                  : "Cannot remove: dependent nodes have points allocated"
+                  ? 'Remove prism'
+                  : 'Cannot remove: dependent nodes have points allocated'
               }
             >
               ×
@@ -154,7 +154,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         <Tooltip isVisible={isHovered} mousePos={mousePos} variant="prism">
           <TooltipTitle>
             <span className="text-purple-400">
-              {prism.rarity === "legendary" ? "Legendary" : "Rare"} Prism
+              {prism.rarity === 'legendary' ? 'Legendary' : 'Rare'} Prism
             </span>
           </TooltipTitle>
           <TooltipContent>{prism.baseAffix}</TooltipContent>
@@ -170,7 +170,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           )}
         </Tooltip>
       </div>
-    );
+    )
   }
 
   // Inverse image node rendering
@@ -238,13 +238,13 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               disabled={!canRemoveInverseImage}
               className={`w-5 h-5 rounded-full text-white text-xs font-bold ${
                 canRemoveInverseImage
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                  ? 'bg-red-500 hover:bg-red-600'
+                  : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
               }`}
               title={
                 canRemoveInverseImage
-                  ? "Remove inverse image"
-                  : "Cannot remove: tree must have 0 allocated points"
+                  ? 'Remove inverse image'
+                  : 'Cannot remove: tree must have 0 allocated points'
               }
             >
               ×
@@ -277,28 +277,28 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           </div>
         </Tooltip>
       </div>
-    );
+    )
   }
 
   // Reflected node rendering (in target area with reflected node data)
   if (isInTargetArea && reflectedNodeData) {
     const reflectedTypeName =
-      reflectedNodeData.nodeType === "micro"
-        ? "Micro Talent"
-        : reflectedNodeData.nodeType === "medium"
-          ? "Medium Talent"
-          : "Legendary Talent";
+      reflectedNodeData.nodeType === 'micro'
+        ? 'Micro Talent'
+        : reflectedNodeData.nodeType === 'medium'
+          ? 'Medium Talent'
+          : 'Legendary Talent'
 
-    const reflectedIsFullyAllocated = allocated >= reflectedNodeData.maxPoints;
+    const reflectedIsFullyAllocated = allocated >= reflectedNodeData.maxPoints
 
     return (
       <div
         className={`relative w-20 h-20 rounded-lg border-2 transition-all ${
           reflectedIsFullyAllocated
-            ? "border-cyan-500 bg-cyan-500/20"
+            ? 'border-cyan-500 bg-cyan-500/20'
             : allocated > 0
-              ? "border-cyan-400 bg-cyan-500/15"
-              : "border-cyan-600 bg-cyan-500/10"
+              ? 'border-cyan-400 bg-cyan-500/15'
+              : 'border-cyan-600 bg-cyan-500/10'
         }`}
         {...handlers}
       >
@@ -310,7 +310,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
             alt={reflectedNodeData.iconName}
             className="w-12 h-12 object-contain"
             onError={(e) => {
-              e.currentTarget.style.display = "none";
+              e.currentTarget.style.display = 'none'
             }}
           />
         </div>
@@ -329,8 +329,8 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               w-5 h-5 rounded-full text-white text-xs font-bold
               ${
                 canAllocate
-                  ? "bg-cyan-500 hover:bg-cyan-400"
-                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                  ? 'bg-cyan-500 hover:bg-cyan-400'
+                  : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
               }
             `}
           >
@@ -343,8 +343,8 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               w-5 h-5 rounded-full text-white text-xs font-bold
               ${
                 canDeallocate
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                  ? 'bg-red-500 hover:bg-red-600'
+                  : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
               }
             `}
           >
@@ -373,7 +373,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           )}
         </Tooltip>
       </div>
-    );
+    )
   }
 
   // Normal talent node rendering
@@ -383,16 +383,16 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         relative w-20 h-20 rounded-lg border-2 transition-all
         ${
           canPlacePrism
-            ? "border-purple-500 bg-purple-500/20 cursor-pointer hover:bg-purple-500/30"
+            ? 'border-purple-500 bg-purple-500/20 cursor-pointer hover:bg-purple-500/30'
             : canPlaceInverseImage
-              ? "border-cyan-500 bg-cyan-500/20 cursor-pointer hover:bg-cyan-500/30"
+              ? 'border-cyan-500 bg-cyan-500/20 cursor-pointer hover:bg-cyan-500/30'
               : isFullyAllocated
-                ? "border-green-500 bg-green-500/15"
+                ? 'border-green-500 bg-green-500/15'
                 : allocated > 0
-                  ? "border-amber-500 bg-amber-500/10"
+                  ? 'border-amber-500 bg-amber-500/10'
                   : isLocked
-                    ? "border-zinc-800 bg-zinc-800 opacity-50"
-                    : "border-zinc-700 bg-zinc-800 hover:border-amber-500"
+                    ? 'border-zinc-800 bg-zinc-800 opacity-50'
+                    : 'border-zinc-700 bg-zinc-800 hover:border-amber-500'
         }
       `}
       onClick={handleClick}
@@ -406,7 +406,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           alt={node.iconName}
           className="w-12 h-12 object-contain"
           onError={(e) => {
-            e.currentTarget.style.display = "none";
+            e.currentTarget.style.display = 'none'
           }}
         />
       </div>
@@ -426,8 +426,8 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               w-5 h-5 rounded-full text-white text-xs font-bold
               ${
                 canAllocate
-                  ? "bg-green-500 hover:bg-green-600"
-                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                  ? 'bg-green-500 hover:bg-green-600'
+                  : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
               }
             `}
           >
@@ -440,8 +440,8 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               w-5 h-5 rounded-full text-white text-xs font-bold
               ${
                 canDeallocate
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-zinc-700 text-zinc-500 cursor-not-allowed"
+                  ? 'bg-red-500 hover:bg-red-600'
+                  : 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
               }
             `}
           >
@@ -471,7 +471,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
       <Tooltip
         isVisible={isHovered}
         mousePos={mousePos}
-        variant={isLegendary ? "legendary" : "default"}
+        variant={isLegendary ? 'legendary' : 'default'}
       >
         <TooltipTitle>{talentTypeName}</TooltipTitle>
         <TooltipContent>{node.rawAffix}</TooltipContent>
@@ -499,5 +499,5 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         )}
       </Tooltip>
     </div>
-  );
-};
+  )
+}

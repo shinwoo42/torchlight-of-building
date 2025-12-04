@@ -1,7 +1,7 @@
-import { Tree } from "../talent";
+import { Tree } from '../talent'
 
 export interface CoreTalent {
-  name: string;
-  tree: Tree;
-  affix: string;
+  name: string
+  tree: Tree
+  affix: string
 }

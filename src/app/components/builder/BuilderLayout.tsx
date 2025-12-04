@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useCallback, ReactNode } from "react";
-import { useRouter } from "next/navigation";
-import { useBuilderStore } from "../../stores/builderStore";
-import { PageTabs } from "../PageTabs";
-import { DebugPanel } from "../DebugPanel";
-import { ExportModal } from "../modals/ExportModal";
-import { ImportModal } from "../modals/ImportModal";
-import { Toast } from "../Toast";
-import { ActivePage } from "../../lib/types";
+import { useState, useEffect, useCallback, ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
+import { useBuilderStore } from '../../stores/builderStore'
+import { PageTabs } from '../PageTabs'
+import { DebugPanel } from '../DebugPanel'
+import { ExportModal } from '../modals/ExportModal'
+import { ImportModal } from '../modals/ImportModal'
+import { Toast } from '../Toast'
+import { ActivePage } from '../../lib/types'
 import {
   loadDebugModeFromStorage,
   saveDebugModeToStorage,
-} from "../../lib/storage";
-import { encodeBuildCode, decodeBuildCode } from "../../lib/build-code";
+} from '../../lib/storage'
+import { encodeBuildCode, decodeBuildCode } from '../../lib/build-code'
 
 interface BuilderLayoutProps {
-  children: ReactNode;
-  activePage: ActivePage;
-  setActivePage: (page: ActivePage) => void;
+  children: ReactNode
+  activePage: ActivePage
+  setActivePage: (page: ActivePage) => void
 }
 
 export const BuilderLayout = ({
@@ -26,81 +26,81 @@ export const BuilderLayout = ({
   activePage,
   setActivePage,
 }: BuilderLayoutProps) => {
-  const router = useRouter();
+  const router = useRouter()
 
-  const currentSaveName = useBuilderStore((state) => state.currentSaveName);
-  const currentSaveId = useBuilderStore((state) => state.currentSaveId);
-  const hasUnsavedChanges = useBuilderStore((state) => state.hasUnsavedChanges);
-  const loadout = useBuilderStore((state) => state.loadout);
-  const save = useBuilderStore((state) => state.save);
-  const setLoadout = useBuilderStore((state) => state.setLoadout);
+  const currentSaveName = useBuilderStore((state) => state.currentSaveName)
+  const currentSaveId = useBuilderStore((state) => state.currentSaveId)
+  const hasUnsavedChanges = useBuilderStore((state) => state.hasUnsavedChanges)
+  const loadout = useBuilderStore((state) => state.loadout)
+  const save = useBuilderStore((state) => state.save)
+  const setLoadout = useBuilderStore((state) => state.setLoadout)
 
-  const [debugMode, setDebugMode] = useState(false);
-  const [debugPanelExpanded, setDebugPanelExpanded] = useState(true);
-  const [exportModalOpen, setExportModalOpen] = useState(false);
-  const [importModalOpen, setImportModalOpen] = useState(false);
-  const [buildCode, setBuildCode] = useState("");
-  const [toastVisible, setToastVisible] = useState(false);
-  const [saveSuccessToastVisible, setSaveSuccessToastVisible] = useState(false);
+  const [debugMode, setDebugMode] = useState(false)
+  const [debugPanelExpanded, setDebugPanelExpanded] = useState(true)
+  const [exportModalOpen, setExportModalOpen] = useState(false)
+  const [importModalOpen, setImportModalOpen] = useState(false)
+  const [buildCode, setBuildCode] = useState('')
+  const [toastVisible, setToastVisible] = useState(false)
+  const [saveSuccessToastVisible, setSaveSuccessToastVisible] = useState(false)
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only localStorage init
-    setDebugMode(loadDebugModeFromStorage());
-  }, []);
+    setDebugMode(loadDebugModeFromStorage())
+  }, [])
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = "";
-        return "";
+        e.preventDefault()
+        e.returnValue = ''
+        return ''
       }
-    };
+    }
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [hasUnsavedChanges]);
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [hasUnsavedChanges])
 
   const handleSave = useCallback(() => {
-    const success = save();
+    const success = save()
     if (success) {
-      setSaveSuccessToastVisible(true);
+      setSaveSuccessToastVisible(true)
     }
-  }, [save]);
+  }, [save])
 
   const handleBackToSaves = useCallback(() => {
     if (hasUnsavedChanges) {
-      setToastVisible(true);
+      setToastVisible(true)
     } else {
-      router.push("/");
+      router.push('/')
     }
-  }, [hasUnsavedChanges, router]);
+  }, [hasUnsavedChanges, router])
 
   const handleDebugToggle = useCallback(() => {
     setDebugMode((prev) => {
-      const newValue = !prev;
-      saveDebugModeToStorage(newValue);
-      return newValue;
-    });
-  }, []);
+      const newValue = !prev
+      saveDebugModeToStorage(newValue)
+      return newValue
+    })
+  }, [])
 
   const handleExport = useCallback(() => {
-    const code = encodeBuildCode(loadout);
-    setBuildCode(code);
-    setExportModalOpen(true);
-  }, [loadout]);
+    const code = encodeBuildCode(loadout)
+    setBuildCode(code)
+    setExportModalOpen(true)
+  }, [loadout])
 
   const handleImport = useCallback(
     (code: string): boolean => {
-      const decoded = decodeBuildCode(code);
+      const decoded = decodeBuildCode(code)
       if (decoded) {
-        setLoadout(decoded);
-        return true;
+        setLoadout(decoded)
+        return true
       }
-      return false;
+      return false
     },
     [setLoadout],
-  );
+  )
 
   return (
     <div className="min-h-screen bg-zinc-950 p-6">
@@ -152,12 +152,12 @@ export const BuilderLayout = ({
               onClick={handleDebugToggle}
               className={`rounded-lg px-3 py-1 text-sm font-medium transition-colors ${
                 debugMode
-                  ? "bg-amber-400 text-zinc-950 hover:bg-amber-500"
-                  : "border border-zinc-700 bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                  ? 'bg-amber-400 text-zinc-950 hover:bg-amber-500'
+                  : 'border border-zinc-700 bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
               }`}
               title="Toggle Debug Mode"
             >
-              {debugMode ? "Debug ON" : "Debug"}
+              {debugMode ? 'Debug ON' : 'Debug'}
             </button>
           </div>
         </div>
@@ -219,5 +219,5 @@ export const BuilderLayout = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}

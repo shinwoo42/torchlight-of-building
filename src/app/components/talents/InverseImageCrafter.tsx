@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { CraftedInverseImage } from "@/src/app/lib/save-data";
-import { generateItemId } from "@/src/app/lib/storage";
-import { validateInverseImageValues } from "@/src/app/lib/inverse-image-utils";
+import { useState } from 'react'
+import { CraftedInverseImage } from '@/src/app/lib/save-data'
+import { generateItemId } from '@/src/app/lib/storage'
+import { validateInverseImageValues } from '@/src/app/lib/inverse-image-utils'
 
 interface InverseImageCrafterInnerProps {
-  editingInverseImage: CraftedInverseImage | undefined;
-  onSave: (inverseImage: CraftedInverseImage) => void;
-  onCancel?: () => void;
+  editingInverseImage: CraftedInverseImage | undefined
+  onSave: (inverseImage: CraftedInverseImage) => void
+  onCancel?: () => void
 }
 
 const InverseImageCrafterInner: React.FC<InverseImageCrafterInnerProps> = ({
@@ -18,47 +18,47 @@ const InverseImageCrafterInner: React.FC<InverseImageCrafterInnerProps> = ({
 }) => {
   const [microEffect, setMicroEffect] = useState<number>(
     editingInverseImage?.microTalentEffect ?? 0,
-  );
+  )
   const [mediumEffect, setMediumEffect] = useState<number>(
     editingInverseImage?.mediumTalentEffect ?? 0,
-  );
+  )
   const [legendaryEffect, setLegendaryEffect] = useState<number>(
     editingInverseImage?.legendaryTalentEffect ?? 0,
-  );
+  )
 
   const validation = validateInverseImageValues(
     microEffect,
     mediumEffect,
     legendaryEffect,
-  );
+  )
 
   const handleSave = () => {
-    if (!validation.valid) return;
+    if (!validation.valid) return
 
     const inverseImage: CraftedInverseImage = {
       id: editingInverseImage?.id ?? generateItemId(),
       microTalentEffect: microEffect,
       mediumTalentEffect: mediumEffect,
       legendaryTalentEffect: legendaryEffect,
-    };
-    onSave(inverseImage);
+    }
+    onSave(inverseImage)
 
     if (!editingInverseImage) {
-      setMicroEffect(0);
-      setMediumEffect(0);
-      setLegendaryEffect(0);
+      setMicroEffect(0)
+      setMediumEffect(0)
+      setLegendaryEffect(0)
     }
-  };
+  }
 
   const formatModifier = (value: number): string => {
-    const sign = value >= 0 ? "+" : "";
-    return `${sign}${value}%`;
-  };
+    const sign = value >= 0 ? '+' : ''
+    return `${sign}${value}%`
+  }
 
   return (
     <div className="rounded-lg border border-zinc-700 bg-zinc-800 p-4">
       <h3 className="mb-4 text-lg font-medium text-zinc-200">
-        {editingInverseImage ? "Edit Inverse Image" : "Craft Inverse Image"}
+        {editingInverseImage ? 'Edit Inverse Image' : 'Craft Inverse Image'}
       </h3>
 
       <div className="space-y-4">
@@ -161,7 +161,7 @@ const InverseImageCrafterInner: React.FC<InverseImageCrafterInnerProps> = ({
           disabled={!validation.valid}
           className="flex-1 rounded bg-cyan-600 px-4 py-2 text-white transition-colors hover:bg-cyan-500 disabled:cursor-not-allowed disabled:bg-zinc-600"
         >
-          {editingInverseImage ? "Update Inverse Image" : "Save to Inventory"}
+          {editingInverseImage ? 'Update Inverse Image' : 'Save to Inventory'}
         </button>
         {onCancel && (
           <button
@@ -173,13 +173,13 @@ const InverseImageCrafterInner: React.FC<InverseImageCrafterInnerProps> = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
 interface InverseImageCrafterProps {
-  editingInverseImage: CraftedInverseImage | undefined;
-  onSave: (inverseImage: CraftedInverseImage) => void;
-  onCancel?: () => void;
+  editingInverseImage: CraftedInverseImage | undefined
+  onSave: (inverseImage: CraftedInverseImage) => void
+  onCancel?: () => void
 }
 
 // Wrapper component that uses key to force remount when editing a different inverse image
@@ -188,8 +188,8 @@ export const InverseImageCrafter: React.FC<InverseImageCrafterProps> = (
 ) => {
   return (
     <InverseImageCrafterInner
-      key={props.editingInverseImage?.id ?? "new"}
+      key={props.editingInverseImage?.id ?? 'new'}
       {...props}
     />
-  );
-};
+  )
+}

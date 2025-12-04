@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import type { HeroMemory, HeroPage } from "@/src/app/lib/save-data";
-import { HeroMemoryItem } from "./HeroMemoryItem";
+import type { HeroMemory, HeroPage } from '@/src/app/lib/save-data'
+import { HeroMemoryItem } from './HeroMemoryItem'
 
 interface MemoryInventoryProps {
-  heroPage: HeroPage;
-  heroMemoryList: HeroMemory[];
-  onMemoryCopy: (memory: HeroMemory) => void;
-  onMemoryDelete: (id: string) => void;
+  heroPage: HeroPage
+  heroMemoryList: HeroMemory[]
+  onMemoryCopy: (memory: HeroMemory) => void
+  onMemoryDelete: (id: string) => void
 }
 
 export const MemoryInventory = ({
@@ -21,8 +21,8 @@ export const MemoryInventory = ({
       heroPage.memorySlots.slot45?.id === memoryId ||
       heroPage.memorySlots.slot60?.id === memoryId ||
       heroPage.memorySlots.slot75?.id === memoryId
-    );
-  };
+    )
+  }
 
   return (
     <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-700">
@@ -47,5 +47,5 @@ export const MemoryInventory = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

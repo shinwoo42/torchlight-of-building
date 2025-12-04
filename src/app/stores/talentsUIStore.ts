@@ -1,40 +1,40 @@
-"use client";
+'use client'
 
-import { create } from "zustand";
-import { TalentTreeData } from "@/src/tli/talent_tree";
-import { TreeSlot } from "../lib/types";
-import { PrismRarity } from "../lib/save-data";
+import { create } from 'zustand'
+import { TalentTreeData } from '@/src/tli/talent_tree'
+import { TreeSlot } from '../lib/types'
+import { PrismRarity } from '../lib/save-data'
 
 interface TalentsUIState {
   // Tree data loaded from files
-  treeData: Record<TreeSlot, TalentTreeData | undefined>;
+  treeData: Record<TreeSlot, TalentTreeData | undefined>
 
   // Active tree slot being viewed
-  activeTreeSlot: TreeSlot;
+  activeTreeSlot: TreeSlot
 
   // Prism crafting state
-  selectedPrismId: string | undefined;
-  craftingPrismRarity: PrismRarity;
-  craftingBaseAffix: string | undefined;
-  craftingGaugeAffixes: Array<{ affix: string; isLegendary: boolean }>;
+  selectedPrismId: string | undefined
+  craftingPrismRarity: PrismRarity
+  craftingBaseAffix: string | undefined
+  craftingGaugeAffixes: Array<{ affix: string; isLegendary: boolean }>
 
   // Inverse image selection state
-  selectedInverseImageId: string | undefined;
+  selectedInverseImageId: string | undefined
 
   // Actions
-  setTreeData: (slot: TreeSlot, data: TalentTreeData | undefined) => void;
-  setActiveTreeSlot: (slot: TreeSlot) => void;
+  setTreeData: (slot: TreeSlot, data: TalentTreeData | undefined) => void
+  setActiveTreeSlot: (slot: TreeSlot) => void
 
   // Prism crafting actions
-  setSelectedPrismId: (id: string | undefined) => void;
-  setCraftingPrismRarity: (rarity: PrismRarity) => void;
-  setCraftingBaseAffix: (affix: string | undefined) => void;
-  addCraftingGaugeAffix: (affix: string, isLegendary: boolean) => void;
-  removeCraftingGaugeAffix: (index: number) => void;
-  resetPrismCrafting: () => void;
+  setSelectedPrismId: (id: string | undefined) => void
+  setCraftingPrismRarity: (rarity: PrismRarity) => void
+  setCraftingBaseAffix: (affix: string | undefined) => void
+  addCraftingGaugeAffix: (affix: string, isLegendary: boolean) => void
+  removeCraftingGaugeAffix: (index: number) => void
+  resetPrismCrafting: () => void
 
   // Inverse image actions
-  setSelectedInverseImageId: (id: string | undefined) => void;
+  setSelectedInverseImageId: (id: string | undefined) => void
 }
 
 export const useTalentsUIStore = create<TalentsUIState>((set) => ({
@@ -45,9 +45,9 @@ export const useTalentsUIStore = create<TalentsUIState>((set) => ({
     tree3: undefined,
     tree4: undefined,
   },
-  activeTreeSlot: "tree1",
+  activeTreeSlot: 'tree1',
   selectedPrismId: undefined,
-  craftingPrismRarity: "rare",
+  craftingPrismRarity: 'rare',
   craftingBaseAffix: undefined,
   craftingGaugeAffixes: [],
   selectedInverseImageId: undefined,
@@ -67,7 +67,7 @@ export const useTalentsUIStore = create<TalentsUIState>((set) => ({
       craftingPrismRarity: rarity,
       craftingBaseAffix: undefined,
       craftingGaugeAffixes:
-        rarity === "rare"
+        rarity === 'rare'
           ? state.craftingGaugeAffixes.filter((a) => !a.isLegendary)
           : state.craftingGaugeAffixes,
     })),
@@ -91,10 +91,10 @@ export const useTalentsUIStore = create<TalentsUIState>((set) => ({
 
   resetPrismCrafting: () =>
     set({
-      craftingPrismRarity: "rare",
+      craftingPrismRarity: 'rare',
       craftingBaseAffix: undefined,
       craftingGaugeAffixes: [],
     }),
 
   setSelectedInverseImageId: (id) => set({ selectedInverseImageId: id }),
-}));
+}))

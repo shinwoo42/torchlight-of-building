@@ -9,15 +9,15 @@ import {
   canRemoveInverseImage,
   canAllocateReflectedNode,
   canDeallocateReflectedNode,
-} from "@/src/tli/talent_tree";
+} from '@/src/tli/talent_tree'
 import {
   AllocatedTalentNode,
   PlacedPrism,
   CraftedPrism,
   PlacedInverseImage,
   CraftedInverseImage,
-} from "@/src/app/lib/save-data";
-import { getNodeBonusAffixes } from "@/src/app/lib/prism-utils";
+} from '@/src/app/lib/save-data'
+import { getNodeBonusAffixes } from '@/src/app/lib/prism-utils'
 import {
   isInSourceArea,
   isInTargetArea,
@@ -26,37 +26,37 @@ import {
   getReflectedNodeData,
   getReflectedNodeBonusAffixes,
   reflectPosition,
-} from "@/src/app/lib/inverse-image-utils";
-import { TalentNodeDisplay } from "./TalentNodeDisplay";
+} from '@/src/app/lib/inverse-image-utils'
+import { TalentNodeDisplay } from './TalentNodeDisplay'
 
 interface TalentGridProps {
-  treeData: TalentTreeData;
-  allocatedNodes: AllocatedTalentNode[];
-  onAllocate: (x: number, y: number) => void;
-  onDeallocate: (x: number, y: number) => void;
-  treeSlot: string;
-  placedPrism?: PlacedPrism;
-  selectedPrism?: CraftedPrism;
-  onPlacePrism?: (x: number, y: number) => void;
-  onRemovePrism?: () => void;
-  placedInverseImage?: PlacedInverseImage;
-  selectedInverseImage?: CraftedInverseImage;
-  onPlaceInverseImage?: (x: number, y: number) => void;
-  onRemoveInverseImage?: () => void;
+  treeData: TalentTreeData
+  allocatedNodes: AllocatedTalentNode[]
+  onAllocate: (x: number, y: number) => void
+  onDeallocate: (x: number, y: number) => void
+  treeSlot: string
+  placedPrism?: PlacedPrism
+  selectedPrism?: CraftedPrism
+  onPlacePrism?: (x: number, y: number) => void
+  onRemovePrism?: () => void
+  placedInverseImage?: PlacedInverseImage
+  selectedInverseImage?: CraftedInverseImage
+  onPlaceInverseImage?: (x: number, y: number) => void
+  onRemoveInverseImage?: () => void
   onAllocateReflected?: (
     x: number,
     y: number,
     sourceX: number,
     sourceY: number,
-  ) => void;
-  onDeallocateReflected?: (x: number, y: number) => void;
+  ) => void
+  onDeallocateReflected?: (x: number, y: number) => void
 }
 
 // Helper to calculate node center positions for SVG lines
 const getNodeCenter = (x: number, y: number) => ({
   cx: x * (80 + 80) + 40, // 80px node + 80px gap, center at 40px
   cy: y * (80 + 80) + 40,
-});
+})
 
 export const TalentGrid: React.FC<TalentGridProps> = ({
   treeData,
@@ -76,8 +76,8 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
   onDeallocateReflected,
 }) => {
   // Grid dimensions: 7 cols × 5 rows, 80px nodes, 80px gaps
-  const gridWidth = 7 * 80 + 6 * 80; // 1040px
-  const gridHeight = 5 * 80 + 4 * 80; // 720px
+  const gridWidth = 7 * 80 + 6 * 80 // 1040px
+  const gridHeight = 5 * 80 + 4 * 80 // 720px
 
   return (
     <div className="overflow-x-auto">
@@ -102,7 +102,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   node.prerequisite!.y,
                 )
               ) {
-                return null;
+                return null
               }
 
               // Don't draw lines for nodes in target area (they lose prerequisites)
@@ -114,7 +114,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   treeSlot,
                 )
               ) {
-                return null;
+                return null
               }
 
               // Don't draw lines for nodes whose prerequisite is in target area
@@ -126,14 +126,14 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   treeSlot,
                 )
               ) {
-                return null;
+                return null
               }
 
               const from = getNodeCenter(
                 node.prerequisite!.x,
                 node.prerequisite!.y,
-              );
-              const to = getNodeCenter(node.position.x, node.position.y);
+              )
+              const to = getNodeCenter(node.position.x, node.position.y)
 
               const isSatisfied = isPrerequisiteSatisfiedWithInverseImage(
                 node.prerequisite,
@@ -143,7 +143,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                 placedPrism,
                 placedInverseImage,
                 treeSlot,
-              );
+              )
 
               return (
                 <line
@@ -152,30 +152,30 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   y1={from.cy}
                   x2={to.cx}
                   y2={to.cy}
-                  stroke={isSatisfied ? "#22c55e" : "#71717a"}
+                  stroke={isSatisfied ? '#22c55e' : '#71717a'}
                   strokeWidth="2"
                   opacity="0.5"
                 />
-              );
+              )
             })}
 
           {/* Blue box outline for prism affected area */}
           {placedPrism &&
             placedPrism.treeSlot === treeSlot &&
             (() => {
-              const { x: prismX, y: prismY } = placedPrism.position;
+              const { x: prismX, y: prismY } = placedPrism.position
               // Calculate bounds of affected area (clamped to grid)
-              const minX = Math.max(0, prismX - 1);
-              const maxX = Math.min(6, prismX + 1);
-              const minY = Math.max(0, prismY - 1);
-              const maxY = Math.min(4, prismY + 1);
+              const minX = Math.max(0, prismX - 1)
+              const maxX = Math.min(6, prismX + 1)
+              const minY = Math.max(0, prismY - 1)
+              const maxY = Math.min(4, prismY + 1)
 
               // Calculate pixel positions (160px stride = 80px node + 80px gap)
-              const padding = 4;
-              const left = minX * 160 - padding;
-              const top = minY * 160 - padding;
-              const width = (maxX - minX) * 160 + 80 + padding * 2;
-              const height = (maxY - minY) * 160 + 80 + padding * 2;
+              const padding = 4
+              const left = minX * 160 - padding
+              const top = minY * 160 - padding
+              const width = (maxX - minX) * 160 + 80 + padding * 2
+              const height = (maxY - minY) * 160 + 80 + padding * 2
 
               return (
                 <rect
@@ -190,25 +190,25 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   opacity="0.7"
                   rx="8"
                 />
-              );
+              )
             })()}
 
           {/* Inverse image source area (green dashed box) */}
           {placedInverseImage &&
             placedInverseImage.treeSlot === treeSlot &&
             (() => {
-              const { x: iiX, y: iiY } = placedInverseImage.position;
-              const sourcePositions = getSourceAreaPositions(iiX, iiY);
-              const minX = Math.min(...sourcePositions.map((p) => p.x));
-              const maxX = Math.max(...sourcePositions.map((p) => p.x));
-              const minY = Math.min(...sourcePositions.map((p) => p.y));
-              const maxY = Math.max(...sourcePositions.map((p) => p.y));
+              const { x: iiX, y: iiY } = placedInverseImage.position
+              const sourcePositions = getSourceAreaPositions(iiX, iiY)
+              const minX = Math.min(...sourcePositions.map((p) => p.x))
+              const maxX = Math.max(...sourcePositions.map((p) => p.x))
+              const minY = Math.min(...sourcePositions.map((p) => p.y))
+              const maxY = Math.max(...sourcePositions.map((p) => p.y))
 
-              const padding = 4;
-              const left = minX * 160 - padding;
-              const top = minY * 160 - padding;
-              const width = (maxX - minX) * 160 + 80 + padding * 2;
-              const height = (maxY - minY) * 160 + 80 + padding * 2;
+              const padding = 4
+              const left = minX * 160 - padding
+              const top = minY * 160 - padding
+              const width = (maxX - minX) * 160 + 80 + padding * 2
+              const height = (maxY - minY) * 160 + 80 + padding * 2
 
               return (
                 <rect
@@ -223,25 +223,25 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   opacity="0.7"
                   rx="8"
                 />
-              );
+              )
             })()}
 
           {/* Inverse image target area (cyan dashed box) */}
           {placedInverseImage &&
             placedInverseImage.treeSlot === treeSlot &&
             (() => {
-              const { x: iiX, y: iiY } = placedInverseImage.position;
-              const targetPositions = getTargetAreaPositions(iiX, iiY);
-              const minX = Math.min(...targetPositions.map((p) => p.x));
-              const maxX = Math.max(...targetPositions.map((p) => p.x));
-              const minY = Math.min(...targetPositions.map((p) => p.y));
-              const maxY = Math.max(...targetPositions.map((p) => p.y));
+              const { x: iiX, y: iiY } = placedInverseImage.position
+              const targetPositions = getTargetAreaPositions(iiX, iiY)
+              const minX = Math.min(...targetPositions.map((p) => p.x))
+              const maxX = Math.max(...targetPositions.map((p) => p.x))
+              const minY = Math.min(...targetPositions.map((p) => p.y))
+              const maxY = Math.max(...targetPositions.map((p) => p.y))
 
-              const padding = 4;
-              const left = minX * 160 - padding;
-              const top = minY * 160 - padding;
-              const width = (maxX - minX) * 160 + 80 + padding * 2;
-              const height = (maxY - minY) * 160 + 80 + padding * 2;
+              const padding = 4
+              const left = minX * 160 - padding
+              const top = minY * 160 - padding
+              const width = (maxX - minX) * 160 + 80 + padding * 2
+              const height = (maxY - minY) * 160 + 80 + padding * 2
 
               return (
                 <rect
@@ -256,7 +256,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   opacity="0.7"
                   rx="8"
                 />
-              );
+              )
             })()}
         </svg>
 
@@ -265,9 +265,9 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
           className="relative grid"
           style={{
             zIndex: 1,
-            gridTemplateColumns: "repeat(7, 80px)",
-            gridTemplateRows: "repeat(5, 80px)",
-            gap: "80px",
+            gridTemplateColumns: 'repeat(7, 80px)',
+            gridTemplateRows: 'repeat(5, 80px)',
+            gap: '80px',
           }}
         >
           {[0, 1, 2, 3, 4].map((y) =>
@@ -278,7 +278,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                 y,
                 placedInverseImage,
                 treeSlot,
-              );
+              )
 
               // If this position is in target area (and has an inverse image placed),
               // render a reflected node instead of the original node
@@ -289,22 +289,22 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   treeData.nodes,
                   placedInverseImage,
                   treeSlot,
-                );
+                )
 
                 // If no reflected node data (source position doesn't have a node), show empty
                 if (!reflectedNodeData) {
-                  return <div key={`${x}-${y}`} className="w-20 h-20" />;
+                  return <div key={`${x}-${y}`} className="w-20 h-20" />
                 }
 
                 // Get the source position for this reflected node
-                const sourcePos = reflectPosition(x, y);
+                const sourcePos = reflectPosition(x, y)
 
                 // Get reflected node allocation
                 const reflectedAllocation =
                   placedInverseImage.reflectedAllocatedNodes.find(
                     (n) => n.x === x && n.y === y,
-                  );
-                const reflectedAllocated = reflectedAllocation?.points ?? 0;
+                  )
+                const reflectedAllocated = reflectedAllocation?.points ?? 0
 
                 // Check if can allocate/deallocate reflected node (with column gating)
                 const canAllocateReflected = canAllocateReflectedNode(
@@ -313,13 +313,13 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   reflectedNodeData.maxPoints,
                   allocatedNodes,
                   placedInverseImage.reflectedAllocatedNodes,
-                );
+                )
                 const canDeallocateReflected = canDeallocateReflectedNode(
                   x,
                   y,
                   allocatedNodes,
                   placedInverseImage.reflectedAllocatedNodes,
-                );
+                )
 
                 // Get bonus affixes for reflected node
                 const inverseImageBonusAffixes = getReflectedNodeBonusAffixes(
@@ -327,7 +327,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   reflectedNodeData.nodeType,
                   placedInverseImage,
                   treeSlot,
-                );
+                )
 
                 return (
                   <TalentNodeDisplay
@@ -349,17 +349,17 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                     isInTargetArea={true}
                     reflectedNodeData={reflectedNodeData}
                   />
-                );
+                )
               }
 
               // Normal node rendering (not in target area)
               const node = treeData.nodes.find(
                 (n) => n.position.x === x && n.position.y === y,
-              );
+              )
 
               // If no node exists at this position, show empty space
               if (!node) {
-                return <div key={`${x}-${y}`} className="w-20 h-20" />;
+                return <div key={`${x}-${y}`} className="w-20 h-20" />
               }
 
               const nodeHasPrism = hasPrismAtPosition(
@@ -367,37 +367,37 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                 treeSlot,
                 x,
                 y,
-              );
+              )
               const nodeHasInverseImage = hasInverseImageAtPosition(
                 placedInverseImage,
                 treeSlot,
                 x,
                 y,
-              );
+              )
               const nodeIsInSourceArea = isInSourceArea(
                 x,
                 y,
                 placedInverseImage,
                 treeSlot,
-              );
+              )
 
               const allocation = allocatedNodes.find(
                 (n) => n.x === x && n.y === y,
-              );
-              const allocated = allocation?.points ?? 0;
+              )
+              const allocated = allocation?.points ?? 0
 
               // Check if prism can be removed (only relevant if this node has the prism)
               const prismCanBeRemoved =
                 nodeHasPrism && placedPrism
                   ? canRemovePrism(placedPrism, allocatedNodes, treeData)
-                  : false;
+                  : false
 
               // Check if inverse image can be removed (needs 0 points in tree AND 0 reflected points)
               const inverseImageCanBeRemoved =
                 nodeHasInverseImage && placedInverseImage
                   ? canRemoveInverseImage(allocatedNodes) &&
                     placedInverseImage.reflectedAllocatedNodes.length === 0
-                  : false;
+                  : false
 
               // Combine prism bonus affixes
               const prismBonusAffixes = getNodeBonusAffixes(
@@ -406,7 +406,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                 placedPrism,
                 treeSlot,
                 allocated,
-              );
+              )
 
               return (
                 <TalentNodeDisplay
@@ -459,11 +459,11 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   isInSourceArea={nodeIsInSourceArea}
                   isInTargetArea={false}
                 />
-              );
+              )
             }),
           )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

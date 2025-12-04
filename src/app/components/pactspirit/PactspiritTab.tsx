@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
-import { PactspiritPage } from "@/src/app/lib/save-data";
+import { PactspiritPage } from '@/src/app/lib/save-data'
 import {
   RingSlotKey,
   PactspiritSlotIndex,
   InstalledDestinyResult,
-} from "../../lib/types";
-import { PactspiritColumn } from "./PactspiritColumn";
+} from '../../lib/types'
+import { PactspiritColumn } from './PactspiritColumn'
 
 interface PactspiritTabProps {
-  pactspiritPage: PactspiritPage;
+  pactspiritPage: PactspiritPage
   onPactspiritSelect: (
     slotIndex: PactspiritSlotIndex,
     pactspiritName: string | undefined,
-  ) => void;
-  onLevelChange: (slotIndex: PactspiritSlotIndex, level: number) => void;
+  ) => void
+  onLevelChange: (slotIndex: PactspiritSlotIndex, level: number) => void
   onInstallDestiny: (
     slotIndex: PactspiritSlotIndex,
     ringSlot: RingSlotKey,
     destiny: InstalledDestinyResult,
-  ) => void;
-  onRevertRing: (slotIndex: PactspiritSlotIndex, ringSlot: RingSlotKey) => void;
+  ) => void
+  onRevertRing: (slotIndex: PactspiritSlotIndex, ringSlot: RingSlotKey) => void
 }
 
 export const PactspiritTab: React.FC<PactspiritTabProps> = ({
@@ -30,13 +30,13 @@ export const PactspiritTab: React.FC<PactspiritTabProps> = ({
   onInstallDestiny,
   onRevertRing,
 }) => {
-  const slotIndices: PactspiritSlotIndex[] = [1, 2, 3];
+  const slotIndices: PactspiritSlotIndex[] = [1, 2, 3]
 
   return (
     <div className="flex gap-4">
       {slotIndices.map((slotIndex) => {
-        const slotKey = `slot${slotIndex}` as keyof PactspiritPage;
-        const slot = pactspiritPage[slotKey];
+        const slotKey = `slot${slotIndex}` as keyof PactspiritPage
+        const slot = pactspiritPage[slotKey]
 
         return (
           <PactspiritColumn
@@ -50,8 +50,8 @@ export const PactspiritTab: React.FC<PactspiritTabProps> = ({
             }
             onRevertRing={(ringSlot) => onRevertRing(slotIndex, ringSlot)}
           />
-        );
+        )
       })}
     </div>
-  );
-};
+  )
+}
