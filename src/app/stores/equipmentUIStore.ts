@@ -7,11 +7,11 @@ import { DEFAULT_QUALITY } from "../lib/constants";
 
 const createEmptyAffixSlots = (): AffixSlotState[] =>
   Array(6)
-    .fill(null)
-    .map(() => ({ affixIndex: null, percentage: DEFAULT_QUALITY }));
+    .fill(undefined)
+    .map(() => ({ affixIndex: undefined, percentage: DEFAULT_QUALITY }));
 
 interface LegendaryAffixSlotState {
-  affixIndex: number | null;
+  affixIndex: number | undefined;
   percentage: number;
 }
 
@@ -19,7 +19,7 @@ interface EquipmentUIState {
   // Crafting state
   selectedEquipmentType: EquipmentType | undefined;
   affixSlots: AffixSlotState[];
-  blendAffixIndex: number | null;
+  blendAffixIndex: number | undefined;
 
   // Legendary crafting state
   selectedLegendaryIndex: number | undefined;
@@ -32,7 +32,7 @@ interface EquipmentUIState {
   setSelectedEquipmentType: (type: EquipmentType | undefined) => void;
   setAffixSlot: (index: number, update: Partial<AffixSlotState>) => void;
   clearAffixSlot: (index: number) => void;
-  setBlendAffixIndex: (index: number | null) => void;
+  setBlendAffixIndex: (index: number | undefined) => void;
   resetCrafting: () => void;
 
   setSelectedLegendaryIndex: (index: number | undefined) => void;
@@ -49,7 +49,7 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
   // Initial state
   selectedEquipmentType: undefined,
   affixSlots: createEmptyAffixSlots(),
-  blendAffixIndex: null,
+  blendAffixIndex: undefined,
   selectedLegendaryIndex: undefined,
   legendaryAffixSlots: [],
   selectedGearSlot: "helmet",
@@ -59,7 +59,7 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
     set({
       selectedEquipmentType: type,
       affixSlots: createEmptyAffixSlots(),
-      blendAffixIndex: null,
+      blendAffixIndex: undefined,
     }),
 
   setAffixSlot: (index, update) =>
@@ -72,7 +72,7 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
   clearAffixSlot: (index) =>
     set((state) => ({
       affixSlots: state.affixSlots.map((slot, i) =>
-        i === index ? { affixIndex: null, percentage: DEFAULT_QUALITY } : slot,
+        i === index ? { affixIndex: undefined, percentage: DEFAULT_QUALITY } : slot,
       ),
     })),
 
@@ -82,13 +82,13 @@ export const useEquipmentUIStore = create<EquipmentUIState>((set) => ({
     set({
       selectedEquipmentType: undefined,
       affixSlots: createEmptyAffixSlots(),
-      blendAffixIndex: null,
+      blendAffixIndex: undefined,
     }),
 
   setSelectedLegendaryIndex: (index) =>
     set({
       selectedLegendaryIndex: index,
-      legendaryAffixSlots: index !== undefined ? [] : [],
+      legendaryAffixSlots: [],
     }),
 
   setLegendaryAffixSlot: (index, update) =>

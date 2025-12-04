@@ -7,7 +7,7 @@ import { EquipmentSlotDropdown } from "../equipment/EquipmentSlotDropdown";
 import { AffixSlotComponent } from "../equipment/AffixSlotComponent";
 import { InventoryItem } from "../equipment/InventoryItem";
 import { LegendaryGearModule } from "../equipment/LegendaryGearModule";
-import { GEAR_SLOTS } from "../../lib/constants";
+import { GEAR_SLOTS, SLOT_TO_VALID_EQUIPMENT_TYPES } from "../../lib/constants";
 import { GearSlot } from "../../lib/types";
 import { getFilteredAffixes } from "../../lib/affix-utils";
 import {
@@ -17,7 +17,6 @@ import {
   formatBlendPreview,
 } from "../../lib/blend-utils";
 import {
-  getValidEquipmentTypes,
   getCompatibleItems,
   getGearTypeFromEquipmentType,
 } from "../../lib/equipment-utils";
@@ -77,17 +76,11 @@ export const EquipmentSection = () => {
   const isBelt = selectedEquipmentType === "Belt";
 
   const allEquipmentTypes = useMemo(() => {
-    return getValidEquipmentTypes("mainHand")
-      .concat(getValidEquipmentTypes("helmet"))
-      .concat(getValidEquipmentTypes("chest"))
-      .concat(getValidEquipmentTypes("gloves"))
-      .concat(getValidEquipmentTypes("boots"))
-      .concat(getValidEquipmentTypes("belt"))
-      .concat(getValidEquipmentTypes("neck"))
-      .concat(getValidEquipmentTypes("leftRing"))
-      .concat(getValidEquipmentTypes("offHand"))
-      .filter((v, i, a) => a.indexOf(v) === i)
-      .sort();
+    const types = new Set<EquipmentType>();
+    Object.values(SLOT_TO_VALID_EQUIPMENT_TYPES).forEach((slotTypes) => {
+      slotTypes.forEach((type) => types.add(type));
+    });
+    return Array.from(types).sort();
   }, []);
 
   const handleEquipmentTypeChange = useCallback(
@@ -100,10 +93,11 @@ export const EquipmentSection = () => {
 
   const handleAffixSelect = useCallback(
     (slotIndex: number, value: string) => {
-      const affixIndex = value === "" ? null : parseInt(value);
+      const affixIndex = value === "" ? undefined : parseInt(value);
       setAffixSlot(slotIndex, {
         affixIndex,
-        percentage: affixIndex === null ? 50 : affixSlots[slotIndex].percentage,
+        percentage:
+          affixIndex === undefined ? 50 : affixSlots[slotIndex].percentage,
       });
     },
     [setAffixSlot, affixSlots],
@@ -126,14 +120,14 @@ export const EquipmentSection = () => {
 
   const handleBlendSelect = useCallback(
     (_slotIndex: number, value: string) => {
-      const index = value === "" ? null : parseInt(value);
+      const index = value === "" ? undefined : parseInt(value);
       setBlendAffixIndex(index);
     },
     [setBlendAffixIndex],
   );
 
   const handleClearBlend = useCallback(() => {
-    setBlendAffixIndex(null);
+    setBlendAffixIndex(undefined);
   }, [setBlendAffixIndex]);
 
   const handleSaveToInventory = useCallback(() => {
@@ -142,14 +136,14 @@ export const EquipmentSection = () => {
     const affixes: string[] = [];
 
     // Add blend affix first if selected (belt only)
-    if (isBelt && blendAffixIndex !== null) {
+    if (isBelt && blendAffixIndex !== undefined) {
       const selectedBlend = blendAffixes[blendAffixIndex];
       affixes.push(formatBlendAffix(selectedBlend));
     }
 
     // Add prefix/suffix affixes
     affixSlots.forEach((selection, idx) => {
-      if (selection.affixIndex === null) return;
+      if (selection.affixIndex === undefined) return;
       const affixType = idx < 3 ? "Prefix" : "Suffix";
       const filteredAffixes =
         affixType === "Prefix" ? prefixAffixes : suffixAffixes;

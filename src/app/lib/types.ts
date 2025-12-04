@@ -13,7 +13,7 @@ export type ActivePage =
   | "divinity";
 
 export interface AffixSlotState {
-  affixIndex: number | null;
+  affixIndex: number | undefined;
   percentage: number;
 }
 
