@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  SaveMetadata,
-  SavesIndex,
+  type SaveMetadata,
+  type SavesIndex,
   loadSavesIndex,
   saveSavesIndex,
   loadSaveData,

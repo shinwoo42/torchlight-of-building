@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CraftedInverseImage } from '@/src/app/lib/save-data'
+import type { CraftedInverseImage } from '@/src/app/lib/save-data'
 import { InverseImageCrafter } from './InverseImageCrafter'
 import { InverseImageInventory } from './InverseImageInventory'
 

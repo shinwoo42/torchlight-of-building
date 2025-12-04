@@ -1,6 +1,6 @@
 'use client'
 
-import { CraftedPrism } from '@/src/app/lib/save-data'
+import type { CraftedPrism } from '@/src/app/lib/save-data'
 import { getLegendaryGaugeAffixes } from '@/src/app/lib/prism-utils'
 import { useTooltip } from '@/src/app/hooks/useTooltip'
 import { Tooltip, TooltipTitle } from '@/src/app/components/ui/Tooltip'

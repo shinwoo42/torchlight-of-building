@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 import type { PlacedPrism } from '@/src/app/lib/save-data'
 import type { TreeSlot } from '@/src/app/lib/types'
 import {

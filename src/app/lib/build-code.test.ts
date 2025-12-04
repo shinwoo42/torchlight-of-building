@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { encodeBuildCode, decodeBuildCode } from './build-code'
-import { SaveData, SkillPage } from './save-data'
+import type { SaveData, SkillPage } from './save-data'
 import {
   createEmptyLoadout,
   createEmptyHeroPage,

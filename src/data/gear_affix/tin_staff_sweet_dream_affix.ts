@@ -1,4 +1,4 @@
-import { BaseGearAffix } from '../../tli/gear_data_types'
+import type { BaseGearAffix } from '../../tli/gear_data_types'
 
 export const TIN_STAFF_SWEET_DREAM_AFFIX_AFFIXES: readonly BaseGearAffix[] = [
   {

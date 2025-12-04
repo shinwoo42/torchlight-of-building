@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, ReactNode } from 'react'
+import { useState, useEffect, useCallback, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { useBuilderStore } from '../../stores/builderStore'
 import { PageTabs } from '../PageTabs'
@@ -8,7 +8,7 @@ import { DebugPanel } from '../DebugPanel'
 import { ExportModal } from '../modals/ExportModal'
 import { ImportModal } from '../modals/ImportModal'
 import { Toast } from '../Toast'
-import { ActivePage } from '../../lib/types'
+import type { ActivePage } from '../../lib/types'
 import {
   loadDebugModeFromStorage,
   saveDebugModeToStorage,

@@ -1,4 +1,4 @@
-import { SaveData } from './save-data'
+import type { SaveData } from './save-data'
 import { encodeBuildCode, decodeBuildCode } from './build-code'
 import { createEmptyLoadout } from './storage'
 import {

@@ -1,10 +1,10 @@
-import { Mod, ModOfType } from './mod'
+import type { Mod, ModOfType } from './mod'
 import {
-  DmgModType,
+  type DmgModType,
   DMG_MOD_TYPES,
-  CritRatingModType,
+  type CritRatingModType,
   CRIT_RATING_MOD_TYPES,
-  CritDmgModType,
+  type CritDmgModType,
   CRIT_DMG_MOD_TYPES,
 } from './constants'
 

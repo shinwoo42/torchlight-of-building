@@ -1,4 +1,4 @@
-import { EquipmentSlot, EquipmentType } from '@/src/tli/gear_data_types'
+import type { EquipmentSlot, EquipmentType } from '@/src/tli/gear_data_types'
 
 export interface Legendary {
   name: string

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { DivinityPage, DivinitySlate } from '@/src/app/lib/save-data'
+import type { DivinityPage, DivinitySlate } from '@/src/app/lib/save-data'
 import {
   GRID_MASK,
   GRID_ROWS,

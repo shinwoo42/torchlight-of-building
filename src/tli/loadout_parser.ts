@@ -1,12 +1,12 @@
-import {
+import type {
   Affix,
   ParsedGear,
   ParsedGearPage,
   Loadout,
   ParsedTalentPage,
 } from './core'
-import { Gear, SaveData, TalentPage, TalentTree } from '@/src/app/lib/save-data'
-import { Mod } from './mod'
+import type { Gear, SaveData, TalentPage, TalentTree } from '@/src/app/lib/save-data'
+import type { Mod } from './mod'
 import { parseMod } from './mod_parser'
 import { readFileSync } from 'fs'
 import { join } from 'path'

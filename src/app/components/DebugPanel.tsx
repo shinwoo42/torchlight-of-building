@@ -1,4 +1,4 @@
-import { SaveData } from '@/src/app/lib/save-data'
+import type { SaveData } from '@/src/app/lib/save-data'
 
 interface DebugPanelProps {
   loadout: SaveData

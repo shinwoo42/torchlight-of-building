@@ -10,7 +10,7 @@ import { SkillsSection } from '../components/builder/SkillsSection'
 import { HeroSection } from '../components/builder/HeroSection'
 import { PactspiritSection } from '../components/builder/PactspiritSection'
 import { DivinitySection } from '../components/builder/DivinitySection'
-import { ActivePage } from '../lib/types'
+import type { ActivePage } from '../lib/types'
 
 const BuilderPageContent = () => {
   const searchParams = useSearchParams()

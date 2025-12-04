@@ -1,4 +1,4 @@
-import { ActivePage } from '../lib/types'
+import type { ActivePage } from '../lib/types'
 
 interface PageTabsProps {
   activePage: ActivePage

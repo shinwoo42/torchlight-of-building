@@ -1,6 +1,6 @@
-import { BaseGearAffix } from '@/src/tli/gear_data_types'
+import type { BaseGearAffix } from '@/src/tli/gear_data_types'
 import { craft } from '@/src/tli/crafting/craft'
-import { AffixSlotState } from '../../lib/types'
+import type { AffixSlotState } from '../../lib/types'
 import { formatAffixOption } from '../../lib/affix-utils'
 import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
 

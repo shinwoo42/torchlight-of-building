@@ -1,6 +1,6 @@
 'use client'
 
-import { DivinitySlate } from '@/src/app/lib/save-data'
+import type { DivinitySlate } from '@/src/app/lib/save-data'
 import { getSlateDisplayName } from '@/src/app/lib/divinity-utils'
 import { SlatePreview } from './SlatePreview'
 

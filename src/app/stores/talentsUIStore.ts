@@ -1,9 +1,9 @@
 'use client'
 
 import { create } from 'zustand'
-import { TalentTreeData } from '@/src/tli/talent_tree'
-import { TreeSlot } from '../lib/types'
-import { PrismRarity } from '../lib/save-data'
+import type { TalentTreeData } from '@/src/tli/talent_tree'
+import type { TreeSlot } from '../lib/types'
+import type { PrismRarity } from '../lib/save-data'
 
 interface TalentsUIState {
   // Tree data loaded from files

@@ -1,4 +1,4 @@
-import { GearPage, PactspiritSlot } from './save-data'
+import type { GearPage, PactspiritSlot } from './save-data'
 
 export type GearSlot = keyof GearPage
 

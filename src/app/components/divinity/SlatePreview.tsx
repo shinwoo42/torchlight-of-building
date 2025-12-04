@@ -1,6 +1,6 @@
 'use client'
 
-import { SlateShape, DivinityGod, Rotation } from '@/src/app/lib/save-data'
+import type { SlateShape, DivinityGod, Rotation } from '@/src/app/lib/save-data'
 import {
   getTransformedCells,
   applyRotation,

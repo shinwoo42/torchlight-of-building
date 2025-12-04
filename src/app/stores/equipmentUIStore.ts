@@ -1,8 +1,8 @@
 'use client'
 
 import { create } from 'zustand'
-import { EquipmentType } from '@/src/tli/gear_data_types'
-import { AffixSlotState, GearSlot } from '../lib/types'
+import type { EquipmentType } from '@/src/tli/gear_data_types'
+import type { AffixSlotState, GearSlot } from '../lib/types'
 import { DEFAULT_QUALITY } from '../lib/constants'
 
 const createEmptyAffixSlots = (): AffixSlotState[] =>

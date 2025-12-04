@@ -2,18 +2,18 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import {
-  DivinitySlate,
+  type DivinitySlate,
   DIVINITY_GODS,
   SLATE_SHAPES,
-  DivinityGod,
-  SlateShape,
-  Rotation,
+  type DivinityGod,
+  type SlateShape,
+  type Rotation,
   ROTATIONS,
 } from '@/src/app/lib/save-data'
 import { generateItemId } from '@/src/app/lib/storage'
 import {
   getDivinityAffixes,
-  DivinityAffix,
+  type DivinityAffix,
   GOD_COLORS,
   GOD_BORDER_COLORS,
 } from '@/src/app/lib/divinity-utils'
@@ -21,7 +21,7 @@ import { MAX_SLATE_AFFIXES } from '@/src/app/lib/constants'
 import { SlatePreview } from './SlatePreview'
 import {
   SearchableSelect,
-  SearchableSelectOption,
+  type SearchableSelectOption,
 } from '@/src/app/components/ui/SearchableSelect'
 
 interface SlateCrafterProps {

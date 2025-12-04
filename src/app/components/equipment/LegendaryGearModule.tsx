@@ -1,14 +1,14 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Gear } from '@/src/app/lib/save-data'
+import type { Gear } from '@/src/app/lib/save-data'
 import { Legendaries } from '@/src/data/legendary/legendaries'
 import { craft } from '@/src/tli/crafting/craft'
 import { generateItemId } from '../../lib/storage'
 import { getGearTypeFromEquipmentType } from '../../lib/equipment-utils'
 import { DEFAULT_QUALITY } from '../../lib/constants'
 import { SearchableSelect } from '../ui/SearchableSelect'
-import { LegendaryAffixRow, LegendaryAffixState } from './LegendaryAffixRow'
+import { LegendaryAffixRow, type LegendaryAffixState } from './LegendaryAffixRow'
 
 interface LegendaryGearModuleProps {
   onSaveToInventory: (item: Gear) => void

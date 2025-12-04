@@ -1,6 +1,6 @@
 'use client'
 
-import { CraftedInverseImage } from '@/src/app/lib/save-data'
+import type { CraftedInverseImage } from '@/src/app/lib/save-data'
 import { formatEffectModifier } from '@/src/app/lib/inverse-image-utils'
 import { useTooltip } from '@/src/app/hooks/useTooltip'
 import { Tooltip, TooltipTitle } from '@/src/app/components/ui/Tooltip'

@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { HeroMemoryType } from '../lib/save-data'
+import type { HeroMemoryType } from '../lib/save-data'
 import { DEFAULT_QUALITY } from '../lib/constants'
 
 interface MemoryAffixSlotState {

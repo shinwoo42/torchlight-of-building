@@ -1,6 +1,6 @@
 'use client'
 
-import { CraftedPrism } from '@/src/app/lib/save-data'
+import type { CraftedPrism } from '@/src/app/lib/save-data'
 import { PrismInventoryItem } from './PrismInventoryItem'
 
 interface PrismInventoryProps {

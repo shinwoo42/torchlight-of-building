@@ -1,5 +1,5 @@
 import {
-  TalentTreeData,
+  type TalentTreeData,
   hasPrismAtPosition,
   canRemovePrism,
   canAllocateNodeWithInverseImage,
@@ -10,7 +10,7 @@ import {
   canAllocateReflectedNode,
   canDeallocateReflectedNode,
 } from '@/src/tli/talent_tree'
-import {
+import type {
   AllocatedTalentNode,
   PlacedPrism,
   CraftedPrism,

@@ -1,11 +1,11 @@
-import { Gear } from './save-data'
-import { EquipmentSlot, EquipmentType } from '@/src/tli/gear_data_types'
+import type { Gear } from './save-data'
+import type { EquipmentSlot, EquipmentType } from '@/src/tli/gear_data_types'
 import { ALL_GEAR_AFFIXES } from '@/src/tli/all_affixes'
 import {
   SLOT_TO_EQUIPMENT_SLOT,
   SLOT_TO_VALID_EQUIPMENT_TYPES,
 } from './constants'
-import { GearSlot } from './types'
+import type { GearSlot } from './types'
 
 export const getValidEquipmentTypes = (slot: GearSlot): EquipmentType[] => {
   const validEquipSlots = SLOT_TO_EQUIPMENT_SLOT[slot]

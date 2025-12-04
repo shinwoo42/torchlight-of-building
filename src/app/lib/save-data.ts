@@ -1,4 +1,4 @@
-import { EquipmentType } from '@/src/tli/gear_data_types'
+import type { EquipmentType } from '@/src/tli/gear_data_types'
 
 export const SLATE_SHAPES = ['O', 'L', 'Z'] as const
 export type SlateShape = (typeof SLATE_SHAPES)[number]

@@ -8,7 +8,7 @@ import { AffixSlotComponent } from '../equipment/AffixSlotComponent'
 import { InventoryItem } from '../equipment/InventoryItem'
 import { LegendaryGearModule } from '../equipment/LegendaryGearModule'
 import { GEAR_SLOTS, SLOT_TO_VALID_EQUIPMENT_TYPES } from '../../lib/constants'
-import { GearSlot } from '../../lib/types'
+import type { GearSlot } from '../../lib/types'
 import { getFilteredAffixes } from '../../lib/affix-utils'
 import {
   getBlendAffixes,
@@ -21,8 +21,8 @@ import {
   getGearTypeFromEquipmentType,
 } from '../../lib/equipment-utils'
 import { craft } from '@/src/tli/crafting/craft'
-import { Gear } from '../../lib/save-data'
-import { BaseGearAffix, EquipmentType } from '@/src/tli/gear_data_types'
+import type { Gear } from '../../lib/save-data'
+import type { BaseGearAffix, EquipmentType } from '@/src/tli/gear_data_types'
 import { generateItemId } from '../../lib/storage'
 
 export const EquipmentSection = () => {

@@ -1,5 +1,5 @@
-import { EquipmentSlot, EquipmentType } from '@/src/tli/gear_data_types'
-import { GearSlot } from './types'
+import type { EquipmentSlot, EquipmentType } from '@/src/tli/gear_data_types'
+import type { GearSlot } from './types'
 
 export const GEAR_SLOTS: { key: GearSlot; label: string }[] = [
   { key: 'helmet', label: 'Helmet' },

@@ -1,5 +1,5 @@
 import { deflateSync, inflateSync, strToU8, strFromU8 } from 'fflate'
-import { SaveData } from './save-data'
+import type { SaveData } from './save-data'
 
 const BUILD_CODE_VERSION = 1
 

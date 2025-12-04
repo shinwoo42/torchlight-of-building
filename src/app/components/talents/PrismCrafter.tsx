@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import {
-  CraftedPrism,
-  PrismRarity,
+  type CraftedPrism,
+  type PrismRarity,
   PRISM_RARITIES,
 } from '@/src/app/lib/save-data'
 import { generateItemId } from '@/src/app/lib/storage'
@@ -16,7 +16,7 @@ import {
 } from '@/src/app/lib/prism-utils'
 import {
   SearchableSelect,
-  SearchableSelectOption,
+  type SearchableSelectOption,
 } from '@/src/app/components/ui/SearchableSelect'
 
 interface PrismCrafterProps {

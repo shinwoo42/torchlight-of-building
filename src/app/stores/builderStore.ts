@@ -2,7 +2,7 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import {
+import type {
   SaveData,
   Gear,
   HeroMemory,
@@ -22,9 +22,9 @@ import {
   saveSaveData,
   loadSavesIndex,
   saveSavesIndex,
-  SavesIndex,
+  type SavesIndex,
 } from '../lib/saves'
-import {
+import type {
   GearSlot,
   TreeSlot,
   RingSlotKey,

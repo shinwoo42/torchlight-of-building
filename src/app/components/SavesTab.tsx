@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { SaveMetadata } from '../lib/saves'
+import type { SaveMetadata } from '../lib/saves'
 
 interface SavesTabProps {
   saves: SaveMetadata[]

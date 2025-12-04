@@ -1,4 +1,4 @@
-import { BaseGearAffix } from '../../tli/gear_data_types'
+import type { BaseGearAffix } from '../../tli/gear_data_types'
 
 export const CHEST_ARMOR_DEX_BASE_AFFIX_AFFIXES: readonly BaseGearAffix[] = [
   {

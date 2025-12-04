@@ -3,8 +3,8 @@
 import { useCallback } from 'react'
 import { useBuilderStore } from '../../stores/builderStore'
 import { PactspiritTab } from '../pactspirit/PactspiritTab'
-import { PactspiritPage } from '../../lib/save-data'
-import {
+import type { PactspiritPage } from '../../lib/save-data'
+import type {
   RingSlotKey,
   PactspiritSlotIndex,
   InstalledDestinyResult,

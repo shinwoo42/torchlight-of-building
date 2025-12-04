@@ -1,5 +1,5 @@
-import { TalentNodeData } from '@/src/tli/talent_tree'
-import { CraftedPrism, CraftedInverseImage } from '@/src/app/lib/save-data'
+import type { TalentNodeData } from '@/src/tli/talent_tree'
+import type { CraftedPrism, CraftedInverseImage } from '@/src/app/lib/save-data'
 import type { NodeBonusAffix } from '@/src/app/lib/prism-utils'
 import type { InverseImageBonusAffix } from '@/src/app/lib/inverse-image-utils'
 import { formatEffectModifier } from '@/src/app/lib/inverse-image-utils'

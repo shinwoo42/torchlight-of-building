@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Destiny } from '@/src/data/destiny/types'
-import { RingSlotKey, InstalledDestinyResult } from '../../lib/types'
+import type { Destiny } from '@/src/data/destiny/types'
+import type { RingSlotKey, InstalledDestinyResult } from '../../lib/types'
 import {
   getDestiniesForRingSlot,
   formatDestinyOption,

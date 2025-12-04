@@ -1,4 +1,4 @@
-import { BaseGearAffix, EquipmentType } from '@/src/tli/gear_data_types'
+import type { BaseGearAffix, EquipmentType } from '@/src/tli/gear_data_types'
 import { ALL_GEAR_AFFIXES } from '@/src/tli/all_affixes'
 
 export const getFilteredAffixes = (

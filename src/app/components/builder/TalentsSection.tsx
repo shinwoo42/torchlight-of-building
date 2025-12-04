@@ -8,18 +8,18 @@ import { CoreTalentSelector } from '../talents/CoreTalentSelector'
 import { PrismCoreTalentEffect } from '../talents/PrismCoreTalentEffect'
 import { PrismSection } from '../talents/PrismSection'
 import { InverseImageSection } from '../talents/InverseImageSection'
-import { TreeSlot } from '../../lib/types'
+import type { TreeSlot } from '../../lib/types'
 import {
   GOD_GODDESS_TREES,
   PROFESSION_TREES,
-  TreeName,
+  type TreeName,
   isGodGoddessTree,
   loadTalentTree,
   canRemovePrism,
   canRemoveInverseImage,
   canPlaceInverseImage,
 } from '@/src/tli/talent_tree'
-import {
+import type {
   AllocatedTalentNode,
   CraftedPrism,
   CraftedInverseImage,

@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { SkillWithSupports, SupportSkills } from '@/src/app/lib/save-data'
+import type { SkillWithSupports, SupportSkills } from '@/src/app/lib/save-data'
 import { SupportSkillSelector } from './SupportSkillSelector'
 import {
   SearchableSelect,
-  SearchableSelectOption,
+  type SearchableSelectOption,
 } from '@/src/app/components/ui/SearchableSelect'
 
 type SupportSkillKey = keyof SupportSkills

@@ -1,6 +1,6 @@
 'use client'
 
-import { CraftedInverseImage } from '@/src/app/lib/save-data'
+import type { CraftedInverseImage } from '@/src/app/lib/save-data'
 import { InverseImageInventoryItem } from './InverseImageInventoryItem'
 
 interface InverseImageInventoryProps {

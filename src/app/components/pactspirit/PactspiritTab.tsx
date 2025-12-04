@@ -1,7 +1,7 @@
 'use client'
 
-import { PactspiritPage } from '@/src/app/lib/save-data'
-import {
+import type { PactspiritPage } from '@/src/app/lib/save-data'
+import type {
   RingSlotKey,
   PactspiritSlotIndex,
   InstalledDestinyResult,

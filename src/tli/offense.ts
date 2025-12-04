@@ -1,8 +1,8 @@
 import * as R from 'remeda'
 import { match } from 'ts-pattern'
-import * as Mod from './mod'
-import { DmgModType } from './constants'
-import { Affix, Loadout, Configuration, DmgRange } from './core'
+import type * as Mod from './mod'
+import type { DmgModType } from './constants'
+import type { Affix, Loadout, Configuration, DmgRange } from './core'
 
 type Stat = 'dex' | 'int' | 'str'
 
@@ -73,7 +73,7 @@ const calculateAddn = (bonuses: number[]) => {
 }
 
 const collectModsFromAffixes = (affixes: Affix[]): Mod.Mod[] => {
-  return affixes?.map((a) => a.mods).flat() || []
+  return affixes?.flatMap((a) => a.mods) || []
 }
 
 export const collectMods = (loadout: Loadout): Mod.Mod[] => {
@@ -152,7 +152,7 @@ const calculateGearDmg = (loadout: Loadout, allMods: Mod.Mod[]): GearDmg => {
   if (mainhand === undefined) {
     return emptyGearDmg()
   }
-  const mainhandMods = mainhand.affixes.map((a) => a.mods).flat()
+  const mainhandMods = mainhand.affixes.flatMap((a) => a.mods)
   const basePhysDmg = findAffix(mainhandMods, 'GearBasePhysFlatDmg')
   if (basePhysDmg === undefined) {
     return emptyGearDmg()

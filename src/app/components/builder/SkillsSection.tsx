@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react'
 import { useBuilderStore } from '../../stores/builderStore'
 import { SkillSlot } from '../skills/SkillSlot'
 import { ActiveSkills, PassiveSkills } from '@/src/data/skill'
-import { SupportSkills } from '../../lib/save-data'
+import type { SupportSkills } from '../../lib/save-data'
 
 type ActiveSkillSlot =
   | 'activeSkill1'

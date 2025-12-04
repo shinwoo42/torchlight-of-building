@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parse_loadout } from './loadout_parser'
-import {
+import type {
   SaveData,
   SkillPage,
   HeroPage,

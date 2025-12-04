@@ -3,7 +3,7 @@
 import { useCallback } from 'react'
 import { useBuilderStore } from '../../stores/builderStore'
 import { DivinityTab } from '../divinity/DivinityTab'
-import { DivinitySlate, PlacedSlate } from '../../lib/save-data'
+import type { DivinitySlate, PlacedSlate } from '../../lib/save-data'
 import { generateItemId } from '../../lib/storage'
 
 export const DivinitySection = () => {

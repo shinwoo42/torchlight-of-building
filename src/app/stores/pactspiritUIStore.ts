@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { PactspiritSlotIndex, RingSlotKey } from '../lib/types'
+import type { PactspiritSlotIndex, RingSlotKey } from '../lib/types'
 
 interface PactspiritUIState {
   // Destiny selection modal state

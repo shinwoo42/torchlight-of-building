@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { Pactspirits } from '@/src/data/pactspirit/pactspirits'
-import { PactspiritSlot } from '@/src/app/lib/save-data'
+import type { PactspiritSlot } from '@/src/app/lib/save-data'
 import {
-  RingSlotKey,
+  type RingSlotKey,
   RING_DISPLAY_ORDER,
-  PactspiritSlotIndex,
-  InstalledDestinyResult,
+  type PactspiritSlotIndex,
+  type InstalledDestinyResult,
 } from '../../lib/types'
 import {
   getPactspiritByName,

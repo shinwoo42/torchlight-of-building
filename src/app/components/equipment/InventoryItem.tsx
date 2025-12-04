@@ -1,6 +1,6 @@
 'use client'
 
-import { Gear } from '@/src/app/lib/save-data'
+import type { Gear } from '@/src/app/lib/save-data'
 import { useTooltip } from '@/src/app/hooks/useTooltip'
 import { Tooltip, TooltipTitle } from '@/src/app/components/ui/Tooltip'
 

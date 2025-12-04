@@ -1,4 +1,4 @@
-import { BaseGearAffix } from '../../tli/gear_data_types'
+import type { BaseGearAffix } from '../../tli/gear_data_types'
 
 export const FIRE_CANNON_BASE_STATS_AFFIXES: readonly BaseGearAffix[] = [
   {

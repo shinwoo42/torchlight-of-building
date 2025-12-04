@@ -1,4 +1,4 @@
-import { BaseSkill } from './types'
+import type { BaseSkill } from './types'
 
 export const MagnificentSupportSkills: readonly BaseSkill[] = [
   {

@@ -3,7 +3,7 @@
 import { useCallback } from 'react'
 import { useBuilderStore } from '../../stores/builderStore'
 import { HeroTab } from '../hero/HeroTab'
-import { HeroMemory, HeroMemorySlot } from '../../lib/save-data'
+import type { HeroMemory, HeroMemorySlot } from '../../lib/save-data'
 import { getBaseTraitForHero } from '../../lib/hero-utils'
 import { createEmptyHeroPage, generateItemId } from '../../lib/storage'
 

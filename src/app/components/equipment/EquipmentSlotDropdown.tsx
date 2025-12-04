@@ -1,5 +1,5 @@
-import { Gear } from '@/src/app/lib/save-data'
-import { GearSlot } from '../../lib/types'
+import type { Gear } from '@/src/app/lib/save-data'
+import type { GearSlot } from '../../lib/types'
 import { SearchableSelect } from '@/src/app/components/ui/SearchableSelect'
 
 interface EquipmentSlotDropdownProps {

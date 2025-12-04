@@ -1,8 +1,8 @@
 import { Pactspirits } from '@/src/data/pactspirit/pactspirits'
 import { Destinies } from '@/src/data/destiny/destinies'
-import { Pactspirit, PactspiritRingDetails } from '@/src/data/pactspirit/types'
-import { Destiny } from '@/src/data/destiny/types'
-import { RingSlotKey } from './types'
+import type { Pactspirit, PactspiritRingDetails } from '@/src/data/pactspirit/types'
+import type { Destiny } from '@/src/data/destiny/types'
+import type { RingSlotKey } from './types'
 
 export const getPactspiritByName = (name: string): Pactspirit | undefined =>
   Pactspirits.find((p) => p.name === name)
