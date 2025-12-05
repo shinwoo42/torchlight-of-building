@@ -27,8 +27,36 @@ export interface DivinitySlate {
 
 export interface Gear {
   equipmentType: EquipmentType;
-  affixes: Affix[];
+
+  // Base stats (shared by both regular and legendary gear)
+  baseStats?: Affix;
+
+  // Regular gear affix properties
+  base_affixes?: Affix[];
+  prefixes?: Affix[];
+  suffixes?: Affix[];
+  blend_affix?: Affix;
+
+  // Legendary gear affix property
+  legendary_affixes?: Affix[];
 }
+
+export const getAllAffixes = (gear: Gear): Affix[] => {
+  const affixes: Affix[] = [];
+
+  if (gear.baseStats) affixes.push(gear.baseStats);
+
+  if (gear.legendary_affixes) {
+    affixes.push(...gear.legendary_affixes);
+  } else {
+    if (gear.base_affixes) affixes.push(...gear.base_affixes);
+    if (gear.blend_affix) affixes.push(gear.blend_affix);
+    if (gear.prefixes) affixes.push(...gear.prefixes);
+    if (gear.suffixes) affixes.push(...gear.suffixes);
+  }
+
+  return affixes;
+};
 
 export interface TalentPage {
   affixes: Affix[];

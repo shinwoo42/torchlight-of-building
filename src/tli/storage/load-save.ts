@@ -30,29 +30,25 @@ const convertAffix = (affixText: string, src: string | undefined): Affix => {
   };
 };
 
+const convertAffixArray = (
+  affixes: string[] | undefined,
+  src: string | undefined,
+): Affix[] | undefined => {
+  if (!affixes || affixes.length === 0) return undefined;
+  return affixes.map((text) => convertAffix(text, src));
+};
+
 const convertGear = (gear: SaveDataGear, src: string | undefined): Gear => {
-  const allAffixStrings: string[] = [];
-
-  if (gear.baseStats) {
-    allAffixStrings.push(gear.baseStats);
-  }
-
-  if (gear.legendary_affixes) {
-    allAffixStrings.push(...gear.legendary_affixes);
-  } else {
-    if (gear.base_affixes) allAffixStrings.push(...gear.base_affixes);
-    if (gear.blend_affix) allAffixStrings.push(gear.blend_affix);
-    if (gear.prefixes) allAffixStrings.push(...gear.prefixes);
-    if (gear.suffixes) allAffixStrings.push(...gear.suffixes);
-  }
-
-  const affixes: Affix[] = allAffixStrings.map((affixText) =>
-    convertAffix(affixText, src),
-  );
-
   return {
     equipmentType: gear.equipmentType,
-    affixes,
+    baseStats: gear.baseStats ? convertAffix(gear.baseStats, src) : undefined,
+    base_affixes: convertAffixArray(gear.base_affixes, src),
+    prefixes: convertAffixArray(gear.prefixes, src),
+    suffixes: convertAffixArray(gear.suffixes, src),
+    blend_affix: gear.blend_affix
+      ? convertAffix(gear.blend_affix, src)
+      : undefined,
+    legendary_affixes: convertAffixArray(gear.legendary_affixes, src),
   };
 };
 

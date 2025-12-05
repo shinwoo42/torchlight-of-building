@@ -1,7 +1,13 @@
 import * as R from "remeda";
 import { match } from "ts-pattern";
 import type { DmgModType } from "./constants";
-import type { Affix, Configuration, DmgRange, Loadout } from "./core";
+import {
+  getAllAffixes,
+  type Affix,
+  type Configuration,
+  type DmgRange,
+  type Loadout,
+} from "./core";
 import type * as Mod from "./mod";
 
 type Stat = "dex" | "int" | "str";
@@ -76,6 +82,12 @@ const collectModsFromAffixes = (affixes: Affix[]): Mod.Mod[] => {
   return affixes?.flatMap((a) => a.mods || []) || [];
 };
 
+const getGearAffixes = (
+  gear: Loadout["gearPage"]["equippedGear"][keyof Loadout["gearPage"]["equippedGear"]],
+): Affix[] => {
+  return gear ? getAllAffixes(gear) : [];
+};
+
 export const collectMods = (loadout: Loadout): Mod.Mod[] => {
   return [
     ...collectModsFromAffixes(
@@ -83,34 +95,34 @@ export const collectMods = (loadout: Loadout): Mod.Mod[] => {
     ),
     ...collectModsFromAffixes(loadout.talentPage.affixes),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.helmet?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.helmet),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.chest?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.chest),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.neck?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.neck),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.gloves?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.gloves),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.belt?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.belt),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.boots?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.boots),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.leftRing?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.leftRing),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.rightRing?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.rightRing),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.mainHand?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.mainHand),
     ),
     ...collectModsFromAffixes(
-      loadout.gearPage.equippedGear.offHand?.affixes || [],
+      getGearAffixes(loadout.gearPage.equippedGear.offHand),
     ),
     ...collectModsFromAffixes(loadout.customConfiguration),
   ];
@@ -172,7 +184,7 @@ const calculateGearDmg = (loadout: Loadout, allMods: Mod.Mod[]): GearDmg => {
   if (mainhand === undefined) {
     return emptyGearDmg();
   }
-  const mainhandMods = mainhand.affixes.flatMap((a) => a.mods || []);
+  const mainhandMods = getAllAffixes(mainhand).flatMap((a) => a.mods || []);
   const basePhysDmg = findAffix(mainhandMods, "GearBasePhysFlatDmg");
   if (basePhysDmg === undefined) {
     return emptyGearDmg();
