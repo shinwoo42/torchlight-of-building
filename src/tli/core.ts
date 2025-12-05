@@ -2,7 +2,7 @@ import type { EquipmentType } from "./gear_data_types";
 import type { Mod } from "./mod";
 
 export interface Affix {
-  mods: Mod[];
+  mods?: Mod[];
   maxDivinity?: number;
   src?: string;
   text?: string;

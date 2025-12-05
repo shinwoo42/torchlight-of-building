@@ -122,17 +122,18 @@ const parseTalentTree = (rawTree: TalentTree): Affix[] => {
 
     const baseAffix = parseAffixString(node.rawAffix);
 
-    const scaledMods: Mod[] = baseAffix.mods.map((mod) => {
-      // Only mods with easily scalable values can possibly be allocated multiple points
-      if ("value" in mod && typeof mod.value === "number") {
-        return {
-          ...mod,
-          value: mod.value * allocatedNode.points,
-        } as Mod;
-      } else {
-        return mod;
-      }
-    });
+    const scaledMods: Mod[] =
+      baseAffix.mods?.map((mod) => {
+        // Only mods with easily scalable values can possibly be allocated multiple points
+        if ("value" in mod && typeof mod.value === "number") {
+          return {
+            ...mod,
+            value: mod.value * allocatedNode.points,
+          } as Mod;
+        } else {
+          return mod;
+        }
+      }) || [];
 
     // Create the final affix with metadata
     const affix: Affix = {

@@ -97,7 +97,7 @@ describe("parse_loadout", () => {
       "+10% fire damage",
     );
     expect(result.equipmentPage.helmet?.affixes[0].mods).toHaveLength(1);
-    expect(result.equipmentPage.helmet?.affixes[0].mods[0]).toEqual({
+    expect(result.equipmentPage.helmet?.affixes[0].mods?.[0]).toEqual({
       type: "DmgPct",
       value: 0.1,
       modType: "fire",
@@ -109,7 +109,7 @@ describe("parse_loadout", () => {
       "+5% attack speed",
     );
     expect(result.equipmentPage.helmet?.affixes[1].mods).toHaveLength(1);
-    expect(result.equipmentPage.helmet?.affixes[1].mods[0]).toEqual({
+    expect(result.equipmentPage.helmet?.affixes[1].mods?.[0]).toEqual({
       type: "AspdPct",
       value: 0.05,
       addn: false,
@@ -154,18 +154,18 @@ describe("parse_loadout", () => {
     expect(result.equipmentPage.chest?.affixes[0].mods).toHaveLength(3);
 
     // Check all three mods
-    expect(result.equipmentPage.chest?.affixes[0].mods[0]).toEqual({
+    expect(result.equipmentPage.chest?.affixes[0].mods?.[0]).toEqual({
       type: "DmgPct",
       value: 0.1,
       modType: "fire",
       addn: false,
     });
-    expect(result.equipmentPage.chest?.affixes[0].mods[1]).toEqual({
+    expect(result.equipmentPage.chest?.affixes[0].mods?.[1]).toEqual({
       type: "AspdPct",
       value: 0.05,
       addn: false,
     });
-    expect(result.equipmentPage.chest?.affixes[0].mods[2]).toEqual({
+    expect(result.equipmentPage.chest?.affixes[0].mods?.[2]).toEqual({
       type: "CritRatingPct",
       value: 0.15,
       modType: "global",
@@ -211,13 +211,13 @@ describe("parse_loadout", () => {
     expect(result.equipmentPage.gloves?.affixes[0].mods).toHaveLength(2);
 
     // Check that the two successfully parsed mods are correct
-    expect(result.equipmentPage.gloves?.affixes[0].mods[0]).toEqual({
+    expect(result.equipmentPage.gloves?.affixes[0].mods?.[0]).toEqual({
       type: "DmgPct",
       value: 0.1,
       modType: "fire",
       addn: false,
     });
-    expect(result.equipmentPage.gloves?.affixes[0].mods[1]).toEqual({
+    expect(result.equipmentPage.gloves?.affixes[0].mods?.[1]).toEqual({
       type: "AspdPct",
       value: 0.05,
       addn: false,
@@ -398,7 +398,7 @@ describe("talent tree parsing", () => {
     expect(result.talentPage.affixes).toHaveLength(1);
     expect(result.talentPage.affixes[0].text).toBe("+9% Attack Damage");
     expect(result.talentPage.affixes[0].mods).toHaveLength(1);
-    expect(result.talentPage.affixes[0].mods[0]).toEqual({
+    expect(result.talentPage.affixes[0].mods?.[0]).toEqual({
       type: "DmgPct",
       value: 0.09,
       modType: "attack",
@@ -433,7 +433,7 @@ describe("talent tree parsing", () => {
     const result = parse_loadout(rawLoadout);
 
     expect(result.talentPage.affixes).toHaveLength(1);
-    expect(result.talentPage.affixes[0].mods[0]).toEqual({
+    expect(result.talentPage.affixes[0].mods?.[0]).toEqual({
       type: "DmgPct",
       value: 0.27, // 0.09 * 3
       modType: "attack",
@@ -476,7 +476,7 @@ describe("talent tree parsing", () => {
     expect(result.talentPage.affixes[0].mods).toHaveLength(1);
 
     // First mod: +20% Attack Critical Strike Rating * 2 points
-    expect(result.talentPage.affixes[0].mods[0]).toEqual({
+    expect(result.talentPage.affixes[0].mods?.[0]).toEqual({
       type: "CritRatingPct",
       value: 0.4, // 0.20 * 2
       modType: "attack",
