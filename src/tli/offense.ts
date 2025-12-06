@@ -3,6 +3,7 @@ import { match } from "ts-pattern";
 import type { DmgModType } from "./constants";
 import {
   getAllAffixes,
+  getTalentAffixes,
   type Affix,
   type Configuration,
   type DmgRange,
@@ -93,7 +94,7 @@ export const collectMods = (loadout: Loadout): Mod.Mod[] => {
     ...collectModsFromAffixes(
       loadout.divinityPage.slates.flatMap((s) => s.affixes),
     ),
-    ...collectModsFromAffixes(loadout.talentPage.affixes),
+    ...collectModsFromAffixes(getTalentAffixes(loadout.talentPage)),
     ...collectModsFromAffixes(
       getGearAffixes(loadout.gearPage.equippedGear.helmet),
     ),

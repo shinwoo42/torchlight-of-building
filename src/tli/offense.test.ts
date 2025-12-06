@@ -5,7 +5,10 @@ import { calculateOffense, collectMods } from "./offense";
 const initLoadout = (pl: Partial<Loadout> = {}): Loadout => {
   return {
     gearPage: pl.gearPage || { equippedGear: {}, inventory: [] },
-    talentPage: pl.talentPage || { affixes: [] },
+    talentPage: pl.talentPage || {
+      allocatedTalents: {},
+      inventory: { prismList: [], inverseImageList: [] },
+    },
     divinityPage: pl.divinityPage || { slates: [] },
     customConfiguration: pl.customConfiguration || [],
   };
@@ -337,13 +340,20 @@ test("calculate offense affixes from equipment, talents, and divinities combine"
       inventory: [],
     },
     talentPage: {
-      affixes: [
-        {
-          mods: [
-            { type: "DmgPct", value: 0.3, modType: "global", addn: false },
+      allocatedTalents: {
+        tree1: {
+          name: "test",
+          allocatedNodes: [],
+          selectedCoreTalents: [
+            {
+              mods: [
+                { type: "DmgPct", value: 0.3, modType: "global", addn: false },
+              ],
+            }, // +30% from talent
           ],
-        }, // +30% from talent
-      ],
+        },
+      },
+      inventory: { prismList: [], inverseImageList: [] },
     },
     divinityPage: {
       slates: [
@@ -596,9 +606,16 @@ test("calculate offense with fervor and multiple FervorEff modifiers stacking", 
       inventory: [],
     },
     talentPage: {
-      affixes: [
-        { mods: [{ type: "FervorEff", value: 0.1 }] }, // +10% fervor effectiveness
-      ],
+      allocatedTalents: {
+        tree1: {
+          name: "test",
+          allocatedNodes: [],
+          selectedCoreTalents: [
+            { mods: [{ type: "FervorEff", value: 0.1 }] }, // +10% fervor effectiveness
+          ],
+        },
+      },
+      inventory: { prismList: [], inverseImageList: [] },
     },
   });
 
@@ -767,9 +784,16 @@ test("calculate offense with multiple CritDmgPerFervor affixes stacking", () => 
       inventory: [],
     },
     talentPage: {
-      affixes: [
-        { mods: [{ type: "CritDmgPerFervor", value: 0.003 }] }, // +0.3% per point
-      ],
+      allocatedTalents: {
+        tree1: {
+          name: "test",
+          allocatedNodes: [],
+          selectedCoreTalents: [
+            { mods: [{ type: "CritDmgPerFervor", value: 0.003 }] }, // +0.3% per point
+          ],
+        },
+      },
+      inventory: { prismList: [], inverseImageList: [] },
     },
   });
 

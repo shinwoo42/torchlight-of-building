@@ -2,8 +2,24 @@ import type {
   SaveData,
   Gear as SaveDataGear,
   GearPage as SaveDataGearPage,
+  TalentPage as SaveDataTalentPage,
+  TalentTree as SaveDataTalentTree,
+  PlacedPrism as SaveDataPlacedPrism,
+  CraftedPrism as SaveDataCraftedPrism,
 } from "@/src/app/lib/save-data";
-import type { Affix, EquippedGear, Gear, GearPage, Loadout } from "../core";
+import type {
+  Affix,
+  EquippedGear,
+  Gear,
+  GearPage,
+  Loadout,
+  TalentPage,
+  TalentTree,
+  PlacedPrism,
+  CraftedPrism,
+  AllocatedTalents,
+  TalentInventory,
+} from "../core";
 import type { Mod } from "../mod";
 import { parseMod } from "../mod_parser";
 
@@ -90,10 +106,96 @@ const convertGearPage = (
   };
 };
 
+type TreeSlot = "tree1" | "tree2" | "tree3" | "tree4";
+
+const getTalentSrc = (treeSlot: TreeSlot): string => {
+  return `Talent#${treeSlot}`;
+};
+
+const convertTalentTree = (
+  tree: SaveDataTalentTree,
+  src: string,
+): TalentTree => {
+  return {
+    name: tree.name,
+    allocatedNodes: tree.allocatedNodes,
+    selectedCoreTalents: tree.selectedCoreTalents
+      ? tree.selectedCoreTalents.map((text) => convertAffix(text, src))
+      : undefined,
+  };
+};
+
+const convertCraftedPrism = (
+  prism: SaveDataCraftedPrism,
+  src: string,
+): CraftedPrism => {
+  return {
+    id: prism.id,
+    rarity: prism.rarity,
+    baseAffix: convertAffix(prism.baseAffix, src),
+    gaugeAffixes: prism.gaugeAffixes.map((text) => convertAffix(text, src)),
+  };
+};
+
+const convertPlacedPrism = (
+  placedPrism: SaveDataPlacedPrism,
+  src: string,
+): PlacedPrism => {
+  return {
+    prism: convertCraftedPrism(placedPrism.prism, src),
+    treeSlot: placedPrism.treeSlot,
+    position: placedPrism.position,
+  };
+};
+
+const convertTalentPage = (
+  saveDataTalentPage: SaveDataTalentPage,
+  prismList: SaveDataCraftedPrism[],
+  inverseImageList: SaveData["inverseImageList"],
+): TalentPage => {
+  const treeSlots: TreeSlot[] = ["tree1", "tree2", "tree3", "tree4"];
+
+  const allocatedTalents: AllocatedTalents = {};
+
+  for (const slot of treeSlots) {
+    const tree = saveDataTalentPage[slot];
+    if (tree) {
+      const src = getTalentSrc(slot);
+      allocatedTalents[slot] = convertTalentTree(tree, src);
+    }
+  }
+
+  if (saveDataTalentPage.placedPrism) {
+    const src = getTalentSrc(saveDataTalentPage.placedPrism.treeSlot);
+    allocatedTalents.placedPrism = convertPlacedPrism(
+      saveDataTalentPage.placedPrism,
+      src,
+    );
+  }
+
+  if (saveDataTalentPage.placedInverseImage) {
+    allocatedTalents.placedInverseImage = saveDataTalentPage.placedInverseImage;
+  }
+
+  const inventory: TalentInventory = {
+    prismList,
+    inverseImageList,
+  };
+
+  return {
+    allocatedTalents,
+    inventory,
+  };
+};
+
 export const loadSave = (saveData: SaveData): Loadout => {
   return {
     gearPage: convertGearPage(saveData.equipmentPage, saveData.itemsList),
-    talentPage: { affixes: [] },
+    talentPage: convertTalentPage(
+      saveData.talentPage,
+      saveData.prismList,
+      saveData.inverseImageList,
+    ),
     divinityPage: { slates: [] },
     customConfiguration: [],
   };

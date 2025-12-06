@@ -1,5 +1,20 @@
 import type { EquipmentType } from "./gear_data_types";
 import type { Mod } from "./mod";
+import type {
+  AllocatedTalentNode,
+  CraftedInverseImage,
+  CraftedPrism as SaveDataCraftedPrism,
+  PlacedInverseImage as SaveDataPlacedInverseImage,
+  PrismRarity,
+  ReflectedAllocatedNode,
+} from "@/src/app/lib/save-data";
+
+export type {
+  AllocatedTalentNode,
+  CraftedInverseImage,
+  PrismRarity,
+  ReflectedAllocatedNode,
+};
 
 export interface Affix {
   mods?: Mod[];
@@ -63,9 +78,76 @@ export const getAllAffixes = (gear: Gear): Affix[] => {
   return affixes;
 };
 
-export interface TalentPage {
-  affixes: Affix[];
+// Talent types with parsed Affix objects (instead of strings)
+export interface TalentTree {
+  name: string;
+  allocatedNodes: AllocatedTalentNode[];
+  selectedCoreTalents?: Affix[];
 }
+
+export interface CraftedPrism {
+  id: string;
+  rarity: PrismRarity;
+  baseAffix: Affix;
+  gaugeAffixes: Affix[];
+}
+
+export interface PlacedPrism {
+  prism: CraftedPrism;
+  treeSlot: "tree1" | "tree2" | "tree3" | "tree4";
+  position: { x: number; y: number };
+}
+
+export interface PlacedInverseImage {
+  inverseImage: CraftedInverseImage;
+  treeSlot: "tree2" | "tree3" | "tree4";
+  position: { x: number; y: number };
+  reflectedAllocatedNodes: ReflectedAllocatedNode[];
+}
+
+export interface AllocatedTalents {
+  tree1?: TalentTree;
+  tree2?: TalentTree;
+  tree3?: TalentTree;
+  tree4?: TalentTree;
+  placedPrism?: PlacedPrism;
+  placedInverseImage?: PlacedInverseImage;
+}
+
+export interface TalentInventory {
+  prismList: SaveDataCraftedPrism[];
+  inverseImageList: CraftedInverseImage[];
+}
+
+export interface TalentPage {
+  allocatedTalents: AllocatedTalents;
+  inventory: TalentInventory;
+}
+
+export const getTalentAffixes = (talentPage: TalentPage): Affix[] => {
+  const affixes: Affix[] = [];
+  const { allocatedTalents } = talentPage;
+
+  const trees = [
+    allocatedTalents.tree1,
+    allocatedTalents.tree2,
+    allocatedTalents.tree3,
+    allocatedTalents.tree4,
+  ];
+
+  for (const tree of trees) {
+    if (tree?.selectedCoreTalents) {
+      affixes.push(...tree.selectedCoreTalents);
+    }
+  }
+
+  if (allocatedTalents.placedPrism) {
+    affixes.push(allocatedTalents.placedPrism.prism.baseAffix);
+    affixes.push(...allocatedTalents.placedPrism.prism.gaugeAffixes);
+  }
+
+  return affixes;
+};
 
 export interface DivinityPage {
   slates: DivinitySlate[];
