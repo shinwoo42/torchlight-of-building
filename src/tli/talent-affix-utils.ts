@@ -10,9 +10,10 @@ import { parseMod } from "./mod_parser";
 
 export type TreeSlot = "tree1" | "tree2" | "tree3" | "tree4";
 
-const treeDataByName: Record<TreeName, TalentNodeData[]> = Object.fromEntries(
-  TalentTrees.map((tree) => [tree.name, tree.nodes]),
-) as Record<TreeName, TalentNodeData[]>;
+export const treeDataByName: Record<TreeName, TalentNodeData[]> =
+  Object.fromEntries(
+    TalentTrees.map((tree) => [tree.name, tree.nodes]),
+  ) as Record<TreeName, TalentNodeData[]>;
 
 export const findTalentNodeData = (
   treeName: string,

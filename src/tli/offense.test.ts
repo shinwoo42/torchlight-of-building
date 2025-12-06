@@ -343,7 +343,7 @@ test("calculate offense affixes from equipment, talents, and divinities combine"
       allocatedTalents: {
         tree1: {
           name: "test",
-          allocatedNodes: [],
+          nodes: [],
           selectedCoreTalents: [
             {
               mods: [
@@ -609,7 +609,7 @@ test("calculate offense with fervor and multiple FervorEff modifiers stacking", 
       allocatedTalents: {
         tree1: {
           name: "test",
-          allocatedNodes: [],
+          nodes: [],
           selectedCoreTalents: [
             { mods: [{ type: "FervorEff", value: 0.1 }] }, // +10% fervor effectiveness
           ],
@@ -787,7 +787,7 @@ test("calculate offense with multiple CritDmgPerFervor affixes stacking", () => 
       allocatedTalents: {
         tree1: {
           name: "test",
-          allocatedNodes: [],
+          nodes: [],
           selectedCoreTalents: [
             { mods: [{ type: "CritDmgPerFervor", value: 0.003 }] }, // +0.3% per point
           ],

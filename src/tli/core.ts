@@ -70,28 +70,35 @@ export const getAllAffixes = (gear: Gear): Affix[] => {
   return affixes;
 };
 
-// Talent node types with derived affix data
-export interface AllocatedTalentNode {
+// Unified talent node type with all derived data
+export interface TalentNode {
+  // Position
   x: number;
   y: number;
-  points: number;
-  affix: Affix; // Scaled by allocated points
-  prismAffixes: Affix[]; // Prism gauge affixes matching node type, scaled by points
-}
 
-export interface ReflectedAllocatedNode {
-  x: number; // Position in target area
-  y: number;
-  sourceX: number; // Position of source node being reflected
-  sourceY: number;
-  points: number;
-  affix: Affix; // Scaled by points (no inverse image effect modifier applied)
+  // From TalentNodeData
+  nodeType: "micro" | "medium" | "legendary";
+  maxPoints: number;
+  prerequisite?: { x: number; y: number };
+  iconName: string;
+
+  // Allocation state
+  points: number; // 0 for unallocated
+
+  // Reflection state
+  isReflected: boolean;
+  sourcePosition?: { x: number; y: number }; // Only for reflected nodes
+  inverseImageEffect?: number; // Decimal like 0.47 for 47%, only for reflected nodes
+
+  // Parsed affix data (scaled by points)
+  affix: Affix;
+  prismAffixes: Affix[]; // Prism gauge affixes matching node type
 }
 
 // Talent types with parsed Affix objects (instead of strings)
 export interface TalentTree {
   name: string;
-  allocatedNodes: AllocatedTalentNode[];
+  nodes: TalentNode[]; // All nodes including unallocated (0 points) and reflected
   selectedCoreTalents?: Affix[];
 }
 
@@ -112,7 +119,6 @@ export interface PlacedInverseImage {
   inverseImage: CraftedInverseImage;
   treeSlot: "tree2" | "tree3" | "tree4";
   position: { x: number; y: number };
-  reflectedAllocatedNodes: ReflectedAllocatedNode[];
 }
 
 export interface TalentGrid {
@@ -149,10 +155,12 @@ export const getTalentAffixes = (talentPage: TalentPage): Affix[] => {
     if (tree?.selectedCoreTalents) {
       affixes.push(...tree.selectedCoreTalents);
     }
-    if (tree?.allocatedNodes) {
-      for (const node of tree.allocatedNodes) {
-        affixes.push(node.affix);
-        affixes.push(...node.prismAffixes);
+    if (tree?.nodes) {
+      for (const node of tree.nodes) {
+        if (node.points > 0) {
+          affixes.push(node.affix);
+          affixes.push(...node.prismAffixes);
+        }
       }
     }
   }
@@ -160,13 +168,6 @@ export const getTalentAffixes = (talentPage: TalentPage): Affix[] => {
   if (allocatedTalents.placedPrism) {
     affixes.push(allocatedTalents.placedPrism.prism.baseAffix);
     affixes.push(...allocatedTalents.placedPrism.prism.gaugeAffixes);
-  }
-
-  if (allocatedTalents.placedInverseImage) {
-    for (const node of allocatedTalents.placedInverseImage
-      .reflectedAllocatedNodes) {
-      affixes.push(node.affix);
-    }
   }
 
   return affixes;
