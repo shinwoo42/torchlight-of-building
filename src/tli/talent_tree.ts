@@ -2,24 +2,19 @@ import {
   isInTargetArea,
   isInverseImagePosition,
 } from "@/src/app/lib/inverse-image-utils";
-import type {
-  AllocatedTalentNode,
-  PlacedInverseImage,
-  PlacedPrism,
-} from "@/src/app/lib/save-data";
 import {
   GOD_GODDESS_TREES,
   isGodGoddessTree,
   PROFESSION_TREES,
-  type TalentNodeData,
   type TalentTreeData,
   TalentTrees,
   type TreeName,
 } from "@/src/data/talent_tree";
+import type { PlacedInverseImage, PlacedPrism, TalentNode } from "./core";
 
 // Re-export tree name constants and types
 export { GOD_GODDESS_TREES, PROFESSION_TREES, isGodGoddessTree };
-export type { TreeName, TalentNodeData, TalentTreeData };
+export type { TreeName, TalentTreeData };
 
 // Convert array to record for lookup
 const TALENT_TREES: Record<TreeName, TalentTreeData> = Object.fromEntries(
@@ -41,73 +36,58 @@ export const hasPrismAtPosition = (
   );
 };
 
-// Calculate total points in a specific column
+// Calculate total points in a specific column (non-reflected nodes only)
 export const calculateColumnPoints = (
-  allocatedNodes: AllocatedTalentNode[],
+  nodes: TalentNode[],
   columnIndex: number,
 ): number => {
-  return allocatedNodes
-    .filter((node) => node.x === columnIndex)
+  return nodes
+    .filter((node) => !node.isReflected && node.x === columnIndex)
     .reduce((sum, node) => sum + node.points, 0);
 };
 
-// Calculate total points allocated before a specific column
+// Calculate total points allocated before a specific column (non-reflected nodes only)
 export const getTotalPointsBeforeColumn = (
-  allocatedNodes: AllocatedTalentNode[],
+  nodes: TalentNode[],
   columnIndex: number,
 ): number => {
   let total = 0;
   for (let x = 0; x < columnIndex; x++) {
-    total += calculateColumnPoints(allocatedNodes, x);
+    total += calculateColumnPoints(nodes, x);
   }
   return total;
 };
 
-// Check if a column is unlocked based on point requirements
+// Check if a column is unlocked based on point requirements (non-reflected nodes only)
 export const isColumnUnlocked = (
-  allocatedNodes: AllocatedTalentNode[],
+  nodes: TalentNode[],
   columnIndex: number,
 ): boolean => {
   const requiredPoints = columnIndex * 3;
-  const pointsAllocated = getTotalPointsBeforeColumn(
-    allocatedNodes,
-    columnIndex,
-  );
+  const pointsAllocated = getTotalPointsBeforeColumn(nodes, columnIndex);
   return pointsAllocated >= requiredPoints;
 };
 
 // Calculate total points in a column, combining regular and reflected allocations
 export const calculateCombinedColumnPoints = (
-  allocatedNodes: AllocatedTalentNode[],
-  reflectedAllocatedNodes: { x: number; y: number; points: number }[],
+  nodes: TalentNode[],
   columnIndex: number,
 ): number => {
-  const regularPoints = allocatedNodes
-    .filter((node) => node.x === columnIndex)
+  return nodes
+    .filter((node) => node.x === columnIndex && node.points > 0)
     .reduce((sum, node) => sum + node.points, 0);
-
-  const reflectedPoints = reflectedAllocatedNodes
-    .filter((node) => node.x === columnIndex)
-    .reduce((sum, node) => sum + node.points, 0);
-
-  return regularPoints + reflectedPoints;
 };
 
 // Check if a column is unlocked based on combined points (regular + reflected)
 export const isColumnUnlockedWithReflected = (
-  allocatedNodes: AllocatedTalentNode[],
-  reflectedAllocatedNodes: { x: number; y: number; points: number }[],
+  nodes: TalentNode[],
   columnIndex: number,
 ): boolean => {
   const requiredPoints = columnIndex * 3;
   let totalPointsBefore = 0;
 
   for (let x = 0; x < columnIndex; x++) {
-    totalPointsBefore += calculateCombinedColumnPoints(
-      allocatedNodes,
-      reflectedAllocatedNodes,
-      x,
-    );
+    totalPointsBefore += calculateCombinedColumnPoints(nodes, x);
   }
 
   return totalPointsBefore >= requiredPoints;
@@ -117,8 +97,7 @@ export const isColumnUnlockedWithReflected = (
 // If the prerequisite node has a prism, the check is bypassed (considered satisfied)
 export const isPrerequisiteSatisfied = (
   prerequisite: { x: number; y: number } | undefined,
-  allocatedNodes: AllocatedTalentNode[],
-  treeData: TalentTreeData,
+  nodes: TalentNode[],
   placedPrism?: PlacedPrism,
   treeSlot?: string,
 ): boolean => {
@@ -133,23 +112,18 @@ export const isPrerequisiteSatisfied = (
     return true;
   }
 
-  const prereqNode = treeData.nodes.find(
-    (n) => n.position.x === prerequisite.x && n.position.y === prerequisite.y,
+  const prereqNode = nodes.find(
+    (n) => n.x === prerequisite.x && n.y === prerequisite.y && !n.isReflected,
   );
   if (!prereqNode) return false;
 
-  const allocation = allocatedNodes.find(
-    (n) => n.x === prerequisite.x && n.y === prerequisite.y,
-  );
-
-  return allocation !== undefined && allocation.points >= prereqNode.maxPoints;
+  return prereqNode.points >= prereqNode.maxPoints;
 };
 
 // Check if a node can be allocated
 export const canAllocateNode = (
-  node: TalentNodeData,
-  allocatedNodes: AllocatedTalentNode[],
-  treeData: TalentTreeData,
+  node: TalentNode,
+  nodes: TalentNode[],
   placedPrism?: PlacedPrism,
   treeSlot?: string,
 ): boolean => {
@@ -157,34 +131,25 @@ export const canAllocateNode = (
   if (
     placedPrism &&
     treeSlot &&
-    hasPrismAtPosition(placedPrism, treeSlot, node.position.x, node.position.y)
+    hasPrismAtPosition(placedPrism, treeSlot, node.x, node.y)
   ) {
     return false;
   }
 
   // Check column gating
-  if (!isColumnUnlocked(allocatedNodes, node.position.x)) {
+  if (!isColumnUnlocked(nodes, node.x)) {
     return false;
   }
 
   // Check prerequisite
   if (
-    !isPrerequisiteSatisfied(
-      node.prerequisite,
-      allocatedNodes,
-      treeData,
-      placedPrism,
-      treeSlot,
-    )
+    !isPrerequisiteSatisfied(node.prerequisite, nodes, placedPrism, treeSlot)
   ) {
     return false;
   }
 
   // Check if already at max
-  const current = allocatedNodes.find(
-    (n) => n.x === node.position.x && n.y === node.position.y,
-  );
-  if (current && current.points >= node.maxPoints) {
+  if (node.points >= node.maxPoints) {
     return false;
   }
 
@@ -193,30 +158,33 @@ export const canAllocateNode = (
 
 // Check if removing a point from a column would break any later column's gating
 const wouldBreakColumnGating = (
-  allocatedNodes: AllocatedTalentNode[],
+  nodes: TalentNode[],
   nodeColumn: number,
+  nodeX: number,
+  nodeY: number,
 ): boolean => {
   const getTotalPointsBeforeColumnSimulated = (columnIndex: number): number => {
     let total = 0;
     for (let x = 0; x < columnIndex; x++) {
-      const colPoints = allocatedNodes
-        .filter((n) => n.x === x)
-        .reduce((sum, n) => sum + n.points, 0);
-      // Subtract 1 if this is the column we're removing from
-      total += x === nodeColumn ? colPoints - 1 : colPoints;
+      for (const n of nodes) {
+        if (n.isReflected || n.x !== x) continue;
+        // Subtract 1 if this is the node we're removing from
+        const adjustment =
+          x === nodeColumn && n.x === nodeX && n.y === nodeY ? 1 : 0;
+        total += n.points - adjustment;
+      }
     }
     return total;
   };
 
   // Check if any allocated node in a later column would become invalid
-  for (const allocation of allocatedNodes) {
-    if (allocation.x <= nodeColumn) continue; // Only check later columns
-    if (allocation.points === 0) continue;
+  for (const n of nodes) {
+    if (n.isReflected) continue;
+    if (n.x <= nodeColumn) continue;
+    if (n.points === 0) continue;
 
-    const requiredPoints = allocation.x * 3;
-    const pointsAfterRemoval = getTotalPointsBeforeColumnSimulated(
-      allocation.x,
-    );
+    const requiredPoints = n.x * 3;
+    const pointsAfterRemoval = getTotalPointsBeforeColumnSimulated(n.x);
 
     if (pointsAfterRemoval < requiredPoints) {
       return true;
@@ -228,55 +196,46 @@ const wouldBreakColumnGating = (
 
 // Check if a node can be deallocated
 export const canDeallocateNode = (
-  node: TalentNodeData,
-  allocatedNodes: AllocatedTalentNode[],
-  treeData: TalentTreeData,
+  node: TalentNode,
+  nodes: TalentNode[],
   placedPrism?: PlacedPrism,
   treeSlot?: string,
 ): boolean => {
   // Must have points allocated
-  const current = allocatedNodes.find(
-    (n) => n.x === node.position.x && n.y === node.position.y,
-  );
-  if (!current || current.points === 0) {
+  if (node.points === 0) {
     return false;
   }
 
   // Check if removing a point would break column gating for any later column
-  if (wouldBreakColumnGating(allocatedNodes, node.position.x)) {
+  if (wouldBreakColumnGating(nodes, node.x, node.x, node.y)) {
     return false;
   }
 
   // Check if any other node depends on this one being fully allocated
   // Skip nodes that have a prism on them (prism nodes don't count as allocated dependents)
-  const hasDependents = treeData.nodes.some((otherNode) => {
-    if (!otherNode.prerequisite) return false;
-    if (otherNode.prerequisite.x !== node.position.x) return false;
-    if (otherNode.prerequisite.y !== node.position.y) return false;
+  // Only check non-reflected nodes for dependents
+  const hasDependents = nodes
+    .filter((n) => !n.isReflected)
+    .some((otherNode) => {
+      if (!otherNode.prerequisite) return false;
+      if (otherNode.prerequisite.x !== node.x) return false;
+      if (otherNode.prerequisite.y !== node.y) return false;
 
-    // If the dependent node has a prism, it doesn't count as a dependent
-    if (
-      placedPrism &&
-      treeSlot &&
-      hasPrismAtPosition(
-        placedPrism,
-        treeSlot,
-        otherNode.position.x,
-        otherNode.position.y,
-      )
-    ) {
-      return false;
-    }
+      // If the dependent node has a prism, it doesn't count as a dependent
+      if (
+        placedPrism &&
+        treeSlot &&
+        hasPrismAtPosition(placedPrism, treeSlot, otherNode.x, otherNode.y)
+      ) {
+        return false;
+      }
 
-    // Check if the dependent node is allocated
-    const dependentAllocation = allocatedNodes.find(
-      (n) => n.x === otherNode.position.x && n.y === otherNode.position.y,
-    );
-    return dependentAllocation !== undefined && dependentAllocation.points > 0;
-  });
+      // Check if the dependent node is allocated
+      return otherNode.points > 0;
+    });
 
   // If deallocating would break the fully-allocated requirement for dependents
-  if (hasDependents && current.points <= node.maxPoints) {
+  if (hasDependents && node.points <= node.maxPoints) {
     return false;
   }
 
@@ -287,22 +246,21 @@ export const canDeallocateNode = (
 // A prism cannot be removed if any dependent node has allocated points
 export const canRemovePrism = (
   placedPrism: PlacedPrism,
-  allocatedNodes: AllocatedTalentNode[],
-  treeData: TalentTreeData,
+  nodes: TalentNode[],
 ): boolean => {
   const { x, y } = placedPrism.position;
 
   // Find all nodes that depend on the prism's position
-  const hasDependentsWithPoints = treeData.nodes.some((node) => {
-    if (!node.prerequisite) return false;
-    if (node.prerequisite.x !== x || node.prerequisite.y !== y) return false;
+  // Only check non-reflected nodes
+  const hasDependentsWithPoints = nodes
+    .filter((n) => !n.isReflected)
+    .some((node) => {
+      if (!node.prerequisite) return false;
+      if (node.prerequisite.x !== x || node.prerequisite.y !== y) return false;
 
-    // Check if this dependent node has allocated points
-    const allocation = allocatedNodes.find(
-      (n) => n.x === node.position.x && n.y === node.position.y,
-    );
-    return allocation !== undefined && allocation.points > 0;
-  });
+      // Check if this dependent node has allocated points
+      return node.points > 0;
+    });
 
   // Cannot remove if there are dependents with allocated points
   return !hasDependentsWithPoints;
@@ -327,8 +285,7 @@ export const hasInverseImageAtPosition = (
 export const isPrerequisiteSatisfiedWithInverseImage = (
   prerequisite: { x: number; y: number } | undefined,
   nodePosition: { x: number; y: number },
-  allocatedNodes: AllocatedTalentNode[],
-  treeData: TalentTreeData,
+  nodes: TalentNode[],
   placedPrism?: PlacedPrism,
   placedInverseImage?: PlacedInverseImage,
   treeSlot?: string,
@@ -354,20 +311,13 @@ export const isPrerequisiteSatisfiedWithInverseImage = (
   }
 
   // Otherwise use normal prism-aware prerequisite check
-  return isPrerequisiteSatisfied(
-    prerequisite,
-    allocatedNodes,
-    treeData,
-    placedPrism,
-    treeSlot,
-  );
+  return isPrerequisiteSatisfied(prerequisite, nodes, placedPrism, treeSlot);
 };
 
 // Check if a node can be allocated, accounting for inverse image
 export const canAllocateNodeWithInverseImage = (
-  node: TalentNodeData,
-  allocatedNodes: AllocatedTalentNode[],
-  treeData: TalentTreeData,
+  node: TalentNode,
+  nodes: TalentNode[],
   placedPrism?: PlacedPrism,
   placedInverseImage?: PlacedInverseImage,
   treeSlot?: string,
@@ -376,12 +326,7 @@ export const canAllocateNodeWithInverseImage = (
   if (
     placedInverseImage &&
     treeSlot &&
-    hasInverseImageAtPosition(
-      placedInverseImage,
-      treeSlot,
-      node.position.x,
-      node.position.y,
-    )
+    hasInverseImageAtPosition(placedInverseImage, treeSlot, node.x, node.y)
   ) {
     return false;
   }
@@ -390,20 +335,13 @@ export const canAllocateNodeWithInverseImage = (
   if (
     placedPrism &&
     treeSlot &&
-    hasPrismAtPosition(placedPrism, treeSlot, node.position.x, node.position.y)
+    hasPrismAtPosition(placedPrism, treeSlot, node.x, node.y)
   ) {
     return false;
   }
 
-  // Check column gating (include reflected nodes if inverse image is placed)
-  const reflectedNodes = placedInverseImage?.reflectedAllocatedNodes ?? [];
-  if (
-    !isColumnUnlockedWithReflected(
-      allocatedNodes,
-      reflectedNodes,
-      node.position.x,
-    )
-  ) {
+  // Check column gating (include all nodes - regular and reflected)
+  if (!isColumnUnlockedWithReflected(nodes, node.x)) {
     return false;
   }
 
@@ -411,9 +349,8 @@ export const canAllocateNodeWithInverseImage = (
   if (
     !isPrerequisiteSatisfiedWithInverseImage(
       node.prerequisite,
-      node.position,
-      allocatedNodes,
-      treeData,
+      { x: node.x, y: node.y },
+      nodes,
       placedPrism,
       placedInverseImage,
       treeSlot,
@@ -423,107 +360,84 @@ export const canAllocateNodeWithInverseImage = (
   }
 
   // Check if already at max
-  const current = allocatedNodes.find(
-    (n) => n.x === node.position.x && n.y === node.position.y,
-  );
-  if (current && current.points >= node.maxPoints) {
+  if (node.points >= node.maxPoints) {
     return false;
   }
 
   return true;
 };
 
+// Helper to simulate removing one point from a node in the nodes array
+const simulateRemovePoint = (
+  nodes: TalentNode[],
+  targetX: number,
+  targetY: number,
+): TalentNode[] => {
+  return nodes.map((n) =>
+    n.x === targetX && n.y === targetY ? { ...n, points: n.points - 1 } : n,
+  );
+};
+
 // Check if a node can be deallocated, accounting for inverse image
 export const canDeallocateNodeWithInverseImage = (
-  node: TalentNodeData,
-  allocatedNodes: AllocatedTalentNode[],
-  treeData: TalentTreeData,
+  node: TalentNode,
+  nodes: TalentNode[],
   placedPrism?: PlacedPrism,
   placedInverseImage?: PlacedInverseImage,
   treeSlot?: string,
 ): boolean => {
   // Must have points allocated
-  const current = allocatedNodes.find(
-    (n) => n.x === node.position.x && n.y === node.position.y,
-  );
-  if (!current || current.points === 0) {
+  if (node.points === 0) {
     return false;
   }
 
   // Check if removing a point would break column gating for any later column
-  // Simulate removing one point
-  const simulatedAllocated = allocatedNodes.map((n) =>
-    n.x === node.position.x && n.y === node.position.y
-      ? { ...n, points: n.points - 1 }
-      : n,
-  );
-  const reflectedNodes = placedInverseImage?.reflectedAllocatedNodes ?? [];
+  const simulatedNodes = simulateRemovePoint(nodes, node.x, node.y);
 
-  // Check all allocations (regular and reflected) in later columns
-  const allAllocations = [
-    ...allocatedNodes.map((n) => ({ x: n.x, points: n.points })),
-    ...reflectedNodes.map((n) => ({ x: n.x, points: n.points })),
-  ];
+  // Check all allocations in later columns
+  for (const n of nodes) {
+    if (n.x <= node.x) continue;
+    if (n.points === 0) continue;
 
-  for (const allocation of allAllocations) {
-    if (allocation.x <= node.position.x) continue;
-    if (allocation.points === 0) continue;
-
-    if (
-      !isColumnUnlockedWithReflected(
-        simulatedAllocated,
-        reflectedNodes,
-        allocation.x,
-      )
-    ) {
+    if (!isColumnUnlockedWithReflected(simulatedNodes, n.x)) {
       return false;
     }
   }
 
   // Check if any other node depends on this one being fully allocated
-  const hasDependents = treeData.nodes.some((otherNode) => {
-    if (!otherNode.prerequisite) return false;
-    if (otherNode.prerequisite.x !== node.position.x) return false;
-    if (otherNode.prerequisite.y !== node.position.y) return false;
+  // Only check non-reflected nodes for dependents
+  const hasDependents = nodes
+    .filter((n) => !n.isReflected)
+    .some((otherNode) => {
+      if (!otherNode.prerequisite) return false;
+      if (otherNode.prerequisite.x !== node.x) return false;
+      if (otherNode.prerequisite.y !== node.y) return false;
 
-    // If the dependent node has a prism, it doesn't count as a dependent
-    if (
-      placedPrism &&
-      treeSlot &&
-      hasPrismAtPosition(
-        placedPrism,
-        treeSlot,
-        otherNode.position.x,
-        otherNode.position.y,
-      )
-    ) {
-      return false;
-    }
+      // If the dependent node has a prism, it doesn't count as a dependent
+      if (
+        placedPrism &&
+        treeSlot &&
+        hasPrismAtPosition(placedPrism, treeSlot, otherNode.x, otherNode.y)
+      ) {
+        return false;
+      }
 
-    // If the dependent node is in the inverse image target area, it doesn't count
-    // (those nodes have no prerequisites)
-    if (
-      placedInverseImage &&
-      treeSlot &&
-      isInTargetArea(
-        otherNode.position.x,
-        otherNode.position.y,
-        placedInverseImage,
-        treeSlot,
-      )
-    ) {
-      return false;
-    }
+      // If the dependent node is in the inverse image target area, it doesn't count
+      // (those nodes have no prerequisites)
+      if (
+        placedInverseImage &&
+        treeSlot &&
+        isInTargetArea(otherNode.x, otherNode.y, placedInverseImage, treeSlot)
+      ) {
+        return false;
+      }
 
-    // Check if the dependent node is allocated
-    const dependentAllocation = allocatedNodes.find(
-      (n) => n.x === otherNode.position.x && n.y === otherNode.position.y,
-    );
-    return dependentAllocation !== undefined && dependentAllocation.points > 0;
-  });
+      // Check if the dependent node is allocated
+      return otherNode.points > 0;
+    });
 
   // If deallocating would break the fully-allocated requirement for dependents
-  if (hasDependents && current.points <= node.maxPoints) {
+  if (hasDependents && node.points <= node.maxPoints) {
     return false;
   }
 
@@ -532,37 +446,23 @@ export const canDeallocateNodeWithInverseImage = (
 
 // Check if an inverse image can be removed
 // Inverse image can only be removed if the tree has 0 allocated points
-export const canRemoveInverseImage = (
-  allocatedNodes: AllocatedTalentNode[],
-): boolean => {
-  const totalPoints = allocatedNodes.reduce((sum, n) => sum + n.points, 0);
+export const canRemoveInverseImage = (nodes: TalentNode[]): boolean => {
+  const totalPoints = nodes.reduce((sum, n) => sum + n.points, 0);
   return totalPoints === 0;
 };
 
 // Check if a reflected node can be allocated
 export const canAllocateReflectedNode = (
-  targetX: number,
-  targetY: number,
-  maxPoints: number,
-  allocatedNodes: AllocatedTalentNode[],
-  reflectedAllocatedNodes: { x: number; y: number; points: number }[],
+  node: TalentNode,
+  nodes: TalentNode[],
 ): boolean => {
   // Check column gating
-  if (
-    !isColumnUnlockedWithReflected(
-      allocatedNodes,
-      reflectedAllocatedNodes,
-      targetX,
-    )
-  ) {
+  if (!isColumnUnlockedWithReflected(nodes, node.x)) {
     return false;
   }
 
   // Check if already at max
-  const current = reflectedAllocatedNodes.find(
-    (n) => n.x === targetX && n.y === targetY,
-  );
-  if (current && current.points >= maxPoints) {
+  if (node.points >= node.maxPoints) {
     return false;
   }
 
@@ -571,54 +471,35 @@ export const canAllocateReflectedNode = (
 
 // Check if a reflected node can be deallocated
 export const canDeallocateReflectedNode = (
-  targetX: number,
-  targetY: number,
-  allocatedNodes: AllocatedTalentNode[],
-  reflectedAllocatedNodes: { x: number; y: number; points: number }[],
+  node: TalentNode,
+  nodes: TalentNode[],
 ): boolean => {
   // Must have points allocated
-  const current = reflectedAllocatedNodes.find(
-    (n) => n.x === targetX && n.y === targetY,
-  );
-  if (!current || current.points === 0) {
+  if (node.points === 0) {
     return false;
   }
 
   // Check if removing a point would break column gating for any later column
-  // Simulate removing one point from this column
-  const simulatedReflected = reflectedAllocatedNodes.map((n) =>
-    n.x === targetX && n.y === targetY ? { ...n, points: n.points - 1 } : n,
-  );
+  const simulatedNodes = simulateRemovePoint(nodes, node.x, node.y);
 
   // Check all later columns that have allocations
-  const allAllocations = [
-    ...allocatedNodes.map((n) => ({ x: n.x, points: n.points })),
-    ...reflectedAllocatedNodes.map((n) => ({ x: n.x, points: n.points })),
-  ];
+  for (const n of nodes) {
+    if (n.x <= node.x) continue;
+    if (n.points === 0) continue;
 
-  for (const allocation of allAllocations) {
-    if (allocation.x <= targetX) continue;
-    if (allocation.points === 0) continue;
-
-    if (
-      !isColumnUnlockedWithReflected(
-        allocatedNodes,
-        simulatedReflected,
-        allocation.x,
-      )
-    ) {
-      return false; // Would break gating
+    if (!isColumnUnlockedWithReflected(simulatedNodes, n.x)) {
+      return false;
     }
   }
 
-  return true; // Safe to deallocate
+  return true;
 };
 
 // Check if an inverse image can be placed at a position
 export const canPlaceInverseImage = (
   x: number,
   treeSlot: string,
-  allocatedNodes: AllocatedTalentNode[],
+  nodes: TalentNode[],
   placedPrism?: PlacedPrism,
   placedInverseImage?: PlacedInverseImage,
 ): { canPlace: boolean; reason?: string } => {
@@ -640,7 +521,7 @@ export const canPlaceInverseImage = (
   }
 
   // Tree must have 0 allocated points
-  const totalPoints = allocatedNodes.reduce((sum, n) => sum + n.points, 0);
+  const totalPoints = nodes.reduce((sum, n) => sum + n.points, 0);
   if (totalPoints > 0) {
     return {
       canPlace: false,

@@ -1,14 +1,10 @@
 "use client";
 
 import { create } from "zustand";
-import type { TalentTreeData } from "@/src/tli/talent_tree";
 import type { PrismRarity } from "../lib/save-data";
 import type { TreeSlot } from "../lib/types";
 
 interface TalentsUIState {
-  // Tree data loaded from files
-  treeData: Record<TreeSlot, TalentTreeData | undefined>;
-
   // Active tree slot being viewed
   activeTreeSlot: TreeSlot;
 
@@ -22,7 +18,6 @@ interface TalentsUIState {
   selectedInverseImageId: string | undefined;
 
   // Actions
-  setTreeData: (slot: TreeSlot, data: TalentTreeData | undefined) => void;
   setActiveTreeSlot: (slot: TreeSlot) => void;
 
   // Prism crafting actions
@@ -39,12 +34,6 @@ interface TalentsUIState {
 
 export const useTalentsUIStore = create<TalentsUIState>((set) => ({
   // Initial state
-  treeData: {
-    tree1: undefined,
-    tree2: undefined,
-    tree3: undefined,
-    tree4: undefined,
-  },
   activeTreeSlot: "tree1",
   selectedPrismId: undefined,
   craftingPrismRarity: "rare",
@@ -53,11 +42,6 @@ export const useTalentsUIStore = create<TalentsUIState>((set) => ({
   selectedInverseImageId: undefined,
 
   // Actions
-  setTreeData: (slot, data) =>
-    set((state) => ({
-      treeData: { ...state.treeData, [slot]: data },
-    })),
-
   setActiveTreeSlot: (slot) => set({ activeTreeSlot: slot }),
 
   setSelectedPrismId: (id) => set({ selectedPrismId: id }),

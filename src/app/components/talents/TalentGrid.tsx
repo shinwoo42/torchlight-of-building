@@ -1,20 +1,17 @@
 import {
-  getReflectedNodeBonusAffixes,
-  getReflectedNodeData,
   getSourceAreaPositions,
   getTargetAreaPositions,
-  isInSourceArea,
-  isInTargetArea,
-  reflectPosition,
+  isInSourceArea as isInSourceAreaUtil,
 } from "@/src/app/lib/inverse-image-utils";
-import { getNodeBonusAffixes } from "@/src/app/lib/prism-utils";
 import type {
-  AllocatedTalentNode,
   CraftedInverseImage,
   CraftedPrism,
+} from "@/src/app/lib/save-data";
+import type {
   PlacedInverseImage,
   PlacedPrism,
-} from "@/src/app/lib/save-data";
+  TalentNode,
+} from "@/src/tli/core";
 import {
   canAllocateNodeWithInverseImage,
   canAllocateReflectedNode,
@@ -25,13 +22,11 @@ import {
   hasInverseImageAtPosition,
   hasPrismAtPosition,
   isPrerequisiteSatisfiedWithInverseImage,
-  type TalentTreeData,
 } from "@/src/tli/talent_tree";
 import { TalentNodeDisplay } from "./TalentNodeDisplay";
 
 interface TalentGridProps {
-  treeData: TalentTreeData;
-  allocatedNodes: AllocatedTalentNode[];
+  nodes: TalentNode[];
   onAllocate: (x: number, y: number) => void;
   onDeallocate: (x: number, y: number) => void;
   treeSlot: string;
@@ -58,9 +53,29 @@ const getNodeCenter = (x: number, y: number) => ({
   cy: y * (80 + 80) + 40,
 });
 
+// Helper to format prism bonus affixes for display
+const formatPrismBonusAffixes = (
+  prismAffixes: TalentNode["prismAffixes"],
+): { bonusText: string }[] => {
+  return prismAffixes
+    .filter((affix) => affix.text)
+    .map((affix) => ({ bonusText: affix.text! }));
+};
+
+// Helper to format inverse image bonus affixes for display
+const formatInverseImageBonusAffixes = (
+  node: TalentNode,
+): { bonusText: string }[] => {
+  if (!node.isReflected || node.inverseImageEffect === undefined) {
+    return [];
+  }
+  const percent = Math.round(node.inverseImageEffect * 100);
+  const sign = percent >= 0 ? "+" : "";
+  return [{ bonusText: `${sign}${percent}% Effect` }];
+};
+
 export const TalentGrid: React.FC<TalentGridProps> = ({
-  treeData,
-  allocatedNodes,
+  nodes,
   onAllocate,
   onDeallocate,
   treeSlot,
@@ -79,6 +94,17 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
   const gridWidth = 7 * 80 + 6 * 80; // 1040px
   const gridHeight = 5 * 80 + 4 * 80; // 720px
 
+  // Build a map for quick node lookup by position
+  const nodeMap = new Map<string, TalentNode>();
+  for (const node of nodes) {
+    nodeMap.set(`${node.x},${node.y}`, node);
+  }
+
+  // Check if there are any reflected nodes with points allocated
+  const hasReflectedAllocations = nodes.some(
+    (n) => n.isReflected && n.points > 0,
+  );
+
   return (
     <div className="overflow-x-auto">
       <div
@@ -90,56 +116,51 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
           className="absolute inset-0 pointer-events-none"
           style={{ width: gridWidth, height: gridHeight, zIndex: 0 }}
         >
-          {treeData.nodes
-            .filter((node) => node.prerequisite)
-            .map((node, idx) => {
+          {nodes
+            .filter((node) => node.prerequisite && !node.isReflected)
+            .map((node) => {
+              const prereq = node.prerequisite!;
+
               // Don't draw lines from prism nodes (prerequisite is bypassed)
               if (
-                hasPrismAtPosition(
-                  placedPrism,
-                  treeSlot,
-                  node.prerequisite!.x,
-                  node.prerequisite!.y,
-                )
+                hasPrismAtPosition(placedPrism, treeSlot, prereq.x, prereq.y)
               ) {
                 return null;
               }
 
               // Don't draw lines for nodes in target area (they lose prerequisites)
+              // Check if this node is in target area
               if (
-                isInTargetArea(
-                  node.position.x,
-                  node.position.y,
-                  placedInverseImage,
-                  treeSlot,
-                )
+                placedInverseImage &&
+                placedInverseImage.treeSlot === treeSlot
               ) {
-                return null;
+                const targetPositions = getTargetAreaPositions(
+                  placedInverseImage.position.x,
+                  placedInverseImage.position.y,
+                );
+                const nodeInTarget = targetPositions.some(
+                  (pos) => pos.x === node.x && pos.y === node.y,
+                );
+                if (nodeInTarget) {
+                  return null;
+                }
+
+                // Don't draw lines if prerequisite is in target area
+                const prereqInTarget = targetPositions.some(
+                  (pos) => pos.x === prereq.x && pos.y === prereq.y,
+                );
+                if (prereqInTarget) {
+                  return null;
+                }
               }
 
-              // Don't draw lines for nodes whose prerequisite is in target area
-              if (
-                isInTargetArea(
-                  node.prerequisite!.x,
-                  node.prerequisite!.y,
-                  placedInverseImage,
-                  treeSlot,
-                )
-              ) {
-                return null;
-              }
-
-              const from = getNodeCenter(
-                node.prerequisite!.x,
-                node.prerequisite!.y,
-              );
-              const to = getNodeCenter(node.position.x, node.position.y);
+              const from = getNodeCenter(prereq.x, prereq.y);
+              const to = getNodeCenter(node.x, node.y);
 
               const isSatisfied = isPrerequisiteSatisfiedWithInverseImage(
-                node.prerequisite,
-                node.position,
-                allocatedNodes,
-                treeData,
+                prereq,
+                { x: node.x, y: node.y },
+                nodes,
                 placedPrism,
                 placedInverseImage,
                 treeSlot,
@@ -147,7 +168,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
 
               return (
                 <line
-                  key={`${node.prerequisite!.x},${node.prerequisite!.y}-${node.position.x},${node.position.y}`}
+                  key={`${prereq.x},${prereq.y}-${node.x},${node.y}`}
                   x1={from.cx}
                   y1={from.cy}
                   x2={to.cx}
@@ -272,90 +293,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
         >
           {[0, 1, 2, 3, 4].map((y) =>
             [0, 1, 2, 3, 4, 5, 6].map((x) => {
-              // Check target area FIRST - reflected nodes take priority over original nodes
-              const nodeIsInTargetArea = isInTargetArea(
-                x,
-                y,
-                placedInverseImage,
-                treeSlot,
-              );
-
-              // If this position is in target area (and has an inverse image placed),
-              // render a reflected node instead of the original node
-              if (nodeIsInTargetArea && placedInverseImage) {
-                const reflectedNodeData = getReflectedNodeData(
-                  x,
-                  y,
-                  treeData.nodes,
-                  placedInverseImage,
-                  treeSlot,
-                );
-
-                // If no reflected node data (source position doesn't have a node), show empty
-                if (!reflectedNodeData) {
-                  return <div key={`${x}-${y}`} className="w-20 h-20" />;
-                }
-
-                // Get the source position for this reflected node
-                const sourcePos = reflectPosition(x, y);
-
-                // Get reflected node allocation
-                const reflectedAllocation =
-                  placedInverseImage.reflectedAllocatedNodes.find(
-                    (n) => n.x === x && n.y === y,
-                  );
-                const reflectedAllocated = reflectedAllocation?.points ?? 0;
-
-                // Check if can allocate/deallocate reflected node (with column gating)
-                const canAllocateReflected = canAllocateReflectedNode(
-                  x,
-                  y,
-                  reflectedNodeData.maxPoints,
-                  allocatedNodes,
-                  placedInverseImage.reflectedAllocatedNodes,
-                );
-                const canDeallocateReflected = canDeallocateReflectedNode(
-                  x,
-                  y,
-                  allocatedNodes,
-                  placedInverseImage.reflectedAllocatedNodes,
-                );
-
-                // Get bonus affixes for reflected node
-                const inverseImageBonusAffixes = getReflectedNodeBonusAffixes(
-                  { x, y },
-                  reflectedNodeData.nodeType,
-                  placedInverseImage,
-                  treeSlot,
-                );
-
-                return (
-                  <TalentNodeDisplay
-                    key={`${x}-${y}`}
-                    node={reflectedNodeData}
-                    allocated={reflectedAllocated}
-                    canAllocate={canAllocateReflected}
-                    canDeallocate={canDeallocateReflected}
-                    onAllocate={() =>
-                      onAllocateReflected?.(x, y, sourcePos.x, sourcePos.y)
-                    }
-                    onDeallocate={() => onDeallocateReflected?.(x, y)}
-                    hasPrism={false}
-                    isSelectingPrism={false}
-                    bonusAffixes={inverseImageBonusAffixes}
-                    hasInverseImage={false}
-                    isSelectingInverseImage={false}
-                    isInSourceArea={false}
-                    isInTargetArea={true}
-                    reflectedNodeData={reflectedNodeData}
-                  />
-                );
-              }
-
-              // Normal node rendering (not in target area)
-              const node = treeData.nodes.find(
-                (n) => n.position.x === x && n.position.y === y,
-              );
+              const node = nodeMap.get(`${x},${y}`);
 
               // If no node exists at this position, show empty space
               if (!node) {
@@ -374,63 +312,72 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                 x,
                 y,
               );
-              const nodeIsInSourceArea = isInSourceArea(
+              const nodeIsInSourceArea = isInSourceAreaUtil(
                 x,
                 y,
                 placedInverseImage,
                 treeSlot,
               );
 
-              const allocation = allocatedNodes.find(
-                (n) => n.x === x && n.y === y,
-              );
-              const allocated = allocation?.points ?? 0;
-
-              // Check if prism can be removed (only relevant if this node has the prism)
+              // Check if prism can be removed
               const prismCanBeRemoved =
                 nodeHasPrism && placedPrism
-                  ? canRemovePrism(placedPrism, allocatedNodes, treeData)
+                  ? canRemovePrism(placedPrism, nodes)
                   : false;
 
-              // Check if inverse image can be removed (needs 0 points in tree AND 0 reflected points)
+              // Check if inverse image can be removed
               const inverseImageCanBeRemoved =
                 nodeHasInverseImage && placedInverseImage
-                  ? canRemoveInverseImage(allocatedNodes) &&
-                    placedInverseImage.reflectedAllocatedNodes.length === 0
+                  ? canRemoveInverseImage(nodes) && !hasReflectedAllocations
                   : false;
 
-              // Combine prism bonus affixes
-              const prismBonusAffixes = getNodeBonusAffixes(
-                node.position,
-                node.nodeType,
-                placedPrism,
-                treeSlot,
-                allocated,
-              );
+              // Determine canAllocate and canDeallocate based on node type
+              let canAllocate: boolean;
+              let canDeallocate: boolean;
+              let handleAllocate: () => void;
+              let handleDeallocate: () => void;
+
+              if (node.isReflected) {
+                // Reflected node - use reflected allocation functions
+                const sourcePos = node.sourcePosition!;
+                canAllocate = canAllocateReflectedNode(node, nodes);
+                canDeallocate = canDeallocateReflectedNode(node, nodes);
+                handleAllocate = () =>
+                  onAllocateReflected?.(x, y, sourcePos.x, sourcePos.y);
+                handleDeallocate = () => onDeallocateReflected?.(x, y);
+              } else {
+                // Normal node - use standard allocation functions
+                canAllocate = canAllocateNodeWithInverseImage(
+                  node,
+                  nodes,
+                  placedPrism,
+                  placedInverseImage,
+                  treeSlot,
+                );
+                canDeallocate = canDeallocateNodeWithInverseImage(
+                  node,
+                  nodes,
+                  placedPrism,
+                  placedInverseImage,
+                  treeSlot,
+                );
+                handleAllocate = () => onAllocate(x, y);
+                handleDeallocate = () => onDeallocate(x, y);
+              }
+
+              // Get bonus affixes for display
+              const bonusAffixes = node.isReflected
+                ? formatInverseImageBonusAffixes(node)
+                : formatPrismBonusAffixes(node.prismAffixes);
 
               return (
                 <TalentNodeDisplay
                   key={`${x}-${y}`}
                   node={node}
-                  allocated={allocated}
-                  canAllocate={canAllocateNodeWithInverseImage(
-                    node,
-                    allocatedNodes,
-                    treeData,
-                    placedPrism,
-                    placedInverseImage,
-                    treeSlot,
-                  )}
-                  canDeallocate={canDeallocateNodeWithInverseImage(
-                    node,
-                    allocatedNodes,
-                    treeData,
-                    placedPrism,
-                    placedInverseImage,
-                    treeSlot,
-                  )}
-                  onAllocate={() => onAllocate(x, y)}
-                  onDeallocate={() => onDeallocate(x, y)}
+                  canAllocate={canAllocate}
+                  canDeallocate={canDeallocate}
+                  onAllocate={handleAllocate}
+                  onDeallocate={handleDeallocate}
                   hasPrism={nodeHasPrism}
                   prism={nodeHasPrism ? placedPrism?.prism : undefined}
                   isSelectingPrism={!!selectedPrism}
@@ -439,7 +386,7 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   }
                   onRemovePrism={nodeHasPrism ? onRemovePrism : undefined}
                   canRemovePrism={prismCanBeRemoved}
-                  bonusAffixes={prismBonusAffixes}
+                  bonusAffixes={bonusAffixes}
                   hasInverseImage={nodeHasInverseImage}
                   inverseImage={
                     nodeHasInverseImage
@@ -457,7 +404,6 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                   }
                   canRemoveInverseImage={inverseImageCanBeRemoved}
                   isInSourceArea={nodeIsInSourceArea}
-                  isInTargetArea={false}
                 />
               );
             }),

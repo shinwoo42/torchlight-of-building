@@ -1,25 +1,20 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import {
   canPlaceInverseImage,
   canRemoveInverseImage,
   canRemovePrism,
   GOD_GODDESS_TREES,
   isGodGoddessTree,
-  loadTalentTree,
   PROFESSION_TREES,
-  type TreeName,
 } from "@/src/tli/talent_tree";
 import { getPrismReplacedCoreTalent } from "../../lib/prism-utils";
-import type {
-  AllocatedTalentNode,
-  CraftedInverseImage,
-  CraftedPrism,
-} from "../../lib/save-data";
+import type { CraftedInverseImage, CraftedPrism } from "../../lib/save-data";
 import { generateItemId } from "../../lib/storage";
 import type { TreeSlot } from "../../lib/types";
 import { useBuilderStore } from "../../stores/builderStore";
+import { useLoadout, useTalentTree } from "../../stores/builderStoreSelectors";
 import { useTalentsUIStore } from "../../stores/talentsUIStore";
 import { CoreTalentSelector } from "../talents/CoreTalentSelector";
 import { InverseImageSection } from "../talents/InverseImageSection";
@@ -53,10 +48,8 @@ export const TalentsSection = () => {
   );
 
   // Talents UI store
-  const treeData = useTalentsUIStore((state) => state.treeData);
   const activeTreeSlot = useTalentsUIStore((state) => state.activeTreeSlot);
   const selectedPrismId = useTalentsUIStore((state) => state.selectedPrismId);
-  const setTreeData = useTalentsUIStore((state) => state.setTreeData);
   const setActiveTreeSlot = useTalentsUIStore(
     (state) => state.setActiveTreeSlot,
   );
@@ -70,35 +63,14 @@ export const TalentsSection = () => {
     (state) => state.setSelectedInverseImageId,
   );
 
-  // Load tree data when trees change
-  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally watching only tree names, not full loadout
-  useEffect(() => {
-    const loadTree = async (slot: TreeSlot) => {
-      const tree = loadout.talentPage[slot];
-      if (!tree) {
-        setTreeData(slot, undefined);
-        return;
-      }
-      const treeName = tree.name;
-      try {
-        const data = await loadTalentTree(treeName as TreeName);
-        setTreeData(slot, data);
-      } catch (error) {
-        console.error(`Failed to load tree ${treeName}:`, error);
-      }
-    };
+  // Get the current talent tree from core.ts (derived from SaveData)
+  const currentTalentTree = useTalentTree(activeTreeSlot);
 
-    loadTree("tree1");
-    loadTree("tree2");
-    loadTree("tree3");
-    loadTree("tree4");
-  }, [
-    loadout.talentPage.tree1?.name,
-    loadout.talentPage.tree2?.name,
-    loadout.talentPage.tree3?.name,
-    loadout.talentPage.tree4?.name,
-    setTreeData,
-  ]);
+  // Get the derived loadout for core.ts types (placedPrism, placedInverseImage)
+  const derivedLoadout = useLoadout();
+  const derivedPlacedPrism = derivedLoadout.talentPage.talentTrees.placedPrism;
+  const derivedPlacedInverseImage =
+    derivedLoadout.talentPage.talentTrees.placedInverseImage;
 
   const handleTreeChange = useCallback(
     (slot: TreeSlot, newTreeName: string) => {
@@ -153,32 +125,42 @@ export const TalentsSection = () => {
         const existing = tree.allocatedNodes.find(
           (n) => n.x === x && n.y === y,
         );
-        const nodeData = treeData[slot]?.nodes.find(
-          (n) => n.position.x === x && n.position.y === y,
+
+        // Find node max points from the current talent tree
+        const talentTree = currentTalentTree;
+        const nodeData = talentTree?.nodes.find(
+          (n) => n.x === x && n.y === y && !n.isReflected,
         );
         if (!nodeData) return prev;
 
-        let updatedNodes: AllocatedTalentNode[];
-
         if (existing) {
           if (existing.points >= nodeData.maxPoints) return prev;
-          updatedNodes = tree.allocatedNodes.map((n) =>
-            n.x === x && n.y === y ? { ...n, points: n.points + 1 } : n,
-          );
-        } else {
-          updatedNodes = [...tree.allocatedNodes, { x, y, points: 1 }];
+          return {
+            ...prev,
+            talentPage: {
+              ...prev.talentPage,
+              [slot]: {
+                ...tree,
+                allocatedNodes: tree.allocatedNodes.map((n) =>
+                  n.x === x && n.y === y ? { ...n, points: n.points + 1 } : n,
+                ),
+              },
+            },
+          };
         }
-
         return {
           ...prev,
           talentPage: {
             ...prev.talentPage,
-            [slot]: { ...tree, allocatedNodes: updatedNodes },
+            [slot]: {
+              ...tree,
+              allocatedNodes: [...tree.allocatedNodes, { x, y, points: 1 }],
+            },
           },
         };
       });
     },
-    [treeData, updateLoadout],
+    [currentTalentTree, updateLoadout],
   );
 
   const handleDeallocate = useCallback(
@@ -191,23 +173,30 @@ export const TalentsSection = () => {
         );
         if (!existing) return prev;
 
-        let updatedNodes: AllocatedTalentNode[];
-
         if (existing.points > 1) {
-          updatedNodes = tree.allocatedNodes.map((n) =>
-            n.x === x && n.y === y ? { ...n, points: n.points - 1 } : n,
-          );
-        } else {
-          updatedNodes = tree.allocatedNodes.filter(
-            (n) => !(n.x === x && n.y === y),
-          );
+          return {
+            ...prev,
+            talentPage: {
+              ...prev.talentPage,
+              [slot]: {
+                ...tree,
+                allocatedNodes: tree.allocatedNodes.map((n) =>
+                  n.x === x && n.y === y ? { ...n, points: n.points - 1 } : n,
+                ),
+              },
+            },
+          };
         }
-
         return {
           ...prev,
           talentPage: {
             ...prev.talentPage,
-            [slot]: { ...tree, allocatedNodes: updatedNodes },
+            [slot]: {
+              ...tree,
+              allocatedNodes: tree.allocatedNodes.filter(
+                (n) => !(n.x === x && n.y === y),
+              ),
+            },
           },
         };
       });
@@ -344,14 +333,9 @@ export const TalentsSection = () => {
 
   const handleRemovePrism = useCallback(() => {
     const placedPrism = loadout.talentPage.placedPrism;
-    if (!placedPrism) return;
+    if (!placedPrism || !currentTalentTree || !derivedPlacedPrism) return;
 
-    // Validate that prism can be removed
-    const tree = loadout.talentPage[placedPrism.treeSlot];
-    const prismTreeData = treeData[placedPrism.treeSlot];
-    if (!tree || !prismTreeData) return;
-
-    if (!canRemovePrism(placedPrism, tree.allocatedNodes, prismTreeData)) {
+    if (!canRemovePrism(derivedPlacedPrism, currentTalentTree.nodes)) {
       return;
     }
 
@@ -365,7 +349,12 @@ export const TalentsSection = () => {
         placedPrism: undefined,
       },
     }));
-  }, [loadout.talentPage, treeData, updateLoadout]);
+  }, [
+    loadout.talentPage,
+    currentTalentTree,
+    derivedPlacedPrism,
+    updateLoadout,
+  ]);
 
   const handleSaveInverseImage = useCallback(
     (inverseImage: CraftedInverseImage) => {
@@ -406,7 +395,7 @@ export const TalentsSection = () => {
 
   const handlePlaceInverseImage = useCallback(
     (treeSlot: TreeSlot, x: number, y: number) => {
-      if (!selectedInverseImageId) return;
+      if (!selectedInverseImageId || !currentTalentTree) return;
 
       // Only allow inverse images on profession trees (slots 2-4)
       if (treeSlot === "tree1") return;
@@ -416,19 +405,15 @@ export const TalentsSection = () => {
       );
       if (!inverseImage) return;
 
-      // Validate placement
-      const tree = loadout.talentPage[treeSlot];
-      if (!tree) return;
+      const result = canPlaceInverseImage(
+        x,
+        treeSlot as "tree2" | "tree3" | "tree4",
+        currentTalentTree.nodes,
+        derivedPlacedPrism,
+        derivedPlacedInverseImage,
+      );
 
-      if (
-        !canPlaceInverseImage(
-          x,
-          treeSlot as "tree2" | "tree3" | "tree4",
-          tree.allocatedNodes,
-          loadout.talentPage.placedPrism,
-          loadout.talentPage.placedInverseImage,
-        )
-      ) {
+      if (!result.canPlace) {
         return;
       }
 
@@ -441,28 +426,25 @@ export const TalentsSection = () => {
     },
     [
       selectedInverseImageId,
+      currentTalentTree,
       loadout.inverseImageList,
-      loadout.talentPage,
+      derivedPlacedPrism,
+      derivedPlacedInverseImage,
       placeInverseImage,
       setSelectedInverseImageId,
     ],
   );
 
   const handleRemoveInverseImage = useCallback(() => {
-    const placedInverseImage = loadout.talentPage.placedInverseImage;
-    if (!placedInverseImage) return;
+    if (!currentTalentTree || !derivedPlacedInverseImage) return;
 
-    const tree = loadout.talentPage[placedInverseImage.treeSlot];
-    if (!tree) return;
-
-    if (!canRemoveInverseImage(tree.allocatedNodes)) {
+    if (!canRemoveInverseImage(currentTalentTree.nodes)) {
       return;
     }
 
     removePlacedInverseImage();
-  }, [loadout.talentPage, removePlacedInverseImage]);
+  }, [currentTalentTree, derivedPlacedInverseImage, removePlacedInverseImage]);
 
-  const currentTreeData = treeData[activeTreeSlot];
   const currentTree = loadout.talentPage[activeTreeSlot];
   const currentTreeTotalPoints = currentTree
     ? currentTree.allocatedNodes.reduce((sum, node) => sum + node.points, 0)
@@ -597,10 +579,10 @@ export const TalentsSection = () => {
           <div className="py-12 text-center text-zinc-500">
             Select a tree to view
           </div>
-        ) : currentTreeData ? (
+        ) : currentTalentTree ? (
           <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
             <h2 className="mb-4 text-xl font-semibold text-zinc-50">
-              {currentTreeData.name.replace(/_/g, " ")} Tree
+              {currentTalentTree.name.replace(/_/g, " ")} Tree
             </h2>
 
             <div className="mb-2 grid grid-cols-7 gap-2">
@@ -615,12 +597,11 @@ export const TalentsSection = () => {
             </div>
 
             <TalentGrid
-              treeData={currentTreeData}
-              allocatedNodes={currentTree.allocatedNodes}
+              nodes={currentTalentTree.nodes}
               onAllocate={(x, y) => handleAllocate(activeTreeSlot, x, y)}
               onDeallocate={(x, y) => handleDeallocate(activeTreeSlot, x, y)}
               treeSlot={activeTreeSlot}
-              placedPrism={loadout.talentPage.placedPrism}
+              placedPrism={derivedPlacedPrism}
               selectedPrism={
                 // Prisms can only be placed on profession trees (slots 2-4)
                 activeTreeSlot !== "tree1"
@@ -629,7 +610,7 @@ export const TalentsSection = () => {
               }
               onPlacePrism={(x, y) => handlePlacePrism(activeTreeSlot, x, y)}
               onRemovePrism={handleRemovePrism}
-              placedInverseImage={loadout.talentPage.placedInverseImage}
+              placedInverseImage={derivedPlacedInverseImage}
               selectedInverseImage={
                 // Inverse images can only be placed on profession trees (slots 2-4)
                 activeTreeSlot !== "tree1"

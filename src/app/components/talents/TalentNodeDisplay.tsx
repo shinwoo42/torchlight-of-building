@@ -4,20 +4,16 @@ import {
   TooltipTitle,
 } from "@/src/app/components/ui/Tooltip";
 import { useTooltip } from "@/src/app/hooks/useTooltip";
-import type { InverseImageBonusAffix } from "@/src/app/lib/inverse-image-utils";
 import { formatEffectModifier } from "@/src/app/lib/inverse-image-utils";
-import type { NodeBonusAffix } from "@/src/app/lib/prism-utils";
-import type {
-  CraftedInverseImage,
-  CraftedPrism,
-} from "@/src/app/lib/save-data";
-import type { TalentNodeData } from "@/src/tli/talent_tree";
+import type { CraftedInverseImage } from "@/src/app/lib/save-data";
+import type { CraftedPrism, TalentNode } from "@/src/tli/core";
 
-type BonusAffix = NodeBonusAffix | InverseImageBonusAffix;
+interface BonusAffix {
+  bonusText: string;
+}
 
 interface TalentNodeDisplayProps {
-  node: TalentNodeData;
-  allocated: number;
+  node: TalentNode;
   canAllocate: boolean;
   canDeallocate: boolean;
   onAllocate: () => void;
@@ -36,13 +32,10 @@ interface TalentNodeDisplayProps {
   onRemoveInverseImage?: () => void;
   canRemoveInverseImage?: boolean;
   isInSourceArea?: boolean;
-  isInTargetArea?: boolean;
-  reflectedNodeData?: TalentNodeData;
 }
 
 export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
   node,
-  allocated,
   canAllocate,
   canDeallocate,
   onAllocate,
@@ -62,14 +55,14 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
   canRemoveInverseImage = false,
   // biome-ignore lint/correctness/noUnusedFunctionParameters: reserved for future visual styling
   isInSourceArea = false,
-  isInTargetArea = false,
-  reflectedNodeData,
 }) => {
   const { isVisible, triggerRef, triggerRect, tooltipHandlers } = useTooltip();
 
+  const allocated = node.points;
   const isFullyAllocated = allocated >= node.maxPoints;
   const isLocked = !canAllocate && allocated === 0;
   const isLegendary = node.nodeType === "legendary";
+  const isReflected = node.isReflected;
   const canPlacePrism =
     isSelectingPrism && allocated === 0 && !hasPrism && !hasInverseImage;
   const canPlaceInverseImage =
@@ -77,7 +70,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
     allocated === 0 &&
     !hasInverseImage &&
     !hasPrism &&
-    node.position.x !== 3; // Not in center column
+    node.x !== 3; // Not in center column
 
   const talentTypeName =
     node.nodeType === "micro"
@@ -93,6 +86,9 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
       onPlaceInverseImage();
     }
   };
+
+  // Get tooltip affix text - for reflected nodes, show the raw affix text
+  const tooltipAffixText = node.affix.text ?? "";
 
   // Prism node rendering
   if (hasPrism && prism) {
@@ -166,13 +162,13 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
               {prism.rarity === "legendary" ? "Legendary" : "Rare"} Prism
             </span>
           </TooltipTitle>
-          <TooltipContent>{prism.baseAffix}</TooltipContent>
+          <TooltipContent>{prism.baseAffix.text}</TooltipContent>
           {prism.gaugeAffixes.length > 0 && (
             <div className="mt-2 pt-2 border-t border-zinc-700">
               <div className="text-xs text-zinc-500 mb-1">Gauge Affixes:</div>
               {prism.gaugeAffixes.map((affix) => (
-                <div key={affix} className="text-xs text-zinc-400">
-                  {affix}
+                <div key={affix.text} className="text-xs text-zinc-400">
+                  {affix.text}
                 </div>
               ))}
             </div>
@@ -295,21 +291,12 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
     );
   }
 
-  // Reflected node rendering (in target area with reflected node data)
-  if (isInTargetArea && reflectedNodeData) {
-    const reflectedTypeName =
-      reflectedNodeData.nodeType === "micro"
-        ? "Micro Talent"
-        : reflectedNodeData.nodeType === "medium"
-          ? "Medium Talent"
-          : "Legendary Talent";
-
-    const reflectedIsFullyAllocated = allocated >= reflectedNodeData.maxPoints;
-
+  // Reflected node rendering (in target area)
+  if (isReflected) {
     return (
       <div
         className={`relative w-20 h-20 rounded-lg border-2 transition-all ${
-          reflectedIsFullyAllocated
+          isFullyAllocated
             ? "border-cyan-500 bg-cyan-500/20"
             : allocated > 0
               ? "border-cyan-400 bg-cyan-500/15"
@@ -321,8 +308,8 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         <div className="absolute inset-0 flex items-center justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element -- dynamic game assets */}
           <img
-            src={`/tli/talents/${reflectedNodeData.iconName}.webp`}
-            alt={reflectedNodeData.iconName}
+            src={`/tli/talents/${node.iconName}.webp`}
+            alt={node.iconName}
             className="w-12 h-12 object-contain"
             onError={(e) => {
               e.currentTarget.style.display = "none";
@@ -332,7 +319,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
 
         {/* Points Display */}
         <div className="absolute bottom-0 left-0 right-0 bg-cyan-900/70 text-cyan-200 text-xs text-center py-0.5 rounded-b-md">
-          {allocated}/{reflectedNodeData.maxPoints}
+          {allocated}/{node.maxPoints}
         </div>
 
         {/* Allocation Buttons */}
@@ -376,11 +363,9 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           {...tooltipHandlers}
         >
           <TooltipTitle>
-            <span className="text-cyan-400">
-              {reflectedTypeName} (Reflected)
-            </span>
+            <span className="text-cyan-400">{talentTypeName} (Reflected)</span>
           </TooltipTitle>
-          <TooltipContent>{reflectedNodeData.rawAffix}</TooltipContent>
+          <TooltipContent>{tooltipAffixText}</TooltipContent>
           {bonusAffixes.length > 0 && (
             <div className="mt-2 pt-2 border-t border-blue-500/30">
               {bonusAffixes.map((bonus) => (
@@ -499,7 +484,7 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         {...tooltipHandlers}
       >
         <TooltipTitle>{talentTypeName}</TooltipTitle>
-        <TooltipContent>{node.rawAffix}</TooltipContent>
+        <TooltipContent>{tooltipAffixText}</TooltipContent>
         {bonusAffixes.length > 0 && (
           <div className="mt-2 pt-2 border-t border-blue-500/30">
             {bonusAffixes.map((bonus) => (
