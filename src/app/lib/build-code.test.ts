@@ -8,16 +8,7 @@ import {
   createEmptyPactspiritPage,
 } from "./storage";
 
-const createEmptySkillPage = (): SkillPage => ({
-  activeSkill1: { enabled: true, supportSkills: {} },
-  activeSkill2: { enabled: true, supportSkills: {} },
-  activeSkill3: { enabled: true, supportSkills: {} },
-  activeSkill4: { enabled: true, supportSkills: {} },
-  passiveSkill1: { enabled: true, supportSkills: {} },
-  passiveSkill2: { enabled: true, supportSkills: {} },
-  passiveSkill3: { enabled: true, supportSkills: {} },
-  passiveSkill4: { enabled: true, supportSkills: {} },
-});
+const createEmptySkillPage = (): SkillPage => ({});
 
 describe("build-code", () => {
   it("should encode and decode an empty loadout", () => {

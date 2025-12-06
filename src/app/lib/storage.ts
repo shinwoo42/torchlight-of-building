@@ -6,13 +6,7 @@ import type {
   PactspiritSlot,
   RingSlotState,
   SaveData,
-  SkillWithSupports,
 } from "./save-data";
-
-const createEmptySkillSlot = (): SkillWithSupports => ({
-  enabled: true,
-  supportSkills: {},
-});
 
 export const createEmptyHeroPage = (): HeroPage => ({
   selectedHero: undefined,
@@ -82,16 +76,7 @@ export const saveDebugModeToStorage = (enabled: boolean): void => {
 export const createEmptyLoadout = (): SaveData => ({
   equipmentPage: {},
   talentPage: {},
-  skillPage: {
-    activeSkill1: createEmptySkillSlot(),
-    activeSkill2: createEmptySkillSlot(),
-    activeSkill3: createEmptySkillSlot(),
-    activeSkill4: createEmptySkillSlot(),
-    passiveSkill1: createEmptySkillSlot(),
-    passiveSkill2: createEmptySkillSlot(),
-    passiveSkill3: createEmptySkillSlot(),
-    passiveSkill4: createEmptySkillSlot(),
-  },
+  skillPage: {},
   heroPage: createEmptyHeroPage(),
   pactspiritPage: createEmptyPactspiritPage(),
   divinityPage: createEmptyDivinityPage(),

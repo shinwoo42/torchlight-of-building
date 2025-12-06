@@ -39,13 +39,13 @@ export const SkillsSection = () => {
 
   const getSelectedActiveSkillNames = useMemo((): string[] => {
     return ACTIVE_SKILL_SLOTS.map(
-      (slot) => loadout.skillPage[slot].skillName,
+      (slot) => loadout.skillPage[slot]?.skillName,
     ).filter((name): name is string => name !== undefined);
   }, [loadout.skillPage]);
 
   const getSelectedPassiveSkillNames = useMemo((): string[] => {
     return PASSIVE_SKILL_SLOTS.map(
-      (slot) => loadout.skillPage[slot].skillName,
+      (slot) => loadout.skillPage[slot]?.skillName,
     ).filter((name): name is string => name !== undefined);
   }, [loadout.skillPage]);
 
@@ -55,11 +55,9 @@ export const SkillsSection = () => {
         ...prev,
         skillPage: {
           ...prev.skillPage,
-          [slotKey]: {
-            ...prev.skillPage[slotKey],
-            skillName,
-            supportSkills: {},
-          },
+          [slotKey]: skillName
+            ? { skillName, enabled: true, supportSkills: {} }
+            : undefined,
         },
       }));
     },
@@ -68,16 +66,17 @@ export const SkillsSection = () => {
 
   const handleToggleSkill = useCallback(
     (slotKey: SkillSlotKey): void => {
-      updateLoadout((prev) => ({
-        ...prev,
-        skillPage: {
-          ...prev.skillPage,
-          [slotKey]: {
-            ...prev.skillPage[slotKey],
-            enabled: !prev.skillPage[slotKey].enabled,
+      updateLoadout((prev) => {
+        const currentSlot = prev.skillPage[slotKey];
+        if (!currentSlot) return prev;
+        return {
+          ...prev,
+          skillPage: {
+            ...prev.skillPage,
+            [slotKey]: { ...currentSlot, enabled: !currentSlot.enabled },
           },
-        },
-      }));
+        };
+      });
     },
     [updateLoadout],
   );
@@ -88,19 +87,23 @@ export const SkillsSection = () => {
       supportKey: SupportSkillKey,
       supportName: string | undefined,
     ): void => {
-      updateLoadout((prev) => ({
-        ...prev,
-        skillPage: {
-          ...prev.skillPage,
-          [slotKey]: {
-            ...prev.skillPage[slotKey],
-            supportSkills: {
-              ...prev.skillPage[slotKey].supportSkills,
-              [supportKey]: supportName,
+      updateLoadout((prev) => {
+        const currentSlot = prev.skillPage[slotKey];
+        if (!currentSlot) return prev;
+        return {
+          ...prev,
+          skillPage: {
+            ...prev.skillPage,
+            [slotKey]: {
+              ...currentSlot,
+              supportSkills: {
+                ...currentSlot.supportSkills,
+                [supportKey]: supportName,
+              },
             },
           },
-        },
-      }));
+        };
+      });
     },
     [updateLoadout],
   );

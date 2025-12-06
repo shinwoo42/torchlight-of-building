@@ -14,16 +14,7 @@ const createMinimalSaveData = (
     tree3: undefined,
     tree4: undefined,
   },
-  skillPage: {
-    activeSkill1: { enabled: false, supportSkills: {} },
-    activeSkill2: { enabled: false, supportSkills: {} },
-    activeSkill3: { enabled: false, supportSkills: {} },
-    activeSkill4: { enabled: false, supportSkills: {} },
-    passiveSkill1: { enabled: false, supportSkills: {} },
-    passiveSkill2: { enabled: false, supportSkills: {} },
-    passiveSkill3: { enabled: false, supportSkills: {} },
-    passiveSkill4: { enabled: false, supportSkills: {} },
-  },
+  skillPage: {},
   heroPage: {
     selectedHero: undefined,
     traits: {

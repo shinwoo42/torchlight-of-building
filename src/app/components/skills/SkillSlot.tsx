@@ -20,7 +20,7 @@ const SUPPORT_SKILL_KEYS: SupportSkillKey[] = [
 
 interface SkillSlotProps {
   slotLabel: string;
-  skill: SkillWithSupports;
+  skill: SkillWithSupports | undefined;
   availableSkills: readonly { name: string }[];
   excludedSkillNames: string[];
   onSkillChange: (skillName: string | undefined) => void;
@@ -42,16 +42,18 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
 
-  const selectedSupports = SUPPORT_SKILL_KEYS.map(
-    (key) => skill.supportSkills[key],
-  ).filter((s): s is string => s !== undefined);
+  const selectedSupports = skill
+    ? SUPPORT_SKILL_KEYS.map((key) => skill.supportSkills[key]).filter(
+        (s): s is string => s !== undefined,
+      )
+    : [];
 
   const supportCount = selectedSupports.length;
-  const hasSkill = skill.skillName !== undefined;
+  const hasSkill = skill !== undefined;
 
   // Filter available skills to exclude already-selected ones (but keep current selection)
   const filteredSkills = availableSkills.filter(
-    (s) => s.name === skill.skillName || !excludedSkillNames.includes(s.name),
+    (s) => s.name === skill?.skillName || !excludedSkillNames.includes(s.name),
   );
 
   return (
@@ -60,14 +62,14 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
         <div className="flex items-center gap-3">
           <input
             type="checkbox"
-            checked={skill.enabled}
+            checked={skill?.enabled ?? false}
             onChange={onToggle}
             disabled={!hasSkill}
             className="w-5 h-5 disabled:opacity-50 accent-amber-500"
           />
           <span className="text-xs text-zinc-500 w-16">{slotLabel}</span>
           <SearchableSelect
-            value={skill.skillName}
+            value={skill?.skillName}
             onChange={onSkillChange}
             options={filteredSkills.map(
               (s): SearchableSelectOption<string> => ({
@@ -92,7 +94,7 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
         </div>
       </div>
 
-      {expanded && hasSkill && (
+      {expanded && skill && (
         <div className="px-4 pb-4 border-t border-zinc-800 pt-3">
           <div className="space-y-2">
             {SUPPORT_SKILL_KEYS.map((key, index) => (

@@ -15,6 +15,7 @@ import type {
   ReflectedAllocatedNode,
   RingSlotState,
   SaveData,
+  SupportSkills,
 } from "../lib/save-data";
 import {
   loadSaveData,
@@ -849,8 +850,9 @@ export const useBuilderStore = create<BuilderState>()(
           const skillKey =
             `${skillType}Skill${skillSlot}` as keyof typeof state.loadout.skillPage;
           const supportKey =
-            `supportSkill${supportSlot}` as keyof (typeof state.loadout.skillPage)[typeof skillKey]["supportSkills"];
+            `supportSkill${supportSlot}` as keyof SupportSkills;
           const skill = state.loadout.skillPage[skillKey];
+          if (!skill) return state;
           return {
             loadout: {
               ...state.loadout,
@@ -874,6 +876,7 @@ export const useBuilderStore = create<BuilderState>()(
           const skillKey =
             `${skillType}Skill${slot}` as keyof typeof state.loadout.skillPage;
           const skill = state.loadout.skillPage[skillKey];
+          if (!skill) return state;
           return {
             loadout: {
               ...state.loadout,

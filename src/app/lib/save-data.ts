@@ -138,20 +138,20 @@ export interface SupportSkills {
 }
 
 export interface SkillWithSupports {
-  skillName?: string;
+  skillName: string;
   enabled: boolean;
   supportSkills: SupportSkills;
 }
 
 export interface SkillPage {
-  activeSkill1: SkillWithSupports;
-  activeSkill2: SkillWithSupports;
-  activeSkill3: SkillWithSupports;
-  activeSkill4: SkillWithSupports;
-  passiveSkill1: SkillWithSupports;
-  passiveSkill2: SkillWithSupports;
-  passiveSkill3: SkillWithSupports;
-  passiveSkill4: SkillWithSupports;
+  activeSkill1?: SkillWithSupports;
+  activeSkill2?: SkillWithSupports;
+  activeSkill3?: SkillWithSupports;
+  activeSkill4?: SkillWithSupports;
+  passiveSkill1?: SkillWithSupports;
+  passiveSkill2?: SkillWithSupports;
+  passiveSkill3?: SkillWithSupports;
+  passiveSkill4?: SkillWithSupports;
 }
 
 export const HERO_MEMORY_TYPES = [
