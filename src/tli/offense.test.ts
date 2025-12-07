@@ -30,7 +30,7 @@ const initLoadout = (pl: Partial<Loadout> = {}): Loadout => {
       talentTrees: {},
       inventory: { prismList: [], inverseImageList: [] },
     },
-    divinityPage: pl.divinityPage || { slates: [] },
+    divinityPage: pl.divinityPage || { placedSlates: [], inventory: [] },
     skillPage: pl.skillPage || {},
     heroPage: pl.heroPage || {
       selectedHero: undefined,
@@ -356,13 +356,21 @@ test("calculate offense affixes from equipment, talents, and divinities combine"
       inventory: { prismList: [], inverseImageList: [] },
     },
     divinityPage: {
-      slates: [
+      placedSlates: [],
+      inventory: [
         {
+          id: "test-slate",
+          god: "Might",
+          shape: "O",
+          rotation: 0,
+          flippedH: false,
+          flippedV: false,
           affixes: [
             affix([
               { type: "DmgPct", value: 0.1, modType: "global", addn: false },
             ]), // +10% from divinity
           ],
+          affixTypes: [],
         },
       ],
     },

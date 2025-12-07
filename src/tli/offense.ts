@@ -93,9 +93,9 @@ const getGearAffixes = (
 
 export const collectMods = (loadout: Loadout): Mod.Mod[] => {
   return [
-    ...collectModsFromAffixes(
-      loadout.divinityPage.slates.flatMap((s) => s.affixes),
-    ),
+    // todo: handle divinity slates
+    // todo: handle pactspirits
+    // todo: handle hero stuff
     ...collectModsFromAffixes(getTalentAffixes(loadout.talentPage)),
     ...collectModsFromAffixes(
       getGearAffixes(loadout.gearPage.equippedGear.helmet),

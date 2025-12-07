@@ -34,10 +34,6 @@ export interface Configuration {
   };
 }
 
-export interface DivinitySlate {
-  affixes: Affix[];
-}
-
 export interface Gear {
   equipmentType: EquipmentType;
 
@@ -182,8 +178,42 @@ export const getTalentAffixes = (talentPage: TalentPage): Affix[] => {
   return affixes;
 };
 
+export const SLATE_SHAPES = ["O", "L", "Z"] as const;
+export type SlateShape = (typeof SLATE_SHAPES)[number];
+
+export const DIVINITY_GODS = [
+  "Deception",
+  "Hunting",
+  "Knowledge",
+  "Machines",
+  "Might",
+  "War",
+] as const;
+export type DivinityGod = (typeof DIVINITY_GODS)[number];
+
+export const ROTATIONS = [0, 90, 180, 270] as const;
+export type Rotation = (typeof ROTATIONS)[number];
+
+export type DivinityAffixType = "Legendary Medium" | "Medium";
+export interface PlacedSlate {
+  slateId: string;
+  position: { row: number; col: number };
+}
+
+export interface DivinitySlate {
+  id: string;
+  god: DivinityGod;
+  shape: SlateShape;
+  rotation: Rotation;
+  flippedH: boolean;
+  flippedV: boolean;
+  affixes: Affix[];
+  affixTypes: DivinityAffixType[];
+}
+
 export interface DivinityPage {
-  slates: DivinitySlate[];
+  placedSlates: PlacedSlate[];
+  inventory: DivinitySlate[];
 }
 
 export interface EquippedGear {

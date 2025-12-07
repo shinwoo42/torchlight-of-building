@@ -1,4 +1,11 @@
-import type { SkillPage, HeroMemoryType } from "@/src/tli/core";
+import type {
+  DivinityAffixType,
+  DivinityGod,
+  HeroMemoryType,
+  Rotation,
+  SkillPage,
+  SlateShape,
+} from "@/src/tli/core";
 import type { EquipmentType } from "@/src/tli/gear_data_types";
 
 export type {
@@ -9,26 +16,16 @@ export type {
 
 export {
   HERO_MEMORY_TYPES,
-  type HeroMemoryType,
   type HeroMemorySlot,
+  type HeroMemoryType,
+  DIVINITY_GODS,
+  type DivinityGod,
+  ROTATIONS,
+  type Rotation,
+  SLATE_SHAPES,
+  type SlateShape,
+  type DivinityAffixType,
 } from "@/src/tli/core";
-export const SLATE_SHAPES = ["O", "L", "Z"] as const;
-export type SlateShape = (typeof SLATE_SHAPES)[number];
-
-export const DIVINITY_GODS = [
-  "Deception",
-  "Hunting",
-  "Knowledge",
-  "Machines",
-  "Might",
-  "War",
-] as const;
-export type DivinityGod = (typeof DIVINITY_GODS)[number];
-
-export const ROTATIONS = [0, 90, 180, 270] as const;
-export type Rotation = (typeof ROTATIONS)[number];
-
-export type DivinityAffixType = "Legendary Medium" | "Medium";
 
 export interface DivinitySlate {
   id: string;

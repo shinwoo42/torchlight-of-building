@@ -12,6 +12,8 @@ import type {
   HeroMemory as SaveDataHeroMemory,
   PactspiritPage as SaveDataPactspiritPage,
   PactspiritSlot as SaveDataPactspiritSlot,
+  DivinityPage as SaveDataDivinityPage,
+  DivinitySlate as SaveDataDivinitySlate,
 } from "@/src/app/lib/save-data";
 import { craftHeroMemoryAffix } from "@/src/app/lib/hero-utils";
 import {
@@ -23,6 +25,8 @@ import type { TalentNodeData, TreeName } from "@/src/data/talent_tree";
 import type {
   Affix,
   AffixLine,
+  DivinityPage,
+  DivinitySlate,
   EquippedGear,
   Gear,
   GearPage,
@@ -482,6 +486,34 @@ const convertPactspiritPage = (
   slot3: convertPactspiritSlot(saveDataPactspiritPage.slot3, 3),
 });
 
+const getDivinitySrc = (slateId: string): string => {
+  return `Divinity#${slateId}`;
+};
+
+const convertDivinitySlate = (slate: SaveDataDivinitySlate): DivinitySlate => {
+  const src = getDivinitySrc(slate.id);
+  return {
+    id: slate.id,
+    god: slate.god,
+    shape: slate.shape,
+    rotation: slate.rotation,
+    flippedH: slate.flippedH,
+    flippedV: slate.flippedV,
+    affixes: slate.affixes.map((text) => convertAffix(text, src)),
+    affixTypes: slate.affixTypes,
+  };
+};
+
+const convertDivinityPage = (
+  saveDataDivinityPage: SaveDataDivinityPage,
+  divinitySlateList: SaveDataDivinitySlate[],
+): DivinityPage => {
+  return {
+    placedSlates: saveDataDivinityPage.placedSlates,
+    inventory: divinitySlateList.map(convertDivinitySlate),
+  };
+};
+
 export const loadSave = (unloadedSaveData: SaveData): Loadout => {
   const saveData = R.clone(unloadedSaveData);
   return {
@@ -491,7 +523,10 @@ export const loadSave = (unloadedSaveData: SaveData): Loadout => {
       saveData.prismList,
       saveData.inverseImageList,
     ),
-    divinityPage: { slates: [] },
+    divinityPage: convertDivinityPage(
+      saveData.divinityPage,
+      saveData.divinitySlateList,
+    ),
     skillPage: saveData.skillPage,
     heroPage: convertHeroPage(saveData.heroPage),
     pactspiritPage: convertPactspiritPage(saveData.pactspiritPage),
