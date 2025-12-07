@@ -1,6 +1,6 @@
 "use client";
 
-import type { DivinitySlate } from "@/src/app/lib/save-data";
+import type { DivinitySlate } from "@/src/tli/core";
 import { SlateInventoryItem } from "./SlateInventoryItem";
 
 interface SlateInventoryProps {

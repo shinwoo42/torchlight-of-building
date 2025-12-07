@@ -1,10 +1,10 @@
-import { getOccupiedCells, getTransformedCells } from "./divinity-shapes";
 import type {
   DivinitySlate,
   PlacedSlate,
   Rotation,
   SlateShape,
-} from "./save-data";
+} from "@/src/tli/core";
+import { getOccupiedCells, getTransformedCells } from "./divinity-shapes";
 
 export const GRID_MASK: number[][] = [
   [0, 0, 1, 1, 0, 0],

@@ -3,7 +3,7 @@ import type {
   PlacedSlate,
   Rotation,
   SlateShape,
-} from "./save-data";
+} from "@/src/tli/core";
 
 export const SHAPE_CELLS: Record<SlateShape, [number, number][]> = {
   O: [

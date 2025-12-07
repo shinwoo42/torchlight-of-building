@@ -12,7 +12,9 @@ import {
   GOD_COLORS,
   getDivinityAffixes,
 } from "@/src/app/lib/divinity-utils";
+import { generateItemId } from "@/src/app/lib/storage";
 import {
+  type Affix,
   DIVINITY_GODS,
   type DivinityGod,
   type DivinitySlate,
@@ -20,9 +22,13 @@ import {
   type Rotation,
   SLATE_SHAPES,
   type SlateShape,
-} from "@/src/app/lib/save-data";
-import { generateItemId } from "@/src/app/lib/storage";
+  getAffixText,
+} from "@/src/tli/core";
 import { SlatePreview } from "./SlatePreview";
+
+const createMinimalAffix = (text: string): Affix => ({
+  affixLines: text.split(/\n/).map((line) => ({ text: line })),
+});
 
 interface SlateCrafterProps {
   editingSlate: DivinitySlate | undefined;
@@ -57,8 +63,8 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
       setFlippedH(editingSlate.flippedH);
       setFlippedV(editingSlate.flippedV);
       const affixes: DivinityAffix[] = editingSlate.affixes.map(
-        (effect: string, i: number) => ({
-          effect,
+        (affix: Affix, i: number) => ({
+          effect: getAffixText(affix),
           type: editingSlate.affixTypes[i],
         }),
       );
@@ -118,7 +124,7 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
       rotation,
       flippedH,
       flippedV,
-      affixes: selectedAffixes.map((a) => a.effect),
+      affixes: selectedAffixes.map((a) => createMinimalAffix(a.effect)),
       affixTypes: selectedAffixes.map((a) => a.type),
     };
     onSave(slate);

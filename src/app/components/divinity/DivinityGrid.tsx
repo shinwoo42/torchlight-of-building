@@ -17,12 +17,11 @@ import {
   getOccupiedCells,
   getTransformedCells,
 } from "@/src/app/lib/divinity-shapes";
-import type { DivinityPage, DivinitySlate } from "@/src/app/lib/save-data";
+import type { DivinityPage } from "@/src/tli/core";
 import { DivinityGridCell } from "./DivinityGridCell";
 
 interface DivinityGridProps {
   divinityPage: DivinityPage;
-  divinitySlateList: DivinitySlate[];
   onClickPlacedSlate: (slateId: string) => void;
   onMoveSlate: (
     slateId: string,
@@ -32,7 +31,6 @@ interface DivinityGridProps {
 
 export const DivinityGrid: React.FC<DivinityGridProps> = ({
   divinityPage,
-  divinitySlateList,
   onClickPlacedSlate,
   onMoveSlate,
 }) => {
@@ -42,11 +40,11 @@ export const DivinityGrid: React.FC<DivinityGridProps> = ({
   >();
 
   const overlappingCells = findOverlappingCells(
-    divinitySlateList,
+    divinityPage.inventory,
     divinityPage.placedSlates,
   );
   const outOfBoundsCells = findOutOfBoundsCells(
-    divinitySlateList,
+    divinityPage.inventory,
     divinityPage.placedSlates,
   );
   const invalidCells = new Set([...overlappingCells, ...outOfBoundsCells]);
@@ -57,7 +55,7 @@ export const DivinityGrid: React.FC<DivinityGridProps> = ({
   // Build set of preview cells where the slate would land
   const previewCells = new Set<string>();
   const draggedSlate = draggedSlateId
-    ? divinitySlateList.find((s) => s.id === draggedSlateId)
+    ? divinityPage.inventory.find((s) => s.id === draggedSlateId)
     : undefined;
 
   if (draggedSlateId && draggedSlate) {
@@ -100,7 +98,7 @@ export const DivinityGrid: React.FC<DivinityGridProps> = ({
     const placed = findSlateAtCell(
       row,
       col,
-      divinitySlateList,
+      divinityPage.inventory,
       divinityPage.placedSlates,
     );
     return placed?.slateId;
@@ -124,7 +122,7 @@ export const DivinityGrid: React.FC<DivinityGridProps> = ({
     const placed = findSlateAtCell(
       row,
       col,
-      divinitySlateList,
+      divinityPage.inventory,
       divinityPage.placedSlates,
     );
     if (placed) {
@@ -170,7 +168,7 @@ export const DivinityGrid: React.FC<DivinityGridProps> = ({
       const isOutOfBounds = !isInGridBounds(row, col) || !isValid;
       const cellSlateId = getCellSlateId(row, col);
       const cellSlate = cellSlateId
-        ? divinitySlateList.find((s) => s.id === cellSlateId)
+        ? divinityPage.inventory.find((s) => s.id === cellSlateId)
         : undefined;
       const slateEdges = getSlateEdges(row, col, cellSlateId);
       const isInvalid = invalidCells.has(`${row},${col}`);

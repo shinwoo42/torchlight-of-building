@@ -2,18 +2,13 @@
 
 import { useState } from "react";
 import { findGridCenter } from "@/src/app/lib/divinity-grid";
-import type {
-  DivinityPage,
-  DivinitySlate,
-  PlacedSlate,
-} from "@/src/app/lib/save-data";
+import type { DivinityPage, DivinitySlate, PlacedSlate } from "@/src/tli/core";
 import { DivinityGrid } from "./DivinityGrid";
 import { SlateCrafter } from "./SlateCrafter";
 import { SlateInventory } from "./SlateInventory";
 
 interface DivinityTabProps {
   divinityPage: DivinityPage;
-  divinitySlateList: DivinitySlate[];
   onSaveSlate: (slate: DivinitySlate) => void;
   onUpdateSlate: (slate: DivinitySlate) => void;
   onCopySlate: (slate: DivinitySlate) => void;
@@ -28,7 +23,6 @@ interface DivinityTabProps {
 
 export const DivinityTab: React.FC<DivinityTabProps> = ({
   divinityPage,
-  divinitySlateList,
   onSaveSlate,
   onUpdateSlate,
   onCopySlate,
@@ -67,7 +61,7 @@ export const DivinityTab: React.FC<DivinityTabProps> = ({
   };
 
   const handleClickPlacedSlate = (slateId: string) => {
-    const slate = divinitySlateList.find((s) => s.id === slateId);
+    const slate = divinityPage.inventory.find((s) => s.id === slateId);
     if (slate) {
       handleEditSlate(slate);
     }
@@ -85,7 +79,6 @@ export const DivinityTab: React.FC<DivinityTabProps> = ({
         <h3 className="text-lg font-medium text-zinc-200">Divinity Grid</h3>
         <DivinityGrid
           divinityPage={divinityPage}
-          divinitySlateList={divinitySlateList}
           onClickPlacedSlate={handleClickPlacedSlate}
           onMoveSlate={onMoveSlate}
         />
@@ -103,7 +96,7 @@ export const DivinityTab: React.FC<DivinityTabProps> = ({
         />
 
         <SlateInventory
-          slates={divinitySlateList}
+          slates={divinityPage.inventory}
           placedSlateIds={placedSlateIds}
           onPlace={handlePlaceSlate}
           onEdit={handleEditSlate}
