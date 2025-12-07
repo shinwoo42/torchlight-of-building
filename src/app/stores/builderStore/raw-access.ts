@@ -3,7 +3,7 @@
 import type { SaveData } from "../../lib/save-data";
 import { internalStore } from "./internal";
 
-type RawAccessReason = "debug" | "export" ;
+type RawAccessReason = "debug" | "export";
 
 /**
  * Explicitly-reasoned access to raw SaveData.

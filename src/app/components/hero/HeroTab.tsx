@@ -1,8 +1,8 @@
 "use client";
 
 import type {
-  HeroMemory as SaveDataHeroMemory,
   HeroMemorySlot,
+  HeroMemory as SaveDataHeroMemory,
 } from "@/src/app/lib/save-data";
 import type { HeroMemory, HeroPage } from "@/src/tli/core";
 import { HeroSelector } from "./HeroSelector";

@@ -2,7 +2,7 @@
 
 import { Tooltip, TooltipTitle } from "@/src/app/components/ui/Tooltip";
 import { useTooltip } from "@/src/app/hooks/useTooltip";
-import { type HeroMemory, getAffixText } from "@/src/tli/core";
+import { getAffixText, type HeroMemory } from "@/src/tli/core";
 
 interface HeroMemoryItemProps {
   memory: HeroMemory;

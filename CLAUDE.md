@@ -12,8 +12,7 @@ pnpm build        # Production build
 pnpm test         # Run all tests
 pnpm test <file>  # Run single test file
 pnpm typecheck    # TypeScript type checking
-pnpm lint         # Biome linting
-pnpm format       # Biome formatting
+pnpm check        # Biome linting and formatting
 ```
 
 ## Architecture
@@ -23,7 +22,8 @@ pnpm format       # Biome formatting
 - **Calculation Engine** ([src/tli/offense.ts](src/tli/offense.ts)) - DPS/stat calculations
 - **Mod Parser** ([src/tli/mod_parser.ts](src/tli/mod_parser.ts)) - String → typed Mod conversion
 - **Data Models** ([src/tli/core.ts](src/tli/core.ts), [src/tli/mod.ts](src/tli/mod.ts)) - Type definitions
-- **Gear Affixes** ([src/data/gear_affix/](src/data/gear_affix/)) - Generated typed gear affixes
+- **Scripts** ([src/scripts/](src/scripts/)) - Scripts for various tasks such as web scraping
+- **Scraped Data** ([src/data/](src/data/)) - Data scraped from wikis/online dbs
 
 ## Key Conventions
 
@@ -66,3 +66,5 @@ See [.claude/docs/](.claude/docs/) for implementation details only when needed.
 - prefer using undefined instead of null for typescript code
 - only make code comments that explain particularly complex pieces of code or why code is written a certain way
 - run `pnpm test` and `pnpm check` after making changes
+- read [.claude/docs/development.md](.claude/docs/development.md) when planning or making code changes
+- read [.claude/docs/ui-development.md](.claude/docs/ui-development.md) when planning or making code changes related to the UI

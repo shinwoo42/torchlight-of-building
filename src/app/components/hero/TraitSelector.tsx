@@ -10,10 +10,10 @@ import { useTooltip } from "@/src/app/hooks/useTooltip";
 import type { HeroMemorySlot } from "@/src/app/lib/save-data";
 import type { HeroTrait } from "@/src/data/hero_trait/types";
 import {
+  getAffixText,
   type HeroMemory,
   type HeroPage,
   type HeroTraits,
-  getAffixText,
 } from "@/src/tli/core";
 import {
   getCompatibleLoadoutMemoriesForSlot,
