@@ -23,6 +23,14 @@ interface SearchableSelectProps<T extends string | number> {
   size?: "sm" | "default" | "lg";
   disabled?: boolean;
   className?: string;
+  renderOption?: (
+    option: SearchableSelectOption<T>,
+    props: { active: boolean; selected: boolean },
+  ) => React.ReactNode;
+  renderSelectedTooltip?: (
+    option: SearchableSelectOption<T>,
+    triggerRect: DOMRect,
+  ) => React.ReactNode;
 }
 
 const SIZE_CLASSES = {
@@ -55,9 +63,14 @@ export const SearchableSelect = <T extends string | number>({
   size = "default",
   disabled = false,
   className = "",
+  renderOption,
+  renderSelectedTooltip,
 }: SearchableSelectProps<T>) => {
   const [query, setQuery] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
+  const [inputRect, setInputRect] = useState<DOMRect | undefined>(undefined);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const inputWrapperRef = useRef<HTMLDivElement>(null);
 
   const selectedOption = useMemo(
     () => options.find((opt) => opt.value === value),
@@ -88,7 +101,17 @@ export const SearchableSelect = <T extends string | number>({
       disabled={disabled}
     >
       <div className={`relative ${className}`}>
-        <div className="relative">
+        <div
+          ref={inputWrapperRef}
+          className="relative"
+          onMouseEnter={() => {
+            setIsHovered(true);
+            if (inputWrapperRef.current) {
+              setInputRect(inputWrapperRef.current.getBoundingClientRect());
+            }
+          }}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           <ComboboxInput
             className={`
               w-full bg-zinc-800 border border-zinc-700 rounded
@@ -145,18 +168,32 @@ export const SearchableSelect = <T extends string | number>({
                   ${selected ? "text-amber-400" : "text-zinc-50"}
                 `}
               >
-                <div>
-                  <span>{option.label}</span>
-                  {option.sublabel && (
-                    <span className="text-zinc-500 ml-2 text-xs">
-                      {option.sublabel}
-                    </span>
-                  )}
-                </div>
+                {({ active, selected }) => (
+                  <div>
+                    {renderOption ? (
+                      renderOption(option, { active, selected })
+                    ) : (
+                      <>
+                        <span>{option.label}</span>
+                        {option.sublabel && (
+                          <span className="text-zinc-500 ml-2 text-xs">
+                            {option.sublabel}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
               </ComboboxOption>
             ))
           )}
         </ComboboxOptions>
+
+        {renderSelectedTooltip &&
+          selectedOption &&
+          isHovered &&
+          inputRect &&
+          renderSelectedTooltip(selectedOption, inputRect)}
       </div>
     </Combobox>
   );
