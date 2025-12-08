@@ -54,6 +54,7 @@ import {
   scaleTalentAffix,
   type TreeSlot,
   treeDataByName,
+  convertAffixTextToAffix,
 } from "../talent-affix-utils";
 
 type GearSlot = keyof SaveDataGearPage;
@@ -155,7 +156,7 @@ const createTalentNode = (
   const affix =
     points > 0
       ? scaleTalentAffix(nodeData.rawAffix, points, src)
-      : { affixLines: [{ text: nodeData.rawAffix }] };
+      : convertAffixTextToAffix(nodeData.rawAffix, "unallocated node");
 
   const prismAffixes =
     !isReflected && points > 0
