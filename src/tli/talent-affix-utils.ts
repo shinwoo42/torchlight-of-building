@@ -25,7 +25,10 @@ export const findTalentNodeData = (
   return nodes.find((n) => n.position.x === x && n.position.y === y);
 };
 
-export const convertAffixTextToAffix = (affixText: string, src: string): Affix => {
+export const convertAffixTextToAffix = (
+  affixText: string,
+  src: string,
+): Affix => {
   const lines = affixText.split(/\n/);
   const affixLines: AffixLine[] = lines.map((lineText) => {
     const mod = parseMod(lineText);

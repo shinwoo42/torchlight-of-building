@@ -1,3 +1,4 @@
+import { BaseStatMod } from "./base_stat_mod";
 import type { EquipmentType } from "./gear_data_types";
 import type { Mod } from "./mod";
 
@@ -15,8 +16,13 @@ export interface Affix {
   src?: string;
 }
 
-export interface BaseStats {
+export interface BaseStatLine {
   text: string;
+  mod?: BaseStatMod;
+}
+
+export interface BaseStats {
+  baseStatLines: BaseStatLine[];
   src?: string;
 }
 

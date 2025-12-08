@@ -25,6 +25,7 @@ import type { TalentNodeData, TreeName } from "@/src/data/talent_tree";
 import type {
   Affix,
   AffixLine,
+  BaseStats,
   CraftedPrism,
   DivinityPage,
   DivinitySlate,
@@ -50,17 +51,36 @@ import type {
 import type { Mod } from "../mod";
 import { parseMod } from "../mod_parser";
 import {
+  convertAffixTextToAffix,
   getPrismAffixesForNode,
   scaleTalentAffix,
   type TreeSlot,
   treeDataByName,
-  convertAffixTextToAffix,
 } from "../talent-affix-utils";
+import { parseBaseStatMod } from "../base_stat_mod";
 
 type GearSlot = keyof SaveDataGearPage;
 
 const getSrc = (gearSlot: GearSlot): string => {
   return `Gear#${gearSlot}`;
+};
+
+const convertBaseStats = (
+  baseStatText: string,
+  src: string | undefined,
+): BaseStats => {
+  const lines = baseStatText.split(/\n/);
+  const baseStatLines = lines.map((lineText) => {
+    const mod = parseBaseStatMod(lineText);
+    return {
+      text: lineText,
+      mod: mod ? { ...mod, src } : undefined,
+    };
+  });
+  return {
+    baseStatLines,
+    src,
+  };
 };
 
 const convertAffix = (affixText: string, src: string | undefined): Affix => {
@@ -93,7 +113,9 @@ const convertGear = (gear: SaveDataGear, src: string | undefined): Gear => {
     id: gear.id,
     rarity: gear.rarity,
     legendaryName: gear.legendaryName,
-    baseStats: gear.baseStats ? { text: gear.baseStats, src } : undefined,
+    baseStats: gear.baseStats
+      ? convertBaseStats(gear.baseStats, src)
+      : undefined,
     base_affixes: convertAffixArray(gear.base_affixes, src),
     prefixes: convertAffixArray(gear.prefixes, src),
     suffixes: convertAffixArray(gear.suffixes, src),

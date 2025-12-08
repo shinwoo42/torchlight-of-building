@@ -16,7 +16,17 @@ export const GearTooltipContent: React.FC<{ item: Gear }> = ({ item }) => {
       )}
       {item.baseStats && (
         <div className="text-xs text-amber-300 mb-2">
-          <div>{item.baseStats.text}</div>
+          <ul className="space-y-1">
+            {item.baseStats.baseStatLines.map((line, lineIdx) => (
+              <li
+                // biome-ignore lint/suspicious/noArrayIndexKey: affixes can have duplicate text, index is stable
+                key={`${lineIdx}`}
+                className="text-xs text-amber-300 mb2 flex items-center"
+              >
+                <span>{line.text}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       {affixes.length > 0 ? (
