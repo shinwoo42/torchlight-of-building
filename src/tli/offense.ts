@@ -16,10 +16,14 @@ type Stat = "dex" | "int" | "str";
 type SkillTag =
   | "Attack"
   | "Spell"
+  | "Cold"
   | "Melee"
   | "Area"
   | "Physical"
+  | "Projectile"
+  | "Horizontal"
   | "Slash-Stike"
+  | "Shadow Strike"
   | "Persistent";
 
 interface SkillConfiguration {
@@ -41,6 +45,20 @@ const offensiveSkillConfs = [
     tags: ["Attack", "Melee", "Area", "Physical", "Slash-Stike", "Persistent"],
     stats: ["dex", "str"],
     addedDmgEffPct: 2.1,
+  },
+  {
+    skill: "Frost Spike",
+    tags: [
+      "Attack",
+      "Melee",
+      "Projectile",
+      "Shadow Strike",
+      "Cold",
+      "Area",
+      "Horizontal",
+    ],
+    stats: ["dex", "int"],
+    addedDmgEffPct: 2.01,
   },
 ] as const satisfies readonly SkillConfiguration[];
 
