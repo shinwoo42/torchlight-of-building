@@ -1,5 +1,6 @@
 import * as R from "remeda";
 import { match } from "ts-pattern";
+import type { SkillTag } from "../data/skill";
 import type { DmgModType } from "./constants";
 import {
   type Affix,
@@ -11,12 +12,11 @@ import {
 } from "./core";
 import type * as Mod from "./mod";
 import {
+  type ImplementedOffenseSkill as ImplementedOffenseSkillName,
   listTags,
   offensiveSkillConfs,
-  type ImplementedOffenseSkill as ImplementedOffenseSkillName,
   type SkillConfiguration,
 } from "./skill_confs";
-import { SkillTag } from "../data/skill";
 
 export type Stat = "dex" | "int" | "str";
 

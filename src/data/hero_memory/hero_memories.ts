@@ -1,51 +1,15 @@
 import type { HeroMemory } from "./types";
 
 export const HeroMemories: readonly HeroMemory[] = [
-  {
-    type: "Base Stats",
-    item: "Memory of Origin",
-    affix: "+90 Dexterity",
-  },
-  {
-    type: "Base Stats",
-    item: "Memory of Origin",
-    affix: "+90 Intelligence",
-  },
-  {
-    type: "Base Stats",
-    item: "Memory of Origin",
-    affix: "+90 Strength",
-  },
-  {
-    type: "Base Stats",
-    item: "Memory of Origin",
-    affix: "+90% damage",
-  },
-  {
-    type: "Base Stats",
-    item: "Memory of Origin",
-    affix: "+90% Minion Damage",
-  },
-  {
-    type: "Base Stats",
-    item: "Memory of Discipline",
-    affix: "+180 Max Mana",
-  },
-  {
-    type: "Base Stats",
-    item: "Memory of Discipline",
-    affix: "+330 Max Life",
-  },
-  {
-    type: "Base Stats",
-    item: "Memory of Discipline",
-    affix: "+4320 Armor",
-  },
-  {
-    type: "Base Stats",
-    item: "Memory of Discipline",
-    affix: "+4320 Evasion",
-  },
+  { type: "Base Stats", item: "Memory of Origin", affix: "+90 Dexterity" },
+  { type: "Base Stats", item: "Memory of Origin", affix: "+90 Intelligence" },
+  { type: "Base Stats", item: "Memory of Origin", affix: "+90 Strength" },
+  { type: "Base Stats", item: "Memory of Origin", affix: "+90% damage" },
+  { type: "Base Stats", item: "Memory of Origin", affix: "+90% Minion Damage" },
+  { type: "Base Stats", item: "Memory of Discipline", affix: "+180 Max Mana" },
+  { type: "Base Stats", item: "Memory of Discipline", affix: "+330 Max Life" },
+  { type: "Base Stats", item: "Memory of Discipline", affix: "+4320 Armor" },
+  { type: "Base Stats", item: "Memory of Discipline", affix: "+4320 Evasion" },
   {
     type: "Base Stats",
     item: "Memory of Discipline",
@@ -61,11 +25,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+36% Attack Speed",
   },
-  {
-    type: "Base Stats",
-    item: "Memory of Progress",
-    affix: "+36% Cast Speed",
-  },
+  { type: "Base Stats", item: "Memory of Progress", affix: "+36% Cast Speed" },
   {
     type: "Base Stats",
     item: "Memory of Progress",
@@ -111,21 +71,13 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+(10-14)% Spell Block Chance",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(12-18)% Armor",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(12-18)% Armor" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
     affix: "+(12-18)% Critical Strike Damage",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(12-18)% Evasion",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(12-18)% Evasion" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -186,21 +138,9 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+(20-26)% Minion Critical Strike Damage",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(20-28)% Armor",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(20-28)% damage",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(20-28)% Evasion",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(20-28)% Armor" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(20-28)% damage" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(20-28)% Evasion" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -231,21 +171,9 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+(28-31)% Minion Critical Strike Damage",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(30-42)% Armor",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(30-42)% damage",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(30-42)% Evasion",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(30-42)% Armor" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(30-42)% damage" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(30-42)% Evasion" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -256,16 +184,8 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+(4-6)% Max Energy Shield",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(4-6)% Max Life",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(44-52)% damage",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(4-6)% Max Life" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(44-52)% damage" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -276,11 +196,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+(6-8)% Max Energy Shield",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+(6-8)% Max Life",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+(6-8)% Max Life" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -291,16 +207,8 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+(6-9)% Spell Block Chance",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+10% Attack Speed",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+10% Cast Speed",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+10% Attack Speed" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+10% Cast Speed" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -316,21 +224,9 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+10% Minion Cast Speed",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+15% Skill Area",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+16% Attack Speed",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+16% Cast Speed",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+15% Skill Area" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+16% Attack Speed" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+16% Cast Speed" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -351,11 +247,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+2 to Hero Trait Level",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+23% Skill Area",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+23% Skill Area" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -366,11 +258,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+30% Projectile Speed",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+30% Skill Area",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+30% Skill Area" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -381,16 +269,8 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+40% Minion Critical Strike Rating",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+6% Attack Speed",
-  },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "+6% Cast Speed",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+6% Attack Speed" },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "+6% Cast Speed" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -421,21 +301,13 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+80% Minion Critical Strike Rating",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "Immune to Slow",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "Immune to Slow" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
     affix: "Immune to Paralysis",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Origin",
-    affix: "Immune to Weaken",
-  },
+  { type: "Fixed Affix", item: "Memory of Origin", affix: "Immune to Weaken" },
   {
     type: "Fixed Affix",
     item: "Memory of Origin",
@@ -841,11 +713,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+(10-14)% Spell Block Chance",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+(12-18)% Armor",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+(12-18)% Armor" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -916,11 +784,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+(20-26)% Minion Critical Strike Damage",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+(20-28)% Armor",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+(20-28)% Armor" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -971,11 +835,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+(30-42)% Minion Damage",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+(34-38)% Armor",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+(34-38)% Armor" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -1026,11 +886,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+10% Attack Speed",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+10% Cast Speed",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+10% Cast Speed" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -1046,21 +902,13 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+10% Minion Cast Speed",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+15% Skill Area",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+15% Skill Area" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
     affix: "+16% Attack Speed",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+16% Cast Speed",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+16% Cast Speed" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -1081,11 +929,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+2 to Hero Trait Level",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+23% Skill Area",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+23% Skill Area" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -1096,11 +940,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+30% Projectile Speed",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+30% Skill Area",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+30% Skill Area" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -1116,11 +956,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+6% Attack Speed",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "+6% Cast Speed",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "+6% Cast Speed" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -1151,11 +987,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Progress",
     affix: "+80% Minion Critical Strike Rating",
   },
-  {
-    type: "Fixed Affix",
-    item: "Memory of Progress",
-    affix: "Immune to Slow",
-  },
+  { type: "Fixed Affix", item: "Memory of Progress", affix: "Immune to Slow" },
   {
     type: "Fixed Affix",
     item: "Memory of Progress",
@@ -1222,11 +1054,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+(26-40)% Affliction Effect",
   },
-  {
-    type: "Random Affix",
-    item: "Memory of Origin",
-    affix: "+(40-46)% Armor",
-  },
+  { type: "Random Affix", item: "Memory of Origin", affix: "+(40-46)% Armor" },
   {
     type: "Random Affix",
     item: "Memory of Origin",
@@ -1337,11 +1165,7 @@ export const HeroMemories: readonly HeroMemory[] = [
     item: "Memory of Origin",
     affix: "+18% Attack and Cast Speed\n+18% Minion Attack and Cast Speed",
   },
-  {
-    type: "Random Affix",
-    item: "Memory of Origin",
-    affix: "+39% Skill Area",
-  },
+  { type: "Random Affix", item: "Memory of Origin", affix: "+39% Skill Area" },
   {
     type: "Random Affix",
     item: "Memory of Origin",

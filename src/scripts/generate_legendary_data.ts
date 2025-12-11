@@ -167,7 +167,7 @@ const extractLegendary = (
 const generateDataFile = (items: Legendary[]): string => {
   return `import type { Legendary } from "./types";
 
-export const Legendaries: readonly Legendary[] = ${JSON.stringify(items, null, 2)};
+export const Legendaries: readonly Legendary[] = ${JSON.stringify(items)};
 `;
 };
 

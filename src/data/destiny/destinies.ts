@@ -461,11 +461,7 @@ export const Destinies: readonly Destiny[] = [
     affix:
       "When activating Spell Burst, +(8-10)% Skill Area for each time Spell Burst is activated",
   },
-  {
-    type: "Kismet",
-    name: "Sacred Crest",
-    affix: "(-60--40)% Cursed Effect",
-  },
+  { type: "Kismet", name: "Sacred Crest", affix: "(-60--40)% Cursed Effect" },
   {
     type: "Kismet",
     name: "Scale",
@@ -568,11 +564,7 @@ export const Destinies: readonly Destiny[] = [
     name: "Affliction Effect",
     affix: "+(20-26)% Affliction Effect",
   },
-  {
-    type: "Medium Fate",
-    name: "Armor",
-    affix: "+(14-18)% Armor",
-  },
+  { type: "Medium Fate", name: "Armor", affix: "+(14-18)% Armor" },
   {
     type: "Medium Fate",
     name: "Attack Block Chance",
@@ -589,26 +581,14 @@ export const Destinies: readonly Destiny[] = [
     name: "Attack Damage",
     affix: "+(28-36)% Attack Damage",
   },
-  {
-    type: "Medium Fate",
-    name: "Aura Effect",
-    affix: "+(5-7)% Aura Effect",
-  },
-  {
-    type: "Medium Fate",
-    name: "Block Ratio",
-    affix: "+(4-6)% Block Ratio",
-  },
+  { type: "Medium Fate", name: "Aura Effect", affix: "+(5-7)% Aura Effect" },
+  { type: "Medium Fate", name: "Block Ratio", affix: "+(4-6)% Block Ratio" },
   {
     type: "Medium Fate",
     name: "Cold Resistance",
     affix: "+(10-14)% Cold Resistance",
   },
-  {
-    type: "Medium Fate",
-    name: "Command",
-    affix: "+ (2-4) Command per second",
-  },
+  { type: "Medium Fate", name: "Command", affix: "+ (2-4) Command per second" },
   {
     type: "Medium Fate",
     name: "Critical Strike Damage",
@@ -621,16 +601,8 @@ export const Destinies: readonly Destiny[] = [
     affix:
       "+(48-60)% Critical Strike Rating\n+(48-60)% Minion Critical Strike Rating",
   },
-  {
-    type: "Medium Fate",
-    name: "Curse Effect",
-    affix: "+(4-6)% curse effect",
-  },
-  {
-    type: "Medium Fate",
-    name: "Dexterity",
-    affix: "+(24-30) Dexterity",
-  },
+  { type: "Medium Fate", name: "Curse Effect", affix: "+(4-6)% curse effect" },
+  { type: "Medium Fate", name: "Dexterity", affix: "+(24-30) Dexterity" },
   {
     type: "Medium Fate",
     name: "Double Damage Chance",
@@ -657,31 +629,19 @@ export const Destinies: readonly Destiny[] = [
     name: "Erosion Resistance",
     affix: "+(10-14)% Erosion Resistance",
   },
-  {
-    type: "Medium Fate",
-    name: "Evade",
-    affix: "+(14-18)% Evasion",
-  },
+  { type: "Medium Fate", name: "Evade", affix: "+(14-18)% Evasion" },
   {
     type: "Medium Fate",
     name: "Fire Resistance",
     affix: "+(10-14)% Fire Resistance",
   },
-  {
-    type: "Medium Fate",
-    name: "Focus Speed",
-    affix: "+(14-18)% Focus Speed",
-  },
+  { type: "Medium Fate", name: "Focus Speed", affix: "+(14-18)% Focus Speed" },
   {
     type: "Medium Fate",
     name: "Growth",
     affix: "+(20-24) initial Growth for Spirit Magi",
   },
-  {
-    type: "Medium Fate",
-    name: "Intelligence",
-    affix: "+(24-30) Intelligence",
-  },
+  { type: "Medium Fate", name: "Intelligence", affix: "+(24-30) Intelligence" },
   {
     type: "Medium Fate",
     name: "Life Regeneration",
@@ -697,11 +657,7 @@ export const Destinies: readonly Destiny[] = [
     name: "Lightning Resistance",
     affix: "+(10-14)% Lightning Resistance",
   },
-  {
-    type: "Medium Fate",
-    name: "Mana%",
-    affix: "+(12-16)% Max Mana",
-  },
+  { type: "Medium Fate", name: "Mana%", affix: "+(12-16)% Max Mana" },
   {
     type: "Medium Fate",
     name: "Max Cold Resistance",
@@ -767,21 +723,13 @@ export const Destinies: readonly Destiny[] = [
     name: "Spell Damage",
     affix: "+(28-36)% Spell Damage\n+(28-36)% Minion Damage",
   },
-  {
-    type: "Medium Fate",
-    name: "Strength",
-    affix: "+(24-30) Strength",
-  },
+  { type: "Medium Fate", name: "Strength", affix: "+(24-30) Strength" },
   {
     type: "Micro Fate",
     name: "Affliction Effect",
     affix: "+(10-13)% Affliction Effect",
   },
-  {
-    type: "Micro Fate",
-    name: "Armor",
-    affix: "+(7-9)% Armor",
-  },
+  { type: "Micro Fate", name: "Armor", affix: "+(7-9)% Armor" },
   {
     type: "Micro Fate",
     name: "Attack Block Chance",
@@ -798,26 +746,14 @@ export const Destinies: readonly Destiny[] = [
     name: "Attack Damage",
     affix: "+(14-18)% Attack Damage",
   },
-  {
-    type: "Micro Fate",
-    name: "Aura Effect",
-    affix: "+(2-3)% Aura Effect",
-  },
-  {
-    type: "Micro Fate",
-    name: "Block Ratio",
-    affix: "+(1-3)% Block Ratio",
-  },
+  { type: "Micro Fate", name: "Aura Effect", affix: "+(2-3)% Aura Effect" },
+  { type: "Micro Fate", name: "Block Ratio", affix: "+(1-3)% Block Ratio" },
   {
     type: "Micro Fate",
     name: "Cold Resistance",
     affix: "+(5-7)% Cold Resistance",
   },
-  {
-    type: "Micro Fate",
-    name: "Command",
-    affix: "+ (1-2) Command per second",
-  },
+  { type: "Micro Fate", name: "Command", affix: "+ (1-2) Command per second" },
   {
     type: "Micro Fate",
     name: "Critical Strike Damage",
@@ -830,11 +766,7 @@ export const Destinies: readonly Destiny[] = [
     affix:
       "+(24-30)% Critical Strike Rating\n+(24-30)% Minion Critical Strike Rating",
   },
-  {
-    type: "Micro Fate",
-    name: "Curse Effect",
-    affix: "+(1-3)% curse effect",
-  },
+  { type: "Micro Fate", name: "Curse Effect", affix: "+(1-3)% curse effect" },
   {
     type: "Micro Fate",
     name: "Deterioration Chance",
@@ -845,11 +777,7 @@ export const Destinies: readonly Destiny[] = [
     name: "Deterioration Duration",
     affix: "+(3-5)% additional Deterioration Duration",
   },
-  {
-    type: "Micro Fate",
-    name: "Dexterity",
-    affix: "+(12-15) Dexterity",
-  },
+  { type: "Micro Fate", name: "Dexterity", affix: "+(12-15) Dexterity" },
   {
     type: "Micro Fate",
     name: "Double Damage Chance",
@@ -876,21 +804,13 @@ export const Destinies: readonly Destiny[] = [
     name: "Erosion Resistance",
     affix: "+(5-7)% Erosion Resistance",
   },
-  {
-    type: "Micro Fate",
-    name: "Evade",
-    affix: "+(7-9)% Evasion",
-  },
+  { type: "Micro Fate", name: "Evade", affix: "+(7-9)% Evasion" },
   {
     type: "Micro Fate",
     name: "Fire Resistance",
     affix: "+(5-7)% Fire Resistance",
   },
-  {
-    type: "Micro Fate",
-    name: "Focus Speed",
-    affix: "+(7-9)% Focus Speed",
-  },
+  { type: "Micro Fate", name: "Focus Speed", affix: "+(7-9)% Focus Speed" },
   {
     type: "Micro Fate",
     name: "Growth",
@@ -902,11 +822,7 @@ export const Destinies: readonly Destiny[] = [
     affix:
       "(-36--30)% additional Ignite Damage taken\n(-36--30)% Ignite Effect received",
   },
-  {
-    type: "Micro Fate",
-    name: "Intelligence",
-    affix: "+(12-15) Intelligence",
-  },
+  { type: "Micro Fate", name: "Intelligence", affix: "+(12-15) Intelligence" },
   {
     type: "Micro Fate",
     name: "Life Regeneration",
@@ -922,11 +838,7 @@ export const Destinies: readonly Destiny[] = [
     name: "Lightning Resistance",
     affix: "+(5-7)% Lightning Resistance",
   },
-  {
-    type: "Micro Fate",
-    name: "Mana%",
-    affix: "+(6-8)% Max Mana",
-  },
+  { type: "Micro Fate", name: "Mana%", affix: "+(6-8)% Max Mana" },
   {
     type: "Micro Fate",
     name: "Max Cold Resistance",
@@ -1007,11 +919,7 @@ export const Destinies: readonly Destiny[] = [
     name: "Spell Damage",
     affix: "+(14-18)% Spell Damage\n+(14-18)% Minion Damage",
   },
-  {
-    type: "Micro Fate",
-    name: "Strength",
-    affix: "+(12-15) Strength",
-  },
+  { type: "Micro Fate", name: "Strength", affix: "+(12-15) Strength" },
   {
     type: "Micro Fate",
     name: "Trauma Damage Mitigation",
@@ -1027,9 +935,5 @@ export const Destinies: readonly Destiny[] = [
     name: "Wilt Damage Mitigation",
     affix: "(-36--30)% Wilt Damage taken",
   },
-  {
-    type: "Undetermined Fate",
-    name: "",
-    affix: "Undetermined Fate",
-  },
+  { type: "Undetermined Fate", name: "", affix: "Undetermined Fate" },
 ];

@@ -6602,13 +6602,7 @@ export const Talents: readonly Talent[] = [
     name: "",
     effect: "+3% Max Life\n+3% Max Energy Shield",
   },
-  {
-    god: "War",
-    tree: "Ranger",
-    type: "Micro",
-    name: "",
-    effect: "+9% damage",
-  },
+  { god: "War", tree: "Ranger", type: "Micro", name: "", effect: "+9% damage" },
   {
     god: "War",
     tree: "Ranger",
@@ -6672,13 +6666,7 @@ export const Talents: readonly Talent[] = [
     name: "",
     effect: "+10% chance to cause Knockbacks",
   },
-  {
-    god: "War",
-    tree: "Ranger",
-    type: "Micro",
-    name: "",
-    effect: "+9% damage",
-  },
+  { god: "War", tree: "Ranger", type: "Micro", name: "", effect: "+9% damage" },
   {
     god: "War",
     tree: "Ronin",

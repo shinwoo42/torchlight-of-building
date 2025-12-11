@@ -35,7 +35,7 @@ const extractPrismData = (html: string): Prism[] => {
 const generateDataFile = (items: Prism[]): string => {
   return `import type { Prism } from "./types";
 
-export const Prisms: readonly Prism[] = ${JSON.stringify(items, null, 2)};
+export const Prisms: readonly Prism[] = ${JSON.stringify(items)};
 `;
 };
 

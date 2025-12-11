@@ -34,7 +34,7 @@ const extractBlendData = (html: string): Blend[] => {
 const generateDataFile = (items: Blend[]): string => {
   return `import type { Blend } from "./types";
 
-export const Blends: readonly Blend[] = ${JSON.stringify(items, null, 2)};
+export const Blends: readonly Blend[] = ${JSON.stringify(items)};
 `;
 };
 

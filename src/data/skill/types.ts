@@ -1,4 +1,4 @@
-import { ActiveSkills } from "./active";
+import type { ActiveSkills } from "./active";
 
 export const SKILL_TYPES = [
   "Activation Medium",

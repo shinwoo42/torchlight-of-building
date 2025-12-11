@@ -37,7 +37,7 @@ const extractTalentData = (html: string): Talent[] => {
 const generateDataFile = (items: Talent[]): string => {
   return `import type { Talent } from "./types";
 
-export const Talents: readonly Talent[] = ${JSON.stringify(items, null, 2)};
+export const Talents: readonly Talent[] = ${JSON.stringify(items)};
 `;
 };
 

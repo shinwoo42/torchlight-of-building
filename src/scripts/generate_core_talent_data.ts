@@ -75,7 +75,7 @@ const extractCoreTalents = ($: cheerio.CheerioAPI): CoreTalent[] => {
 const generateDataFile = (talents: CoreTalent[]): string => {
   return `import type { CoreTalent } from "./types";
 
-export const CoreTalents: readonly CoreTalent[] = ${JSON.stringify(talents, null, 2)};
+export const CoreTalents: readonly CoreTalent[] = ${JSON.stringify(talents)};
 `;
 };
 

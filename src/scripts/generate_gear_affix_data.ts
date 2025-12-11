@@ -125,9 +125,9 @@ const generateEquipmentAffixFile = (
 ): string => {
   const constName = `${fileKey.toUpperCase()}_AFFIXES`;
 
-  return `import { BaseGearAffix } from "../../tli/gear_data_types";
+  return `import type { BaseGearAffix } from "../../tli/gear_data_types";
 
-export const ${constName}: readonly BaseGearAffix[] = ${JSON.stringify(affixes, null, 2)};
+export const ${constName}: readonly BaseGearAffix[] = ${JSON.stringify(affixes)};
 `;
 };
 

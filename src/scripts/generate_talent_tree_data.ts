@@ -180,7 +180,7 @@ const scrapeProfessionTree = async (
 const generateDataFile = (trees: TalentTreeData[]): string => {
   return `import type { TalentTreeData } from "./types";
 
-export const TalentTrees: readonly TalentTreeData[] = ${JSON.stringify(trees, null, 2)};
+export const TalentTrees: readonly TalentTreeData[] = ${JSON.stringify(trees)};
 `;
 };
 

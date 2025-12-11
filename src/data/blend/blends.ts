@@ -175,10 +175,7 @@ export const Blends: readonly Blend[] = [
     affix:
       "[Source] +50% Sealed Mana Compensation for Spirit Magus Skills\n+30% additional Origin of Spirit Magus Effect\nSpirit Magi +30% additional Empower Skill Effect",
   },
-  {
-    type: "Core",
-    affix: "[Starfire] +1 Ignite limit\n+30% Ignite Duration",
-  },
+  { type: "Core", affix: "[Starfire] +1 Ignite limit\n+30% Ignite Duration" },
   {
     type: "Core",
     affix:
@@ -204,43 +201,19 @@ export const Blends: readonly Blend[] = [
     affix:
       "[Winter] Deals +1% additional damage to an enemy for every 2 points of Frostbite Rating the enemy has",
   },
-  {
-    type: "Medium",
-    affix: "Multistrikes deal 16% increasing damage",
-  },
+  { type: "Medium", affix: "Multistrikes deal 16% increasing damage" },
   {
     type: "Medium",
     affix:
       "-4% to the Max Life and Energy Shield thresholds for inflicting Numbed\nInflicts 1 additional stack(s) of Numbed",
   },
-  {
-    type: "Medium",
-    affix: "+1 Jumps",
-  },
-  {
-    type: "Medium",
-    affix: "+1 all skills' level",
-  },
-  {
-    type: "Medium",
-    affix: "+1 Max Spell Burst",
-  },
-  {
-    type: "Medium",
-    affix: "+1 Minion Skill Level",
-  },
-  {
-    type: "Medium",
-    affix: "+1 to Attack Skill Level",
-  },
-  {
-    type: "Medium",
-    affix: "+1% Attack Speed per 40 Dexterity",
-  },
-  {
-    type: "Medium",
-    affix: "+1% Movement Speed per 10 Fervor Rating",
-  },
+  { type: "Medium", affix: "+1 Jumps" },
+  { type: "Medium", affix: "+1 all skills' level" },
+  { type: "Medium", affix: "+1 Max Spell Burst" },
+  { type: "Medium", affix: "+1 Minion Skill Level" },
+  { type: "Medium", affix: "+1 to Attack Skill Level" },
+  { type: "Medium", affix: "+1% Attack Speed per 40 Dexterity" },
+  { type: "Medium", affix: "+1% Movement Speed per 10 Fervor Rating" },
   {
     type: "Medium",
     affix: "+10% additional Base Damage for Two-Handed Weapons",
@@ -249,14 +222,8 @@ export const Blends: readonly Blend[] = [
     type: "Medium",
     affix: "+10% additional damage taken by enemies Frozen by you recently",
   },
-  {
-    type: "Medium",
-    affix: "+100% chance to gain Blur on defeat",
-  },
-  {
-    type: "Medium",
-    affix: "+12% Steep Strike chance.",
-  },
+  { type: "Medium", affix: "+100% chance to gain Blur on defeat" },
+  { type: "Medium", affix: "+12% Steep Strike chance." },
   {
     type: "Medium",
     affix: "+12% additional max damage\n+12% additional Max Damage for Minions",
@@ -276,19 +243,13 @@ export const Blends: readonly Blend[] = [
     affix:
       "+20% chance to cause Blinding on hit\n+25% Critical Strike Damage Mitigation against Blinded enemies",
   },
-  {
-    type: "Medium",
-    affix: "+40% Defense gained from Chest Armor",
-  },
+  { type: "Medium", affix: "+40% Defense gained from Chest Armor" },
   {
     type: "Medium",
     affix:
       "+5% Block Ratio\nRestores 1% Missing Life and Energy Shield when blocking",
   },
-  {
-    type: "Medium",
-    affix: "+8% Barrier Absorption Rate",
-  },
+  { type: "Medium", affix: "+8% Barrier Absorption Rate" },
   {
     type: "Medium",
     affix:
@@ -304,10 +265,7 @@ export const Blends: readonly Blend[] = [
     affix:
       "120% of the increase/decrease on Knockback distance is also applied to damage bonus",
   },
-  {
-    type: "Medium",
-    affix: "8% of damage is taken from Mana before life",
-  },
+  { type: "Medium", affix: "8% of damage is taken from Mana before life" },
   {
     type: "Medium",
     affix:
@@ -321,10 +279,7 @@ export const Blends: readonly Blend[] = [
     type: "Medium",
     affix: "Critical Strikes can eliminate enemies under 8% Life",
   },
-  {
-    type: "Medium",
-    affix: "Gains 1 stack(s) of Focus Blessing when Reaping",
-  },
+  { type: "Medium", affix: "Gains 1 stack(s) of Focus Blessing when Reaping" },
   {
     type: "Medium",
     affix:
@@ -334,26 +289,11 @@ export const Blends: readonly Blend[] = [
     type: "Medium",
     affix: "Immune to Ignite\nMinions are immune to Fire Damage",
   },
-  {
-    type: "Medium",
-    affix: "Max Agility Blessing Stacks +1",
-  },
-  {
-    type: "Medium",
-    affix: "Max Focus Blessing Stacks +1",
-  },
-  {
-    type: "Medium",
-    affix: "Max Tenacity Blessing Stacks +1",
-  },
-  {
-    type: "Medium",
-    affix: "Max Channeled Stacks +1",
-  },
-  {
-    type: "Medium",
-    affix: "Restores 3% of Life on defeat",
-  },
+  { type: "Medium", affix: "Max Agility Blessing Stacks +1" },
+  { type: "Medium", affix: "Max Focus Blessing Stacks +1" },
+  { type: "Medium", affix: "Max Tenacity Blessing Stacks +1" },
+  { type: "Medium", affix: "Max Channeled Stacks +1" },
+  { type: "Medium", affix: "Restores 3% of Life on defeat" },
   {
     type: "Medium",
     affix:
