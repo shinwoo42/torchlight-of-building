@@ -2,7 +2,15 @@ import { execSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
-import type { BaseSkill } from "../data/skill/types";
+import {
+  type BaseSkill,
+  type MagnificentSupportSkill,
+  type NobleSupportSkill,
+  SKILL_TAGS,
+  type SkillTag,
+  type SupportSkill,
+  type SupportTarget,
+} from "../data/skill/types";
 import { readCodexHtml } from "./lib/codex";
 
 interface RawSkill {
@@ -12,22 +20,296 @@ interface RawSkill {
   description: string[];
 }
 
+// Set for fast tag validation
+const VALID_TAGS = new Set<string>(SKILL_TAGS);
+
+// Compound tags that contain spaces (must be checked before splitting by whitespace)
+const COMPOUND_TAGS: SkillTag[] = [
+  "Base Skill",
+  "Enhanced Skill",
+  "Shadow Strike",
+  "Slash-Strike",
+  "Spirit Magus",
+  "Synthetic Troop",
+];
+
+// Edge case: description uses "Slash Strike" but tag is "Slash-Strike"
+const DESCRIPTION_TO_TAG: Record<string, SkillTag> = {
+  "Slash Strike": "Slash-Strike",
+};
+
+const validateTag = (tag: string, skillName: string): SkillTag => {
+  if (!VALID_TAGS.has(tag)) {
+    throw new Error(`Unknown tag "${tag}" found in skill "${skillName}"`);
+  }
+  return tag as SkillTag;
+};
+
+// Parse tags from a string like "Melee Attack" or "Horizontal Projectile"
+const parseTagsFromString = (
+  tagString: string,
+  skillName: string,
+): SkillTag[] => {
+  const tags: SkillTag[] = [];
+  let remaining = tagString.trim();
+
+  // First check for edge case mappings (e.g., "Slash Strike" -> "Slash-Strike")
+  for (const [descText, tagValue] of Object.entries(DESCRIPTION_TO_TAG)) {
+    if (remaining.includes(descText)) {
+      tags.push(tagValue);
+      remaining = remaining.replace(descText, "").trim();
+    }
+  }
+
+  for (const compoundTag of COMPOUND_TAGS) {
+    if (remaining.includes(compoundTag)) {
+      tags.push(compoundTag);
+      remaining = remaining.replace(compoundTag, "").trim();
+    }
+  }
+
+  // Finally split remaining by spaces for single-word tags
+  const singleTags = remaining.split(/\s+/).filter((t) => t.length > 0);
+  for (const tag of singleTags) {
+    tags.push(validateTag(tag, skillName));
+  }
+
+  return tags;
+};
+
+interface ParsedSupportTargets {
+  supportTargets: SupportTarget[];
+  cannotSupportTargets: SupportTarget[];
+}
+
+const parseSupportTargets = (
+  description: string,
+  skillName: string,
+): ParsedSupportTargets => {
+  const supportTargets: SupportTarget[] = [];
+  const cannotSupportTargets: SupportTarget[] = [];
+
+  // Search the entire first description part (not just first line)
+  // as "Cannot support" clauses may appear on subsequent lines
+
+  // Special patterns (check these first, in order of specificity)
+  const specialPatterns: Array<{
+    pattern: RegExp;
+    targets: SupportTarget[];
+    isCannotSupport?: boolean;
+  }> = [
+    // DoT + Ailment combinations (check before pure DoT)
+    {
+      pattern: /Supports DoT Skills and skills that can inflict Ailment/i,
+      targets: ["dot_and_ailment"],
+    },
+    {
+      pattern:
+        /Supports skills that deal Damage Over Time or inflict Ailments/i,
+      targets: ["dot_and_ailment"],
+    },
+    // Hit enemies + DoT combination
+    {
+      pattern: /Supports skills that hit enemies or deal Damage Over Time/i,
+      targets: ["hit_enemies", "dot"],
+    },
+    // Spell + Spell Burst combination
+    {
+      pattern: /Supports Spell Skills or skills that can activate Spell Burst/i,
+      targets: [{ tags: ["Spell"] }, "spell_burst"],
+    },
+    // Pure DoT (after combinations)
+    {
+      pattern: /Supports? DoT Skills?\.?/i,
+      targets: ["dot"],
+    },
+    // Summon patterns
+    {
+      pattern: /Supports skills that summon Spirit Magus/i,
+      targets: ["summon_spirit_magus"],
+    },
+    {
+      pattern: /Supports skills that summon Synthetic Troops/i,
+      targets: ["summon_synthetic_troops"],
+    },
+    {
+      pattern: /Supports skills that summon Minions/i,
+      targets: ["summon_minions"],
+    },
+    // Skill type patterns (Active/Passive are skill types, not tags)
+    {
+      pattern: /Supports? Active Skills?/i,
+      targets: ["active_skill"],
+    },
+    {
+      pattern: /Supports? Passive Skills?/i,
+      targets: ["passive_skill"],
+    },
+    // Generic patterns
+    {
+      pattern: /Supports any skill/i,
+      targets: ["any"],
+    },
+    {
+      pattern: /Supports skills that hit enemies/i,
+      targets: ["hit_enemies"],
+    },
+    {
+      pattern: /Supports skills that deal damage/i,
+      targets: ["deal_damage"],
+    },
+  ];
+
+  // Check special patterns
+  for (const { pattern, targets: patternTargets } of specialPatterns) {
+    if (pattern.test(description)) {
+      supportTargets.push(...patternTargets);
+      break; // Only match one special pattern for support targets
+    }
+  }
+
+  // If no special pattern matched, parse generic tag patterns
+  if (supportTargets.length === 0) {
+    // Match "Supports? <tags> Skills?" pattern with greedy match to capture full clause
+    // Handle both "Support" and "Supports", "Skill" and "Skills"
+    const supportsMatch = description.match(
+      /Supports?\s+(.+?Skills?)(?:\.|,|\n|$)/i,
+    );
+
+    if (supportsMatch?.[1]) {
+      const fullClause = supportsMatch[1];
+
+      // Check for "Skills or" pattern (e.g., "Attack Skills or Spell Skills")
+      if (/Skills?\s+or\s+/i.test(fullClause)) {
+        // Split by "Skills or" to get each target group
+        const parts = fullClause
+          .split(/Skills?\s+or\s+/i)
+          .map((p) => p.replace(/Skills?$/i, "").trim())
+          .filter((p) => p.length > 0);
+
+        for (const part of parts) {
+          const tags = parseTagsFromString(part, skillName);
+          if (tags.length > 0) {
+            supportTargets.push({ tags });
+          }
+        }
+      }
+      // Check for "and" pattern between tags (creates separate targets)
+      // e.g., "Attack and Spell Skills"
+      else if (fullClause.includes(" and ")) {
+        const tagsPart = fullClause.replace(/Skills?$/i, "").trim();
+        const andParts = tagsPart
+          .split(/\s+and\s+/i)
+          .map((p) => p.trim())
+          .filter((p) => p.length > 0);
+
+        for (const part of andParts) {
+          const tags = parseTagsFromString(part, skillName);
+          if (tags.length > 0) {
+            supportTargets.push({ tags });
+          }
+        }
+      }
+      // Adjacent tags (single target with multiple tags)
+      // e.g., "Melee Attack Skills"
+      else {
+        const tagsPart = fullClause.replace(/Skills?$/i, "").trim();
+        const tags = parseTagsFromString(tagsPart, skillName);
+        if (tags.length > 0) {
+          supportTargets.push({ tags });
+        }
+      }
+    }
+  }
+
+  // Parse "Cannot support" patterns
+  // Use greedy match to capture full clause like "Channeled Skills or Attack Skills"
+  const cannotMatch = description.match(
+    /Cannot support\s+(.+?Skills?)(?:\.|,|\n|$)/i,
+  );
+  if (cannotMatch?.[1]) {
+    const fullClause = cannotMatch[1];
+
+    // Check for "Skills or" pattern (e.g., "Channeled Skills or Attack Skills")
+    if (/Skills?\s+or\s+/i.test(fullClause)) {
+      // Split by "Skills or" to get each target group
+      const parts = fullClause
+        .split(/Skills?\s+or\s+/i)
+        .map((p) => p.replace(/Skills?$/i, "").trim())
+        .filter((p) => p.length > 0);
+
+      for (const part of parts) {
+        const tags = parseTagsFromString(part, skillName);
+        if (tags.length > 0) {
+          cannotSupportTargets.push({ tags });
+        }
+      }
+    }
+    // Check for simple "or" pattern (e.g., "Mobility or Channeled Skills")
+    else if (fullClause.includes(" or ")) {
+      const tagsPart = fullClause.replace(/Skills?$/i, "").trim();
+      const orParts = tagsPart
+        .split(/\s+or\s+/i)
+        .map((p) => p.trim())
+        .filter((p) => p.length > 0);
+
+      for (const part of orParts) {
+        const tags = parseTagsFromString(part, skillName);
+        if (tags.length > 0) {
+          cannotSupportTargets.push({ tags });
+        }
+      }
+    } else {
+      const tagsPart = fullClause.replace(/Skills?$/i, "").trim();
+      const tags = parseTagsFromString(tagsPart, skillName);
+      if (tags.length > 0) {
+        cannotSupportTargets.push({ tags });
+      }
+    }
+  }
+
+  return { supportTargets, cannotSupportTargets };
+};
+
+// Parse the specific skill name from "Supports <SkillName>." for Magnificent/Noble supports
+const parseSkillSupportTarget = (description: string): string => {
+  const firstLine = description.split("\n")[0] ?? "";
+  const match = firstLine.match(/^Supports\s+(.+?)\./);
+  return match?.[1] ?? "";
+};
+
 // Maps JSON type → file key and type names
+// supportType: "none" | "generic" | "magnificent" | "noble"
 const SKILL_TYPE_CONFIG = {
-  Active: { fileKey: "active", constName: "ActiveSkills" },
-  Passive: { fileKey: "passive", constName: "PassiveSkills" },
-  Support: { fileKey: "support", constName: "SupportSkills" },
+  Active: {
+    fileKey: "active",
+    constName: "ActiveSkills",
+    supportType: "none",
+  },
+  Passive: {
+    fileKey: "passive",
+    constName: "PassiveSkills",
+    supportType: "none",
+  },
+  Support: {
+    fileKey: "support",
+    constName: "SupportSkills",
+    supportType: "generic",
+  },
   "Support (Magnificent)": {
     fileKey: "support_magnificent",
     constName: "MagnificentSupportSkills",
+    supportType: "magnificent",
   },
   "Support (Noble)": {
     fileKey: "support_noble",
     constName: "NobleSupportSkills",
+    supportType: "noble",
   },
   "Activation Medium": {
     fileKey: "activation_medium",
     constName: "ActivationMediumSkills",
+    supportType: "none",
   },
 } as const;
 
@@ -86,13 +368,43 @@ const extractSkillData = (html: string): RawSkill[] => {
   return skills;
 };
 
-const generateSkillTypeFile = (
+const generateBaseSkillFile = (
   constName: string,
   skills: BaseSkill[],
 ): string => {
-  return `import { BaseSkill } from "./types";
+  return `import type { BaseSkill } from "./types";
 
 export const ${constName}: readonly BaseSkill[] = ${JSON.stringify(skills, null, 2)};
+`;
+};
+
+const generateSupportSkillFile = (
+  constName: string,
+  skills: SupportSkill[],
+): string => {
+  return `import type { SupportSkill } from "./types";
+
+export const ${constName}: readonly SupportSkill[] = ${JSON.stringify(skills, null, 2)};
+`;
+};
+
+const generateMagnificentSupportSkillFile = (
+  constName: string,
+  skills: MagnificentSupportSkill[],
+): string => {
+  return `import type { MagnificentSupportSkill } from "./types";
+
+export const ${constName}: readonly MagnificentSupportSkill[] = ${JSON.stringify(skills, null, 2)};
+`;
+};
+
+const generateNobleSupportSkillFile = (
+  constName: string,
+  skills: NobleSupportSkill[],
+): string => {
+  return `import type { NobleSupportSkill } from "./types";
+
+export const ${constName}: readonly NobleSupportSkill[] = ${JSON.stringify(skills, null, 2)};
 `;
 };
 
@@ -104,8 +416,14 @@ const main = async (): Promise<void> => {
   const rawData = extractSkillData(html);
   console.log(`Extracted ${rawData.length} skills`);
 
-  // Group by skill type
-  const grouped = new Map<SkillTypeKey, BaseSkill[]>();
+  // Group by skill type - separate maps for different skill interfaces
+  const baseSkillGroups = new Map<SkillTypeKey, BaseSkill[]>();
+  const supportSkillGroups = new Map<SkillTypeKey, SupportSkill[]>();
+  const magnificentSupportSkillGroups = new Map<
+    SkillTypeKey,
+    MagnificentSupportSkill[]
+  >();
+  const nobleSupportSkillGroups = new Map<SkillTypeKey, NobleSupportSkill[]>();
 
   for (const raw of rawData) {
     const skillType = raw.type as SkillTypeKey;
@@ -115,39 +433,140 @@ const main = async (): Promise<void> => {
       continue;
     }
 
-    const skillEntry: BaseSkill = {
-      type: raw.type as BaseSkill["type"],
-      name: raw.name,
-      tags: raw.tags as unknown as BaseSkill["tags"],
-      description: raw.description,
-    };
+    const config = SKILL_TYPE_CONFIG[skillType];
+    const firstDescription = raw.description[0] ?? "";
 
-    if (!grouped.has(skillType)) {
-      grouped.set(skillType, []);
+    if (config.supportType === "generic") {
+      // Parse support targets for generic support skills
+      const { supportTargets, cannotSupportTargets } = parseSupportTargets(
+        firstDescription,
+        raw.name,
+      );
+
+      const skillEntry: SupportSkill = {
+        type: raw.type as SupportSkill["type"],
+        name: raw.name,
+        tags: raw.tags as unknown as SupportSkill["tags"],
+        description: raw.description,
+        supportTargets,
+        cannotSupportTargets,
+      };
+
+      if (!supportSkillGroups.has(skillType)) {
+        supportSkillGroups.set(skillType, []);
+      }
+      supportSkillGroups.get(skillType)?.push(skillEntry);
+    } else if (config.supportType === "magnificent") {
+      const supportTarget = parseSkillSupportTarget(firstDescription);
+
+      const skillEntry: MagnificentSupportSkill = {
+        type: raw.type as MagnificentSupportSkill["type"],
+        name: raw.name,
+        tags: raw.tags as unknown as MagnificentSupportSkill["tags"],
+        description: raw.description,
+        supportTarget,
+      };
+
+      if (!magnificentSupportSkillGroups.has(skillType)) {
+        magnificentSupportSkillGroups.set(skillType, []);
+      }
+      magnificentSupportSkillGroups.get(skillType)?.push(skillEntry);
+    } else if (config.supportType === "noble") {
+      const supportTarget = parseSkillSupportTarget(firstDescription);
+
+      const skillEntry: NobleSupportSkill = {
+        type: raw.type as NobleSupportSkill["type"],
+        name: raw.name,
+        tags: raw.tags as unknown as NobleSupportSkill["tags"],
+        description: raw.description,
+        supportTarget,
+      };
+
+      if (!nobleSupportSkillGroups.has(skillType)) {
+        nobleSupportSkillGroups.set(skillType, []);
+      }
+      nobleSupportSkillGroups.get(skillType)?.push(skillEntry);
+    } else {
+      // Base skills (supportType === "none")
+      const skillEntry: BaseSkill = {
+        type: raw.type as BaseSkill["type"],
+        name: raw.name,
+        tags: raw.tags as unknown as BaseSkill["tags"],
+        description: raw.description,
+      };
+
+      if (!baseSkillGroups.has(skillType)) {
+        baseSkillGroups.set(skillType, []);
+      }
+      baseSkillGroups.get(skillType)?.push(skillEntry);
     }
-    grouped.get(skillType)?.push(skillEntry);
   }
 
-  console.log(`Grouped into ${grouped.size} skill types`);
+  const totalGroups =
+    baseSkillGroups.size +
+    supportSkillGroups.size +
+    magnificentSupportSkillGroups.size +
+    nobleSupportSkillGroups.size;
+  console.log(`Grouped into ${totalGroups} skill types`);
 
   // Create output directory
   const outDir = join(process.cwd(), "src", "data", "skill");
   await mkdir(outDir, { recursive: true });
 
-  // Generate individual skill type files
-  for (const [skillType, skills] of grouped) {
+  // Generate base skill type files
+  for (const [skillType, skills] of baseSkillGroups) {
     const config = SKILL_TYPE_CONFIG[skillType];
     const fileName = `${config.fileKey}.ts`;
     const filePath = join(outDir, fileName);
-    const content = generateSkillTypeFile(config.constName, skills);
+    const content = generateBaseSkillFile(config.constName, skills);
 
     await writeFile(filePath, content, "utf-8");
-    console.log(`Generated ${fileName} (${skills.length} skills)`);
+    console.log(`Generated ${fileName} (${skills.length} base skills)`);
+  }
+
+  // Generate generic support skill type files
+  for (const [skillType, skills] of supportSkillGroups) {
+    const config = SKILL_TYPE_CONFIG[skillType];
+    const fileName = `${config.fileKey}.ts`;
+    const filePath = join(outDir, fileName);
+    const content = generateSupportSkillFile(config.constName, skills);
+
+    await writeFile(filePath, content, "utf-8");
+    console.log(`Generated ${fileName} (${skills.length} support skills)`);
+  }
+
+  // Generate magnificent support skill type files
+  for (const [skillType, skills] of magnificentSupportSkillGroups) {
+    const config = SKILL_TYPE_CONFIG[skillType];
+    const fileName = `${config.fileKey}.ts`;
+    const filePath = join(outDir, fileName);
+    const content = generateMagnificentSupportSkillFile(
+      config.constName,
+      skills,
+    );
+
+    await writeFile(filePath, content, "utf-8");
+    console.log(
+      `Generated ${fileName} (${skills.length} magnificent support skills)`,
+    );
+  }
+
+  // Generate noble support skill type files
+  for (const [skillType, skills] of nobleSupportSkillGroups) {
+    const config = SKILL_TYPE_CONFIG[skillType];
+    const fileName = `${config.fileKey}.ts`;
+    const filePath = join(outDir, fileName);
+    const content = generateNobleSupportSkillFile(config.constName, skills);
+
+    await writeFile(filePath, content, "utf-8");
+    console.log(
+      `Generated ${fileName} (${skills.length} noble support skills)`,
+    );
   }
 
   console.log("\nCode generation complete!");
   console.log(
-    `Generated ${grouped.size} skill type files with ${rawData.length} total skills`,
+    `Generated ${totalGroups} skill type files with ${rawData.length} total skills`,
   );
 
   execSync("pnpm format", { stdio: "inherit" });

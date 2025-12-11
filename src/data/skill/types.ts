@@ -64,9 +64,34 @@ export interface BaseSkill {
 }
 
 // Multiple skill tags means the target must have all specified tags
-export type SupportTarget = SkillTag[] | "deal_damage" | "hit_enemies";
+export type SupportTarget =
+  | { tags: SkillTag[] }
+  | "active_skill"
+  | "any"
+  | "deal_damage"
+  | "dot"
+  | "dot_and_ailment"
+  | "hit_enemies"
+  | "inflict_ailment"
+  | "passive_skill"
+  | "spell_burst"
+  | "summon_minions"
+  | "summon_spirit_magus"
+  | "summon_synthetic_troops";
 
 export interface SupportSkill extends BaseSkill {
-  // support can target skill if any of the support targets match
+  // support can target skill if any of the targets match
   supportTargets: SupportTarget[];
+  // cannot support any of the matched targets (takes precedence over supportTargets)
+  cannotSupportTargets: SupportTarget[];
+}
+
+export interface MagnificentSupportSkill extends BaseSkill {
+  // name of skill that can be supported
+  supportTarget: string;
+}
+
+export interface NobleSupportSkill extends BaseSkill {
+  // name of skill that can be supported
+  supportTarget: string;
 }
