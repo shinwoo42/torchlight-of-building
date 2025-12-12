@@ -412,4 +412,4 @@ export const ActivationMediumSkills = [
     supportTargets: [{ tags: ["Spell"], requiredKind: "deal_damage" }],
     cannotSupportTargets: [{ skillType: "passive" }, { tags: ["Channeled"] }],
   },
-] as const satisfies readonly SupportSkill[];
+] as const satisfies readonly (SupportSkill & Record<string, unknown>)[];

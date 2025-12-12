@@ -2127,4 +2127,4 @@ export const ActiveSkills = [
     ],
     kinds: ["hit_enemies"],
   },
-] as const satisfies readonly ActiveSkill[];
+] as const satisfies readonly (ActiveSkill & Record<string, unknown>)[];

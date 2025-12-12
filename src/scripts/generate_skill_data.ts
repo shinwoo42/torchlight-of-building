@@ -519,7 +519,7 @@ const generateActiveSkillFile = (
 ): string => {
   return `import type { ActiveSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly ActiveSkill[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (ActiveSkill & Record<string, unknown>)[];
 `;
 };
 
@@ -529,7 +529,7 @@ const generateBaseSkillFile = (
 ): string => {
   return `import type { BaseSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly BaseSkill[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (BaseSkill & Record<string, unknown>)[];
 `;
 };
 
@@ -539,7 +539,7 @@ const generateSupportSkillFile = (
 ): string => {
   return `import type { SupportSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly SupportSkill[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (SupportSkill & Record<string, unknown>)[];
 `;
 };
 
@@ -549,7 +549,7 @@ const generateMagnificentSupportSkillFile = (
 ): string => {
   return `import type { MagnificentSupportSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly MagnificentSupportSkill[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (MagnificentSupportSkill & Record<string, unknown>)[];
 `;
 };
 
@@ -559,7 +559,7 @@ const generateNobleSupportSkillFile = (
 ): string => {
   return `import type { NobleSupportSkill } from "./types";
 
-export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly NobleSupportSkill[];
+export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies readonly (NobleSupportSkill & Record<string, unknown>)[];
 `;
 };
 

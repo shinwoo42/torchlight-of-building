@@ -1335,4 +1335,4 @@ export const SupportSkills = [
     supportTargets: [{ tags: ["Projectile"] }],
     cannotSupportTargets: [],
   },
-] as const satisfies readonly SupportSkill[];
+] as const satisfies readonly (SupportSkill & Record<string, unknown>)[];
