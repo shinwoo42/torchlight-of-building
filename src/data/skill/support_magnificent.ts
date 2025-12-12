@@ -1305,27 +1305,6 @@ export const MagnificentSupportSkills = [
   },
   {
     type: "Support (Magnificent)",
-    name: "Whirlwind Blade: Swift Slash (Magnificent)",
-    tags: ["Physical"],
-    description: [
-      "Supports Whirlwind Blade.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\n0.05 s Damage Interval for the supported skill's Projectiles\nBonuses and additional bonuses to Cast Speed are also applied to the Damage Interval of the supported skill's Projectiles",
-      "0.05 s Damage Interval for the supported skill's Projectiles\nBonuses and additional bonuses to Cast Speed are also applied to the Damage Interval of the supported skill's Projectiles",
-      "+(26–28)% additional damage for the supported skill",
-    ],
-    supportTarget: "Whirlwind Blade",
-  },
-  {
-    type: "Support (Magnificent)",
-    name: "Whirlwind Blade: Unsheath (Magnificent)",
-    tags: ["Physical"],
-    description: [
-      "Supports Whirlwind Blade.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill",
-      "+(38–40)% additional damage when the supported skill's Projectiles are flying in the air",
-    ],
-    supportTarget: "Whirlwind Blade",
-  },
-  {
-    type: "Support (Magnificent)",
     name: "Whirlwind: Endless Wind (Magnificent)",
     tags: ["Physical"],
     description: [
@@ -1345,6 +1324,27 @@ export const MagnificentSupportSkills = [
       "When the supported skill is channeled, +(1.5–1.9)% chance to avoid damage for every channeled stack, up to 8 time(s)",
     ],
     supportTarget: "Whirlwind",
+  },
+  {
+    type: "Support (Magnificent)",
+    name: "Whirlwind Blade: Swift Slash (Magnificent)",
+    tags: ["Physical"],
+    description: [
+      "Supports Whirlwind Blade.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\n0.05 s Damage Interval for the supported skill's Projectiles\nBonuses and additional bonuses to Cast Speed are also applied to the Damage Interval of the supported skill's Projectiles",
+      "0.05 s Damage Interval for the supported skill's Projectiles\nBonuses and additional bonuses to Cast Speed are also applied to the Damage Interval of the supported skill's Projectiles",
+      "+(26–28)% additional damage for the supported skill",
+    ],
+    supportTarget: "Whirlwind Blade",
+  },
+  {
+    type: "Support (Magnificent)",
+    name: "Whirlwind Blade: Unsheath (Magnificent)",
+    tags: ["Physical"],
+    description: [
+      "Supports Whirlwind Blade.\nThis skill can only be installed in the third Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill",
+      "+(38–40)% additional damage when the supported skill's Projectiles are flying in the air",
+    ],
+    supportTarget: "Whirlwind Blade",
   },
   {
     type: "Support (Magnificent)",

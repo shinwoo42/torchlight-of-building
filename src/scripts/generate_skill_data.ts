@@ -12,7 +12,7 @@ import {
   type SupportSkill,
   type SupportTarget,
 } from "../data/skill/types";
-import { readCodexHtml } from "./lib/codex";
+import { readAllTlidbSkills, type TlidbSkillFile } from "./lib/tlidb";
 import { classifyWithRegex } from "./skill_kind_patterns";
 
 interface RawSkill {
@@ -403,57 +403,114 @@ const SKILL_TYPE_CONFIG = {
 
 type SkillTypeKey = keyof typeof SKILL_TYPE_CONFIG;
 
-const extractSkillData = (html: string): RawSkill[] => {
-  const $ = cheerio.load(html);
-  const skills: RawSkill[] = [];
+// Map tlidb directory names to skill types
+const DIRECTORY_TO_SKILL_TYPE: Record<string, SkillTypeKey> = {
+  active: "Active",
+  passive: "Passive",
+  support: "Support",
+  magnificent_support: "Support (Magnificent)",
+  noble_support: "Support (Noble)",
+  activation_medium: "Activation Medium",
+};
 
-  const rows = $('#skill tbody tr[class*="thing"]');
-  console.log(`Found ${rows.length} skill rows`);
+// Tags that appear in tlidb HTML but are not actual skill tags
+const NON_SKILL_TAGS = new Set(["Support", "Activation Medium"]);
 
-  rows.each((_, row) => {
-    const tds = $(row).find("td");
+const extractSkillFromTlidbHtml = (
+  file: TlidbSkillFile,
+): RawSkill | undefined => {
+  const skillType = DIRECTORY_TO_SKILL_TYPE[file.category];
+  if (!skillType) {
+    console.warn(`Unknown category: ${file.category}`);
+    return undefined;
+  }
 
-    if (tds.length !== 4) {
-      console.warn(`Skipping row with ${tds.length} columns (expected 4)`);
-      return;
+  const $ = cheerio.load(file.html);
+
+  // Find the card with SS10Season (current season) - each skill has multiple season versions
+  let currentCard = $("div.card.ui_item.popupItem")
+    .filter(
+      (_, el) => $(el).find("div.item_ver").text().trim() === "SS10Season",
+    )
+    .first();
+
+  // Fallback to first non-previousItem card if SS10Season not found
+  if (currentCard.length === 0) {
+    currentCard = $("div.card.ui_item.popupItem:not(.previousItem)").first();
+  }
+
+  if (currentCard.length === 0) {
+    return undefined;
+  }
+
+  // Extract name from card-title
+  const name = currentCard.find("h5.card-title").first().text().trim();
+  if (!name) {
+    return undefined;
+  }
+
+  // Extract tags from span.tag elements, filtering out non-skill tags
+  const tags: string[] = [];
+  currentCard.find("span.tag").each((_, elem) => {
+    const tag = $(elem).text().trim();
+    if (tag && !NON_SKILL_TAGS.has(tag)) {
+      tags.push(tag);
     }
-
-    const tags: string[] = [];
-    $(tds[2])
-      .find("span.multiVal")
-      .each((_, elem) => {
-        tags.push($(elem).text().replace(/\s+/g, " ").trim());
-      });
-
-    // Extract description from Effect column, split by <hr> tags
-    const effectHtml = $(tds[3]).html() ?? "";
-    const description = effectHtml
-      .split(/<hr\s*\/?>/i)
-      .map((block) => {
-        // Replace <br> tags with newlines
-        const withNewlines = block.replace(/<br\s*\/?>/gi, "\n");
-        // Strip remaining HTML tags and get text
-        const text = cheerio.load(withNewlines).text();
-        // Trim each line and remove empty lines
-        return text
-          .split("\n")
-          .map((line) => line.replace(/\s+/g, " ").trim())
-          .filter((line) => line.length > 0)
-          .join("\n");
-      })
-      .filter((block) => block.length > 0);
-
-    const skill: RawSkill = {
-      type: $(tds[0]).text().trim(),
-      name: $(tds[1]).text().trim(),
-      tags,
-      description,
-    };
-
-    skills.push(skill);
   });
 
-  return skills;
+  // Extract Main Stat and add to tags
+  currentCard.find("div.d-flex").each((_, elem) => {
+    const label = $(elem).find("div").first().text().trim();
+    if (label === "Main Stat:" || label === "Main Stat") {
+      const value = $(elem).find("div.ps-2").text().trim();
+      // Can be comma-separated like "Dexterity, Intelligence"
+      const stats = value
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      tags.push(...stats);
+    }
+  });
+
+  // Remove <small class="description"> elements (level scaling info)
+  currentCard.find("small.description").remove();
+
+  // Extract description from explicitMod divs
+  const description: string[] = [];
+  currentCard.find("div.explicitMod").each((_, elem) => {
+    // Remove tier spans (empty visual indicators)
+    $(elem).find("span.tier").remove();
+
+    // Get HTML content
+    let blockHtml = $(elem).html() ?? "";
+
+    // Replace <br> with newlines
+    blockHtml = blockHtml.replace(/<br\s*\/?>/gi, "\n");
+
+    // Load into cheerio to get text content (strips remaining HTML)
+    let text = cheerio.load(blockHtml).text();
+
+    // Convert literal \n strings to actual newlines (some HTML has these)
+    text = text.replace(/\\n/g, "\n");
+
+    // Clean up: normalize whitespace per line, filter empty lines
+    const cleaned = text
+      .split("\n")
+      .map((line) => line.replace(/\s+/g, " ").trim())
+      .filter((line) => line.length > 0)
+      .join("\n");
+
+    if (cleaned) {
+      description.push(cleaned);
+    }
+  });
+
+  return {
+    type: skillType,
+    name,
+    tags,
+    description,
+  };
 };
 
 const generateActiveSkillFile = (
@@ -507,11 +564,24 @@ export const ${constName} = ${JSON.stringify(skills, null)} as const satisfies r
 };
 
 const main = async (): Promise<void> => {
-  console.log("Reading HTML file...");
-  const html = await readCodexHtml();
+  console.log("Reading tlidb skill HTML files...");
+  const allFiles = await readAllTlidbSkills();
+  console.log(`Found ${allFiles.length} skill files`);
 
   console.log("Extracting skill data...");
-  const rawData = extractSkillData(html);
+  const rawData: RawSkill[] = [];
+
+  for (const file of allFiles) {
+    const skill = extractSkillFromTlidbHtml(file);
+    if (skill) {
+      rawData.push(skill);
+    } else {
+      console.warn(
+        `Failed to extract skill from ${file.category}/${file.fileName}`,
+      );
+    }
+  }
+
   console.log(`Extracted ${rawData.length} skills`);
 
   // Group by skill type - separate maps for different skill interfaces

@@ -1396,6 +1396,17 @@ export const NobleSupportSkills = [
   },
   {
     type: "Support (Noble)",
+    name: "Whirlwind: Whirling Blade (Noble)",
+    tags: ["Physical"],
+    description: [
+      "Supports Whirlwind.\nThis skill can only be installed in the fifth Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\nThe supported skill now has the Projectile tag. Wind Blade Quantity is not affected by Projectile Quantity bonuses",
+      "The supported skill now has the Projectile tag. Wind Blade Quantity is not affected by Projectile Quantity bonuses",
+      "+(33–35)% additional damage for the supported skill",
+    ],
+    supportTarget: "Whirlwind",
+  },
+  {
+    type: "Support (Noble)",
     name: "Whirlwind Blade: Circling (Noble)",
     tags: ["Physical"],
     description: [
@@ -1414,17 +1425,6 @@ export const NobleSupportSkills = [
       "For every 0.2s duration of the supported skill's Projectiles, +(3.3–3.5)% additional damage, up to 25 time(s)",
     ],
     supportTarget: "Whirlwind Blade",
-  },
-  {
-    type: "Support (Noble)",
-    name: "Whirlwind: Whirling Blade (Noble)",
-    tags: ["Physical"],
-    description: [
-      "Supports Whirlwind.\nThis skill can only be installed in the fifth Support Skill Slot of each Active Skill.\n+20% additional damage for the supported skill\nThe supported skill now has the Projectile tag. Wind Blade Quantity is not affected by Projectile Quantity bonuses",
-      "The supported skill now has the Projectile tag. Wind Blade Quantity is not affected by Projectile Quantity bonuses",
-      "+(33–35)% additional damage for the supported skill",
-    ],
-    supportTarget: "Whirlwind",
   },
   {
     type: "Support (Noble)",

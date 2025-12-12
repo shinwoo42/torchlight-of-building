@@ -798,17 +798,6 @@ export const SupportSkills = [
   },
   {
     type: "Support",
-    name: "Precise Restrain",
-    tags: [],
-    description: [
-      "Supports Passive Skill.\n15.5% Sealed Mana Compensation for the supported skill",
-      "15.5% Sealed Mana Compensation for the supported skill",
-    ],
-    supportTargets: [{ skillType: "passive" }],
-    cannotSupportTargets: [],
-  },
-  {
-    type: "Support",
     name: "Precise: Concentrated",
     tags: ["Aura"],
     description: [
@@ -959,6 +948,17 @@ export const SupportSkills = [
       "48.2% Origin of Spirit Magus effect for the supported skill\n-20% Sealed Mana Compensation for the supported skill",
     ],
     supportTargets: [{ tags: ["Spirit Magus"] }],
+    cannotSupportTargets: [],
+  },
+  {
+    type: "Support",
+    name: "Precise Restrain",
+    tags: [],
+    description: [
+      "Supports Passive Skill.\n15.5% Sealed Mana Compensation for the supported skill",
+      "15.5% Sealed Mana Compensation for the supported skill",
+    ],
+    supportTargets: [{ skillType: "passive" }],
     cannotSupportTargets: [],
   },
   {

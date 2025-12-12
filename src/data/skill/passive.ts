@@ -161,15 +161,6 @@ export const PassiveSkills = [
   },
   {
     type: "Passive",
-    name: "Precise Projectiles",
-    tags: ["Aura", "Area", "Projectile"],
-    description: [
-      "Activates the Aura, you and allies within a certain area gain the following buff:\n16% additional Projectile Damage, 16% additional Ailment Damage by Projectiles, and 10% Projectile Speed.",
-      "Activates the Aura, you and allies within a certain area gain the following buff:\n+35% additional Projectile Damage\n+35% additional Ailment Damage dealt by Projectiles\n+10% Projectile Speed",
-    ],
-  },
-  {
-    type: "Passive",
     name: "Precise: Acuteness Focus",
     tags: ["Area", "Focus", "Physical", "Attack", "Strength"],
     description: [
@@ -398,6 +389,15 @@ export const PassiveSkills = [
     description: [
       "Activates the Aura, you and allies within a certain area gain the following buff:\n15% additional Physical Damage. 30% chance to inflict Paralysis on hit.",
       "Activates the Aura, you and allies within a certain area gain the following buff:\n+34% additional Physical Damage\n+30% chance to inflict Paralysis on hit",
+    ],
+  },
+  {
+    type: "Passive",
+    name: "Precise Projectiles",
+    tags: ["Aura", "Area", "Projectile"],
+    description: [
+      "Activates the Aura, you and allies within a certain area gain the following buff:\n16% additional Projectile Damage, 16% additional Ailment Damage by Projectiles, and 10% Projectile Speed.",
+      "Activates the Aura, you and allies within a certain area gain the following buff:\n+35% additional Projectile Damage\n+35% additional Ailment Damage dealt by Projectiles\n+10% Projectile Speed",
     ],
   },
   {

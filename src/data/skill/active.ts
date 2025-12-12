@@ -484,8 +484,8 @@ export const ActiveSkills = [
       "Area",
       "Physical",
       "Combo",
-      "Dexterity",
       "Persistent",
+      "Dexterity",
     ],
     description: [
       "Combo Starter 1: Unleashes a sword slash forward, dealing 343% Weapon Attack Damage.",
@@ -1611,8 +1611,8 @@ export const ActiveSkills = [
       "Fire",
       "Beam",
       "Combo",
-      "Intelligence",
       "Persistent",
+      "Intelligence",
     ],
     description: [
       "Combo Starter 1: Fires a Fire Beam at an enemy, dealing 461-769 Spell Physical Damage and inflicting Serpent Bind.",
@@ -1784,8 +1784,8 @@ export const ActiveSkills = [
     name: "Stoneskin",
     tags: ["Persistent", "Defensive", "Spell"],
     description: [
-      "Casts the skill and gains defensive effect: Absorbs Absorb 70% damage taken. Cannot absorb Damage Over Time.1350 damaged absorbed of damage taken, up to Absorb 70% damage taken. Cannot absorb Damage Over Time.1350 damaged absorbed. Lasts 6s.",
-      "Casts the skill and gains defensive effect: Absorbs Absorb 70% damage taken. Cannot absorb Damage Over Time.1350 damaged absorbed of damage taken.\nAbsorbs up to Absorb 70% damage taken. Cannot absorb Damage Over Time.1350 damaged absorbed damage.\nLasts 6s.",
+      "Casts the skill and gains defensive effect: Absorbs Absorb 70% damage taken. Cannot absorb Damage Over Time.\n1350 damaged absorbed of damage taken, up to Absorb 70% damage taken. Cannot absorb Damage Over Time.\n1350 damaged absorbed. Lasts 6s.",
+      "Casts the skill and gains defensive effect: Absorbs Absorb 70% damage taken. Cannot absorb Damage Over Time.\n1350 damaged absorbed of damage taken.\nAbsorbs up to Absorb 70% damage taken. Cannot absorb Damage Over Time.\n1350 damaged absorbed damage.\nLasts 6s.",
     ],
     kinds: ["dot"],
   },
