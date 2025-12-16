@@ -2,6 +2,7 @@ import { execSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
+import * as R from "remeda";
 import {
   type BaseActiveSkill,
   type BaseMagnificentSupportSkill,
@@ -571,6 +572,29 @@ const toTypeScript = (obj: unknown): string => {
   return String(obj);
 };
 
+const createTestActiveSkill = (): BaseActiveSkill => {
+  const weaponAtkDmgPctLevels = R.mapToObj(R.range(1, 41), (i) => [i, 1]);
+  const addedDmgEffPctLevels = R.mapToObj(R.range(1, 41), (i) => [i, 1]);
+  return {
+    type: "Active",
+    name: "[Test] Simple Attack",
+    kinds: ["hit_enemies", "deal_damage"],
+    tags: ["Attack", "Melee"],
+    description: ["this is used for testing"],
+    mainStats: ["dex", "str"],
+    levelOffense: [
+      {
+        template: { type: "WeaponAtkDmgPct" },
+        levels: weaponAtkDmgPctLevels,
+      },
+      {
+        template: { type: "AddedDmgEffPct" },
+        levels: addedDmgEffPctLevels,
+      },
+    ],
+  };
+};
+
 const generateActiveSkillFile = (
   constName: string,
   skills: BaseActiveSkill[],
@@ -887,6 +911,10 @@ const main = async (): Promise<void> => {
   // Create output directory
   const outDir = join(process.cwd(), "src", "data", "skill");
   await mkdir(outDir, { recursive: true });
+
+  // Add test skill for testing purposes
+  const testSkill = createTestActiveSkill();
+  activeSkillGroups.get("Active")?.push(testSkill);
 
   // Generate active skill files
   for (const [skillType, skills] of activeSkillGroups) {
