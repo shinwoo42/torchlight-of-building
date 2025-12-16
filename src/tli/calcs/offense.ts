@@ -4,6 +4,7 @@ import {
   ActiveSkills,
   type BaseActiveSkill,
   type BaseSupportSkill,
+  type SkillOffenseType,
   type SkillTag,
   SupportSkills,
 } from "../../data/skill";
@@ -19,12 +20,7 @@ import {
   type SupportSkillSlot,
 } from "../core";
 import type { DmgType, Mod, Stackable } from "../mod";
-import {
-  type ImplementedOffenseSkill as ImplementedOffenseSkillName,
-  listTags,
-  offensiveSkillConfs,
-  type SkillConfiguration,
-} from "./skill_confs";
+import type { OffenseSkillName } from "./skill_confs";
 
 const addDR = (dr1: DmgRange, dr2: DmgRange): DmgRange => {
   return {
@@ -507,9 +503,9 @@ const dmgModTypePerSkillTag: Partial<Record<SkillTag, DmgModType>> = {
   Area: "attack",
 };
 
-const dmgModTypesForSkill = (conf: SkillConfiguration) => {
+const dmgModTypesForSkill = (skill: BaseActiveSkill) => {
   const dmgModTypes: DmgModType[] = ["global"];
-  const tags = listTags(conf.skillName);
+  const tags = skill.tags;
   tags.forEach((t) => {
     const dmgModType = dmgModTypePerSkillTag[t];
     if (dmgModType !== undefined) {
@@ -539,9 +535,9 @@ const calculateChunkDmg = (
   chunk: DmgChunk,
   currentType: DmgType,
   allDmgPctMods: Extract<Mod, { type: "DmgPct" }>[],
-  skillConf: SkillConfiguration,
+  skill: BaseActiveSkill,
 ): DmgRange => {
-  const baseDmgModTypes = dmgModTypesForSkill(skillConf);
+  const baseDmgModTypes = dmgModTypesForSkill(skill);
 
   // Chunk benefits from bonuses for current type AND all types in its history
   const allApplicableTypes: DmgType[] = [currentType, ...chunk.history];
@@ -568,16 +564,11 @@ const calculatePoolTotal = (
   pool: DmgChunk[],
   poolType: DmgType,
   allDmgPctMods: Extract<Mod, { type: "DmgPct" }>[],
-  skillConf: SkillConfiguration,
+  skill: BaseActiveSkill,
 ): DmgRange => {
   let total: DmgRange = { min: 0, max: 0 };
   for (const chunk of pool) {
-    const chunkDmg = calculateChunkDmg(
-      chunk,
-      poolType,
-      allDmgPctMods,
-      skillConf,
-    );
+    const chunkDmg = calculateChunkDmg(chunk, poolType, allDmgPctMods, skill);
     total = addDR(total, chunkDmg);
   }
   return total;
@@ -597,13 +588,33 @@ interface SkillHitOverview {
   avg: number;
 }
 
+const getLeveOffenseValue = (
+  skill: BaseActiveSkill,
+  skillOffenseType: SkillOffenseType,
+  level: number,
+): number | DmgRange => {
+  if (skill.levelOffense === undefined) {
+    throw new Error(`Skill "${skill.name}" has no levelOffense data`);
+  }
+  const offense = skill.levelOffense.find(
+    (o) => o.template.type === skillOffenseType,
+  );
+  if (offense === undefined) {
+    throw new Error(
+      `Skill "${skill.name}" has no ${skillOffenseType} in levelOffense`,
+    );
+  }
+  return offense.levels[level];
+};
+
 const calculateSkillHit = (
   gearDmg: GearDmg,
   flatDmg: DmgRanges,
   allMods: Mod[],
-  skillConf: SkillConfiguration,
+  skill: BaseActiveSkill,
+  level: number,
 ): SkillHitOverview => {
-  const skillWeaponDR = match(skillConf.skillName)
+  const skillWeaponDR = match(skill.name)
     .with("Berserking Blade", () => {
       return multDRs(gearDmg.mainHand, 2.1);
     })
@@ -617,7 +628,10 @@ const calculateSkillHit = (
       // either it's unimplemented, not an attack
       return emptyDmgRanges();
     });
-  const skillFlatDR = multDRs(flatDmg, skillConf.addedDmgEffPct);
+  const skillFlatDR = multDRs(
+    flatDmg,
+    getLeveOffenseValue(skill, "AddedDmgEffPct", level) as number,
+  );
   const skillBaseDmg = addDRs(skillWeaponDR, skillFlatDR);
 
   // Damage conversion happens after flat damage, before % bonuses
@@ -629,21 +643,21 @@ const calculateSkillHit = (
     dmgPools.physical,
     "physical",
     allDmgPcts,
-    skillConf,
+    skill,
   );
-  const cold = calculatePoolTotal(dmgPools.cold, "cold", allDmgPcts, skillConf);
+  const cold = calculatePoolTotal(dmgPools.cold, "cold", allDmgPcts, skill);
   const lightning = calculatePoolTotal(
     dmgPools.lightning,
     "lightning",
     allDmgPcts,
-    skillConf,
+    skill,
   );
-  const fire = calculatePoolTotal(dmgPools.fire, "fire", allDmgPcts, skillConf);
+  const fire = calculatePoolTotal(dmgPools.fire, "fire", allDmgPcts, skill);
   const erosion = calculatePoolTotal(
     dmgPools.erosion,
     "erosion",
     allDmgPcts,
-    skillConf,
+    skill,
   );
 
   const total = {
@@ -667,7 +681,7 @@ const calculateSkillHit = (
 
 export interface OffenseInput {
   loadout: Loadout;
-  skillName: ImplementedOffenseSkillName;
+  skillName: OffenseSkillName;
   configuration: Configuration;
 }
 
@@ -711,19 +725,18 @@ const listSkillSlots = (input: OffenseInput): SkillSlot[] => {
   return slots.filter((s) => s !== undefined);
 };
 
-const resolveBuffSkill = (
-  input: OffenseInput,
-  skillConf: SkillConfiguration,
-): Mod[] => {
-  // todo finish
-  return [];
+const getSkillSlot = (input: OffenseInput): SkillSlot => {
+  const name = input.skillName;
+  const slots = listSkillSlots(input);
+  const slot = slots.find((s) => s?.skillName === name);
+  if (slot === undefined) {
+    throw new Error(`Skill "${name}" not found in skill page activeSkills`);
+  }
+  return slot;
 };
 
-const resolveSelectedSkill = (
-  input: OffenseInput,
-  skillConf: SkillConfiguration,
-): Mod[] => {
-  const name = skillConf.skillName;
+const resolveSelectedSkill = (input: OffenseInput): Mod[] => {
+  const name = input.skillName;
   const slots = listSkillSlots(input);
   const slot = slots.find((s) => s?.skillName === name);
   if (slot === undefined) {
@@ -736,11 +749,17 @@ const resolveSelectedSkill = (
   ];
 };
 
-const resolveSelectedSkillMods = (name: string, level: number): Mod[] => {
-  const skill = ActiveSkills.find((s) => s.name === name) as
-    | BaseActiveSkill
-    | undefined;
-  if (skill === undefined || skill.levelMods === undefined) {
+const findActiveSkill = (name: OffenseSkillName): BaseActiveSkill => {
+  // OffenseSkillName should be guaranteed to be something within ActiveSkills
+  return ActiveSkills.find((s) => s.name === name) as BaseActiveSkill;
+};
+
+const resolveSelectedSkillMods = (
+  name: OffenseSkillName,
+  level: number,
+): Mod[] => {
+  const skill = findActiveSkill(name);
+  if (skill.levelMods === undefined) {
     return [];
   }
   const mods: Mod[] = [];
@@ -787,12 +806,12 @@ const resolveSelectedSkillSupportMods = (slot: SkillSlot): Mod[] => {
 // * filtered based on various criteria
 const resolveMods = (
   input: OffenseInput,
-  skillConf: SkillConfiguration,
+  offenseSkill: BaseActiveSkill,
 ): Mod[] => {
   // includes mods from loadout and from base effects, such as from stats
   const allOriginalMods: Mod[] = [
     ...collectMods(input.loadout),
-    ...resolveSelectedSkill(input, skillConf),
+    ...resolveSelectedSkill(input),
     {
       type: "DmgPct",
       // .5% additional damage per main stat
@@ -817,9 +836,13 @@ const resolveMods = (
           multModValue(mod, willpowerStacks / div),
         )
         .with("main_stat", () => {
-          const mainStatTypes = skillConf.stats;
+          if (offenseSkill.mainStats === undefined) {
+            throw new Error(
+              `Skill "${offenseSkill.name}" has no mainStats defined`,
+            );
+          }
           let totalMainStats = 0;
-          for (const mainStatType of mainStatTypes) {
+          for (const mainStatType of offenseSkill.mainStats) {
             totalMainStats += stats[mainStatType];
           }
           return multModValue(mod, totalMainStats / div);
@@ -839,11 +862,9 @@ export const calculateOffense = (
   input: OffenseInput,
 ): OffenseSummary | undefined => {
   const { loadout, skillName, configuration } = input;
-  const skillConf = offensiveSkillConfs.find((c) => c.skillName === skillName);
-  if (skillConf === undefined) {
-    return undefined;
-  }
-  const mods = resolveMods(input, skillConf);
+  const offenseSkill = findActiveSkill(skillName);
+  const selectedSkillSlot = getSkillSlot(input);
+  const mods = resolveMods(input, offenseSkill);
   const gearDmg = calculateGearDmg(loadout, mods);
   const flatDmg = calculateFlatDmg(mods, "attack");
 
@@ -851,7 +872,13 @@ export const calculateOffense = (
   const critChance = calculateCritRating(mods, configuration);
   const critDmgMult = calculateCritDmg(mods, configuration);
 
-  const skillHit = calculateSkillHit(gearDmg, flatDmg, mods, skillConf);
+  const skillHit = calculateSkillHit(
+    gearDmg,
+    flatDmg,
+    mods,
+    offenseSkill,
+    selectedSkillSlot.level || 20,
+  );
   const avgHitWithCrit =
     skillHit.avg * critChance * critDmgMult + skillHit.avg * (1 - critChance);
   const avgDps = avgHitWithCrit * aspd;

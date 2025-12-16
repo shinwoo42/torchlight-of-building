@@ -8,7 +8,7 @@ import {
   type DmgRanges,
   type OffenseInput,
 } from "./offense";
-import type { ImplementedOffenseSkill } from "./skill_confs";
+import type { OffenseSkillName } from "./skill_confs";
 
 // Helper to create Affix objects from mods for tests
 const affix = (mods: Mod[]): Affix => ({
@@ -85,7 +85,7 @@ type TestInput = {
   } | null; // null means no weapon
   mods?: Affix[]; // customConfiguration - array of affixes
   talentMods?: Affix[]; // for talent tree selectedCoreTalents
-  skill?: ImplementedOffenseSkill;
+  skill?: OffenseSkillName;
   configuration?: Configuration;
 };
 
@@ -98,6 +98,8 @@ type ExpectedOutput = Partial<{
 }>;
 
 const createInput = (input: TestInput): OffenseInput => {
+  const skillName = input.skill ?? "[Test] Simple Attack";
+
   const weapon =
     input.weapon === null
       ? undefined
@@ -111,6 +113,17 @@ const createInput = (input: TestInput): OffenseInput => {
       inventory: [],
     },
     customConfiguration: input.mods ?? [],
+    skillPage: {
+      activeSkills: {
+        1: {
+          skillName,
+          enabled: true,
+          level: 20,
+          supportSkills: {},
+        },
+      },
+      passiveSkills: {},
+    },
     ...(input.talentMods && {
       talentPage: {
         talentTrees: {
@@ -127,7 +140,7 @@ const createInput = (input: TestInput): OffenseInput => {
 
   return {
     loadout,
-    skillName: input.skill ?? "[Test] Simple Attack",
+    skillName,
     configuration: input.configuration ?? defaultConfiguration,
   };
 };
@@ -588,11 +601,11 @@ test("calculate offense with multiple flat damage sources stacking", () => {
   validate(actual, { avgHit: 150 });
 });
 
-test("calculate offense with flat damage scaled by addedDmgEffPct (Berserking Blade)", () => {
-  // Berserking Blade has addedDmgEffPct = 2.1 and weapon mult = 2.1
-  // Weapon damage: 100 * 2.1 = 210
-  // Flat damage: 100 * 2.1 = 210
-  // Total: 210 + 210 = 420
+test("calculate offense with flat damage scaled by addedDmgEffPct (Frost Spike)", () => {
+  // Frost Spike at level 20 has addedDmgEffPct = 2.01 and WeaponAtkDmgPct = 2.01
+  // Weapon damage: 100 * 2.01 = 201 (converted to cold)
+  // Flat damage: 100 * 2.01 = 201 (converted to cold)
+  // Total: 201 + 201 = 402 cold
   const input = createInput({
     mods: [
       affix([
@@ -603,10 +616,10 @@ test("calculate offense with flat damage scaled by addedDmgEffPct (Berserking Bl
         },
       ]),
     ],
-    skill: "Berserking Blade",
+    skill: "Frost Spike",
   });
   const actual = calculateOffense(input);
-  validate(actual, { avgHit: 420 });
+  validate(actual, { avgHit: 402 });
 });
 
 test("calculate offense with flat damage and % damage modifiers", () => {
@@ -1699,8 +1712,9 @@ describe("resolveSelectedSkillMods via calculateOffense", () => {
       skillName: "Frost Spike",
       configuration: defaultConfiguration,
     });
+    if (actual === undefined) throw new Error("Expected actual to be defined");
 
-    const mods = actual!.resolvedMods;
+    const mods = actual.resolvedMods;
     const skillMods = mods.filter((m) => m.src?.includes("Frost Spike L20"));
 
     // Should have exactly 5 mods from Frost Spike levelMods
@@ -1742,10 +1756,11 @@ describe("resolveSelectedSkillMods via calculateOffense", () => {
       configuration: defaultConfiguration,
     });
 
+    if (actual === undefined) throw new Error("Expected actual to be defined");
     validate(actual, { avgHit: 201 });
 
     // Verify the conversion mod is present in resolvedMods
-    const convertMod = actual!.resolvedMods.find(
+    const convertMod = actual.resolvedMods.find(
       (m) => m.type === "ConvertDmgPct" && m.from === "physical",
     );
     expect(convertMod).toBeDefined();

@@ -1,8 +1,7 @@
 import type { DmgRange } from "@/src/tli/core";
-import type { Mod } from "@/src/tli/mod";
 import type { ModWithoutValue } from "@/src/tli/skills/support_templates";
 import type { ActivationMediumSkills } from "./activation_medium";
-import type { ActiveSkills } from "./active";
+import { ActiveSkills } from "./active";
 import type { PassiveSkills } from "./passive";
 import type { SupportSkills } from "./support";
 import type { MagnificentSupportSkills } from "./support_magnificent";
@@ -67,6 +66,9 @@ export const SKILL_TAGS = [
 export type SkillTag = (typeof SKILL_TAGS)[number];
 
 export type ActiveSkillName = (typeof ActiveSkills)[number]["name"];
+const implementedActiveSkills = ActiveSkills.filter((s) => "levelOffense" in s);
+export type ImplementedActiveSkillName =
+  (typeof implementedActiveSkills)[number]["name"];
 export type SupportSkillName = (typeof SupportSkills)[number]["name"];
 export type MagnificentSupportSkillName =
   (typeof MagnificentSupportSkills)[number]["name"];
@@ -145,6 +147,8 @@ export interface BaseNobleSupportSkill extends BaseSkill {
 export type SkillOffense =
   | { type: "WeaponAtkDmgPct"; value: number }
   | { type: "AddedDmgEffPct"; value: number };
+
+export type SkillOffenseType = SkillOffense["type"];
 
 export type SkillOffenseTemplate = SkillOffense extends infer M
   ? M extends SkillOffense
