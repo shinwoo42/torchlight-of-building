@@ -75,6 +75,7 @@ export type MagnificentSupportSkillName =
 export type NobleSupportSkillName = (typeof NobleSupportSkills)[number]["name"];
 export type ActivationMediumSkillNmae =
   (typeof ActivationMediumSkills)[number]["name"];
+export type PassiveSkillName = (typeof PassiveSkills)[number]["name"];
 
 export type ActiveSkill = (typeof ActiveSkills)[];
 export type PassiveSkill = (typeof PassiveSkills)[];
@@ -92,6 +93,10 @@ export interface BaseSkill {
 
 export interface BasePassiveSkill extends BaseSkill {
   mainStats?: ("str" | "dex" | "int")[];
+  levelBuffMods?: {
+    template: ModWithoutValue;
+    levels: Record<number, number | DmgRange>;
+  }[];
 }
 
 // Support targets which cannot be identified using easily

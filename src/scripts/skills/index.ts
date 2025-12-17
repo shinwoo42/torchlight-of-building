@@ -3,6 +3,7 @@ import {
   frostSpikeParser,
   iceBondParser,
 } from "./active_parsers";
+import { preciseCrueltyParser } from "./passive_parsers";
 import {
   criticalStrikeDamageIncreaseParser,
   criticalStrikeRatingIncreaseParser,
@@ -76,6 +77,11 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     skillName: "Bull's Rage",
     categories: ["active"],
     parser: bullsRageParser,
+  },
+  {
+    skillName: "Precise: Cruelty",
+    categories: ["passive"],
+    parser: preciseCrueltyParser,
   },
 ];
 

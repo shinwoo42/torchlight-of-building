@@ -15,6 +15,7 @@ import {
   type SupportTarget,
 } from "../data/skill/types";
 import { activeSkillTemplates } from "../tli/skills/active_templates";
+import { passiveSkillTemplates } from "../tli/skills/passive_templates";
 import { skillModTemplates } from "../tli/skills/support_templates";
 import { readAllTlidbSkills, type TlidbSkillFile } from "./lib/tlidb";
 import { classifyWithRegex } from "./skill_kind_patterns";
@@ -870,13 +871,42 @@ const main = async (): Promise<void> => {
       }
       activeSkillGroups.get(skillType)?.push(skillEntry);
     } else if (skillType === "Passive") {
-      // Passive skills with optional mainStats
+      // Look up passive skill template for levelBuffMods
+      const template =
+        passiveSkillTemplates[raw.name as keyof typeof passiveSkillTemplates];
+
+      let levelBuffMods: BasePassiveSkill["levelBuffMods"];
+
+      if (template !== undefined && raw.parsedLevelModValues !== undefined) {
+        const parsedValues = raw.parsedLevelModValues;
+        const buffModsCount = template.levelBuffMods?.length ?? 0;
+
+        if (parsedValues.length !== buffModsCount) {
+          throw new Error(
+            `Skill "${raw.name}": template expects ${buffModsCount} level arrays but parser returned ${parsedValues.length}`,
+          );
+        }
+
+        if (template.levelBuffMods !== undefined && buffModsCount > 0) {
+          levelBuffMods = template.levelBuffMods.map((modTemplate, i) => {
+            const levels = parsedValues[i];
+            if (levels === undefined) {
+              throw new Error(
+                `Skill "${raw.name}": missing parsed buff mod levels at index ${i}`,
+              );
+            }
+            return { template: modTemplate, levels };
+          });
+        }
+      }
+
       const skillEntry: BasePassiveSkill = {
         type: raw.type as BasePassiveSkill["type"],
         name: raw.name,
         tags: raw.tags as unknown as BasePassiveSkill["tags"],
         description: raw.description,
         ...(raw.mainStats !== undefined && { mainStats: raw.mainStats }),
+        ...(levelBuffMods !== undefined && { levelBuffMods }),
       };
 
       if (!passiveSkillGroups.has(skillType)) {
