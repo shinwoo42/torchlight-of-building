@@ -5,6 +5,7 @@ import {
   ActiveSkills,
   type BaseActiveSkill,
   type BaseSupportSkill,
+  type ImplementedActiveSkillName,
   type SkillOffenseType,
   type SkillTag,
   SupportSkills,
@@ -685,9 +686,12 @@ const calculateSkillHit = (
 
 export interface OffenseInput {
   loadout: Loadout;
-  mainSkillName: OffenseSkillName;
   configuration: Configuration;
 }
+
+export type OffenseResults = Partial<
+  Record<ImplementedActiveSkillName, OffenseSummary>
+>;
 
 const multValue = <T extends number | DmgRange>(
   value: T,
@@ -731,37 +735,13 @@ const calculateStats = (
   };
 };
 
-const listActiveSkillSlots = (input: OffenseInput): SkillSlot[] => {
+const listActiveSkillSlots = (loadout: Loadout): SkillSlot[] => {
   // we're sure that SkillSlots properties only has SkillSlot as values
-  const slots = Object.values(input.loadout.skillPage.activeSkills) as (
+  const slots = Object.values(loadout.skillPage.activeSkills) as (
     | SkillSlot
     | undefined
   )[];
   return slots.filter((s) => s !== undefined);
-};
-
-const getSkillSlot = (input: OffenseInput): SkillSlot => {
-  const name = input.mainSkillName;
-  const slots = listActiveSkillSlots(input);
-  const slot = slots.find((s) => s?.skillName === name);
-  if (slot === undefined) {
-    throw new Error(`Skill "${name}" not found in skill page activeSkills`);
-  }
-  return slot;
-};
-
-const resolveMainSkill = (input: OffenseInput): Mod[] => {
-  const name = input.mainSkillName;
-  const slots = listActiveSkillSlots(input);
-  const slot = slots.find((s) => s?.skillName === name);
-  if (slot === undefined) {
-    return [];
-  }
-
-  return [
-    ...resolveMainSkillMods(name, slot.level || 20),
-    ...resolveSelectedSkillSupportMods(slot),
-  ];
 };
 
 const findActiveSkill = (name: ActiveSkillName): BaseActiveSkill => {
@@ -793,10 +773,10 @@ const normalizeSkillEffMod = (
   return { ...mod, value: mod.value * (stacks / div), per: undefined };
 };
 
-// resolves mods coming from skills that are NOT the selected main skill
+// resolves mods coming from skills that provide buffs (levelBuffMods)
 // for example, "Bull's Rage" provides a buff that increases all melee damage
-const resolveBuffSkillMods = (input: OffenseInput): Mod[] => {
-  const activeSkillSlots = listActiveSkillSlots(input);
+const resolveBuffSkillMods = (loadout: Loadout): Mod[] => {
+  const activeSkillSlots = listActiveSkillSlots(loadout);
   const resolvedMods = [];
   for (const skillSlot of activeSkillSlots) {
     if (!skillSlot.enabled) {
@@ -881,40 +861,91 @@ const resolveSelectedSkillSupportMods = (slot: SkillSlot): Mod[] => {
   return supportMods;
 };
 
-// retrieves all mods, and filters or normalizes them in the following ways:
-// * value multiplied by the per? property based on the referenced StackableBuff
-// * filtered based on various criteria
-const resolveMods = (
-  input: OffenseInput,
-  mainSkill: BaseActiveSkill,
+// Context for mods that are shared across all skill calculations
+interface SharedModContext {
+  gearMods: Mod[];
+  buffSkillMods: Mod[];
+  stats: { str: number; dex: number; int: number };
+  willpowerStacks: number;
+}
+
+// Resolves mods that are shared across all skill calculations
+const resolveSharedMods = (loadout: Loadout): SharedModContext => {
+  const gearMods = collectMods(loadout);
+  const buffSkillMods = resolveBuffSkillMods(loadout);
+  const allMods = [...gearMods, ...buffSkillMods];
+  const stats = calculateStats(allMods);
+  const willpowerStacks = findAffix(allMods, "MaxWillpowerStacks")?.value || 0;
+  return { gearMods, buffSkillMods, stats, willpowerStacks };
+};
+
+// Context for mods specific to a single skill
+interface PerSkillModContext {
+  mods: Mod[];
+  skill: BaseActiveSkill;
+  skillSlot: SkillSlot;
+}
+
+// Resolves mods specific to a single skill slot
+// Returns undefined if the skill is not implemented (no levelOffense)
+const resolvePerSkillMods = (
+  skillSlot: SkillSlot,
+): PerSkillModContext | undefined => {
+  const skill = findActiveSkill(skillSlot.skillName as ActiveSkillName);
+
+  // Skip non-implemented skills (those without levelOffense)
+  if (!("levelOffense" in skill) || skill.levelOffense === undefined) {
+    return undefined;
+  }
+
+  const level = skillSlot.level || 20;
+  const mainSkillMods = resolveMainSkillMods(
+    skillSlot.skillName as OffenseSkillName,
+    level,
+  );
+  const supportMods = resolveSelectedSkillSupportMods(skillSlot);
+
+  return {
+    mods: [...mainSkillMods, ...supportMods],
+    skill,
+    skillSlot,
+  };
+};
+
+// Normalizes mods for a specific skill, handling "per" properties
+const normalizeModsForSkill = (
+  sharedMods: Mod[],
+  perSkillMods: Mod[],
+  skill: BaseActiveSkill,
+  context: SharedModContext,
 ): Mod[] => {
-  // includes mods from loadout and from base effects, such as from stats
-  const allOriginalMods: Mod[] = [
-    ...collectMods(input.loadout),
-    ...resolveMainSkill(input),
-    ...resolveBuffSkillMods(input),
-    {
-      type: "DmgPct",
-      // .5% additional damage per main stat
-      // todo: verify in-game that this number is correct
-      value: 0.005,
-      modType: "global",
-      addn: true,
-      per: { stackable: "main_stat" },
-      src: "Additional Damage from skill Main Stat (.5% per stat)",
-    },
-  ];
-  const stats = calculateStats(allOriginalMods);
+  // Create stat-based damage mod
+  const statBasedDmgMod: Mod = {
+    type: "DmgPct",
+    // .5% additional damage per main stat
+    value: 0.005,
+    modType: "global",
+    addn: true,
+    per: { stackable: "main_stat" },
+    src: "Additional Damage from skill Main Stat (.5% per stat)",
+  };
+
+  const allMods = [...sharedMods, ...perSkillMods, statBasedDmgMod];
+
+  // Calculate willpower stacks from ALL mods (including per-skill mods like Willpower support)
   const willpowerStacks =
-    findAffix(allOriginalMods, "MaxWillpowerStacks")?.value || 0;
+    findAffix(allMods, "MaxWillpowerStacks")?.value ||
+    context.willpowerStacks ||
+    0;
+
   // TODO: figure these out
   const frostbiteRating = 0;
   const projectile = 0;
   const skillUse = 0;
   const skillChargesOnUse = 0;
 
-  const normalizedMods = [];
-  for (const mod of allOriginalMods) {
+  const normalizedMods: Mod[] = [];
+  for (const mod of allMods) {
     if ("per" in mod && mod.per !== undefined) {
       const div = mod.per.amt || 1;
       const normalizedMod = match<Stackable, Mod>(mod.per.stackable)
@@ -928,14 +959,12 @@ const resolveMods = (
           multModValue(mod, skillChargesOnUse / div),
         )
         .with("main_stat", () => {
-          if (mainSkill.mainStats === undefined) {
-            throw new Error(
-              `Skill "${mainSkill.name}" has no mainStats defined`,
-            );
+          if (skill.mainStats === undefined) {
+            throw new Error(`Skill "${skill.name}" has no mainStats defined`);
           }
           let totalMainStats = 0;
-          for (const mainStatType of mainSkill.mainStats) {
-            totalMainStats += stats[mainStatType];
+          for (const mainStatType of skill.mainStats) {
+            totalMainStats += context.stats[mainStatType];
           }
           return multModValue(mod, totalMainStats / div);
         })
@@ -949,39 +978,64 @@ const resolveMods = (
   return normalizedMods;
 };
 
-// return undefined if skill unimplemented or it's not an offensive skill
-export const calculateOffense = (
-  input: OffenseInput,
-): OffenseSummary | undefined => {
-  const { loadout, mainSkillName, configuration } = input;
-  const mainSkill = findActiveSkill(mainSkillName);
-  const mainSkillSlot = getSkillSlot(input);
-  const mods = resolveMods(input, mainSkill);
-  const gearDmg = calculateGearDmg(loadout, mods);
-  const flatDmg = calculateFlatDmg(mods, "attack");
+// Calculates offense for all enabled implemented skills
+export const calculateOffense = (input: OffenseInput): OffenseResults => {
+  const { loadout, configuration } = input;
 
-  const aspd = calculateAspd(loadout, mods);
-  const critChance = calculateCritRating(mods, configuration);
-  const critDmgMult = calculateCritDmg(mods, configuration);
+  // Phase 1: Resolve shared mods once
+  const sharedContext = resolveSharedMods(loadout);
+  const sharedMods = [
+    ...sharedContext.gearMods,
+    ...sharedContext.buffSkillMods,
+  ];
 
-  const skillHit = calculateSkillHit(
-    gearDmg,
-    flatDmg,
-    mods,
-    mainSkill,
-    mainSkillSlot.level || 20,
-  );
-  const avgHitWithCrit =
-    skillHit.avg * critChance * critDmgMult + skillHit.avg * (1 - critChance);
-  const avgDps = avgHitWithCrit * aspd;
+  // Phase 2: Get enabled skill slots
+  const skillSlots = listActiveSkillSlots(loadout);
+  const enabledSlots = skillSlots.filter((s) => s.enabled);
 
-  return {
-    critChance: critChance,
-    critDmgMult: critDmgMult,
-    aspd: aspd,
-    avgHit: skillHit.avg,
-    avgHitWithCrit: avgHitWithCrit,
-    avgDps: avgDps,
-    resolvedMods: mods,
-  };
+  // Phase 3: Calculate for each implemented skill
+  const results: OffenseResults = {};
+  for (const slot of enabledSlots) {
+    const perSkillContext = resolvePerSkillMods(slot);
+    if (perSkillContext === undefined) {
+      continue; // Skip non-implemented skills
+    }
+
+    const mods = normalizeModsForSkill(
+      sharedMods,
+      perSkillContext.mods,
+      perSkillContext.skill,
+      sharedContext,
+    );
+
+    const gearDmg = calculateGearDmg(loadout, mods);
+    const flatDmg = calculateFlatDmg(mods, "attack");
+
+    const aspd = calculateAspd(loadout, mods);
+    const critChance = calculateCritRating(mods, configuration);
+    const critDmgMult = calculateCritDmg(mods, configuration);
+
+    const skillHit = calculateSkillHit(
+      gearDmg,
+      flatDmg,
+      mods,
+      perSkillContext.skill,
+      perSkillContext.skillSlot.level || 20,
+    );
+    const avgHitWithCrit =
+      skillHit.avg * critChance * critDmgMult + skillHit.avg * (1 - critChance);
+    const avgDps = avgHitWithCrit * aspd;
+
+    results[slot.skillName as ImplementedActiveSkillName] = {
+      critChance,
+      critDmgMult,
+      aspd,
+      avgHit: skillHit.avg,
+      avgHitWithCrit,
+      avgDps,
+      resolvedMods: mods,
+    };
+  }
+
+  return results;
 };
