@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from "react";
 import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
 import { calculateOffense, type OffenseInput } from "@/src/tli/calcs/offense";
-import type { Configuration } from "@/src/tli/core";
+import { createDefaultConfiguration } from "@/src/tli/core";
 import {
   formatStatValue,
   getStatCategoryDescription,
@@ -21,12 +21,7 @@ import { ModGroup } from "../calculations/ModGroup";
 import { SkillSelector } from "../calculations/SkillSelector";
 import { StatBreakdown } from "../calculations/StatBreakdown";
 
-const DEFAULT_CONFIGURATION: Configuration = {
-  fervor: {
-    enabled: false,
-    points: 0,
-  },
-};
+const DEFAULT_CONFIGURATION = createDefaultConfiguration();
 
 export const CalculationsSection = () => {
   const loadout = useLoadout();

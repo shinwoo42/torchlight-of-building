@@ -1,6 +1,11 @@
 import { describe, expect, test } from "vitest";
 import type { ImplementedActiveSkillName } from "../../data/skill";
-import type { Affix, Configuration, Loadout } from "../core";
+import {
+  type Affix,
+  type Configuration,
+  createDefaultConfiguration,
+  type Loadout,
+} from "../core";
 import type { Mod } from "../mod";
 import {
   calculateOffense,
@@ -76,11 +81,12 @@ const initLoadout = (pl: Partial<Loadout> = {}): Loadout => {
   };
 };
 
-const defaultConfiguration: Configuration = {
-  fervor: {
-    enabled: false,
-    points: 100,
-  },
+const defaultConfiguration = createDefaultConfiguration();
+
+// Configuration with enemyFrobitten enabled for tests that need Ice Bond's conditional buff
+const frostbittenEnabledConfig: Configuration = {
+  ...createDefaultConfiguration(),
+  enemyFrobitten: { enabled: true, points: 0 },
 };
 
 type TestInput = {
@@ -301,7 +307,10 @@ test("calculate offense with fervor enabled default points", () => {
   // Crit damage: 1.5 (default)
   // AvgHitWithCrit: 100 * 0.15 * 1.5 + 100 * 0.85 = 22.5 + 85 = 107.5
   const { input, skillName } = createInput({
-    configuration: { fervor: { enabled: true, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -318,7 +327,10 @@ test("calculate offense with fervor enabled custom points", () => {
   // Crit damage: 1.5 (default)
   // AvgHitWithCrit: 100 * 0.10 * 1.5 + 100 * 0.90 = 15 + 90 = 105
   const { input, skillName } = createInput({
-    configuration: { fervor: { enabled: true, points: 50 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 50 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -334,7 +346,10 @@ test("calculate offense with fervor disabled", () => {
   // Crit damage: 1.5 (default)
   // AvgHitWithCrit: 100 * 0.05 * 1.5 + 100 * 0.95 = 7.5 + 95 = 102.5
   const { input, skillName } = createInput({
-    configuration: { fervor: { enabled: false, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: false, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -358,7 +373,10 @@ test("calculate offense with fervor and other crit rating affixes", () => {
         affix([{ type: "CritRatingPct", value: 0.5, modType: "global" }]),
       ], // +50% crit rating
     },
-    configuration: { fervor: { enabled: true, points: 25 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 25 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -378,7 +396,10 @@ test("calculate offense with fervor and single FervorEff modifier", () => {
     weapon: {
       base_affixes: [affix([{ type: "FervorEff", value: 0.5 }])], // +50% fervor effectiveness
     },
-    configuration: { fervor: { enabled: true, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -400,7 +421,10 @@ test("calculate offense with fervor and multiple FervorEff modifiers stacking", 
       base_affixes: [affix([{ type: "FervorEff", value: 0.1 }])], // +10% fervor effectiveness
     },
     talentMods: [affix([{ type: "FervorEff", value: 0.1 }])], // +10% fervor effectiveness
-    configuration: { fervor: { enabled: true, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -420,7 +444,10 @@ test("calculate offense with fervor and FervorEff with custom fervor points", ()
     weapon: {
       base_affixes: [affix([{ type: "FervorEff", value: 1.0 }])], // +100% fervor effectiveness (doubles it)
     },
-    configuration: { fervor: { enabled: true, points: 50 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 50 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -439,7 +466,10 @@ test("calculate offense with FervorEff but fervor disabled", () => {
     weapon: {
       base_affixes: [affix([{ type: "FervorEff", value: 0.5 }])], // +50% fervor effectiveness
     },
-    configuration: { fervor: { enabled: false, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: false, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -460,7 +490,10 @@ test("calculate offense with CritDmgPerFervor single affix", () => {
     weapon: {
       base_affixes: [affix([{ type: "CritDmgPerFervor", value: 0.005 }])], // +0.5% crit dmg per fervor point
     },
-    configuration: { fervor: { enabled: true, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -483,7 +516,10 @@ test("calculate offense with multiple CritDmgPerFervor affixes stacking", () => 
       base_affixes: [affix([{ type: "CritDmgPerFervor", value: 0.005 }])], // +0.5% per point
     },
     talentMods: [affix([{ type: "CritDmgPerFervor", value: 0.003 }])], // +0.3% per point
-    configuration: { fervor: { enabled: true, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -505,7 +541,10 @@ test("calculate offense with CritDmgPerFervor with custom fervor points", () => 
     weapon: {
       base_affixes: [affix([{ type: "CritDmgPerFervor", value: 0.01 }])], // +1% crit dmg per fervor point
     },
-    configuration: { fervor: { enabled: true, points: 50 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 50 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -525,7 +564,10 @@ test("calculate offense with CritDmgPerFervor but fervor disabled", () => {
     weapon: {
       base_affixes: [affix([{ type: "CritDmgPerFervor", value: 0.005 }])], // +0.5% per point
     },
-    configuration: { fervor: { enabled: false, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: false, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -554,7 +596,10 @@ test("calculate offense with CritDmgPerFervor and other crit damage modifiers", 
         ]), // +30% increased
       ],
     },
-    configuration: { fervor: { enabled: true, points: 100 } },
+    configuration: {
+      ...createDefaultConfiguration(),
+      fervor: { enabled: true, points: 100 },
+    },
   });
   const results = calculateOffense(input);
   validate(results, skillName, {
@@ -1903,7 +1948,7 @@ describe("resolveBuffSkillMods", () => {
 
     const results = calculateOffense({
       loadout,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actual = results["[Test] Simple Attack"];
 
@@ -1962,6 +2007,33 @@ describe("resolveBuffSkillMods", () => {
     expect(iceBondBuffMod).toBeUndefined();
   });
 
+  test("Ice Bond buff mod is excluded when enemyFrobitten condition is disabled", () => {
+    // Ice Bond provides +33% cold damage to frostbitten enemies
+    // When enemyFrobitten is disabled, this condition is not met so the mod should be filtered out
+    const loadout = createBuffSkillLoadout({ name: "[Test] Simple Attack" }, [
+      { name: "Ice Bond", enabled: true },
+    ]);
+
+    const results = calculateOffense({
+      loadout,
+      configuration: {
+        fervor: { enabled: false, points: 0 },
+        enemyFrobitten: { enabled: false, points: 0 },
+      },
+    });
+    const actual = results["[Test] Simple Attack"];
+
+    expect(actual).toBeDefined();
+    const iceBondBuffMod = actual?.resolvedMods.find(
+      (m) =>
+        m.type === "DmgPct" &&
+        m.modType === "cold" &&
+        "cond" in m &&
+        m.cond === "enemy_frostbitten",
+    );
+    expect(iceBondBuffMod).toBeUndefined();
+  });
+
   test("buff skill level affects buff value", () => {
     // Ice Bond at level 1: 23.5% additional cold damage
     // Ice Bond at level 20: 33% additional cold damage
@@ -1975,11 +2047,11 @@ describe("resolveBuffSkillMods", () => {
 
     const resultsL1 = calculateOffense({
       loadout: loadoutL1,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const resultsL20 = calculateOffense({
       loadout: loadoutL20,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actualL1 = resultsL1["[Test] Simple Attack"];
     const actualL20 = resultsL20["[Test] Simple Attack"];
@@ -2013,7 +2085,7 @@ describe("resolveBuffSkillMods", () => {
 
     const results = calculateOffense({
       loadout,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actual = results["[Test] Simple Attack"];
 
@@ -2038,7 +2110,7 @@ describe("resolveBuffSkillMods", () => {
 
     const results = calculateOffense({
       loadout,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actual = results["[Test] Simple Attack"];
 
@@ -2087,7 +2159,7 @@ describe("resolveBuffSkillMods", () => {
 
     const results = calculateOffense({
       loadout,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actual = results["Frost Spike"];
 
@@ -2126,7 +2198,7 @@ describe("resolveBuffSkillMods", () => {
 
     const results = calculateOffense({
       loadout,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actual = results["[Test] Simple Attack"];
 
@@ -2156,7 +2228,7 @@ describe("resolveBuffSkillMods", () => {
 
     const results = calculateOffense({
       loadout,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actual = results["[Test] Simple Attack"];
 
@@ -2194,7 +2266,7 @@ describe("resolveBuffSkillMods", () => {
 
     const results = calculateOffense({
       loadout,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actual = results["[Test] Simple Attack"];
 
@@ -2226,11 +2298,11 @@ describe("resolveBuffSkillMods", () => {
 
     const resultsL1 = calculateOffense({
       loadout: loadoutL1,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const resultsL20 = calculateOffense({
       loadout: loadoutL20,
-      configuration: defaultConfiguration,
+      configuration: frostbittenEnabledConfig,
     });
     const actualL1 = resultsL1["[Test] Simple Attack"];
     const actualL20 = resultsL20["[Test] Simple Attack"];

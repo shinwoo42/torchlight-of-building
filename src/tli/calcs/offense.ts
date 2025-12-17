@@ -726,10 +726,21 @@ interface NormalizationContext {
 const normalizeMod = <T extends Mod>(
   mod: T,
   context: NormalizationContext,
-): T => {
+  config: Configuration,
+): T | undefined => {
+  if ("cond" in mod && mod.cond !== undefined) {
+    const conditionMatched = match(mod.cond)
+      .with("enemy_frostbitten", () => config.enemyFrobitten.enabled)
+      .exhaustive();
+    if (!conditionMatched) {
+      return undefined;
+    }
+  }
+
   if (!("per" in mod) || mod.per === undefined) {
     return mod;
   }
+
   const div = mod.per.amt || 1;
   const stacks = match(mod.per.stackable)
     .with("willpower", () => context.willpower)
@@ -781,7 +792,8 @@ const findActiveSkill = (name: ActiveSkillName): BaseActiveSkill => {
 // based on the `per` property.
 const normalizeSkillEffMod = (
   mod: Extract<Mod, { type: "SkillEffPct" }>,
-): Extract<Mod, { type: "SkillEffPct" }> => {
+  config: Configuration,
+): Extract<Mod, { type: "SkillEffPct" }> | undefined => {
   // TODO: skillUse and skillChargesOnUse should come from actual skill slot configuration or user input
   // skill_use represents number of times the buff skill has been cast (Well-Fought Battle max = 3)
   // skill_charges_on_use represents charges consumed when using the skill (Mass Effect)
@@ -793,12 +805,15 @@ const normalizeSkillEffMod = (
     skillChargesOnUse: 2,
     mainStat: 0,
   };
-  return normalizeMod(mod, context);
+  return normalizeMod(mod, context, config);
 };
 
 // resolves mods coming from skills that provide buffs (levelBuffMods)
 // for example, "Bull's Rage" provides a buff that increases all melee damage
-const resolveBuffSkillMods = (loadout: Loadout): Mod[] => {
+const resolveBuffSkillMods = (
+  loadout: Loadout,
+  config: Configuration,
+): Mod[] => {
   const activeSkillSlots = listActiveSkillSlots(loadout);
   const resolvedMods = [];
   for (const skillSlot of activeSkillSlots) {
@@ -810,7 +825,8 @@ const resolveBuffSkillMods = (loadout: Loadout): Mod[] => {
     // todo: add area, cdr, duration, and other buff-skill modifiers
     const skillEffMods = resolveSelectedSkillSupportMods(skillSlot)
       .filter((m) => m.type === "SkillEffPct")
-      .map(normalizeSkillEffMod);
+      .map((m) => normalizeSkillEffMod(m, config))
+      .filter((m) => m !== undefined);
     const incSkillEffMods = skillEffMods.filter(
       (m) => m.addn === undefined || m.addn === false,
     );
@@ -893,9 +909,12 @@ interface SharedModContext {
 }
 
 // Resolves mods that are shared across all skill calculations
-const resolveSharedMods = (loadout: Loadout): SharedModContext => {
+const resolveSharedMods = (
+  loadout: Loadout,
+  config: Configuration,
+): SharedModContext => {
   const gearMods = collectMods(loadout);
-  const buffSkillMods = resolveBuffSkillMods(loadout);
+  const buffSkillMods = resolveBuffSkillMods(loadout, config);
   const allMods = [...gearMods, ...buffSkillMods];
   const stats = calculateStats(allMods);
   const willpowerStacks = findAffix(allMods, "MaxWillpowerStacks")?.value || 0;
@@ -941,6 +960,7 @@ const normalizeModsForSkill = (
   perSkillMods: Mod[],
   skill: BaseActiveSkill,
   sharedContext: SharedModContext,
+  config: Configuration,
 ): Mod[] => {
   // Create stat-based damage mod
   const statBasedDmgMod: Mod = {
@@ -980,7 +1000,9 @@ const normalizeModsForSkill = (
     mainStat,
   };
 
-  return allMods.map((mod) => normalizeMod(mod, normContext));
+  return allMods
+    .map((mod) => normalizeMod(mod, normContext, config))
+    .filter((mod) => mod !== undefined);
 };
 
 // Calculates offense for all enabled implemented skills
@@ -988,7 +1010,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const { loadout, configuration } = input;
 
   // Phase 1: Resolve shared mods once
-  const sharedContext = resolveSharedMods(loadout);
+  const sharedContext = resolveSharedMods(loadout, configuration);
   const sharedMods = [
     ...sharedContext.gearMods,
     ...sharedContext.buffSkillMods,
@@ -1011,6 +1033,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       perSkillContext.mods,
       perSkillContext.skill,
       sharedContext,
+      configuration,
     );
 
     const gearDmg = calculateGearDmg(loadout, mods);

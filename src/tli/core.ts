@@ -43,11 +43,16 @@ export interface Configuration {
     enabled: boolean;
     points: number;
   };
-  enemyFrobitten?: {
-    enabled: true;
+  enemyFrobitten: {
+    enabled: boolean;
     points: number;
   };
 }
+
+export const createDefaultConfiguration = (): Configuration => ({
+  fervor: { enabled: false, points: 0 },
+  enemyFrobitten: { enabled: false, points: 0 },
+});
 
 export interface Gear {
   equipmentType: EquipmentType;
