@@ -31,19 +31,6 @@ export const DivinitySection = () => {
     [updateSaveData],
   );
 
-  const handleUpdateSlate = useCallback(
-    (slate: DivinitySlate) => {
-      const saveDataSlate = toSaveDataSlate(slate);
-      updateSaveData((prev) => ({
-        ...prev,
-        divinitySlateList: prev.divinitySlateList.map((s) =>
-          s.id === slate.id ? saveDataSlate : s,
-        ),
-      }));
-    },
-    [updateSaveData],
-  );
-
   const handleCopySlate = useCallback(
     (slate: DivinitySlate) => {
       const saveDataSlate = toSaveDataSlate(slate);
@@ -87,21 +74,6 @@ export const DivinitySection = () => {
     [updateSaveData],
   );
 
-  const handleRemovePlacedSlate = useCallback(
-    (slateId: string) => {
-      updateSaveData((prev) => ({
-        ...prev,
-        divinityPage: {
-          ...prev.divinityPage,
-          placedSlates: prev.divinityPage.placedSlates.filter(
-            (p) => p.slateId !== slateId,
-          ),
-        },
-      }));
-    },
-    [updateSaveData],
-  );
-
   const handleMoveSlate = useCallback(
     (slateId: string, position: { row: number; col: number }) => {
       updateSaveData((prev) => ({
@@ -121,11 +93,9 @@ export const DivinitySection = () => {
     <DivinityTab
       divinityPage={loadout.divinityPage}
       onSaveSlate={handleSaveSlate}
-      onUpdateSlate={handleUpdateSlate}
       onCopySlate={handleCopySlate}
       onDeleteSlate={handleDeleteSlate}
       onPlaceSlate={handlePlaceSlate}
-      onRemovePlacedSlate={handleRemovePlacedSlate}
       onMoveSlate={handleMoveSlate}
     />
   );

@@ -25,7 +25,7 @@ const CELL_SIZE = 48; // h-12 w-12 = 48px
 
 interface DivinityGridProps {
   divinityPage: DivinityPage;
-  onClickPlacedSlate: (slateId: string) => void;
+  onClickPlacedSlate?: (slateId: string) => void;
   onMoveSlate: (
     slateId: string,
     position: { row: number; col: number },
@@ -131,6 +131,7 @@ export const DivinityGrid: React.FC<DivinityGridProps> = ({
   };
 
   const handleCellClick = (row: number, col: number) => {
+    if (!onClickPlacedSlate) return;
     const placed = findSlateAtCell(
       row,
       col,

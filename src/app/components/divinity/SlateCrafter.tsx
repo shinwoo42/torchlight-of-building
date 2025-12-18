@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   SearchableSelect,
   type SearchableSelectOption,
@@ -18,7 +18,6 @@ import {
   DIVINITY_GODS,
   type DivinityGod,
   type DivinitySlate,
-  getAffixText,
   ROTATIONS,
   type Rotation,
   SLATE_SHAPES,
@@ -31,50 +30,16 @@ const createMinimalAffix = (text: string): Affix => ({
 });
 
 interface SlateCrafterProps {
-  editingSlate: DivinitySlate | undefined;
-  isPlaced?: boolean;
   onSave: (slate: DivinitySlate) => void;
-  onCancel?: () => void;
-  onRemoveFromGrid?: () => void;
 }
 
-export const SlateCrafter: React.FC<SlateCrafterProps> = ({
-  editingSlate,
-  isPlaced = false,
-  onSave,
-  onCancel,
-  onRemoveFromGrid,
-}) => {
-  const [god, setGod] = useState<DivinityGod>(editingSlate?.god ?? "Hunting");
-  const [shape, setShape] = useState<SlateShape>(editingSlate?.shape ?? "O");
-  const [rotation, setRotation] = useState<Rotation>(
-    editingSlate?.rotation ?? 0,
-  );
-  const [flippedH, setFlippedH] = useState(editingSlate?.flippedH ?? false);
-  const [flippedV, setFlippedV] = useState(editingSlate?.flippedV ?? false);
+export const SlateCrafter: React.FC<SlateCrafterProps> = ({ onSave }) => {
+  const [god, setGod] = useState<DivinityGod>("Hunting");
+  const [shape, setShape] = useState<SlateShape>("O");
+  const [rotation, setRotation] = useState<Rotation>(0);
+  const [flippedH, setFlippedH] = useState(false);
+  const [flippedV, setFlippedV] = useState(false);
   const [selectedAffixes, setSelectedAffixes] = useState<DivinityAffix[]>([]);
-
-  useEffect(() => {
-    if (editingSlate) {
-      setGod(editingSlate.god);
-      setShape(editingSlate.shape);
-      setRotation(editingSlate.rotation);
-      setFlippedH(editingSlate.flippedH);
-      setFlippedV(editingSlate.flippedV);
-      const affixes: DivinityAffix[] = editingSlate.affixes.map(
-        (affix: Affix, i: number) => ({
-          effect: getAffixText(affix),
-          type: editingSlate.affixTypes[i],
-        }),
-      );
-      setSelectedAffixes(affixes);
-    } else {
-      setSelectedAffixes([]);
-      setRotation(0);
-      setFlippedH(false);
-      setFlippedV(false);
-    }
-  }, [editingSlate]);
 
   const availableAffixes = getDivinityAffixes(god);
 
@@ -116,7 +81,7 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
 
   const handleSave = () => {
     const slate: DivinitySlate = {
-      id: editingSlate?.id ?? generateItemId(),
+      id: generateItemId(),
       god,
       shape,
       rotation,
@@ -127,19 +92,15 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
     };
     onSave(slate);
 
-    if (!editingSlate) {
-      setSelectedAffixes([]);
-      setRotation(0);
-      setFlippedH(false);
-      setFlippedV(false);
-    }
+    setSelectedAffixes([]);
+    setRotation(0);
+    setFlippedH(false);
+    setFlippedV(false);
   };
 
   return (
     <div className="rounded-lg border border-zinc-700 bg-zinc-800 p-4">
-      <h3 className="mb-4 text-lg font-medium text-zinc-200">
-        {editingSlate ? "Edit Slate" : "Craft Slate"}
-      </h3>
+      <h3 className="mb-4 text-lg font-medium text-zinc-200">Craft Slate</h3>
 
       <div className="mb-4">
         <label className="mb-2 block text-sm text-zinc-400">God</label>
@@ -282,34 +243,14 @@ export const SlateCrafter: React.FC<SlateCrafterProps> = ({
         />
       </div>
 
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={selectedAffixes.length === 0}
-          className="flex-1 rounded bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-500 disabled:bg-zinc-600 disabled:cursor-not-allowed"
-        >
-          {editingSlate ? "Update Slate" : "Save to Inventory"}
-        </button>
-        {isPlaced && onRemoveFromGrid && (
-          <button
-            type="button"
-            onClick={onRemoveFromGrid}
-            className="rounded bg-red-900 px-4 py-2 text-red-200 transition-colors hover:bg-red-800"
-          >
-            Remove from Grid
-          </button>
-        )}
-        {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded bg-zinc-700 px-4 py-2 text-zinc-200 transition-colors hover:bg-zinc-600"
-          >
-            Cancel
-          </button>
-        )}
-      </div>
+      <button
+        type="button"
+        onClick={handleSave}
+        disabled={selectedAffixes.length === 0}
+        className="w-full rounded bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-500 disabled:bg-zinc-600 disabled:cursor-not-allowed"
+      >
+        Save to Inventory
+      </button>
     </div>
   );
 };

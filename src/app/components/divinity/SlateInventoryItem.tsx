@@ -8,7 +8,6 @@ interface SlateInventoryItemProps {
   slate: DivinitySlate;
   isPlaced: boolean;
   onPlace: () => void;
-  onEdit: () => void;
   onCopy: () => void;
   onDelete: () => void;
 }
@@ -17,7 +16,6 @@ export const SlateInventoryItem: React.FC<SlateInventoryItemProps> = ({
   slate,
   isPlaced,
   onPlace,
-  onEdit,
   onCopy,
   onDelete,
 }) => {
@@ -82,13 +80,6 @@ export const SlateInventoryItem: React.FC<SlateInventoryItemProps> = ({
             Place
           </button>
         )}
-        <button
-          type="button"
-          onClick={onEdit}
-          className="rounded bg-zinc-700 px-2 py-1 text-xs text-zinc-300 hover:bg-zinc-600"
-        >
-          Edit
-        </button>
         <button
           type="button"
           onClick={onCopy}
