@@ -6,6 +6,7 @@ const FILTER_AFFIX_TYPES = [
   "Suffix",
   "Base Stats",
   "Base Affix",
+  "Sweet Dream Affix",
 ] as const;
 
 type FilterAffixType = (typeof FILTER_AFFIX_TYPES)[number];

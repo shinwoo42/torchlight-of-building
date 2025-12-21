@@ -28,6 +28,8 @@ interface EquipmentUIState {
   baseAffixSlots: AffixSlotState[];
   blendAffixIndex: number | undefined;
   baseStatsAffixIndex: number | undefined;
+  sweetDreamAffixIndex: number | undefined;
+  sweetDreamAffixPercentage: number;
 
   // Legendary crafting state
   selectedLegendaryIndex: number | undefined;
@@ -44,6 +46,8 @@ interface EquipmentUIState {
   clearBaseAffixSlot: (index: number) => void;
   setBlendAffixIndex: (index: number | undefined) => void;
   setBaseStatsAffixIndex: (index: number | undefined) => void;
+  setSweetDreamAffixIndex: (index: number | undefined) => void;
+  setSweetDreamAffixPercentage: (percentage: number) => void;
   resetCrafting: () => void;
 
   setSelectedLegendaryIndex: (index: number | undefined) => void;
@@ -64,6 +68,8 @@ export const useEquipmentUIStore = create<EquipmentUIState>()(
     baseAffixSlots: createEmptyBaseAffixSlots(),
     blendAffixIndex: undefined,
     baseStatsAffixIndex: undefined,
+    sweetDreamAffixIndex: undefined,
+    sweetDreamAffixPercentage: DEFAULT_QUALITY,
     selectedLegendaryIndex: undefined,
     legendaryAffixSlots: [],
     selectedGearSlot: "helmet",
@@ -76,6 +82,8 @@ export const useEquipmentUIStore = create<EquipmentUIState>()(
         state.baseAffixSlots = createEmptyBaseAffixSlots();
         state.blendAffixIndex = undefined;
         state.baseStatsAffixIndex = undefined;
+        state.sweetDreamAffixIndex = undefined;
+        state.sweetDreamAffixPercentage = DEFAULT_QUALITY;
       }),
 
     setAffixSlot: (index, update) =>
@@ -114,6 +122,19 @@ export const useEquipmentUIStore = create<EquipmentUIState>()(
         state.baseStatsAffixIndex = index;
       }),
 
+    setSweetDreamAffixIndex: (index) =>
+      set((state) => {
+        state.sweetDreamAffixIndex = index;
+        if (index === undefined) {
+          state.sweetDreamAffixPercentage = DEFAULT_QUALITY;
+        }
+      }),
+
+    setSweetDreamAffixPercentage: (percentage) =>
+      set((state) => {
+        state.sweetDreamAffixPercentage = percentage;
+      }),
+
     resetCrafting: () =>
       set((state) => {
         state.selectedEquipmentType = undefined;
@@ -121,6 +142,8 @@ export const useEquipmentUIStore = create<EquipmentUIState>()(
         state.baseAffixSlots = createEmptyBaseAffixSlots();
         state.blendAffixIndex = undefined;
         state.baseStatsAffixIndex = undefined;
+        state.sweetDreamAffixIndex = undefined;
+        state.sweetDreamAffixPercentage = DEFAULT_QUALITY;
       }),
 
     setSelectedLegendaryIndex: (index) =>

@@ -127,6 +127,7 @@ export interface Gear {
   prefixes?: string[];
   suffixes?: string[];
   blend_affix?: string;
+  sweet_dream_affix?: string;
 
   // Legendary gear affix property
   legendary_affixes?: string[];

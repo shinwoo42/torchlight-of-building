@@ -53,6 +53,18 @@ export const EquipmentSection = () => {
   const setBaseStatsAffixIndex = useEquipmentUIStore(
     (state) => state.setBaseStatsAffixIndex,
   );
+  const sweetDreamAffixIndex = useEquipmentUIStore(
+    (state) => state.sweetDreamAffixIndex,
+  );
+  const sweetDreamAffixPercentage = useEquipmentUIStore(
+    (state) => state.sweetDreamAffixPercentage,
+  );
+  const setSweetDreamAffixIndex = useEquipmentUIStore(
+    (state) => state.setSweetDreamAffixIndex,
+  );
+  const setSweetDreamAffixPercentage = useEquipmentUIStore(
+    (state) => state.setSweetDreamAffixPercentage,
+  );
   const baseAffixSlots = useEquipmentUIStore((state) => state.baseAffixSlots);
   const setBaseAffixSlot = useEquipmentUIStore(
     (state) => state.setBaseAffixSlot,
@@ -95,6 +107,14 @@ export const EquipmentSection = () => {
     () =>
       selectedEquipmentType
         ? getFilteredAffixes(selectedEquipmentType, "Base Affix")
+        : [],
+    [selectedEquipmentType],
+  );
+
+  const sweetDreamAffixes = useMemo(
+    () =>
+      selectedEquipmentType
+        ? getFilteredAffixes(selectedEquipmentType, "Sweet Dream Affix")
         : [],
     [selectedEquipmentType],
   );
@@ -197,6 +217,26 @@ export const EquipmentSection = () => {
     [clearBaseAffixSlot],
   );
 
+  const handleSweetDreamSelect = useCallback(
+    (_slotIndex: number, value: string) => {
+      const index = value === "" ? undefined : parseInt(value, 10);
+      setSweetDreamAffixIndex(index);
+    },
+    [setSweetDreamAffixIndex],
+  );
+
+  const handleSweetDreamSliderChange = useCallback(
+    (_slotIndex: number, value: string) => {
+      const percentage = parseInt(value, 10);
+      setSweetDreamAffixPercentage(percentage);
+    },
+    [setSweetDreamAffixPercentage],
+  );
+
+  const handleClearSweetDream = useCallback(() => {
+    setSweetDreamAffixIndex(undefined);
+  }, [setSweetDreamAffixIndex]);
+
   const handleSaveToInventory = useCallback(() => {
     if (!selectedEquipmentType) return;
 
@@ -218,6 +258,15 @@ export const EquipmentSection = () => {
     const blend_affix =
       isBelt && blendAffixIndex !== undefined
         ? formatBlendAffix(blendAffixes[blendAffixIndex])
+        : undefined;
+
+    // Build sweet dream affix (1 max)
+    const sweet_dream_affix =
+      sweetDreamAffixIndex !== undefined
+        ? craft(
+            sweetDreamAffixes[sweetDreamAffixIndex],
+            sweetDreamAffixPercentage,
+          )
         : undefined;
 
     // Build prefixes (slots 0-2)
@@ -244,6 +293,7 @@ export const EquipmentSection = () => {
       prefixes: prefixes.length > 0 ? prefixes : undefined,
       suffixes: suffixes.length > 0 ? suffixes : undefined,
       blend_affix,
+      sweet_dream_affix,
     };
 
     addItemToInventory(newItem);
@@ -262,6 +312,9 @@ export const EquipmentSection = () => {
     baseStatsAffixes,
     baseAffixSlots,
     baseAffixes,
+    sweetDreamAffixIndex,
+    sweetDreamAffixPercentage,
+    sweetDreamAffixes,
   ]);
 
   const handleSelectItemForSlot = useCallback(
@@ -373,6 +426,27 @@ export const EquipmentSection = () => {
                       />
                     ))}
                   </div>
+                </div>
+              )}
+              {/* Sweet Dream Affix Section */}
+              {sweetDreamAffixes.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="mb-3 text-lg font-semibold text-zinc-50">
+                    Sweet Dream Affix (1 max)
+                  </h3>
+                  <AffixSlotComponent
+                    slotIndex={-3}
+                    affixType="Sweet Dream Affix"
+                    affixes={sweetDreamAffixes}
+                    selection={{
+                      affixIndex: sweetDreamAffixIndex,
+                      percentage: sweetDreamAffixPercentage,
+                    }}
+                    onAffixSelect={handleSweetDreamSelect}
+                    onSliderChange={handleSweetDreamSliderChange}
+                    onClear={handleClearSweetDream}
+                    hideTierInfo
+                  />
                 </div>
               )}
               {/* Blending Affix Section (Belts Only) */}
