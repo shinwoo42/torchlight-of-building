@@ -457,6 +457,7 @@ const calculateGearAspd = (loadout: Loadout, allMods: Mod[]): number => {
 const calculateCritRating = (
   allMods: Mod[],
   configuration: Configuration,
+  sharedCtx: SharedCtx,
 ): number => {
   const critRatingPctMods = filterMod(allMods, "CritRatingPct");
   const mods = critRatingPctMods.map((a) => {
@@ -469,7 +470,7 @@ const calculateCritRating = (
   });
 
   // Add fervor bonus if enabled
-  if (configuration.fervor.enabled) {
+  if (sharedCtx.fervor.enabled) {
     // Collect FervorEff modifiers and calculate total effectiveness
     const fervorEffMods = filterMod(allMods, "FervorEff");
     const fervorEffTotal = calculateInc(fervorEffMods.map((a) => a.value));
@@ -477,7 +478,7 @@ const calculateCritRating = (
     // Base fervor: 2% per point, modified by FervorEff
     // Example: 100 points * 0.02 * (1 + 0.5) = 3.0 (with 50% FervorEff)
     const fervorPerPoint = 0.02 * (1 + fervorEffTotal);
-    const fervorBonus = configuration.fervor.points * fervorPerPoint;
+    const fervorBonus = sharedCtx.fervor.points * fervorPerPoint;
 
     mods.push({
       type: "CritRatingPct",
@@ -494,6 +495,7 @@ const calculateCritRating = (
 const calculateCritDmg = (
   allMods: Mod[],
   configuration: Configuration,
+  sharedCtx: SharedCtx,
 ): number => {
   const critDmgPctMods = filterMod(allMods, "CritDmgPct");
   const mods = critDmgPctMods.map((a) => {
@@ -512,7 +514,7 @@ const calculateCritDmg = (
     critDmgPerFervorMods.forEach((a) => {
       // Calculate bonus: value * fervor points
       // Example: 0.005 (0.5%) * 100 points = 0.5 (50% increased crit damage)
-      const bonus = a.value * configuration.fervor.points;
+      const bonus = a.value * sharedCtx.fervor.points;
       mods.push({
         type: "CritDmgPct",
         value: bonus,
@@ -1030,18 +1032,19 @@ const resolveSelectedSkillSupportMods = (slot: SkillSlot): Mod[] => {
 };
 
 // Context for mods that are shared across all skill calculations
-interface SharedModContext {
+interface SharedCtx {
   loadoutMods: Mod[];
   buffSkillMods: Mod[];
   stats: { str: number; dex: number; int: number };
   willpowerStacks: number;
+  fervor: { enabled: boolean; points: number };
 }
 
 // Resolves mods that are shared across all skill calculations
 const resolveSharedMods = (
   loadout: Loadout,
   config: Configuration,
-): SharedModContext => {
+): SharedCtx => {
   const loadoutMods = collectMods(loadout);
   const stats = calculateStats(loadoutMods);
   const buffSkillMods = resolveBuffSkillMods(
@@ -1052,7 +1055,11 @@ const resolveSharedMods = (
   );
   const allMods = [...loadoutMods, ...buffSkillMods];
   const willpowerStacks = findMod(allMods, "MaxWillpowerStacks")?.value || 0;
-  return { loadoutMods, buffSkillMods, stats, willpowerStacks };
+  const fervor = {
+    enabled: config.fervor.enabled,
+    points: config.fervor.points ?? 100,
+  };
+  return { loadoutMods, buffSkillMods, stats, willpowerStacks, fervor };
 };
 
 // Context for mods specific to a single skill
@@ -1093,7 +1100,7 @@ const normalizeModsForSkill = (
   sharedMods: Mod[],
   perSkillMods: Mod[],
   skill: BaseActiveSkill,
-  sharedContext: SharedModContext,
+  sharedContext: SharedCtx,
   config: Configuration,
 ): Mod[] => {
   // Create stat-based damage mod
@@ -1126,11 +1133,8 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const { loadout, configuration } = input;
 
   // Phase 1: Resolve shared mods once
-  const sharedContext = resolveSharedMods(loadout, configuration);
-  const sharedMods = [
-    ...sharedContext.loadoutMods,
-    ...sharedContext.buffSkillMods,
-  ];
+  const sharedCtx = resolveSharedMods(loadout, configuration);
+  const sharedMods = [...sharedCtx.loadoutMods, ...sharedCtx.buffSkillMods];
 
   // Phase 2: Get enabled skill slots
   const skillSlots = listActiveSkillSlots(loadout);
@@ -1148,7 +1152,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       sharedMods,
       perSkillContext.mods,
       perSkillContext.skill,
-      sharedContext,
+      sharedCtx,
       configuration,
     );
 
@@ -1156,8 +1160,8 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     const flatDmg = calculateFlatDmg(mods, "attack");
 
     const aspd = calculateAspd(loadout, mods);
-    const critChance = calculateCritRating(mods, configuration);
-    const critDmgMult = calculateCritDmg(mods, configuration);
+    const critChance = calculateCritRating(mods, configuration, sharedCtx);
+    const critDmgMult = calculateCritDmg(mods, configuration, sharedCtx);
 
     const skillHit = calculateSkillHit(
       gearDmg,

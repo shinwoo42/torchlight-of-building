@@ -41,11 +41,11 @@ export interface DmgRange {
 export interface Configuration {
   fervor: {
     enabled: boolean;
-    points: number;
+    points?: number;
   };
   enemyFrostbitten: {
     enabled: boolean;
-    points: number;
+    points?: number;
   };
   crueltyBuffStacks: number;
 }
