@@ -292,6 +292,20 @@ export const isPrerequisiteSatisfiedWithInverseImage = (
 ): boolean => {
   if (!prerequisite) return true;
 
+  // If prerequisite node has an inverse image, bypass the check (same as prisms)
+  if (
+    placedInverseImage &&
+    treeSlot &&
+    hasInverseImageAtPosition(
+      placedInverseImage,
+      treeSlot,
+      prerequisite.x,
+      prerequisite.y,
+    )
+  ) {
+    return true;
+  }
+
   // If node is in target area (reflected), it has no prerequisites
   if (
     placedInverseImage &&

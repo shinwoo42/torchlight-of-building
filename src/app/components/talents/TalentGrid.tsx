@@ -126,6 +126,18 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
                 return null;
               }
 
+              // Don't draw lines from inverse image nodes (prerequisite is bypassed)
+              if (
+                hasInverseImageAtPosition(
+                  placedInverseImage,
+                  treeSlot,
+                  prereq.x,
+                  prereq.y,
+                )
+              ) {
+                return null;
+              }
+
               // Don't draw lines for nodes in target area (they lose prerequisites)
               // Check if this node is in target area
               if (

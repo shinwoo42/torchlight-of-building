@@ -167,8 +167,8 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           {prism.gaugeAffixes.length > 0 && (
             <div className="mt-2 pt-2 border-t border-zinc-700">
               <div className="text-xs text-zinc-500 mb-1">Gauge Affixes:</div>
-              {prism.gaugeAffixes.map((affix) => (
-                <div key={affix} className="text-xs text-zinc-400">
+              {prism.gaugeAffixes.map((affix, index) => (
+                <div key={index} className="text-xs text-zinc-400">
                   {affix}
                 </div>
               ))}
@@ -380,9 +380,10 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
           </TooltipContent>
           {bonusAffixes.length > 0 && (
             <div className="mt-2 pt-2 border-t border-blue-500/30">
-              {bonusAffixes.map((bonus) => (
+              {bonusAffixes.map((bonus, index) => (
                 <div
-                  key={bonus.bonusText}
+                  // biome-ignore lint/suspicious/noArrayIndexKey: affixes can have duplicate text, index is stable
+                  key={index}
                   className="text-xs text-blue-400 whitespace-pre-line"
                 >
                   {bonus.bonusText}
@@ -510,9 +511,10 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
         </TooltipContent>
         {bonusAffixes.length > 0 && (
           <div className="mt-2 pt-2 border-t border-blue-500/30">
-            {bonusAffixes.map((bonus) => (
+            {bonusAffixes.map((bonus, index) => (
               <div
-                key={bonus.bonusText}
+                // biome-ignore lint/suspicious/noArrayIndexKey: affixes can have duplicate text, index is stable
+                key={index}
                 className="text-xs text-blue-400 whitespace-pre-line"
               >
                 {bonus.bonusText}

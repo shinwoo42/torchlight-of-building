@@ -194,7 +194,7 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
         <div className="mb-2 flex flex-col gap-1">
           {selectedGaugeAffixes.map((gauge, index) => (
             <div
-              key={gauge.affix}
+              key={index}
               className="flex items-center gap-2 rounded bg-zinc-700 px-2 py-1"
             >
               <span

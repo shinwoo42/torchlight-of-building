@@ -128,12 +128,12 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
         {prism.gaugeAffixes.length > 0 && (
           <div className="space-y-1">
             <span className="text-xs text-zinc-500">Gauge Affixes:</span>
-            {prism.gaugeAffixes.map((affix) => {
+            {prism.gaugeAffixes.map((affix, index) => {
               const isLegendary = legendaryGauges.some(
                 (lg) => lg.affix === affix,
               );
               return (
-                <div key={affix} className="flex items-start gap-1">
+                <div key={index} className="flex items-start gap-1">
                   <span
                     className={`mt-1 h-2 w-2 flex-shrink-0 rounded-sm ${
                       isLegendary ? "bg-orange-500" : "bg-purple-500"
