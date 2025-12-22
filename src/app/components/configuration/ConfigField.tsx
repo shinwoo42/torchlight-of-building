@@ -2,7 +2,6 @@
 
 interface ConfigFieldProps {
   label: string;
-  description?: string;
   enabled: boolean;
   onEnabledChange: (enabled: boolean) => void;
   children: React.ReactNode;
@@ -10,7 +9,6 @@ interface ConfigFieldProps {
 
 export const ConfigField: React.FC<ConfigFieldProps> = ({
   label,
-  _description,
   enabled,
   onEnabledChange,
   children,

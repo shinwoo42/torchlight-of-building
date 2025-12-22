@@ -98,14 +98,23 @@ export const TalentsSection = () => {
       const tree = loadout.talentPage.talentTrees[slot];
       if (!tree || !tree.nodes.some((n) => n.points > 0)) return;
       if (confirm("Reset all points in this tree? This cannot be undone.")) {
-        updateSaveData((prev) => ({
-          ...prev,
-          talentPage: {
+        updateSaveData((prev) => {
+          const updatedTalentPage = {
             ...prev.talentPage,
             // biome-ignore lint/style/noNonNullAssertion: slot existence checked above
             [slot]: { ...prev.talentPage[slot]!, allocatedNodes: [] },
-          },
-        }));
+          };
+
+          // Also clear reflected nodes if inverse image is placed on this tree
+          if (prev.talentPage.placedInverseImage?.treeSlot === slot) {
+            updatedTalentPage.placedInverseImage = {
+              ...prev.talentPage.placedInverseImage,
+              reflectedAllocatedNodes: [],
+            };
+          }
+
+          return { ...prev, talentPage: updatedTalentPage };
+        });
       }
     },
     [loadout.talentPage.talentTrees, updateSaveData],
