@@ -3,10 +3,18 @@
 import { useMemo, useRef } from "react";
 import type { Configuration, Loadout, TalentTree } from "@/src/tli/core";
 import { loadSave } from "@/src/tli/storage/load-save";
+import type { SavesIndex } from "../../lib/saves";
 import { createEmptyConfigurationPage } from "../../lib/storage";
 import type { TreeSlot } from "../../lib/types";
 import { internalStore } from "./internal";
-import type { BuilderReadableState } from "./types";
+
+// Public readable state (NO saveData)
+export interface BuilderReadableState {
+  hasUnsavedChanges: boolean;
+  currentSaveId: string | undefined;
+  currentSaveName: string | undefined;
+  savesIndex: SavesIndex;
+}
 
 export const useLoadout = (): Loadout => {
   const saveData = internalStore((state) => state.saveData);
