@@ -93,6 +93,7 @@ export const EquipmentSlotDropdown: React.FC<EquipmentSlotDropdownProps> = ({
   const renderSelectedTooltip = (
     option: SearchableSelectOption<string>,
     triggerRect: DOMRect,
+    tooltipHandlers: { onMouseEnter: () => void; onMouseLeave: () => void },
   ) => {
     const item = itemsById.get(option.value);
     if (!item) return null;
@@ -102,6 +103,7 @@ export const EquipmentSlotDropdown: React.FC<EquipmentSlotDropdownProps> = ({
         isVisible={true}
         triggerRect={triggerRect}
         variant={isLegendary ? "legendary" : "default"}
+        {...tooltipHandlers}
       >
         <GearTooltipContent item={item} />
       </Tooltip>

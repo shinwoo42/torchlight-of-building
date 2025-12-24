@@ -5,7 +5,7 @@ import {
   ComboboxOption,
   ComboboxOptions,
 } from "@headlessui/react";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 export interface SearchableSelectOption<T = string> {
   value: T;
@@ -34,6 +34,7 @@ interface SearchableSelectProps<T extends string | number> {
   renderSelectedTooltip?: (
     option: SearchableSelectOption<T>,
     triggerRect: DOMRect,
+    tooltipHandlers: { onMouseEnter: () => void; onMouseLeave: () => void },
   ) => React.ReactNode;
 }
 
@@ -72,9 +73,58 @@ export const SearchableSelect = <T extends string | number>({
   renderSelectedTooltip,
 }: SearchableSelectProps<T>) => {
   const [query, setQuery] = useState("");
-  const [isHovered, setIsHovered] = useState(false);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [inputRect, setInputRect] = useState<DOMRect | undefined>(undefined);
   const inputWrapperRef = useRef<HTMLDivElement>(null);
+  const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+  const inputHoveredRef = useRef(false);
+  const tooltipHoveredRef = useRef(false);
+
+  const cancelHideTimeout = useCallback(() => {
+    if (hideTimeoutRef.current !== undefined) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = undefined;
+    }
+  }, []);
+
+  const scheduleHide = useCallback(() => {
+    cancelHideTimeout();
+    hideTimeoutRef.current = setTimeout(() => {
+      if (!inputHoveredRef.current && !tooltipHoveredRef.current) {
+        setIsTooltipVisible(false);
+      }
+    }, 120);
+  }, [cancelHideTimeout]);
+
+  const handleInputMouseEnter = useCallback(() => {
+    inputHoveredRef.current = true;
+    cancelHideTimeout();
+    if (inputWrapperRef.current) {
+      setInputRect(inputWrapperRef.current.getBoundingClientRect());
+    }
+    setIsTooltipVisible(true);
+  }, [cancelHideTimeout]);
+
+  const handleInputMouseLeave = useCallback(() => {
+    inputHoveredRef.current = false;
+    scheduleHide();
+  }, [scheduleHide]);
+
+  const tooltipHandlers = useMemo(
+    () => ({
+      onMouseEnter: () => {
+        tooltipHoveredRef.current = true;
+        cancelHideTimeout();
+      },
+      onMouseLeave: () => {
+        tooltipHoveredRef.current = false;
+        scheduleHide();
+      },
+    }),
+    [cancelHideTimeout, scheduleHide],
+  );
 
   const allOptions = useMemo(() => {
     if (groups) {
@@ -124,13 +174,8 @@ export const SearchableSelect = <T extends string | number>({
         <div
           ref={inputWrapperRef}
           className="relative"
-          onMouseEnter={() => {
-            setIsHovered(true);
-            if (inputWrapperRef.current) {
-              setInputRect(inputWrapperRef.current.getBoundingClientRect());
-            }
-          }}
-          onMouseLeave={() => setIsHovered(false)}
+          onMouseEnter={handleInputMouseEnter}
+          onMouseLeave={handleInputMouseLeave}
         >
           <ComboboxInput
             className={`
@@ -249,9 +294,9 @@ export const SearchableSelect = <T extends string | number>({
 
         {renderSelectedTooltip &&
           selectedOption &&
-          isHovered &&
+          isTooltipVisible &&
           inputRect &&
-          renderSelectedTooltip(selectedOption, inputRect)}
+          renderSelectedTooltip(selectedOption, inputRect, tooltipHandlers)}
       </div>
     </Combobox>
   );

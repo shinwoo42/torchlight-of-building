@@ -86,11 +86,12 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
   const renderSelectedTooltip = (
     option: SearchableSelectOption<string>,
     triggerRect: DOMRect,
+    tooltipHandlers: { onMouseEnter: () => void; onMouseLeave: () => void },
   ) => {
     const skillData = skillsByName.get(option.value);
     if (!skillData) return null;
     return (
-      <Tooltip isVisible={true} triggerRect={triggerRect}>
+      <Tooltip isVisible={true} triggerRect={triggerRect} {...tooltipHandlers}>
         <SkillTooltipContent skill={skillData} />
       </Tooltip>
     );
