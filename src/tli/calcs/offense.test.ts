@@ -101,6 +101,7 @@ type ExpectedOutput = Partial<{
   critChance: number;
   critDmgMult: number;
   aspd: number;
+  avgDps: number;
 }>;
 
 const validate = (
@@ -3264,5 +3265,84 @@ describe("penetration", () => {
     const results = calculateOffense(input);
     // 100 phys * (1 - 0.5) = 50 (resistance doesn't apply)
     validate(results, skillName, { avgHit: 50 });
+  });
+});
+
+describe("double damage chance", () => {
+  const skillName = "[Test] Simple Attack" as const;
+
+  // Weapon with attack speed for DPS calculations
+  const weaponWithAspd = {
+    equipmentType: "One-Handed Sword" as const,
+    baseStats: {
+      baseStatLines: [
+        {
+          text: "100 - 100 physical damage",
+          mod: { type: "FlatPhysDmg", value: 100 } as const,
+        },
+        {
+          text: "1.0 attack speed",
+          mod: { type: "AttackSpeed", value: 1.0 } as const,
+        },
+      ],
+    },
+  };
+
+  const createDoubleDmgInput = (mods: Affix[]) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: { mainHand: weaponWithAspd }, inventory: [] },
+      customConfiguration: mods,
+      skillPage: simpleAttackSkillPage(),
+    }),
+    configuration: defaultConfiguration,
+  });
+
+  test("30% double damage chance increases avgDps by 30%", () => {
+    // Base: 100 damage, 1.0 aspd, no crit
+    // avgHit = 100
+    // avgHitWithCrit = 100 * 0.05 * 1.5 + 100 * 0.95 = 7.5 + 95 = 102.5
+    // doubleDmgMult = 1 + 0.30 = 1.30
+    // avgDps = 102.5 * 1.30 * 1.0 = 133.25
+    const input = createDoubleDmgInput([
+      affix([{ type: "DoubleDmgChancePct", value: 0.3 }]),
+    ]);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgDps: 133.25 });
+  });
+
+  test("multiple double damage chance sources stack additively", () => {
+    // 20% + 15% = 35% total double damage chance
+    // avgHitWithCrit = 102.5 (same as above)
+    // doubleDmgMult = 1 + 0.35 = 1.35
+    // avgDps = 102.5 * 1.35 * 1.0 = 138.375
+    const input = createDoubleDmgInput([
+      affix([{ type: "DoubleDmgChancePct", value: 0.2 }]),
+      affix([{ type: "DoubleDmgChancePct", value: 0.15 }]),
+    ]);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgDps: 138.375 });
+  });
+
+  test("double damage chance caps at 100%", () => {
+    // 70% + 50% = 120%, but capped at 100%
+    // avgHitWithCrit = 102.5
+    // doubleDmgMult = 1 + 1.0 = 2.0 (capped)
+    // avgDps = 102.5 * 2.0 * 1.0 = 205
+    const input = createDoubleDmgInput([
+      affix([{ type: "DoubleDmgChancePct", value: 0.7 }]),
+      affix([{ type: "DoubleDmgChancePct", value: 0.5 }]),
+    ]);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgDps: 205 });
+  });
+
+  test("no double damage mod results in no DPS multiplier", () => {
+    // No double damage mods
+    // avgHitWithCrit = 102.5
+    // doubleDmgMult = 1.0
+    // avgDps = 102.5 * 1.0 * 1.0 = 102.5
+    const input = createDoubleDmgInput([]);
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgDps: 102.5 });
   });
 });

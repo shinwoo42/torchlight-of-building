@@ -564,6 +564,21 @@ const parseGearAspdPct = (
   return { type: "GearAspdPct", value };
 };
 
+const parseDoubleDmgChancePct = (
+  input: string,
+): ModOfType<"DoubleDmgChancePct"> | undefined => {
+  // Regex to parse: +31% chance to deal Double Damage
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% chance to deal double damage$/i;
+  const match = input.match(pattern);
+
+  if (!match) {
+    return undefined;
+  }
+
+  const value = parseFloat(match[2]) / 100;
+  return { type: "DoubleDmgChancePct", value };
+};
+
 const parseGearAspdWithDmgPenalty = (
   input: string,
 ): [ModOfType<"GearAspdPct">, ModOfType<"DmgPct">] | undefined => {
@@ -626,6 +641,7 @@ export const parseMod = (input: string): Mod[] | undefined => {
     parseResPenPct,
     parseArmorPenPct,
     parseGearAspdPct,
+    parseDoubleDmgChancePct,
 
     // Defense parsers
     parseAttackBlockChancePct,

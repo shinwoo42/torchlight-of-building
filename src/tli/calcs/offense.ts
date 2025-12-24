@@ -491,6 +491,13 @@ const calculateCritDmg = (allMods: Mod[]): number => {
   return 1.5 * (1 + inc) * addn;
 };
 
+const calculateDoubleDmgMult = (mods: Mod[]): number => {
+  const doubleDmgMods = filterMod(mods, "DoubleDmgChancePct");
+  // capped at 100% chance to deal double damage
+  const inc = Math.min(1, calculateInc(doubleDmgMods.map((v) => v.value)));
+  return 1 + inc;
+};
+
 const calculateAspd = (loadout: Loadout, allMods: Mod[]): number => {
   const gearAspd = calculateGearAspd(loadout, allMods);
   const aspdPctMods = R.concat(
@@ -1330,11 +1337,6 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
 
     const gearDmg = calculateGearDmg(loadout, mods);
     const flatDmg = calculateFlatDmg(mods, "attack");
-
-    const aspd = calculateAspd(loadout, mods);
-    const critChance = calculateCritRating(mods);
-    const critDmgMult = calculateCritDmg(mods);
-
     const skillHit = calculateSkillHit(
       gearDmg,
       flatDmg,
@@ -1343,9 +1345,15 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       perSkillContext.skillSlot.level || 20,
       configuration,
     );
+
+    const aspd = calculateAspd(loadout, mods);
+    const critChance = calculateCritRating(mods);
+    const critDmgMult = calculateCritDmg(mods);
+    const doubleDmgMult = calculateDoubleDmgMult(mods);
+
     const avgHitWithCrit =
       skillHit.avg * critChance * critDmgMult + skillHit.avg * (1 - critChance);
-    const avgDps = avgHitWithCrit * aspd;
+    const avgDps = avgHitWithCrit * doubleDmgMult * aspd;
 
     results[slot.skillName as ImplementedActiveSkillName] = {
       critChance,

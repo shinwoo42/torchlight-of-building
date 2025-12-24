@@ -131,6 +131,11 @@ export type Mod =
       src?: string;
     }
   | {
+      type: "DoubleDmgChancePct";
+      value: number;
+      src?: string;
+    }
+  | {
       type: "Stat";
       value: number;
       statType: StatType;

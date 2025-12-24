@@ -585,3 +585,13 @@ test("parse gear attack speed with damage penalty", () => {
     },
   ]);
 });
+
+test("parse double damage chance", () => {
+  const result = parseMod("+31% chance to deal Double Damage");
+  expect(result).toEqual([
+    {
+      type: "DoubleDmgChancePct",
+      value: 0.31,
+    },
+  ]);
+});
