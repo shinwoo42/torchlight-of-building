@@ -562,6 +562,7 @@ export const parseMod = (input: string): Mod[] | undefined => {
 
   const parsers = [
     // Offense
+    // basic offense
     parseDmgPct,
     parseCritRatingPct,
     parseCritDmgPct,
@@ -569,6 +570,15 @@ export const parseMod = (input: string): Mod[] | undefined => {
     parseAspdAndCspdPct,
     parseAspdPct,
     parseCspdPct,
+    // misc offense
+    parseFervorEff,
+    parseSteepStrikeChance,
+    parseShadowQuant,
+    parseShadowDmgPct,
+    parseAddsDmgAs,
+    parseResPenPct,
+    parseArmorPenPct,
+
     // Defense parsers
     parseAttackBlockChancePct,
     parseSpellBlockChancePct,
@@ -578,18 +588,11 @@ export const parseMod = (input: string): Mod[] | undefined => {
     parseEvasionPct,
     parseEnergyShieldRegainPct,
     parseLifeRegainPct,
+
     // Attributes
     parseStat,
     parseStatPct,
-    // misc
-    parseFervorEff,
-    parseSteepStrikeChance,
-    parseShadowQuant,
-    parseShadowDmgPct,
-    parseAddsDmgAs,
-    parseResPenPct,
-    parseArmorPenPct,
-    // parseMultistrikeChancePct,
+
     // Add more parsers here as they're implemented
   ];
 
