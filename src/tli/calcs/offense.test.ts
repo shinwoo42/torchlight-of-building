@@ -166,680 +166,689 @@ const validate = (
   }
 };
 
-test("calculate offense very basic", () => {
-  // base * bonusdmg
-  // 100 * 2 = 200
-  const { input, skillName } = createInput({
-    mods: [
-      affix([{ type: "DmgPct", value: 1, modType: "global", addn: false }]),
-    ],
+describe("basic damage modifiers", () => {
+  test("calculate offense very basic", () => {
+    // base * bonusdmg
+    // 100 * 2 = 200
+    const { input, skillName } = createInput({
+      mods: [
+        affix([{ type: "DmgPct", value: 1, modType: "global", addn: false }]),
+      ],
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 200 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 200 });
-});
 
-test("calculate offense multiple inc dmg", () => {
-  // base * (1 + sum of increased)
-  // 100 * (1 + 0.5 + 0.3) = 180
-  const { input, skillName } = createInput({
-    mods: [
-      affix([{ type: "DmgPct", value: 0.5, modType: "global", addn: false }]), // +50% increased
-      affix([{ type: "DmgPct", value: 0.3, modType: "global", addn: false }]), // +30% increased
-    ],
+  test("calculate offense multiple inc dmg", () => {
+    // base * (1 + sum of increased)
+    // 100 * (1 + 0.5 + 0.3) = 180
+    const { input, skillName } = createInput({
+      mods: [
+        affix([{ type: "DmgPct", value: 0.5, modType: "global", addn: false }]), // +50% increased
+        affix([{ type: "DmgPct", value: 0.3, modType: "global", addn: false }]), // +30% increased
+      ],
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 180 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 180 });
-});
 
-test("calculate offense multiple addn dmg", () => {
-  // base * (1 + more1) * (1 + more2)
-  // 100 * 1.5 * 1.2 = 180
-  const { input, skillName } = createInput({
-    mods: [
-      affix([{ type: "DmgPct", value: 0.5, modType: "global", addn: true }]), // +50% more
-      affix([{ type: "DmgPct", value: 0.2, modType: "global", addn: true }]), // +20% more
-    ],
+  test("calculate offense multiple addn dmg", () => {
+    // base * (1 + more1) * (1 + more2)
+    // 100 * 1.5 * 1.2 = 180
+    const { input, skillName } = createInput({
+      mods: [
+        affix([{ type: "DmgPct", value: 0.5, modType: "global", addn: true }]), // +50% more
+        affix([{ type: "DmgPct", value: 0.2, modType: "global", addn: true }]), // +20% more
+      ],
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 180 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 180 });
-});
 
-test("calculate offense multiple mix inc and addn dmg", () => {
-  // base * (1 + sum of increased) * (1 + more)
-  // 100 * (1 + 0.5 + 0.3) * 1.2 = 100 * 1.8 * 1.2 = 216
-  const { input, skillName } = createInput({
-    mods: [
-      affix([{ type: "DmgPct", value: 0.5, modType: "global", addn: false }]), // +50% increased
-      affix([{ type: "DmgPct", value: 0.3, modType: "global", addn: false }]), // +30% increased
-      affix([{ type: "DmgPct", value: 0.2, modType: "global", addn: true }]), // +20% more
-    ],
+  test("calculate offense multiple mix inc and addn dmg", () => {
+    // base * (1 + sum of increased) * (1 + more)
+    // 100 * (1 + 0.5 + 0.3) * 1.2 = 100 * 1.8 * 1.2 = 216
+    const { input, skillName } = createInput({
+      mods: [
+        affix([{ type: "DmgPct", value: 0.5, modType: "global", addn: false }]), // +50% increased
+        affix([{ type: "DmgPct", value: 0.3, modType: "global", addn: false }]), // +30% increased
+        affix([{ type: "DmgPct", value: 0.2, modType: "global", addn: true }]), // +20% more
+      ],
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 216 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 216 });
+
+  test("calculate offense atk dmg mod", () => {
+    // [Test] Simple Attack has "Attack" tag, so attack modifiers apply
+    // 100 * (1 + 0.5) = 150
+    const { input, skillName } = createInput({
+      mods: [
+        affix([{ type: "DmgPct", value: 0.5, modType: "attack", addn: false }]),
+      ],
+    }); // +50% increased attack damage
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 150 });
+  });
+
+  test("calculate offense spell dmg mod doesn't affect attack skill", () => {
+    // [Test] Simple Attack has "Attack" tag, NOT "Spell" tag
+    // So spell modifiers don't apply - only base damage
+    // 100 * 1 (no applicable modifiers) = 100
+    const { input, skillName } = createInput({
+      mods: [
+        affix([{ type: "DmgPct", value: 0.5, modType: "spell", addn: false }]),
+      ],
+    }); // +50% increased spell damage
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 100 });
+  });
+
+  test("calculate offense elemental damage", () => {
+    // GearPlusEleMinusPhysDmg removes all physical damage and adds elemental
+    // Physical: 100 * (1 - 1) = 0 (removed by conversion)
+    // Cold/Lightning/Fire: 50 each * 1.5 (elemental bonus) = 75 each
+    // Total avg hit: 0 + 75 + 75 + 75 = 225
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [
+          affix([
+            {
+              type: "FlatGearDmg",
+              modType: "elemental",
+              value: { min: 50, max: 50 },
+            },
+            { type: "GearPhysDmgPct", value: -1 },
+          ]),
+        ],
+      },
+      mods: [
+        affix([
+          { type: "DmgPct", value: 0.5, modType: "elemental", addn: false },
+        ]),
+      ], // +50% elemental
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 225 });
+  });
+
+  test("calculate offense cold damage", () => {
+    // Physical: 100 (no bonuses)
+    // Cold: 30 * 1.8 (cold bonus) = 54
+    // Total avg hit: 100 + 54 = 154
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [
+          affix([
+            {
+              type: "FlatGearDmg",
+              value: { min: 30, max: 30 },
+              modType: "cold",
+            },
+          ]),
+        ],
+      },
+      mods: [
+        affix([{ type: "DmgPct", value: 0.8, modType: "cold", addn: false }]),
+      ], // +80% cold damage
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 154 });
+  });
 });
 
-test("calculate offense atk dmg mod", () => {
-  // [Test] Simple Attack has "Attack" tag, so attack modifiers apply
-  // 100 * (1 + 0.5) = 150
-  const { input, skillName } = createInput({
-    mods: [
-      affix([{ type: "DmgPct", value: 0.5, modType: "attack", addn: false }]),
-    ],
-  }); // +50% increased attack damage
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 150 });
-});
+describe("fervor mechanics", () => {
+  test("calculate offense with fervor enabled default points", () => {
+    // Base damage: 100
+    // Fervor: 100 points * 2% = 200% increased crit rating
+    // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
+    // Crit damage: 1.5 (default)
+    // AvgHitWithCrit: 100 * 0.15 * 1.5 + 100 * 0.85 = 22.5 + 85 = 107.5
+    const { input, skillName } = createInput({
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.15,
+      avgHitWithCrit: 107.5,
+    });
+  });
 
-test("calculate offense spell dmg mod doesn't affect attack skill", () => {
-  // [Test] Simple Attack has "Attack" tag, NOT "Spell" tag
-  // So spell modifiers don't apply - only base damage
-  // 100 * 1 (no applicable modifiers) = 100
-  const { input, skillName } = createInput({
-    mods: [
-      affix([{ type: "DmgPct", value: 0.5, modType: "spell", addn: false }]),
-    ],
-  }); // +50% increased spell damage
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 100 });
-});
+  test("calculate offense with fervor enabled custom points", () => {
+    // Base damage: 100
+    // Fervor: 50 points * 2% = 100% increased crit rating
+    // Crit chance: 0.05 * (1 + 1.0) = 0.10 (10%)
+    // Crit damage: 1.5 (default)
+    // AvgHitWithCrit: 100 * 0.10 * 1.5 + 100 * 0.90 = 15 + 90 = 105
+    const { input, skillName } = createInput({
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 50 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.1,
+      avgHitWithCrit: 105,
+    });
+  });
 
-test("calculate offense elemental damage", () => {
-  // GearPlusEleMinusPhysDmg removes all physical damage and adds elemental
-  // Physical: 100 * (1 - 1) = 0 (removed by conversion)
-  // Cold/Lightning/Fire: 50 each * 1.5 (elemental bonus) = 75 each
-  // Total avg hit: 0 + 75 + 75 + 75 = 225
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [
+  test("calculate offense with fervor disabled", () => {
+    // Fervor disabled, so no bonus despite having 100 points
+    // Crit chance: 0.05 * (1 + 0) = 0.05 (5%)
+    // Crit damage: 1.5 (default)
+    // AvgHitWithCrit: 100 * 0.05 * 1.5 + 100 * 0.95 = 7.5 + 95 = 102.5
+    const { input, skillName } = createInput({
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: false, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.05,
+      avgHitWithCrit: 102.5,
+    });
+  });
+
+  test("calculate offense with fervor and other crit rating affixes", () => {
+    // Base damage: 100
+    // Crit rating from gear: +50%
+    // Fervor: 25 points * 2% = 50% increased crit rating
+    // Total crit rating bonus: 50% + 50% = 100%
+    // Crit chance: 0.05 * (1 + 1.0) = 0.10 (10%)
+    // Crit damage: 1.5 (default)
+    // AvgHitWithCrit: 100 * 0.10 * 1.5 + 100 * 0.90 = 15 + 90 = 105
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [
+          affix([{ type: "CritRatingPct", value: 0.5, modType: "global" }]),
+        ], // +50% crit rating
+      },
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 25 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.1,
+      avgHitWithCrit: 105,
+    });
+  });
+
+  test("calculate offense with fervor and single FervorEff modifier", () => {
+    // Base damage: 100
+    // Fervor: 100 points * 2% * (1 + 0.5) = 100 * 0.02 * 1.5 = 3.0 (300% increased crit rating)
+    // Crit chance: 0.05 * (1 + 3.0) = 0.20 (20%)
+    // Crit damage: 1.5 (default)
+    // AvgHitWithCrit: 100 * 0.20 * 1.5 + 100 * 0.80 = 30 + 80 = 110
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [affix([{ type: "FervorEff", value: 0.5 }])], // +50% fervor effectiveness
+      },
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.2,
+      avgHitWithCrit: 110,
+    });
+  });
+
+  test("calculate offense with fervor and multiple FervorEff modifiers stacking", () => {
+    // Base damage: 100
+    // FervorEff total: 0.1 + 0.1 = 0.2 (20% total)
+    // Fervor: 100 points * 2% * (1 + 0.2) = 100 * 0.02 * 1.2 = 2.4 (240% increased crit rating)
+    // Crit chance: 0.05 * (1 + 2.4) = 0.17 (17%)
+    // Crit damage: 1.5 (default)
+    // AvgHitWithCrit: 100 * 0.17 * 1.5 + 100 * 0.83 = 25.5 + 83 = 108.5
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [affix([{ type: "FervorEff", value: 0.1 }])], // +10% fervor effectiveness
+      },
+      talentMods: [affix([{ type: "FervorEff", value: 0.1 }])], // +10% fervor effectiveness
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.17,
+      avgHitWithCrit: 108.5,
+    });
+  });
+
+  test("calculate offense with fervor and FervorEff with custom fervor points", () => {
+    // Base damage: 100
+    // Fervor: 50 points * 2% * (1 + 1.0) = 50 * 0.02 * 2.0 = 2.0 (200% increased crit rating)
+    // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
+    // Crit damage: 1.5 (default)
+    // AvgHitWithCrit: 100 * 0.15 * 1.5 + 100 * 0.85 = 22.5 + 85 = 107.5
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [affix([{ type: "FervorEff", value: 1.0 }])], // +100% fervor effectiveness (doubles it)
+      },
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 50 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.15,
+      avgHitWithCrit: 107.5,
+    });
+  });
+
+  test("calculate offense with FervorEff but fervor disabled", () => {
+    // FervorEff has no effect when fervor is disabled
+    // Crit chance: 0.05 * (1 + 0) = 0.05 (5%)
+    // Crit damage: 1.5 (default)
+    // AvgHitWithCrit: 100 * 0.05 * 1.5 + 100 * 0.95 = 7.5 + 95 = 102.5
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [affix([{ type: "FervorEff", value: 0.5 }])], // +50% fervor effectiveness
+      },
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: false, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.05,
+      avgHitWithCrit: 102.5,
+    });
+  });
+
+  test("calculate offense with CritDmgPerFervor single affix", () => {
+    // Base damage: 100
+    // Fervor: 100 points * 2% = 200% increased crit rating
+    // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
+    // CritDmgPerFervor: 0.005 * 100 = 0.5 (50% increased crit damage)
+    // Crit damage: 1.5 * (1 + 0.5) = 2.25
+    // AvgHitWithCrit: 100 * 0.15 * 2.25 + 100 * 0.85 = 33.75 + 85 = 118.75
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [
+          affix([
+            {
+              type: "CritDmgPct",
+              value: 0.005,
+              addn: false,
+              modType: "global",
+              per: { stackable: "fervor" },
+            },
+          ]),
+        ], // +0.5% crit dmg per fervor point
+      },
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.15,
+      critDmgMult: 2.25,
+      avgHitWithCrit: 118.75,
+    });
+  });
+
+  test("calculate offense with multiple CritDmgPerFervor affixes stacking", () => {
+    // Base damage: 100
+    // Fervor: 100 points * 2% = 200% increased crit rating
+    // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
+    // CritDmgPerFervor total: (0.005 * 100) + (0.003 * 100) = 0.5 + 0.3 = 0.8
+    // Crit damage: 1.5 * (1 + 0.8) = 2.7
+    // AvgHitWithCrit: 100 * 0.15 * 2.7 + 100 * 0.85 = 40.5 + 85 = 125.5
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [
+          affix([
+            {
+              type: "CritDmgPct",
+              value: 0.005,
+              addn: false,
+              modType: "global",
+              per: { stackable: "fervor" },
+            },
+          ]),
+        ], // +0.5% per point
+      },
+      talentMods: [
         affix([
           {
-            type: "FlatGearDmg",
-            modType: "elemental",
+            type: "CritDmgPct",
+            value: 0.003,
+            addn: false,
+            modType: "global",
+            per: { stackable: "fervor" },
+          },
+        ]),
+      ], // +0.3% per point
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.15,
+      critDmgMult: 2.7,
+      avgHitWithCrit: 125.5,
+    });
+  });
+
+  test("calculate offense with CritDmgPerFervor with custom fervor points", () => {
+    // Base damage: 100
+    // Fervor: 50 points * 2% = 100% increased crit rating
+    // Crit chance: 0.05 * (1 + 1.0) = 0.10 (10%)
+    // CritDmgPerFervor: 0.01 * 50 = 0.5 (50% increased crit damage)
+    // Crit damage: 1.5 * (1 + 0.5) = 2.25
+    // AvgHitWithCrit: 100 * 0.10 * 2.25 + 100 * 0.90 = 22.5 + 90 = 112.5
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [
+          affix([
+            {
+              type: "CritDmgPct",
+              value: 0.01,
+              addn: false,
+              modType: "global",
+              per: { stackable: "fervor" },
+            },
+          ]),
+        ], // +1% crit dmg per fervor point
+      },
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 50 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.1,
+      critDmgMult: 2.25,
+      avgHitWithCrit: 112.5,
+    });
+  });
+
+  test("calculate offense with CritDmgPerFervor but fervor disabled", () => {
+    // CritDmgPerFervor has no effect when fervor is disabled
+    // Crit chance: 0.05 (5%, no fervor bonus)
+    // Crit damage: 1.5 (no bonus)
+    // AvgHitWithCrit: 100 * 0.05 * 1.5 + 100 * 0.95 = 7.5 + 95 = 102.5
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [
+          affix([
+            {
+              type: "CritDmgPct",
+              value: 0.005,
+              addn: false,
+              modType: "global",
+              per: { stackable: "fervor" },
+            },
+          ]),
+        ], // +0.5% per point
+      },
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: false, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.05,
+      critDmgMult: 1.5,
+      avgHitWithCrit: 102.5,
+    });
+  });
+
+  test("calculate offense with CritDmgPerFervor and other crit damage modifiers", () => {
+    // Base damage: 100
+    // Fervor: 100 points * 2% = 200% increased crit rating
+    // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
+    // CritDmgPerFervor: 0.005 * 100 = 0.5 (50%)
+    // CritDmgPct: 0.3 (30%)
+    // Total increased crit damage: 0.5 + 0.3 = 0.8 (80%)
+    // Crit damage: 1.5 * (1 + 0.8) = 2.7
+    // AvgHitWithCrit: 100 * 0.15 * 2.7 + 100 * 0.85 = 40.5 + 85 = 125.5
+    const { input, skillName } = createInput({
+      weapon: {
+        base_affixes: [
+          affix([
+            {
+              type: "CritDmgPct",
+              value: 0.005,
+              addn: false,
+              modType: "global",
+              per: { stackable: "fervor" },
+            },
+          ]), // +0.5% per point
+          affix([
+            { type: "CritDmgPct", value: 0.3, modType: "global", addn: false },
+          ]), // +30% increased
+        ],
+      },
+      configuration: {
+        ...createDefaultConfiguration(),
+        fervor: { enabled: true, points: 100 },
+      },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, {
+      avgHit: 100,
+      critChance: 0.15,
+      critDmgMult: 2.7,
+      avgHitWithCrit: 125.5,
+    });
+  });
+});
+
+describe("flat damage to attacks", () => {
+  test("calculate offense with flat physical damage to attacks", () => {
+    // Weapon damage: 100
+    // Flat damage: 50 (scaled by addedDmgEffPct = 1.0)
+    // Total: 100 + 50 = 150
+    const { input, skillName } = createInput({
+      mods: [
+        affix([
+          {
+            type: "FlatDmgToAtks",
             value: { min: 50, max: 50 },
+            dmgType: "physical",
           },
-          { type: "GearPhysDmgPct", value: -1 },
         ]),
       ],
-    },
-    mods: [
-      affix([
-        { type: "DmgPct", value: 0.5, modType: "elemental", addn: false },
-      ]),
-    ], // +50% elemental
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 150 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 225 });
-});
 
-test("calculate offense cold damage", () => {
-  // Physical: 100 (no bonuses)
-  // Cold: 30 * 1.8 (cold bonus) = 54
-  // Total avg hit: 100 + 54 = 154
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [
+  test("calculate offense with flat elemental damage to attacks", () => {
+    // Weapon: 100 phys
+    // Flat: 20 cold + 30 fire + 10 lightning = 60 elemental
+    // Total: 100 + 60 = 160
+    const { input, skillName } = createInput({
+      mods: [
         affix([
           {
-            type: "FlatGearDmg",
+            type: "FlatDmgToAtks",
+            value: { min: 20, max: 20 },
+            dmgType: "cold",
+          },
+        ]),
+        affix([
+          {
+            type: "FlatDmgToAtks",
             value: { min: 30, max: 30 },
-            modType: "cold",
+            dmgType: "fire",
+          },
+        ]),
+        affix([
+          {
+            type: "FlatDmgToAtks",
+            value: { min: 10, max: 10 },
+            dmgType: "lightning",
           },
         ]),
       ],
-    },
-    mods: [
-      affix([{ type: "DmgPct", value: 0.8, modType: "cold", addn: false }]),
-    ], // +80% cold damage
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 160 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 154 });
-});
 
-test("calculate offense with fervor enabled default points", () => {
-  // Base damage: 100
-  // Fervor: 100 points * 2% = 200% increased crit rating
-  // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
-  // Crit damage: 1.5 (default)
-  // AvgHitWithCrit: 100 * 0.15 * 1.5 + 100 * 0.85 = 22.5 + 85 = 107.5
-  const { input, skillName } = createInput({
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 100 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.15,
-    avgHitWithCrit: 107.5,
-  });
-});
-
-test("calculate offense with fervor enabled custom points", () => {
-  // Base damage: 100
-  // Fervor: 50 points * 2% = 100% increased crit rating
-  // Crit chance: 0.05 * (1 + 1.0) = 0.10 (10%)
-  // Crit damage: 1.5 (default)
-  // AvgHitWithCrit: 100 * 0.10 * 1.5 + 100 * 0.90 = 15 + 90 = 105
-  const { input, skillName } = createInput({
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 50 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.1,
-    avgHitWithCrit: 105,
-  });
-});
-
-test("calculate offense with fervor disabled", () => {
-  // Fervor disabled, so no bonus despite having 100 points
-  // Crit chance: 0.05 * (1 + 0) = 0.05 (5%)
-  // Crit damage: 1.5 (default)
-  // AvgHitWithCrit: 100 * 0.05 * 1.5 + 100 * 0.95 = 7.5 + 95 = 102.5
-  const { input, skillName } = createInput({
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: false, points: 100 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.05,
-    avgHitWithCrit: 102.5,
-  });
-});
-
-test("calculate offense with fervor and other crit rating affixes", () => {
-  // Base damage: 100
-  // Crit rating from gear: +50%
-  // Fervor: 25 points * 2% = 50% increased crit rating
-  // Total crit rating bonus: 50% + 50% = 100%
-  // Crit chance: 0.05 * (1 + 1.0) = 0.10 (10%)
-  // Crit damage: 1.5 (default)
-  // AvgHitWithCrit: 100 * 0.10 * 1.5 + 100 * 0.90 = 15 + 90 = 105
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [
-        affix([{ type: "CritRatingPct", value: 0.5, modType: "global" }]),
-      ], // +50% crit rating
-    },
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 25 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.1,
-    avgHitWithCrit: 105,
-  });
-});
-
-test("calculate offense with fervor and single FervorEff modifier", () => {
-  // Base damage: 100
-  // Fervor: 100 points * 2% * (1 + 0.5) = 100 * 0.02 * 1.5 = 3.0 (300% increased crit rating)
-  // Crit chance: 0.05 * (1 + 3.0) = 0.20 (20%)
-  // Crit damage: 1.5 (default)
-  // AvgHitWithCrit: 100 * 0.20 * 1.5 + 100 * 0.80 = 30 + 80 = 110
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [affix([{ type: "FervorEff", value: 0.5 }])], // +50% fervor effectiveness
-    },
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 100 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.2,
-    avgHitWithCrit: 110,
-  });
-});
-
-test("calculate offense with fervor and multiple FervorEff modifiers stacking", () => {
-  // Base damage: 100
-  // FervorEff total: 0.1 + 0.1 = 0.2 (20% total)
-  // Fervor: 100 points * 2% * (1 + 0.2) = 100 * 0.02 * 1.2 = 2.4 (240% increased crit rating)
-  // Crit chance: 0.05 * (1 + 2.4) = 0.17 (17%)
-  // Crit damage: 1.5 (default)
-  // AvgHitWithCrit: 100 * 0.17 * 1.5 + 100 * 0.83 = 25.5 + 83 = 108.5
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [affix([{ type: "FervorEff", value: 0.1 }])], // +10% fervor effectiveness
-    },
-    talentMods: [affix([{ type: "FervorEff", value: 0.1 }])], // +10% fervor effectiveness
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 100 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.17,
-    avgHitWithCrit: 108.5,
-  });
-});
-
-test("calculate offense with fervor and FervorEff with custom fervor points", () => {
-  // Base damage: 100
-  // Fervor: 50 points * 2% * (1 + 1.0) = 50 * 0.02 * 2.0 = 2.0 (200% increased crit rating)
-  // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
-  // Crit damage: 1.5 (default)
-  // AvgHitWithCrit: 100 * 0.15 * 1.5 + 100 * 0.85 = 22.5 + 85 = 107.5
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [affix([{ type: "FervorEff", value: 1.0 }])], // +100% fervor effectiveness (doubles it)
-    },
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 50 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.15,
-    avgHitWithCrit: 107.5,
-  });
-});
-
-test("calculate offense with FervorEff but fervor disabled", () => {
-  // FervorEff has no effect when fervor is disabled
-  // Crit chance: 0.05 * (1 + 0) = 0.05 (5%)
-  // Crit damage: 1.5 (default)
-  // AvgHitWithCrit: 100 * 0.05 * 1.5 + 100 * 0.95 = 7.5 + 95 = 102.5
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [affix([{ type: "FervorEff", value: 0.5 }])], // +50% fervor effectiveness
-    },
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: false, points: 100 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.05,
-    avgHitWithCrit: 102.5,
-  });
-});
-
-test("calculate offense with CritDmgPerFervor single affix", () => {
-  // Base damage: 100
-  // Fervor: 100 points * 2% = 200% increased crit rating
-  // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
-  // CritDmgPerFervor: 0.005 * 100 = 0.5 (50% increased crit damage)
-  // Crit damage: 1.5 * (1 + 0.5) = 2.25
-  // AvgHitWithCrit: 100 * 0.15 * 2.25 + 100 * 0.85 = 33.75 + 85 = 118.75
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [
+  test("calculate offense with multiple flat damage sources stacking", () => {
+    // Weapon: 100 phys
+    // Flat: 25 + 25 = 50 phys (stacks additively)
+    // Total: 100 + 50 = 150
+    const { input, skillName } = createInput({
+      mods: [
         affix([
           {
-            type: "CritDmgPct",
-            value: 0.005,
-            addn: false,
-            modType: "global",
-            per: { stackable: "fervor" },
+            type: "FlatDmgToAtks",
+            value: { min: 25, max: 25 },
+            dmgType: "physical",
           },
         ]),
-      ], // +0.5% crit dmg per fervor point
-    },
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 100 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.15,
-    critDmgMult: 2.25,
-    avgHitWithCrit: 118.75,
-  });
-});
-
-test("calculate offense with multiple CritDmgPerFervor affixes stacking", () => {
-  // Base damage: 100
-  // Fervor: 100 points * 2% = 200% increased crit rating
-  // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
-  // CritDmgPerFervor total: (0.005 * 100) + (0.003 * 100) = 0.5 + 0.3 = 0.8
-  // Crit damage: 1.5 * (1 + 0.8) = 2.7
-  // AvgHitWithCrit: 100 * 0.15 * 2.7 + 100 * 0.85 = 40.5 + 85 = 125.5
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [
         affix([
           {
-            type: "CritDmgPct",
-            value: 0.005,
-            addn: false,
-            modType: "global",
-            per: { stackable: "fervor" },
+            type: "FlatDmgToAtks",
+            value: { min: 25, max: 25 },
+            dmgType: "physical",
           },
         ]),
-      ], // +0.5% per point
-    },
-    talentMods: [
-      affix([
-        {
-          type: "CritDmgPct",
-          value: 0.003,
-          addn: false,
-          modType: "global",
-          per: { stackable: "fervor" },
-        },
-      ]),
-    ], // +0.3% per point
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 100 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.15,
-    critDmgMult: 2.7,
-    avgHitWithCrit: 125.5,
-  });
-});
-
-test("calculate offense with CritDmgPerFervor with custom fervor points", () => {
-  // Base damage: 100
-  // Fervor: 50 points * 2% = 100% increased crit rating
-  // Crit chance: 0.05 * (1 + 1.0) = 0.10 (10%)
-  // CritDmgPerFervor: 0.01 * 50 = 0.5 (50% increased crit damage)
-  // Crit damage: 1.5 * (1 + 0.5) = 2.25
-  // AvgHitWithCrit: 100 * 0.10 * 2.25 + 100 * 0.90 = 22.5 + 90 = 112.5
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [
-        affix([
-          {
-            type: "CritDmgPct",
-            value: 0.01,
-            addn: false,
-            modType: "global",
-            per: { stackable: "fervor" },
-          },
-        ]),
-      ], // +1% crit dmg per fervor point
-    },
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 50 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.1,
-    critDmgMult: 2.25,
-    avgHitWithCrit: 112.5,
-  });
-});
-
-test("calculate offense with CritDmgPerFervor but fervor disabled", () => {
-  // CritDmgPerFervor has no effect when fervor is disabled
-  // Crit chance: 0.05 (5%, no fervor bonus)
-  // Crit damage: 1.5 (no bonus)
-  // AvgHitWithCrit: 100 * 0.05 * 1.5 + 100 * 0.95 = 7.5 + 95 = 102.5
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [
-        affix([
-          {
-            type: "CritDmgPct",
-            value: 0.005,
-            addn: false,
-            modType: "global",
-            per: { stackable: "fervor" },
-          },
-        ]),
-      ], // +0.5% per point
-    },
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: false, points: 100 },
-    },
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.05,
-    critDmgMult: 1.5,
-    avgHitWithCrit: 102.5,
-  });
-});
-
-test("calculate offense with CritDmgPerFervor and other crit damage modifiers", () => {
-  // Base damage: 100
-  // Fervor: 100 points * 2% = 200% increased crit rating
-  // Crit chance: 0.05 * (1 + 2.0) = 0.15 (15%)
-  // CritDmgPerFervor: 0.005 * 100 = 0.5 (50%)
-  // CritDmgPct: 0.3 (30%)
-  // Total increased crit damage: 0.5 + 0.3 = 0.8 (80%)
-  // Crit damage: 1.5 * (1 + 0.8) = 2.7
-  // AvgHitWithCrit: 100 * 0.15 * 2.7 + 100 * 0.85 = 40.5 + 85 = 125.5
-  const { input, skillName } = createInput({
-    weapon: {
-      base_affixes: [
-        affix([
-          {
-            type: "CritDmgPct",
-            value: 0.005,
-            addn: false,
-            modType: "global",
-            per: { stackable: "fervor" },
-          },
-        ]), // +0.5% per point
-        affix([
-          { type: "CritDmgPct", value: 0.3, modType: "global", addn: false },
-        ]), // +30% increased
       ],
-    },
-    configuration: {
-      ...createDefaultConfiguration(),
-      fervor: { enabled: true, points: 100 },
-    },
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 150 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, {
-    avgHit: 100,
-    critChance: 0.15,
-    critDmgMult: 2.7,
-    avgHitWithCrit: 125.5,
-  });
-});
 
-// Flat damage tests
-test("calculate offense with flat physical damage to attacks", () => {
-  // Weapon damage: 100
-  // Flat damage: 50 (scaled by addedDmgEffPct = 1.0)
-  // Total: 100 + 50 = 150
-  const { input, skillName } = createInput({
-    mods: [
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 50, max: 50 },
-          dmgType: "physical",
-        },
-      ]),
-    ],
+  test("calculate offense with flat damage scaled by addedDmgEffPct (Frost Spike)", () => {
+    // Frost Spike at level 20 has addedDmgEffPct = 2.01 and WeaponAtkDmgPct = 2.01
+    // Weapon damage: 100 * 2.01 = 201 (converted to cold)
+    // Flat damage: 100 * 2.01 = 201 (converted to cold)
+    // Total: 201 + 201 = 402 cold
+    const { input, skillName } = createInput({
+      mods: [
+        affix([
+          {
+            type: "FlatDmgToAtks",
+            value: { min: 100, max: 100 },
+            dmgType: "physical",
+          },
+        ]),
+      ],
+      skill: "Frost Spike",
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 402 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 150 });
-});
 
-test("calculate offense with flat elemental damage to attacks", () => {
-  // Weapon: 100 phys
-  // Flat: 20 cold + 30 fire + 10 lightning = 60 elemental
-  // Total: 100 + 60 = 160
-  const { input, skillName } = createInput({
-    mods: [
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 20, max: 20 },
-          dmgType: "cold",
-        },
-      ]),
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 30, max: 30 },
-          dmgType: "fire",
-        },
-      ]),
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 10, max: 10 },
-          dmgType: "lightning",
-        },
-      ]),
-    ],
+  test("calculate offense with flat damage and % damage modifiers", () => {
+    // Weapon: 100 phys
+    // Flat: 50 phys
+    // Base total: 150
+    // After +100% physical: 150 * 2 = 300
+    const { input, skillName } = createInput({
+      mods: [
+        affix([
+          {
+            type: "FlatDmgToAtks",
+            value: { min: 50, max: 50 },
+            dmgType: "physical",
+          },
+        ]),
+        affix([
+          { type: "DmgPct", value: 1.0, modType: "physical", addn: false },
+        ]), // +100% physical damage
+      ],
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 300 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 160 });
-});
 
-test("calculate offense with multiple flat damage sources stacking", () => {
-  // Weapon: 100 phys
-  // Flat: 25 + 25 = 50 phys (stacks additively)
-  // Total: 100 + 50 = 150
-  const { input, skillName } = createInput({
-    mods: [
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 25, max: 25 },
-          dmgType: "physical",
-        },
-      ]),
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 25, max: 25 },
-          dmgType: "physical",
-        },
-      ]),
-    ],
+  test("calculate offense with FlatDmgToAtksAndSpells on attack skill", () => {
+    // Weapon: 100 phys
+    // Flat (FlatDmgToAtksAndSpells): 40 cold
+    // Total: 100 + 40 = 140
+    const { input, skillName } = createInput({
+      mods: [
+        affix([
+          {
+            type: "FlatDmgToAtksAndSpells",
+            value: { min: 40, max: 40 },
+            dmgType: "cold",
+          },
+        ]),
+      ],
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 140 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 150 });
-});
 
-test("calculate offense with flat damage scaled by addedDmgEffPct (Frost Spike)", () => {
-  // Frost Spike at level 20 has addedDmgEffPct = 2.01 and WeaponAtkDmgPct = 2.01
-  // Weapon damage: 100 * 2.01 = 201 (converted to cold)
-  // Flat damage: 100 * 2.01 = 201 (converted to cold)
-  // Total: 201 + 201 = 402 cold
-  const { input, skillName } = createInput({
-    mods: [
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 100, max: 100 },
-          dmgType: "physical",
-        },
-      ]),
-    ],
-    skill: "Frost Spike",
+  test("calculate offense with flat damage only (no weapon damage)", () => {
+    // No weapon equipped, only flat damage
+    // Flat: 100 fire * 1.0 (addedDmgEffPct) = 100
+    const { input, skillName } = createInput({
+      weapon: null, // no weapon
+      mods: [
+        affix([
+          {
+            type: "FlatDmgToAtks",
+            value: { min: 100, max: 100 },
+            dmgType: "fire",
+          },
+        ]),
+      ],
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 100 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 402 });
-});
 
-test("calculate offense with flat damage and % damage modifiers", () => {
-  // Weapon: 100 phys
-  // Flat: 50 phys
-  // Base total: 150
-  // After +100% physical: 150 * 2 = 300
-  const { input, skillName } = createInput({
-    mods: [
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 50, max: 50 },
-          dmgType: "physical",
-        },
-      ]),
-      affix([{ type: "DmgPct", value: 1.0, modType: "physical", addn: false }]), // +100% physical damage
-    ],
+  test("calculate offense with flat erosion damage", () => {
+    // Weapon: 100 phys (no bonus)
+    // Flat: 50 erosion * 1.5 (50% erosion bonus) = 75
+    // Total: 100 + 75 = 175
+    const { input, skillName } = createInput({
+      mods: [
+        affix([
+          {
+            type: "FlatDmgToAtks",
+            value: { min: 50, max: 50 },
+            dmgType: "erosion",
+          },
+        ]),
+        affix([
+          { type: "DmgPct", value: 0.5, modType: "erosion", addn: false },
+        ]), // +50% erosion damage
+      ],
+    });
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 175 });
   });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 300 });
-});
-
-test("calculate offense with FlatDmgToAtksAndSpells on attack skill", () => {
-  // Weapon: 100 phys
-  // Flat (FlatDmgToAtksAndSpells): 40 cold
-  // Total: 100 + 40 = 140
-  const { input, skillName } = createInput({
-    mods: [
-      affix([
-        {
-          type: "FlatDmgToAtksAndSpells",
-          value: { min: 40, max: 40 },
-          dmgType: "cold",
-        },
-      ]),
-    ],
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 140 });
-});
-
-test("calculate offense with flat damage only (no weapon damage)", () => {
-  // No weapon equipped, only flat damage
-  // Flat: 100 fire * 1.0 (addedDmgEffPct) = 100
-  const { input, skillName } = createInput({
-    weapon: null, // no weapon
-    mods: [
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 100, max: 100 },
-          dmgType: "fire",
-        },
-      ]),
-    ],
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 100 });
-});
-
-test("calculate offense with flat erosion damage", () => {
-  // Weapon: 100 phys (no bonus)
-  // Flat: 50 erosion * 1.5 (50% erosion bonus) = 75
-  // Total: 100 + 75 = 175
-  const { input, skillName } = createInput({
-    mods: [
-      affix([
-        {
-          type: "FlatDmgToAtks",
-          value: { min: 50, max: 50 },
-          dmgType: "erosion",
-        },
-      ]),
-      affix([{ type: "DmgPct", value: 0.5, modType: "erosion", addn: false }]), // +50% erosion damage
-    ],
-  });
-  const results = calculateOffense(input);
-  validate(results, skillName, { avgHit: 175 });
 });
 
 // Damage Conversion Tests
@@ -3145,7 +3154,20 @@ describe("shadow damage", () => {
 });
 
 // Resistance and Armor Penetration tests
-describe("resistance and armor penetration", () => {
+describe("penetration", () => {
+  interface PenConfigInput {
+    enemyRes?: number;
+    enemyArmor?: number;
+  }
+
+  const createPenetrationConfig = (input: PenConfigInput) => {
+    const config = createDefaultConfiguration();
+    const { enemyRes, enemyArmor } = input;
+    if (enemyRes !== undefined) config.enemyRes = enemyRes;
+    if (enemyArmor !== undefined) config.enemyArmor = enemyArmor;
+    return config;
+  };
+
   describe("resistance penetration", () => {
     test("cold penetration counters cold resistance", () => {
       // 30% resistance, 10% penetration -> effective 20% resistance
@@ -3164,10 +3186,7 @@ describe("resistance and armor penetration", () => {
           ],
         },
         mods: [affix([{ type: "ResPenPct", value: 0.1, penType: "cold" }])],
-        configuration: {
-          ...defaultConfiguration,
-          enemyRes: 0.3,
-        },
+        configuration: createPenetrationConfig({ enemyRes: 0.3 }),
       });
       const results = calculateOffense(input);
       // 100 * (1 - 0.3 + 0.1) = 80
@@ -3192,10 +3211,7 @@ describe("resistance and armor penetration", () => {
         mods: [
           affix([{ type: "ResPenPct", value: 0.1, penType: "elemental" }]),
         ],
-        configuration: {
-          ...defaultConfiguration,
-          enemyRes: 0.3,
-        },
+        configuration: createPenetrationConfig({ enemyRes: 0.3 }),
       });
       const results = calculateOffense(input);
       validate(results, skillName, { avgHit: 80 });
@@ -3217,10 +3233,7 @@ describe("resistance and armor penetration", () => {
           ],
         },
         mods: [affix([{ type: "ResPenPct", value: 0.1, penType: "all" }])],
-        configuration: {
-          ...defaultConfiguration,
-          enemyRes: 0.3,
-        },
+        configuration: createPenetrationConfig({ enemyRes: 0.3 }),
       });
       const results = calculateOffense(input);
       validate(results, skillName, { avgHit: 80 });
@@ -3245,10 +3258,7 @@ describe("resistance and armor penetration", () => {
           affix([{ type: "ResPenPct", value: 0.05, penType: "cold" }]),
           affix([{ type: "ResPenPct", value: 0.05, penType: "elemental" }]),
         ],
-        configuration: {
-          ...defaultConfiguration,
-          enemyRes: 0.3,
-        },
+        configuration: createPenetrationConfig({ enemyRes: 0.3 }),
       });
       const results = calculateOffense(input);
       // 100 * (1 - 0.3 + 0.1) = 80
@@ -3271,10 +3281,7 @@ describe("resistance and armor penetration", () => {
           ],
         },
         mods: [affix([{ type: "ResPenPct", value: 0.1, penType: "fire" }])],
-        configuration: {
-          ...defaultConfiguration,
-          enemyRes: 0.3,
-        },
+        configuration: createPenetrationConfig({ enemyRes: 0.3 }),
       });
       const results = calculateOffense(input);
       // 100 * (1 - 0.3) = 70 (pen doesn't apply)
@@ -3297,10 +3304,7 @@ describe("resistance and armor penetration", () => {
           ],
         },
         mods: [affix([{ type: "ResPenPct", value: 0.3, penType: "cold" }])],
-        configuration: {
-          ...defaultConfiguration,
-          enemyRes: 0.1,
-        },
+        configuration: createPenetrationConfig({ enemyRes: 0.1 }),
       });
       const results = calculateOffense(input);
       // 100 * (1 - 0.1 + 0.3) = 100 * 1.2 = 120
@@ -3313,10 +3317,7 @@ describe("resistance and armor penetration", () => {
       // Formula: armor / (0.9 * armor + 30000)
       // With 27273 armor: 27273 / (0.9 * 27273 + 30000) = 27273 / 54545.7 ≈ 0.5 (50%)
       const { input, skillName } = createInput({
-        configuration: {
-          ...defaultConfiguration,
-          enemyArmor: 27273,
-        },
+        configuration: createPenetrationConfig({ enemyArmor: 27273 }),
       });
       const results = calculateOffense(input);
       // 100 phys * (1 - 0.5) = 50
@@ -3339,11 +3340,10 @@ describe("resistance and armor penetration", () => {
             ]),
           ],
         },
-        configuration: {
-          ...defaultConfiguration,
+        configuration: createPenetrationConfig({
           enemyArmor: 27273,
-          enemyRes: 0, // no resistance, only armor
-        },
+          enemyRes: 0,
+        }),
       });
       const results = calculateOffense(input);
       // 100 cold * (1 - 0.3) = 70
@@ -3356,10 +3356,7 @@ describe("resistance and armor penetration", () => {
       // 50% armor mitigation, 10% armor pen -> 40% effective mitigation
       const { input, skillName } = createInput({
         mods: [affix([{ type: "ArmorPenPct", value: 0.1 }])],
-        configuration: {
-          ...defaultConfiguration,
-          enemyArmor: 27273, // 50% mitigation
-        },
+        configuration: createPenetrationConfig({ enemyArmor: 27273 }),
       });
       const results = calculateOffense(input);
       // 100 phys * (1 - 0.5 + 0.1) = 60
@@ -3382,11 +3379,10 @@ describe("resistance and armor penetration", () => {
           ],
         },
         mods: [affix([{ type: "ArmorPenPct", value: 0.1 }])],
-        configuration: {
-          ...defaultConfiguration,
+        configuration: createPenetrationConfig({
           enemyArmor: 27273,
           enemyRes: 0,
-        },
+        }),
       });
       const results = calculateOffense(input);
       // 100 cold * (1 - 0.3 + 0.1) = 80
@@ -3400,10 +3396,7 @@ describe("resistance and armor penetration", () => {
           affix([{ type: "ArmorPenPct", value: 0.05 }]),
           affix([{ type: "ArmorPenPct", value: 0.05 }]),
         ],
-        configuration: {
-          ...defaultConfiguration,
-          enemyArmor: 27273,
-        },
+        configuration: createPenetrationConfig({ enemyArmor: 27273 }),
       });
       const results = calculateOffense(input);
       // 100 phys * (1 - 0.5 + 0.1) = 60
@@ -3429,11 +3422,10 @@ describe("resistance and armor penetration", () => {
             ]),
           ],
         },
-        configuration: {
-          ...defaultConfiguration,
-          enemyArmor: 27273, // 50% phys, 30% non-phys
+        configuration: createPenetrationConfig({
+          enemyArmor: 27273,
           enemyRes: 0.3,
-        },
+        }),
       });
       const results = calculateOffense(input);
       // 100 * (1 - 0.3) * (1 - 0.3) = 49
@@ -3460,11 +3452,10 @@ describe("resistance and armor penetration", () => {
           affix([{ type: "ResPenPct", value: 0.1, penType: "cold" }]),
           affix([{ type: "ArmorPenPct", value: 0.1 }]),
         ],
-        configuration: {
-          ...defaultConfiguration,
+        configuration: createPenetrationConfig({
           enemyArmor: 27273,
           enemyRes: 0.3,
-        },
+        }),
       });
       const results = calculateOffense(input);
       // 100 * (1 - 0.3 + 0.1) * (1 - 0.3 + 0.1) = 100 * 0.8 * 0.8 = 64
@@ -3474,11 +3465,10 @@ describe("resistance and armor penetration", () => {
     test("physical damage only affected by armor, not resistance", () => {
       // Physical damage should ignore elemental resistance
       const { input, skillName } = createInput({
-        configuration: {
-          ...defaultConfiguration,
-          enemyArmor: 27273, // 50% phys mitigation
-          enemyRes: 0.3, // should not affect physical
-        },
+        configuration: createPenetrationConfig({
+          enemyArmor: 27273,
+          enemyRes: 0.3,
+        }),
       });
       const results = calculateOffense(input);
       // 100 phys * (1 - 0.5) = 50 (resistance doesn't apply)
