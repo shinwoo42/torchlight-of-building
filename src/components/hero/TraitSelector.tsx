@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTitle,
 } from "@/src/components/ui/Tooltip";
-import type { HeroTrait } from "@/src/data/hero_trait/types";
+import type { BaseHeroTrait } from "@/src/data/hero_trait/types";
 import { useTooltip } from "@/src/hooks/useTooltip";
 import type { HeroMemorySlot } from "@/src/lib/save-data";
 import {
@@ -81,7 +81,7 @@ interface TraitSelectorProps {
 const TRAIT_LEVELS = [1, 45, 60, 75] as const;
 
 interface TraitItemProps {
-  trait: HeroTrait;
+  trait: BaseHeroTrait;
   isSelected: boolean;
   isLevel1: boolean;
   level: number;

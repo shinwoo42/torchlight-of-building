@@ -1,6 +1,6 @@
 import { HeroMemories } from "@/src/data/hero_memory/hero_memories";
 import { HeroTraits } from "@/src/data/hero_trait/hero_traits";
-import type { HeroTrait } from "@/src/data/hero_trait/types";
+import type { BaseHeroTrait } from "@/src/data/hero_trait/types";
 import type { HeroMemory as LoadoutHeroMemory } from "@/src/tli/core";
 import type { HeroMemory, HeroMemorySlot, HeroMemoryType } from "./save-data";
 
@@ -16,7 +16,7 @@ export const getUniqueHeroes = (): string[] => {
   return Array.from(heroSet).sort();
 };
 
-export const getTraitsForHero = (hero: string): HeroTrait[] => {
+export const getTraitsForHero = (hero: string): BaseHeroTrait[] => {
   const normalizedHero = normalizeHeroName(hero);
   return HeroTraits.filter(
     (trait) => normalizeHeroName(trait.hero) === normalizedHero,
@@ -26,11 +26,13 @@ export const getTraitsForHero = (hero: string): HeroTrait[] => {
 export const getTraitsForHeroAtLevel = (
   hero: string,
   level: number,
-): HeroTrait[] => {
+): BaseHeroTrait[] => {
   return getTraitsForHero(hero).filter((trait) => trait.level === level);
 };
 
-export const getBaseTraitForHero = (hero: string): HeroTrait | undefined => {
+export const getBaseTraitForHero = (
+  hero: string,
+): BaseHeroTrait | undefined => {
   const traits = getTraitsForHeroAtLevel(hero, 1);
   return traits[0];
 };

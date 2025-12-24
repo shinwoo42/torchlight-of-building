@@ -2,12 +2,12 @@ import { execSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
-import type { HeroTrait } from "../data/hero_trait/types";
+import type { BaseHeroTrait } from "../data/hero_trait/types";
 import { cleanEffectText, readCodexHtml } from "./lib/codex";
 
-const extractHeroTraitData = (html: string): HeroTrait[] => {
+const extractHeroTraitData = (html: string): BaseHeroTrait[] => {
   const $ = cheerio.load(html);
-  const traits: HeroTrait[] = [];
+  const traits: BaseHeroTrait[] = [];
 
   const rows = $('#heroTrait tbody tr[class*="thing"]');
   console.log(`Found ${rows.length} hero trait rows`);
@@ -31,7 +31,7 @@ const extractHeroTraitData = (html: string): HeroTrait[] => {
       return;
     }
 
-    const trait: HeroTrait = {
+    const trait: BaseHeroTrait = {
       hero,
       name,
       level,
@@ -44,10 +44,10 @@ const extractHeroTraitData = (html: string): HeroTrait[] => {
   return traits;
 };
 
-const generateHeroTraitsFile = (traits: HeroTrait[]): string => {
-  return `import type { HeroTrait } from "./types";
+const generateHeroTraitsFile = (traits: BaseHeroTrait[]): string => {
+  return `import type { BaseHeroTrait } from "./types";
 
-export const HeroTraits: readonly HeroTrait[] = ${JSON.stringify(traits)};
+export const HeroTraits = ${JSON.stringify(traits)} as const satisfies readonly BaseHeroTrait[];
 `;
 };
 
