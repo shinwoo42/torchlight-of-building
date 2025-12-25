@@ -595,3 +595,35 @@ test("parse double damage chance", () => {
     },
   ]);
 });
+
+test("parse flat max mana", () => {
+  const result = parseMod("+166 Max Mana");
+  expect(result).toEqual([
+    {
+      type: "MaxMana",
+      value: 166,
+    },
+  ]);
+});
+
+test("parse percentage max mana", () => {
+  const result = parseMod("+90% Max Mana");
+  expect(result).toEqual([
+    {
+      type: "MaxManaPct",
+      value: 0.9,
+      addn: false,
+    },
+  ]);
+});
+
+test("parse additional percentage max mana", () => {
+  const result = parseMod("+20% additional Max Mana");
+  expect(result).toEqual([
+    {
+      type: "MaxManaPct",
+      value: 0.2,
+      addn: true,
+    },
+  ]);
+});

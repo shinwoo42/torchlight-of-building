@@ -579,6 +579,36 @@ const parseDoubleDmgChancePct = (
   return { type: "DoubleDmgChancePct", value };
 };
 
+const parseMaxMana = (input: string): ModOfType<"MaxMana"> | undefined => {
+  // Regex to parse: +166 Max Mana
+  const pattern = /^([+-])?(\d+(?:\.\d+)?) max mana$/i;
+  const match = input.match(pattern);
+
+  if (!match) {
+    return undefined;
+  }
+
+  const value = parseFloat(match[2]);
+  return { type: "MaxMana", value };
+};
+
+const parseMaxManaPct = (
+  input: string,
+): ModOfType<"MaxManaPct"> | undefined => {
+  // Regex to parse: +90% [additional] Max Mana
+  const pattern = /^([+-])?(\d+(?:\.\d+)?)% (?:(additional) )?max mana$/i;
+  const match = input.match(pattern);
+
+  if (!match) {
+    return undefined;
+  }
+
+  const value = parseFloat(match[2]) / 100;
+  const addn = match[3] !== undefined;
+
+  return { type: "MaxManaPct", value, addn };
+};
+
 const parseGearAspdWithDmgPenalty = (
   input: string,
 ): [ModOfType<"GearAspdPct">, ModOfType<"DmgPct">] | undefined => {
@@ -642,6 +672,10 @@ export const parseMod = (input: string): Mod[] | undefined => {
     parseArmorPenPct,
     parseGearAspdPct,
     parseDoubleDmgChancePct,
+
+    // Mana parsers
+    parseMaxMana,
+    parseMaxManaPct,
 
     // Defense parsers
     parseAttackBlockChancePct,
