@@ -1074,20 +1074,11 @@ const resolveBuffSkillMods = (
     }
 
     const prenormMods = [...loadoutMods, ...supportMods, ...levelMods];
-    const mods = resolveModsForSkill(prenormMods, skill, loadout, config);
-
-    // === Calculate SkillEffPct multiplier (from support skills + loadout mods) ===
-    // todo: add area, cdr, duration, and other buff-skill modifiers
-    const skillEffMods = filterMod(mods, "SkillEffPct");
-    const skillEffMult = calculateEffMultiplier(skillEffMods);
-
-    // === Calculate AuraEffPct multiplier (from loadout mods + support skills + own levelBuffMods) ===
-    // Only applies if this is an Aura skill
-    let auraEffMult = 1;
-    if (isAuraSkill) {
-      const allAuraEffMods = filterMod(mods, "AuraEffPct");
-      auraEffMult = calculateEffMultiplier(allAuraEffMods);
-    }
+    const { skillEffMult, auraEffMult } = resolveBuffSkillEffMults(
+      prenormMods,
+      loadout,
+      config,
+    );
 
     // === Apply multipliers to buff mods ===
     for (const mod of rawBuffMods) {
@@ -1299,9 +1290,45 @@ const replaceCoreTalentMods = (mods: Mod[]): Mod[] => {
   return [...withoutCoreTalentMods, ...newMods];
 };
 
+const resolveBuffSkillEffMults = (
+  unresolvedModsFromParam: Mod[],
+  loadout: Loadout,
+  config: Configuration,
+): { skillEffMult: number; auraEffMult: number } => {
+  const buffSkillEffMods = unresolvedModsFromParam.filter(
+    (m) => m.type === "AuraEffPct" || m.type === "SkillEffPct",
+  );
+  const prenormMods = filterModsByCond(buffSkillEffMods, loadout, config);
+
+  const mods = filterOutPerMods(prenormMods);
+  const skillUse = 3;
+  mods.push(...normalizeStackables(prenormMods, "skill_use", skillUse));
+
+  const skillChargesOnUse = 2;
+  mods.push(
+    ...normalizeStackables(
+      prenormMods,
+      "skill_charges_on_use",
+      skillChargesOnUse,
+    ),
+  );
+
+  const crueltyBuffStacks = config.crueltyBuffStacks ?? 40;
+  mods.push(
+    ...normalizeStackables(prenormMods, "cruelty_buff", crueltyBuffStacks),
+  );
+
+  const skillEffMods = filterMod(mods, "SkillEffPct");
+  const skillEffMult = calculateEffMultiplier(skillEffMods);
+  const allAuraEffMods = filterMod(mods, "AuraEffPct");
+  const auraEffMult = calculateEffMultiplier(allAuraEffMods);
+
+  return { skillEffMult, auraEffMult };
+};
+
 // resolves mods, replacing core talents, removing unmatched conditions,
 //   and normalizing per mods
-const resolveModsForSkill = (
+const resolveModsForOffenseSkill = (
   prenormModsFromParam: Mod[],
   skill: BaseActiveSkill | BasePassiveSkill,
   loadout: Loadout,
@@ -1309,6 +1336,7 @@ const resolveModsForSkill = (
 ): Mod[] => {
   // Create stat-based damage mod
   const prenormMods = filterModsByCond(
+    // core talent mod replacement should be done much sooner
     replaceCoreTalentMods([
       ...prenormModsFromParam,
       ...calculateImplicitMods(),
@@ -1322,25 +1350,8 @@ const resolveModsForSkill = (
   const totalMainStats = calculateTotalMainStats(skill, stats);
   mods.push(...normalizeStackables(prenormMods, "main_stat", totalMainStats));
 
-  const skillUse = 3;
-  mods.push(...normalizeStackables(prenormMods, "skill_use", skillUse));
-
-  const skillChargesOnUse = 2;
-  mods.push(
-    ...normalizeStackables(
-      prenormMods,
-      "skill_charges_on_use",
-      skillChargesOnUse,
-    ),
-  );
-
   const willpowerStacks = calculateWillpower(prenormMods);
   mods.push(...normalizeStackables(prenormMods, "willpower", willpowerStacks));
-
-  const crueltyBuffStacks = config.crueltyBuffStacks ?? 40;
-  mods.push(
-    ...normalizeStackables(prenormMods, "cruelty_buff", crueltyBuffStacks),
-  );
 
   const frostbitten = calculateEnemyFrostbitten(config);
   mods.push(
@@ -1415,7 +1426,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       continue; // Skip non-implemented skills
     }
 
-    const mods = resolveModsForSkill(
+    const mods = resolveModsForOffenseSkill(
       [...unresolvedLoadoutAndBuffMods, ...perSkillContext.mods],
       perSkillContext.skill,
       loadout,
