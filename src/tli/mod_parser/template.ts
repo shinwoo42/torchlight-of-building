@@ -11,6 +11,21 @@ import type {
   TemplateBuilder,
 } from "./types";
 
+/**
+ * Type-safe spec builder for outputMany.
+ * Ensures the mod function returns the correct shape for the given mod type.
+ */
+export const spec = <
+  TModType extends keyof ModTypeMap,
+  TCaptures extends object = RuntimeCaptures,
+>(
+  type: TModType,
+  mod: (captures: TCaptures) => Omit<ModOfType<TModType>, "type">,
+): MultiOutput<TCaptures> => ({
+  type,
+  mod: mod as MultiOutput<TCaptures>["mod"],
+});
+
 interface BuilderConfig {
   template: string;
   enumMappings: Map<string, Record<string, string>>;

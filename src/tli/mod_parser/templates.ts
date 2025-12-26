@@ -1,6 +1,6 @@
 import type { PerStackable, ResPenType } from "../mod";
 import { StatWordMapping } from "./enums";
-import { multi, t } from "./template";
+import { multi, spec, t } from "./template";
 
 // ============= Damage =============
 
@@ -50,56 +50,44 @@ export const FlatDmgToSpells = t(
 export const FlatDmgToAtksAndSpells = t(
   "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks and spells",
 ).outputMany([
-  {
-    type: "FlatDmgToAtks",
-    mod: (c) => ({
-      value: { min: c.min, max: c.max },
-      dmgType: c.dmgType,
-    }),
-  },
-  {
-    type: "FlatDmgToSpells",
-    mod: (c) => ({
-      value: { min: c.min, max: c.max },
-      dmgType: c.dmgType,
-    }),
-  },
+  spec("FlatDmgToAtks", (c) => ({
+    value: { min: c.min, max: c.max },
+    dmgType: c.dmgType,
+  })),
+  spec("FlatDmgToSpells", (c) => ({
+    value: { min: c.min, max: c.max },
+    dmgType: c.dmgType,
+  })),
 ]);
 
 // Adds 22 - 27 Physical Damage to Attacks and Spells for every 1034 Mana consumed recently. Stacks up to 200 time(s)
 export const FlatDmgToAtksAndSpellsPer = t(
   "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks and spells for every {amt:int} mana consumed recently. stacks up to {limit:int} time\\(s\\)",
 ).outputMany([
-  {
-    type: "FlatDmgToAtks",
-    mod: (c) => {
-      const per: PerStackable = {
-        stackable: "mana_consumed_recently",
-        amt: c.amt,
-        limit: c.limit,
-      };
-      return {
-        value: { min: c.min, max: c.max },
-        dmgType: c.dmgType,
-        per,
-      };
-    },
-  },
-  {
-    type: "FlatDmgToSpells",
-    mod: (c) => {
-      const per: PerStackable = {
-        stackable: "mana_consumed_recently",
-        amt: c.amt,
-        limit: c.limit,
-      };
-      return {
-        value: { min: c.min, max: c.max },
-        dmgType: c.dmgType,
-        per,
-      };
-    },
-  },
+  spec("FlatDmgToAtks", (c) => {
+    const per: PerStackable = {
+      stackable: "mana_consumed_recently",
+      amt: c.amt,
+      limit: c.limit,
+    };
+    return {
+      value: { min: c.min, max: c.max },
+      dmgType: c.dmgType,
+      per,
+    };
+  }),
+  spec("FlatDmgToSpells", (c) => {
+    const per: PerStackable = {
+      stackable: "mana_consumed_recently",
+      amt: c.amt,
+      limit: c.limit,
+    };
+    return {
+      value: { min: c.min, max: c.max },
+      dmgType: c.dmgType,
+      per,
+    };
+  }),
 ]);
 
 // Adds 18% of Physical Damage to/as Cold Damage
@@ -115,18 +103,12 @@ export const AddsDmgAs = t(
 export const GearAspdWithDmgPenalty = t(
   "{aspd:dec%} gear attack speed. {dmg:dec%} additional attack damage",
 ).outputMany([
-  {
-    type: "GearAspdPct",
-    mod: (c) => ({ value: c.aspd }),
-  },
-  {
-    type: "DmgPct",
-    mod: (c) => ({
-      value: c.dmg,
-      addn: true,
-      modType: "attack" as const,
-    }),
-  },
+  spec("GearAspdPct", (c) => ({ value: c.aspd })),
+  spec("DmgPct", (c) => ({
+    value: c.dmg,
+    addn: true,
+    modType: "attack" as const,
+  })),
 ]);
 
 // Combined damage multi-mod parsers (more specific first)
@@ -159,56 +141,44 @@ export const CritDmgPct = t(
 export const CritRatingAndCritDmgPct = t(
   "{value:dec%} critical strike rating and critical strike damage",
 ).outputMany([
-  {
-    type: "CritRatingPct",
-    mod: (c) => ({
-      value: c.value,
-      modType: "global" as const,
-    }),
-  },
-  {
-    type: "CritDmgPct",
-    mod: (c) => ({
-      value: c.value,
-      modType: "global" as const,
-      addn: false,
-    }),
-  },
+  spec("CritRatingPct", (c) => ({
+    value: c.value,
+    modType: "global" as const,
+  })),
+  spec("CritDmgPct", (c) => ({
+    value: c.value,
+    modType: "global" as const,
+    addn: false,
+  })),
 ]);
 
 // +5% Critical Strike Rating and Critical Strike Damage for every 720 Mana consumed recently
 export const CritRatingAndCritDmgPctPerMana = t(
   "{value:dec%} critical strike rating and critical strike damage for every {amt:int} mana consumed recently",
 ).outputMany([
-  {
-    type: "CritRatingPct",
-    mod: (c) => {
-      const per: PerStackable = {
-        stackable: "mana_consumed_recently",
-        amt: c.amt,
-      };
-      return {
-        value: c.value,
-        modType: "global" as const,
-        per,
-      };
-    },
-  },
-  {
-    type: "CritDmgPct",
-    mod: (c) => {
-      const per: PerStackable = {
-        stackable: "mana_consumed_recently",
-        amt: c.amt,
-      };
-      return {
-        value: c.value,
-        modType: "global" as const,
-        addn: false,
-        per,
-      };
-    },
-  },
+  spec("CritRatingPct", (c) => {
+    const per: PerStackable = {
+      stackable: "mana_consumed_recently",
+      amt: c.amt,
+    };
+    return {
+      value: c.value,
+      modType: "global" as const,
+      per,
+    };
+  }),
+  spec("CritDmgPct", (c) => {
+    const per: PerStackable = {
+      stackable: "mana_consumed_recently",
+      amt: c.amt,
+    };
+    return {
+      value: c.value,
+      modType: "global" as const,
+      addn: false,
+      per,
+    };
+  }),
 ]);
 
 // Combined multi-mod parsers (more specific first)

@@ -1,5 +1,8 @@
 import type { Mod } from "../mod";
 import { multi } from "./template";
+
+export { multi, spec, t } from "./template";
+
 import {
   AddsDmgAs,
   ArmorPct,
