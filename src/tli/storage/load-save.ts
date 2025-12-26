@@ -56,7 +56,7 @@ import type {
   TalentTree,
   TalentTrees,
 } from "../core";
-import { parseMod } from "../mod_parser";
+import { parseMod } from "../mod_parser/index";
 import {
   convertAffixTextToAffix,
   getPrismAffixesForNode,
