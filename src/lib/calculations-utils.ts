@@ -175,19 +175,33 @@ export const getModDisplayName = (mod: Mod): string => {
   }
 };
 
+const formatLargeNumber = (val: number): string => {
+  const absVal = Math.abs(val);
+  const sign = val < 0 ? "-" : "";
+
+  if (absVal >= 1_000_000_000_000) {
+    return `${sign}${(absVal / 1_000_000_000_000).toFixed(2)}T`;
+  }
+  if (absVal >= 1_000_000_000) {
+    return `${sign}${(absVal / 1_000_000_000).toFixed(2)}B`;
+  }
+  if (absVal >= 1_000_000) {
+    return `${sign}${(absVal / 1_000_000).toFixed(2)}M`;
+  }
+  if (absVal >= 1_000) {
+    return `${sign}${(absVal / 1_000).toFixed(2)}K`;
+  }
+  return val.toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+};
+
 export const formatStatValue = {
   percentage: (val: number) => `${(val * 100).toFixed(1)}%`,
   multiplier: (val: number) => `${(val * 100).toFixed(0)}%`,
   aps: (val: number) => `${val.toFixed(2)} APS`,
-  damage: (val: number) =>
-    val.toLocaleString("en-US", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }),
-  dps: (val: number) =>
-    val.toLocaleString("en-US", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }),
+  damage: formatLargeNumber,
+  dps: formatLargeNumber,
   integer: (val: number) => Math.round(val).toLocaleString("en-US"),
 };
