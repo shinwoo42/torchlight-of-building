@@ -45,15 +45,29 @@ src/hooks/               # Custom React hooks
 src/tli/                 # Game engine (pure TypeScript, no React)
 ├── core.ts              # Base types (Gear, HeroMemory, etc.)
 ├── mod.ts               # Mod type definitions
-├── mod_parser.ts        # String → Mod parsing
+├── mod_parser/          # Template-based mod parsing system
+│   ├── index.ts         # Public API exports
+│   ├── compiler.ts      # Template → regex compiler
+│   ├── template.ts      # Template parsing and matching
+│   ├── templates.ts     # All mod templates
+│   ├── template-types.ts # Template type definitions
+│   ├── type-registry.ts # Mod type registry
+│   ├── types.ts         # Core parser types
+│   ├── enums.ts         # Parser enums
+│   └── README.md        # Parser documentation
 ├── calcs/               # Calculation engine
 │   ├── offense.ts       # DPS calculations
 │   └── skill_confs.ts   # Skill configurations
-├── skills/              # Skill templates and mods
-│   ├── active_templates.ts
-│   ├── passive_templates.ts
-│   ├── support_templates.ts
+├── skills/              # Skill factories and mods
+│   ├── types.ts         # Skill type definitions
+│   ├── active_factories.ts
+│   ├── active_mods.ts
+│   ├── passive_factories.ts
+│   ├── passive_mods.ts
+│   ├── support_factories.ts
 │   └── support_mods.ts
+├── hero/                # Hero-related logic
+│   └── hero_trait_mods.ts
 ├── storage/             # Save/load functionality
 │   └── load-save.ts     # SaveData parsing
 └── crafting/            # Gear crafting logic
@@ -94,7 +108,7 @@ src/data/                # Generated TypeScript data (from scripts)
 
 ```
 Raw UI strings (SaveData)
-    ↓ loadSave() / parseMod()  (src/tli/storage/, src/tli/mod_parser.ts)
+    ↓ loadSave() / parseMod()  (src/tli/storage/, src/tli/mod_parser/)
 Typed Loadout (engine types)
     ↓ calculateOffense()       (src/tli/calcs/offense.ts)
 Results (DPS, stats)
@@ -193,10 +207,10 @@ Scripts in `src/scripts/`. Key patterns:
 
 | Task | Key Files |
 |------|-----------|
-| Add gear affix | `src/tli/mod.ts` → `mod_parser.ts` → `calcs/offense.ts` → test |
+| Add mod type | `src/tli/mod.ts` → `mod_parser/templates.ts` → `calcs/offense.ts` → test |
 | Add skill | `src/tli/calcs/skill_confs.ts` (skill configurations) |
-| Add skill template | `src/tli/skills/` (active, passive, or support templates) |
-| Add utility helper | Create `src/app/lib/{feature}-utils.ts` |
+| Add skill mods | `src/tli/skills/` (active, passive, or support mods/factories) |
+| Add utility helper | Create `src/lib/{feature}-utils.ts` |
 | Update talent trees | `pnpm exec tsx src/scripts/generate_talent_tree_data.ts` |
 | Regenerate affixes | `pnpm exec tsx src/scripts/generate_gear_affix_data.ts` |
 | Regenerate skills | `pnpm exec tsx src/scripts/generate_skill_data.ts` |
