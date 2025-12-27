@@ -360,6 +360,15 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "Deals +1% additional damage to an enemy for every 2 points of Frostbite Rating the enemy has",
+        mods: [
+          {
+            type: "DmgPct",
+            value: 1,
+            modType: "global",
+            addn: true,
+            per: { stackable: "frostbite_rating", amt: 2 },
+          },
+        ],
       },
     ],
   },

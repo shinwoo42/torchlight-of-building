@@ -69,6 +69,14 @@ export const allParsers = [
     addn: true,
     cond: "enemy_has_ailment" as const,
   })),
+  t(
+    "deals {value:dec%} additional damage to an enemy for every {amt:int} points of frostbite rating the enemy has",
+  ).output("DmgPct", (c) => ({
+    value: c.value,
+    modType: "global" as const,
+    addn: true,
+    per: { stackable: "frostbite_rating" as const, amt: c.amt },
+  })),
   t("{value:dec%} [additional] [{modType:DmgModType}] damage").output("DmgPct", (c) => ({
     value: c.value,
     modType: c.modType ?? "global",

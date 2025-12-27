@@ -79,6 +79,21 @@ test("parse additional damage against enemies with elemental ailments", () => {
   ]);
 });
 
+test("parse additional damage per frostbite rating", () => {
+  const result = parseMod(
+    "Deals +1% additional damage to an enemy for every 2 points of Frostbite Rating the enemy has",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 1,
+      modType: "global",
+      addn: true,
+      per: { stackable: "frostbite_rating", amt: 2 },
+    },
+  ]);
+});
+
 test("parse decimal damage", () => {
   const result = parseMod("+12.5% fire damage");
   expect(result).toEqual([
