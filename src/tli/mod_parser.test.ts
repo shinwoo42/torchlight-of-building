@@ -823,3 +823,23 @@ test("return undefined for non-existent core talent name", () => {
   const result = parseMod("Not A Real Talent");
   expect(result).toBeUndefined();
 });
+
+test("parse max focus blessing stacks", () => {
+  const result = parseMod("Max Focus Blessing Stacks +1");
+  expect(result).toEqual([
+    {
+      type: "MaxFocusBlessing",
+      value: 1,
+    },
+  ]);
+});
+
+test("parse max focus blessing stacks with higher value", () => {
+  const result = parseMod("Max Focus Blessing Stacks +3");
+  expect(result).toEqual([
+    {
+      type: "MaxFocusBlessing",
+      value: 3,
+    },
+  ]);
+});

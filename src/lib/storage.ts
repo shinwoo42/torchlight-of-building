@@ -71,6 +71,8 @@ export const createEmptyConfigurationPage = (): ConfigurationPage => ({
   manaConsumedRecently: undefined,
   unsealedManaPct: undefined,
   realmOfMercuryEnabled: false,
+  focusBlessings: undefined,
+  hasFocusBlessing: false,
   enemyRes: undefined,
   enemyArmor: undefined,
 });

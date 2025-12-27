@@ -56,6 +56,9 @@ export interface Configuration {
   manaConsumedRecently: number | undefined;
   // default to 0
   unsealedManaPct: number | undefined;
+  // default to max
+  focusBlessings: number | undefined;
+  hasFocusBlessing: boolean;
 
   // --------------------
   // hero-specific config

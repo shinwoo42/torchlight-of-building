@@ -901,6 +901,7 @@ const filterModsByCond = (
             "Lightbringer Rosa: Unsullied Blade (#2)" &&
           config.realmOfMercuryEnabled,
       )
+      .with("has_focus_blessing", () => config.hasFocusBlessing)
       .exhaustive();
   });
 };
@@ -983,12 +984,20 @@ const calculateImplicitMods = (): Mod[] => {
   return [
     {
       type: "DmgPct",
-      // .5% additional damage per main stat
       value: 0.5,
       modType: "global",
       addn: true,
       per: { stackable: "main_stat" },
       src: "Additional Damage from skill Main Stat (.5% per stat)",
+    },
+    {
+      type: "DmgPct",
+      value: 5,
+      modType: "global",
+      addn: true,
+      per: { stackable: "focus_blessing" },
+      cond: "has_focus_blessing",
+      src: "Additional Damage from focus blessings (5% per blessing)",
     },
     {
       type: "AspdPct",
@@ -1368,6 +1377,20 @@ const resolveBuffSkillEffMults = (
   return { skillEffMult, auraEffMult };
 };
 
+const calculateNumFocusBlessings = (
+  mods: Mod[],
+  config: Configuration,
+): number => {
+  if (config.focusBlessings !== undefined) {
+    return config.focusBlessings;
+  }
+  const baseMaxFocusBlessings = 4;
+  const additionalMaxFocusBlessings = sumByValue(
+    filterMod(mods, "MaxFocusBlessing"),
+  );
+  return baseMaxFocusBlessings + additionalMaxFocusBlessings;
+};
+
 // resolves mods, replacing core talents, removing unmatched conditions,
 //   and normalizing per mods
 const resolveModsForOffenseSkill = (
@@ -1383,6 +1406,11 @@ const resolveModsForOffenseSkill = (
 
   const totalMainStats = calculateTotalMainStats(skill, stats);
   mods.push(...normalizeStackables(prenormMods, "main_stat", totalMainStats));
+
+  const focusBlessings = calculateNumFocusBlessings(mods, config);
+  mods.push(
+    ...normalizeStackables(prenormMods, "focus_blessing", focusBlessings),
+  );
 
   const willpowerStacks = calculateWillpower(prenormMods);
   mods.push(...normalizeStackables(prenormMods, "willpower", willpowerStacks));

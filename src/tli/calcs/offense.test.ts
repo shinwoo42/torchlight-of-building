@@ -24,6 +24,8 @@ const createDefaultConfiguration = (): Configuration => ({
   manaConsumedRecently: undefined,
   unsealedManaPct: undefined,
   realmOfMercuryEnabled: false,
+  focusBlessings: 0,
+  hasFocusBlessing: false,
   enemyRes: 0,
   enemyArmor: 0,
 });
@@ -2129,6 +2131,8 @@ describe("resolveBuffSkillMods", () => {
         manaConsumedRecently: undefined,
         unsealedManaPct: undefined,
         realmOfMercuryEnabled: false,
+        focusBlessings: 0,
+        hasFocusBlessing: false,
         enemyRes: undefined,
         enemyArmor: undefined,
       },
