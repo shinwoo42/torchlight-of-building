@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
+import { Analytics } from "@vercel/analytics/react";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
 import "../globals.css";
@@ -29,6 +30,7 @@ function RootLayout(): React.ReactNode {
       </head>
       <body className="antialiased">
         <Outlet />
+        <Analytics />
         <Scripts />
       </body>
     </html>
