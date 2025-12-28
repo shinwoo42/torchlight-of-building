@@ -255,6 +255,17 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
           />
 
           <label className="text-right text-zinc-50">
+            Unsealed Life %
+            <InfoTooltip text="Percentage of life currently unsealed. Defaults to 0." />
+          </label>
+          <NumberInput
+            value={config.unsealedLifePct}
+            onChange={(v) => onUpdate({ unsealedLifePct: v })}
+            min={0}
+            max={100}
+          />
+
+          <label className="text-right text-zinc-50">
             Enemy Resistance %
             <InfoTooltip text="Enemy elemental resistance. Defaults to 50%." />
           </label>

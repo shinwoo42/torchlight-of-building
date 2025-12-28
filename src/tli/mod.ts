@@ -40,6 +40,7 @@ export type Stackable =
   | "mana_consumed_recently"
   | "mercury_pt"
   | "unsealed_mana_pct"
+  | "unsealed_life_pct"
   | "focus_blessing"
   | "agility_blessing"
   | "num_enemies_affected_by_warcry"

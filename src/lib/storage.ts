@@ -70,6 +70,7 @@ export const createEmptyConfigurationPage = (): ConfigurationPage => ({
   numShadowHits: undefined,
   manaConsumedRecently: undefined,
   unsealedManaPct: undefined,
+  unsealedLifePct: undefined,
   realmOfMercuryEnabled: false,
   focusBlessings: undefined,
   hasFocusBlessing: false,

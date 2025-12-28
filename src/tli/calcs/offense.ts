@@ -1554,6 +1554,11 @@ const resolveModsForOffenseSkill = (
     ...normalizeStackables(prenormMods, "unsealed_mana_pct", unsealedManaPct),
   );
 
+  const unsealedLifePct = config.unsealedLifePct ?? 0;
+  mods.push(
+    ...normalizeStackables(prenormMods, "unsealed_life_pct", unsealedLifePct),
+  );
+
   const numEnemiesAffectedByWarcry = config.numEnemiesAffectedByWarcry;
   mods.push(
     ...normalizeStackables(

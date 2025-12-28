@@ -78,6 +78,7 @@ export const useConfiguration = (): Configuration => {
     numShadowHits: configPage.numShadowHits,
     manaConsumedRecently: configPage.manaConsumedRecently,
     unsealedManaPct: configPage.unsealedManaPct,
+    unsealedLifePct: configPage.unsealedLifePct,
     realmOfMercuryEnabled: configPage.realmOfMercuryEnabled,
     focusBlessings: configPage.focusBlessings,
     hasFocusBlessing: configPage.hasFocusBlessing,
