@@ -90,7 +90,13 @@ const convertBaseStats = (
   };
 };
 
-const convertAffix = (affixText: string, src: string | undefined): Affix => {
+const convertAffix = (
+  affixTextParam: string,
+  src: string | undefined,
+): Affix => {
+  const divinityText = " (Max Divinity Effect: 1)";
+  const maxDivinity = affixTextParam.endsWith(divinityText) ? 1 : undefined;
+  const affixText = affixTextParam.replace(divinityText, "");
   const lines = affixText.split(/\n/);
   const affixLines: AffixLine[] = lines.map((lineText) => {
     const mods = parseMod(lineText);
@@ -103,6 +109,7 @@ const convertAffix = (affixText: string, src: string | undefined): Affix => {
   return {
     affixLines,
     src,
+    maxDivinity,
   };
 };
 
