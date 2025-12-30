@@ -66,7 +66,7 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
   const baseAffixOptions = useMemo((): SearchableSelectOption<string>[] => {
     return getBaseAffixes(rarity).map((affix) => ({
       value: affix.affix,
-      label: `${affix.affix.split("\n")[0].slice(0, 80)}...`,
+      label: affix.affix,
     }));
   }, [rarity]);
 
