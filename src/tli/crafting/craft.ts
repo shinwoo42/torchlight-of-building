@@ -1,11 +1,23 @@
 export type ValueRange = { min: number; max: number };
 
-const interpolateValue = (range: ValueRange, percentage: number): number => {
+const getDecimalPlaces = (numStr: string): number => {
+  const decimalIndex = numStr.indexOf(".");
+  return decimalIndex === -1 ? 0 : numStr.length - decimalIndex - 1;
+};
+
+const interpolateValue = (
+  range: ValueRange,
+  percentage: number,
+  decimalPlaces: number,
+): string => {
   if (percentage < 0 || percentage > 100) {
     throw new Error(`Percentage must be 0-100, got ${percentage}`);
   }
   const value = range.min + (range.max - range.min) * (percentage / 100);
-  return Math.round(value);
+  if (decimalPlaces === 0) {
+    return Math.round(value).toString();
+  }
+  return value.toFixed(decimalPlaces);
 };
 
 /**
@@ -26,14 +38,17 @@ export const craft = <T extends { craftableAffix: string }>(
 ): string => {
   let result = affix.craftableAffix;
 
-  // Pattern to match range values like (17-24) or (-6--4)
-  const rangePattern = /\((-?\d+)-(-?\d+)\)/g;
+  // Pattern to match range values like (17-24), (-6--4), or (0.13-0.18)
+  const rangePattern = /\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)/g;
 
   result = result.replace(rangePattern, (_match, minStr, maxStr) => {
-    const min = parseInt(minStr, 10);
-    const max = parseInt(maxStr, 10);
-    const value = interpolateValue({ min, max }, percentage);
-    return value.toString();
+    const min = parseFloat(minStr);
+    const max = parseFloat(maxStr);
+    const decimalPlaces = Math.max(
+      getDecimalPlaces(minStr),
+      getDecimalPlaces(maxStr),
+    );
+    return interpolateValue({ min, max }, percentage, decimalPlaces);
   });
 
   return result;

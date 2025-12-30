@@ -84,4 +84,21 @@ describe("craft", () => {
     // 10 + (20-10) * 0.75 = 10 + 7.5 = 17.5 → rounds to 18
     expect(craft(affix, 75)).toBe("+18% Speed");
   });
+
+  test("crafts affix with decimal ranges", () => {
+    const affix = {
+      craftableAffix:
+        "Reaps (0.13-0.18) s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target",
+    };
+    expect(craft(affix, 0)).toBe(
+      "Reaps 0.13 s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target",
+    );
+    expect(craft(affix, 100)).toBe(
+      "Reaps 0.18 s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target",
+    );
+    // 0.13 + (0.18-0.13) * 0.5 = 0.13 + 0.025 = 0.155 → toFixed(2) gives 0.15
+    expect(craft(affix, 50)).toBe(
+      "Reaps 0.15 s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target",
+    );
+  });
 });
