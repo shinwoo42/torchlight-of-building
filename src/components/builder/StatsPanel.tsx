@@ -1,12 +1,23 @@
 import { useMemo } from "react";
 import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
-import { calculateOffense, type OffenseInput } from "@/src/tli/calcs/offense";
+import {
+  calculateOffense,
+  type OffenseInput,
+  type Resistance,
+} from "@/src/tli/calcs/offense";
 import { formatStatValue } from "../../lib/calculations-utils";
 import {
   useCalculationsSelectedSkill,
   useConfiguration,
   useLoadout,
 } from "../../stores/builderStore";
+
+const formatRes = (res: Resistance): string => {
+  if (res.potential > res.actual) {
+    return `${res.actual}% (${res.potential}%)`;
+  }
+  return `${res.actual}%`;
+};
 
 export const StatsPanel = () => {
   const loadout = useLoadout();
@@ -24,7 +35,7 @@ export const StatsPanel = () => {
     return calculateOffense(input);
   }, [loadout, configuration]);
 
-  const { skills, resourcePool } = offenseResults;
+  const { skills, resourcePool, defenses } = offenseResults;
   const offenseSummary = selectedSkill ? skills[selectedSkill] : undefined;
 
   return (
@@ -70,6 +81,36 @@ export const StatsPanel = () => {
             <div className="text-xs text-zinc-500">Mercury</div>
             <div className="font-medium text-purple-400">
               {formatStatValue.integer(resourcePool.mercuryPts)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-4 space-y-2">
+        <div className="text-xs font-medium text-zinc-400">Resistances</div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="rounded bg-zinc-800 p-2">
+            <div className="text-xs text-zinc-500">Cold</div>
+            <div className="font-medium text-cyan-400">
+              {formatRes(defenses.coldRes)}
+            </div>
+          </div>
+          <div className="rounded bg-zinc-800 p-2">
+            <div className="text-xs text-zinc-500">Lightning</div>
+            <div className="font-medium text-yellow-400">
+              {formatRes(defenses.lightningRes)}
+            </div>
+          </div>
+          <div className="rounded bg-zinc-800 p-2">
+            <div className="text-xs text-zinc-500">Fire</div>
+            <div className="font-medium text-orange-400">
+              {formatRes(defenses.fireRes)}
+            </div>
+          </div>
+          <div className="rounded bg-zinc-800 p-2">
+            <div className="text-xs text-zinc-500">Erosion</div>
+            <div className="font-medium text-fuchsia-400">
+              {formatRes(defenses.erosionRes)}
             </div>
           </div>
         </div>

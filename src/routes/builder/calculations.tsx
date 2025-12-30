@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
-import { calculateOffense, type OffenseInput } from "@/src/tli/calcs/offense";
+import {
+  calculateOffense,
+  type OffenseInput,
+  type Resistance,
+} from "@/src/tli/calcs/offense";
 import { ModGroup } from "../../components/calculations/ModGroup";
 import { SkillSelector } from "../../components/calculations/SkillSelector";
 import {
@@ -17,6 +21,13 @@ import {
   useConfiguration,
   useLoadout,
 } from "../../stores/builderStore";
+
+const formatRes = (res: Resistance): string => {
+  if (res.potential > res.actual) {
+    return `${res.actual}% (${res.potential}%)`;
+  }
+  return `${res.actual}%`;
+};
 
 export const Route = createFileRoute("/builder/calculations")({
   component: CalculationsPage,
@@ -40,7 +51,7 @@ function CalculationsPage(): React.ReactNode {
     return calculateOffense(input);
   }, [loadout, configuration]);
 
-  const { skills, resourcePool } = offenseResults;
+  const { skills, resourcePool, defenses } = offenseResults;
   const offenseSummary = selectedSkill ? skills[selectedSkill] : undefined;
 
   const groupedMods = useMemo(() => {
@@ -101,6 +112,36 @@ function CalculationsPage(): React.ReactNode {
             <div className="text-sm text-zinc-400">Mercury Points</div>
             <div className="text-xl font-semibold text-purple-400">
               {formatStatValue.integer(resourcePool.mercuryPts)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
+        <h3 className="mb-4 text-lg font-semibold text-zinc-50">Resistances</h3>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="rounded-lg bg-zinc-800 p-4">
+            <div className="text-sm text-zinc-400">Cold</div>
+            <div className="text-xl font-semibold text-cyan-400">
+              {formatRes(defenses.coldRes)}
+            </div>
+          </div>
+          <div className="rounded-lg bg-zinc-800 p-4">
+            <div className="text-sm text-zinc-400">Lightning</div>
+            <div className="text-xl font-semibold text-yellow-400">
+              {formatRes(defenses.lightningRes)}
+            </div>
+          </div>
+          <div className="rounded-lg bg-zinc-800 p-4">
+            <div className="text-sm text-zinc-400">Fire</div>
+            <div className="text-xl font-semibold text-orange-400">
+              {formatRes(defenses.fireRes)}
+            </div>
+          </div>
+          <div className="rounded-lg bg-zinc-800 p-4">
+            <div className="text-sm text-zinc-400">Erosion</div>
+            <div className="text-xl font-semibold text-fuchsia-400">
+              {formatRes(defenses.erosionRes)}
             </div>
           </div>
         </div>
