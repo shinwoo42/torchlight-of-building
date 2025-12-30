@@ -307,7 +307,7 @@ const mapLibraryToPool = (library: string): CraftingPool => {
 
 /**
  * Parse craft affixes from #XXXCraft section
- * Only extracts T0 and T1 affixes
+ * Extracts T0 through T4 affixes
  * Table structure: Tier, Modifier, Lv, Weight, Library
  * Two tables: Pre-fix and Suffix (identified by caption)
  */
@@ -335,9 +335,11 @@ const parseCraftAffixes = (
       return; // Skip unknown tables
     }
 
-    // Filter for T0 and T1 only
+    // Filter for T0 through T4
     $table
-      .find('tbody tr[data-tier="0"], tbody tr[data-tier="1"]')
+      .find(
+        'tbody tr[data-tier="0"], tbody tr[data-tier="1"], tbody tr[data-tier="2"], tbody tr[data-tier="3"], tbody tr[data-tier="4"]',
+      )
       .each((_, row) => {
         const $row = $(row);
         const tds = $row.find("td");
