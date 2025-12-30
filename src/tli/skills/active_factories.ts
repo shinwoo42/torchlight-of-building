@@ -50,6 +50,46 @@ export const activeSkillModFactories: Partial<
       },
     ],
   }),
+  "Mind Control": (l, vals) => ({
+    offense: [
+      { type: "AddedDmgEffPct", value: v(vals.addedDmgEffPct, l) },
+      {
+        type: "PersistentDmg",
+        value: v(vals.persistentDamage, l),
+        dmgType: "erosion",
+        duration: 2,
+      },
+      { type: "InitialMaxChannel", value: v(vals.initialMaxChannel, l) },
+    ],
+    mods: [
+      {
+        type: "DmgPct",
+        value: v(vals.additionalDmgPerMaxChannel, l),
+        addn: true,
+        modType: "global",
+        per: { stackable: "additional_max_channel_stack" },
+      },
+      {
+        type: "MindControlMaxLink",
+        value: v(vals.initialMaxLinks, l),
+      },
+      {
+        type: "MindControlMaxLink",
+        value: v(vals.maxLinkPerChannel, l),
+        per: { stackable: "channel_stack" },
+      },
+      {
+        type: "MovementSpeedPct",
+        value: v(vals.movementSpeedPctWhileChanneling, l),
+        cond: "channeling",
+      },
+      {
+        type: "RestoreLifePct",
+        value: v(vals.restoreLifePctValue, l),
+        interval: v(vals.restoreLifePctInterval, l),
+      },
+    ],
+  }),
   "Ice Bond": (l, vals) => ({
     buffMods: [
       {

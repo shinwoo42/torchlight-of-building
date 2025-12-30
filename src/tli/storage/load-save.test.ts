@@ -84,6 +84,7 @@ const createMinimalSaveData = (
     hasElitesNearby: false,
     enemyHasAilment: false,
     hasCritRecently: false,
+    channeling: false,
   },
   calculationsPage: { selectedSkillName: undefined },
   ...overrides,

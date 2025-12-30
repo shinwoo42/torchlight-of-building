@@ -83,6 +83,8 @@ export interface Configuration {
   enemyHasAilment: boolean;
   // default to false
   hasCritRecently: boolean;
+  // default fo false
+  channeling: boolean;
 
   // --------------------
   // hero-specific config

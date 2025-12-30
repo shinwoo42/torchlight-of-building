@@ -66,7 +66,12 @@ export type Stackable =
   | "num_enemies_affected_by_warcry"
   | "str"
   | "dex"
-  | "int";
+  | "int"
+  // max channel stacks beyond initial skill channel stacks
+  | "additional_max_channel_stack"
+  | "channel_stack"
+  // skill-specific
+  | "mind_control_link";
 
 export type StatType = "str" | "dex" | "int";
 
@@ -95,7 +100,8 @@ export type Condition =
   | "has_elites_nearby"
   | "enemy_has_ailment"
   | "has_hasten"
-  | "has_crit_recently";
+  | "has_crit_recently"
+  | "channeling";
 
 export type ConditionThresholdTarget =
   | "num_enemies_nearby"
@@ -150,6 +156,7 @@ interface ModDefinitions {
       | "elemental";
   };
   GearPhysDmgPct: { value: number };
+  // defenses
   AttackBlockChancePct: { value: number };
   SpellBlockChancePct: { value: number };
   BlockRatioPct: { value: number };
@@ -166,6 +173,8 @@ interface ModDefinitions {
   MaxResistancePct: { value: number; resType: ResType };
   LifeRegainPct: { value: number };
   EnergyShieldRegainPct: { value: number };
+  RestoreLifePct: { value: number; interval: number };
+  // end defenses
   MultistrikeChancePct: { value: number };
   ConvertDmgPct: { from: DmgChunkType; to: DmgChunkType; value: number };
   AddsDmgAsPct: { from: DmgChunkType; to: DmgChunkType; value: number };
@@ -192,12 +201,15 @@ interface ModDefinitions {
   MaxMercuryPtsPct: { value: number };
   MaxFocusBlessing: { value: number };
   MaxAgilityBlessing: { value: number };
+  MaxChannel: { value: number };
   SkillLevel: { value: number; skillLevelType: SkillLevelType };
   HeroTraitLevel: { value: number; heroTraitLevelType?: HeroTraitLevelType };
   CoreTalent: { name: CoreTalentName };
   GearBasePhysDmg: { value: number };
   GearBaseCritRating: { value: number };
   GearBaseAttackSpeed: { value: number };
+  // skill-specific
+  MindControlMaxLink: { value: number };
 }
 
 // Generate the Mod union type from ModDefinitions

@@ -1,3 +1,4 @@
+import type { DmgChunkType } from "@/src/tli/mod";
 import type { ActivationMediumSkills } from "./activation_medium";
 import { ActiveSkills } from "./active";
 import type { PassiveSkills } from "./passive";
@@ -151,7 +152,14 @@ export interface BaseNobleSupportSkill extends BaseSkill {
 
 export type SkillOffense =
   | { type: "WeaponAtkDmgPct"; value: number }
-  | { type: "AddedDmgEffPct"; value: number };
+  | { type: "AddedDmgEffPct"; value: number }
+  | {
+      type: "PersistentDmg";
+      value: number;
+      dmgType: DmgChunkType;
+      duration: number;
+    }
+  | { type: "InitialMaxChannel"; value: number };
 
 export type SkillOffenseType = SkillOffense["type"];
 

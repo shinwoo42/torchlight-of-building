@@ -97,5 +97,6 @@ export const useConfiguration = (): Configuration => {
     hasElitesNearby: configPage.hasElitesNearby,
     enemyHasAilment: configPage.enemyHasAilment,
     hasCritRecently: configPage.hasCritRecently,
+    channeling: configPage.channeling,
   };
 };

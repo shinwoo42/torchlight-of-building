@@ -897,6 +897,7 @@ const filterModsByCond = (
       .with("enemy_has_ailment", () => config.enemyHasAilment)
       .with("has_hasten", () => derivedCtx.hasHasten)
       .with("has_crit_recently", () => config.hasCritRecently)
+      .with("channeling", () => config.channeling)
       .exhaustive();
   });
 };

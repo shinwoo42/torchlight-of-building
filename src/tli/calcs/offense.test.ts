@@ -42,6 +42,7 @@ const createDefaultConfiguration = (): Configuration => ({
   hasElitesNearby: false,
   enemyHasAilment: false,
   hasCritRecently: false,
+  channeling: false,
 });
 
 // Helper to create Affix objects from mods for tests
@@ -2229,6 +2230,7 @@ describe("resolveBuffSkillMods", () => {
         hasElitesNearby: false,
         enemyHasAilment: false,
         hasCritRecently: false,
+        channeling: false,
       },
     });
     const actual = results.skills["[Test] Simple Attack"];
