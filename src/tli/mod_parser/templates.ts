@@ -259,6 +259,13 @@ export const allParsers = [
 
   t("{value:dec%} energy shield regain").output("EnergyShieldRegainPct", (c) => ({ value: c.value })),
   t("{value:dec%} life regain").output("LifeRegainPct", (c) => ({ value: c.value })),
+  t("{value:dec} {statModType:StatWord} per {amt:int} level\\(s\\)")
+    .enum("StatWord", StatWordMapping)
+    .output("Stat", (c) => ({
+      value: c.value,
+      statModType: c.statModType,
+      per: { stackable: "level" as const, amt: c.amt },
+    })),
   t("{value:dec} {statModType:StatWord}")
     .enum("StatWord", StatWordMapping)
     .output("Stat", (c) => ({ value: c.value, statModType: c.statModType })),

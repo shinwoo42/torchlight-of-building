@@ -1775,6 +1775,8 @@ const resolveModsForOffenseSkill = (
     ...calculateSkillLevelDmgMods(skillLevel),
   ];
 
+  mods.push(...normalizeStackables(prenormMods, "level", config.level));
+
   const totalMainStats = calculateTotalMainStats(skill, stats);
   mods.push(...normalizeStackables(prenormMods, "main_stat", totalMainStats));
 
@@ -1871,6 +1873,8 @@ const calculateResourcePool = (
   //   maybe we should factor it out if performance becomes an issue
   const prenormMods = filterModsByCond(paramMods, loadout, config, derivedCtx);
   const mods = filterOutPerMods(prenormMods);
+
+  mods.push(...normalizeStackables(prenormMods, "level", config.level));
 
   const stats = calculateStats(mods);
 

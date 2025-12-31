@@ -559,6 +559,42 @@ test("parse flat intelligence", () => {
   ]);
 });
 
+test("parse intelligence per level", () => {
+  const result = parseMod("+3 Intelligence per 4 level(s)");
+  expect(result).toEqual([
+    {
+      type: "Stat",
+      statModType: "int",
+      value: 3,
+      per: { stackable: "level", amt: 4 },
+    },
+  ]);
+});
+
+test("parse dexterity per level", () => {
+  const result = parseMod("+2 Dexterity per 5 level(s)");
+  expect(result).toEqual([
+    {
+      type: "Stat",
+      statModType: "dex",
+      value: 2,
+      per: { stackable: "level", amt: 5 },
+    },
+  ]);
+});
+
+test("parse strength per level", () => {
+  const result = parseMod("+1 Strength per 2 level(s)");
+  expect(result).toEqual([
+    {
+      type: "Stat",
+      statModType: "str",
+      value: 1,
+      per: { stackable: "level", amt: 2 },
+    },
+  ]);
+});
+
 test("parse flat all stats", () => {
   const result = parseMod("+20 all stats");
   expect(result).toEqual([
