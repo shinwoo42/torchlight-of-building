@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   SearchableSelect,
   type SearchableSelectOption,
@@ -45,8 +45,6 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
   onUpdateSupport,
   onUpdateSupportLevel,
 }) => {
-  const [expanded, setExpanded] = useState(false);
-
   const mainSkill = useMemo(
     () => availableSkills.find((s) => s.name === skill?.skillName),
     [availableSkills, skill?.skillName],
@@ -58,7 +56,6 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
       )
     : [];
 
-  const supportCount = selectedSupports.length;
   const hasSkill = skill?.skillName !== undefined;
 
   // Filter available skills to exclude already-selected ones (but keep current selection)
@@ -98,84 +95,78 @@ export const SkillSlot: React.FC<SkillSlotProps> = ({
   };
 
   return (
-    <div className="bg-zinc-900 rounded-lg border border-zinc-700">
-      <div className="p-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+    <div className="bg-zinc-900 rounded-lg border border-zinc-700 p-4">
+      <div className="flex gap-4">
+        {/* Main skill column */}
+        <div className="flex items-start gap-3 shrink-0">
           <input
             type="checkbox"
             checked={skill?.enabled ?? false}
             onChange={onToggle}
             disabled={!hasSkill}
-            className="w-5 h-5 disabled:opacity-50 accent-amber-500"
+            className="w-5 h-5 mt-1.5 disabled:opacity-50 accent-amber-500"
           />
-          <span className="text-xs text-zinc-500 w-16">{slotLabel}</span>
-          <SearchableSelect
-            value={skill?.skillName}
-            onChange={onSkillChange}
-            options={filteredSkills.map(
-              (s): SearchableSelectOption<string> => ({
-                value: s.name,
-                label: s.name,
-              }),
-            )}
-            placeholder="<Empty slot>"
-            size="sm"
-            className="flex-1"
-            renderOption={renderOption}
-            renderSelectedTooltip={renderSelectedTooltip}
-          />
-          {hasSkill && (
-            <SearchableSelect
-              value={skill?.level ?? 20}
-              onChange={(val) => val !== undefined && onLevelChange(val)}
-              options={SKILL_LEVEL_OPTIONS}
-              placeholder="Lv."
-              size="sm"
-              className="w-20"
-            />
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          {hasSkill && (
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="px-3 py-1 bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 hover:border-amber-500 rounded text-sm text-zinc-400"
-            >
-              {expanded ? "Hide" : "Supports"} ({supportCount}/5)
-            </button>
-          )}
-        </div>
-      </div>
-
-      {expanded && hasSkill && skill !== undefined && (
-        <div className="px-4 pb-4 border-t border-zinc-800 pt-3">
-          <div className="space-y-2">
-            {SUPPORT_SLOT_KEYS.map((supportKey) => (
-              <div
-                key={`support-${supportKey}`}
-                className="flex items-center gap-2"
-              >
-                <span className="text-xs text-zinc-500 w-6">{supportKey}.</span>
-                <SupportSkillSelector
-                  mainSkill={mainSkill}
-                  selectedSkill={skill.supportSkills[supportKey]?.name}
-                  excludedSkills={selectedSupports.filter(
-                    (s) => s !== skill.supportSkills[supportKey]?.name,
-                  )}
-                  onChange={(supportName) =>
-                    onUpdateSupport(supportKey, supportName)
-                  }
-                  slotIndex={supportKey}
-                  level={skill.supportSkills[supportKey]?.level}
-                  onLevelChange={(level) =>
-                    onUpdateSupportLevel(supportKey, level)
-                  }
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500 w-16">{slotLabel}</span>
+              <SearchableSelect
+                value={skill?.skillName}
+                onChange={onSkillChange}
+                options={filteredSkills.map(
+                  (s): SearchableSelectOption<string> => ({
+                    value: s.name,
+                    label: s.name,
+                  }),
+                )}
+                placeholder="<Empty slot>"
+                size="sm"
+                className="w-48"
+                renderOption={renderOption}
+                renderSelectedTooltip={renderSelectedTooltip}
+              />
+              {hasSkill && (
+                <SearchableSelect
+                  value={skill?.level ?? 20}
+                  onChange={(val) => val !== undefined && onLevelChange(val)}
+                  options={SKILL_LEVEL_OPTIONS}
+                  placeholder="Lv."
+                  size="sm"
+                  className="w-20"
                 />
-              </div>
-            ))}
+              )}
+            </div>
           </div>
         </div>
-      )}
+
+        {/* Support skills column */}
+        <div className="flex-1 space-y-1.5 border-l border-zinc-700 pl-4">
+          {SUPPORT_SLOT_KEYS.map((supportKey) => (
+            <div
+              key={`support-${supportKey}`}
+              className="flex items-center gap-2"
+            >
+              <span className="text-xs text-zinc-600 w-4">{supportKey}.</span>
+              <SupportSkillSelector
+                mainSkill={mainSkill}
+                selectedSkill={
+                  hasSkill ? skill?.supportSkills[supportKey]?.name : undefined
+                }
+                excludedSkills={selectedSupports.filter(
+                  (s) => s !== skill?.supportSkills[supportKey]?.name,
+                )}
+                onChange={(supportName) =>
+                  onUpdateSupport(supportKey, supportName)
+                }
+                slotIndex={supportKey}
+                level={skill?.supportSkills[supportKey]?.level}
+                onLevelChange={(level) =>
+                  onUpdateSupportLevel(supportKey, level)
+                }
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
