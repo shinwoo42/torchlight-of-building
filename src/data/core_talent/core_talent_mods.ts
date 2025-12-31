@@ -533,7 +533,9 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+30% additional Physical Damage",
-        mods: [{ type: "DmgPct", value: 30, dmgModType: "physical", addn: true }],
+        mods: [
+          { type: "DmgPct", value: 30, dmgModType: "physical", addn: true },
+        ],
       },
       { text: "Enemies +20% Injury Buffer" },
     ],
@@ -570,7 +572,9 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+33% additional Physical Damage",
-        mods: [{ type: "DmgPct", value: 33, dmgModType: "physical", addn: true }],
+        mods: [
+          { type: "DmgPct", value: 33, dmgModType: "physical", addn: true },
+        ],
       },
       { text: "+30% additional Minion Physical Damage" },
       { text: "-1% additional Elemental Damage for every 3 level(s)." },
@@ -704,7 +708,9 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+35% additional Erosion Damage",
-        mods: [{ type: "DmgPct", value: 35, dmgModType: "erosion", addn: true }],
+        mods: [
+          { type: "DmgPct", value: 35, dmgModType: "erosion", addn: true },
+        ],
       },
       { text: "-10% Elemental Resistance" },
     ],
@@ -726,7 +732,9 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+15% additional Erosion Damage",
-        mods: [{ type: "DmgPct", value: 15, dmgModType: "erosion", addn: true }],
+        mods: [
+          { type: "DmgPct", value: 15, dmgModType: "erosion", addn: true },
+        ],
       },
       { text: "15% additional damage applied to Life" },
     ],

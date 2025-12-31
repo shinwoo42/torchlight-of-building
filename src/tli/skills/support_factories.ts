@@ -25,7 +25,12 @@ export const supportSkillModFactories: Partial<
   ],
   Haunt: (l, vals) => [
     { type: "ShadowQuant", value: v(vals.shadowQuant, l) },
-    { type: "DmgPct", value: v(vals.dmgPct, l), dmgModType: "global", addn: true },
+    {
+      type: "DmgPct",
+      value: v(vals.dmgPct, l),
+      dmgModType: "global",
+      addn: true,
+    },
   ],
   Steamroll: (l, vals) => [
     // Attack speed penalty is constant (-15%), not level-dependent

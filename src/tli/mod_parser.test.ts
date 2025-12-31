@@ -7,7 +7,7 @@ test("parse basic damage without type (global)", () => {
     {
       type: "DmgPct",
       value: 9,
-      modType: "global",
+      dmgModType: "global",
       addn: false,
     },
   ]);
@@ -19,7 +19,7 @@ test("parse typed damage", () => {
     {
       type: "DmgPct",
       value: 18,
-      modType: "fire",
+      dmgModType: "fire",
       addn: false,
     },
   ]);
@@ -31,7 +31,7 @@ test("parse additional global damage", () => {
     {
       type: "DmgPct",
       value: 9,
-      modType: "global",
+      dmgModType: "global",
       addn: true,
     },
   ]);
@@ -43,7 +43,7 @@ test("parse additional typed damage", () => {
     {
       type: "DmgPct",
       value: 9,
-      modType: "attack",
+      dmgModType: "attack",
       addn: true,
     },
   ]);
@@ -57,7 +57,7 @@ test("parse additional damage when mana reaches max", () => {
     {
       type: "DmgPct",
       value: 40,
-      modType: "global",
+      dmgModType: "global",
       addn: true,
       cond: "has_full_mana",
     },
@@ -72,7 +72,7 @@ test("parse additional damage against enemies with elemental ailments", () => {
     {
       type: "DmgPct",
       value: 25,
-      modType: "global",
+      dmgModType: "global",
       addn: true,
       cond: "enemy_has_ailment",
     },
@@ -85,7 +85,7 @@ test("parse damage when focus blessing is active", () => {
     {
       type: "DmgPct",
       value: 30,
-      modType: "global",
+      dmgModType: "global",
       addn: false,
       cond: "has_focus_blessing",
     },
@@ -98,7 +98,7 @@ test("parse damage if you have blocked recently", () => {
     {
       type: "DmgPct",
       value: 40,
-      modType: "global",
+      dmgModType: "global",
       addn: false,
       cond: "has_blocked_recently",
     },
@@ -113,7 +113,7 @@ test("parse additional damage per frostbite rating", () => {
     {
       type: "DmgPct",
       value: 1,
-      modType: "global",
+      dmgModType: "global",
       addn: true,
       per: { stackable: "frostbite_rating", amt: 2 },
     },
@@ -128,7 +128,7 @@ test("parse additional attack damage to nearby enemies", () => {
     {
       type: "DmgPct",
       value: 25,
-      modType: "attack",
+      dmgModType: "attack",
       addn: true,
       cond: "target_enemy_is_in_proximity",
     },
@@ -143,14 +143,14 @@ test("parse additional attack and ailment damage with elites nearby", () => {
     {
       type: "DmgPct",
       value: 20,
-      modType: "attack",
+      dmgModType: "attack",
       addn: true,
       cond: "has_elites_nearby",
     },
     {
       type: "DmgPct",
       value: 20,
-      modType: "ailment",
+      dmgModType: "ailment",
       addn: true,
       cond: "has_elites_nearby",
     },
@@ -163,8 +163,32 @@ test("parse decimal damage", () => {
     {
       type: "DmgPct",
       value: 12.5,
-      modType: "fire",
+      dmgModType: "fire",
       addn: false,
+    },
+  ]);
+});
+
+test("parse damage over time", () => {
+  const result = parseMod("+94% Damage Over Time");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 94,
+      dmgModType: "damage_over_time",
+      addn: false,
+    },
+  ]);
+});
+
+test("parse additional damage over time", () => {
+  const result = parseMod("+50% additional Damage Over Time");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 50,
+      dmgModType: "damage_over_time",
+      addn: true,
     },
   ]);
 });
@@ -748,7 +772,7 @@ test("parse gear attack speed with damage penalty", () => {
       type: "DmgPct",
       value: -12,
       addn: true,
-      modType: "attack",
+      dmgModType: "attack",
     },
   ]);
 });
@@ -910,7 +934,7 @@ test("parse spell damage per mana consumed recently with value limit", () => {
     {
       type: "DmgPct",
       value: 7,
-      modType: "spell",
+      dmgModType: "spell",
       addn: false,
       per: { stackable: "mana_consumed_recently", amt: 100, valueLimit: 432 },
     },
@@ -1050,7 +1074,7 @@ test("parse additional attack damage dealt to nearby enemies", () => {
     {
       type: "DmgPct",
       value: 10,
-      modType: "attack",
+      dmgModType: "attack",
       addn: true,
       cond: "target_enemy_is_nearby",
     },

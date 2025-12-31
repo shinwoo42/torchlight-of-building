@@ -360,7 +360,9 @@ describe("basic damage modifiers", () => {
           { type: "FlatGearDmg", value: { min: 30, max: 30 }, modType: "cold" },
         ]),
       ],
-      affixLines([{ type: "DmgPct", value: 80, dmgModType: "cold", addn: false }]), // +80% cold damage
+      affixLines([
+        { type: "DmgPct", value: 80, dmgModType: "cold", addn: false },
+      ]), // +80% cold damage
     );
     const results = calculateOffense(input);
     validate(results, skillName, { avgHit: 154 });
@@ -1972,7 +1974,9 @@ describe("calculateOffense with damage conversion", () => {
     // 100 phys weapon * 2.01 = 201 phys → 201 cold via skill's conversion
     // Cold damage with 50% cold bonus: 201 * (1 + 0.5) = 301.5
     const input = createFrostSpikeInput(
-      affixLines([{ type: "DmgPct", value: 50, dmgModType: "cold", addn: false }]),
+      affixLines([
+        { type: "DmgPct", value: 50, dmgModType: "cold", addn: false },
+      ]),
     );
     const results = calculateOffense(input);
     validate(results, "Frost Spike", { avgHit: 301.5 });
@@ -2589,7 +2593,8 @@ describe("resolveBuffSkillMods", () => {
     const actual = results.skills["[Test] Simple Attack"];
 
     const preciseCrueltyBuffMod = actual?.resolvedMods.find(
-      (m) => m.type === "DmgPct" && m.dmgModType === "attack" && m.addn === true,
+      (m) =>
+        m.type === "DmgPct" && m.dmgModType === "attack" && m.addn === true,
     ) as DmgPctMod | undefined;
     // Base 22% scaled by 100% aura effect = 44%
     expect(preciseCrueltyBuffMod?.value).toBeCloseTo(22 * 2);
@@ -2634,7 +2639,8 @@ describe("resolveBuffSkillMods", () => {
     const actual = results.skills["[Test] Simple Attack"];
 
     const preciseCrueltyBuffMod = actual?.resolvedMods.find(
-      (m) => m.type === "DmgPct" && m.dmgModType === "attack" && m.addn === true,
+      (m) =>
+        m.type === "DmgPct" && m.dmgModType === "attack" && m.addn === true,
     ) as DmgPctMod | undefined;
     // Base 22% scaled by 50% aura effect = 33%
     expect(preciseCrueltyBuffMod?.value).toBeCloseTo(22 * 1.5);
@@ -2717,7 +2723,8 @@ describe("resolveBuffSkillMods", () => {
     const actual = results.skills["[Test] Simple Attack"];
 
     const preciseCrueltyBuffMod = actual?.resolvedMods.find(
-      (m) => m.type === "DmgPct" && m.dmgModType === "attack" && m.addn === true,
+      (m) =>
+        m.type === "DmgPct" && m.dmgModType === "attack" && m.addn === true,
     ) as DmgPctMod | undefined;
     // Base 22% with aura multiplier 3 = 66%
     expect(preciseCrueltyBuffMod?.value).toBeCloseTo(22 * 3);
@@ -2775,7 +2782,12 @@ describe("Pactspirit Ring Mods", () => {
           rings: {
             innerRing1: ringSlotWithOriginalAffix(
               affix([
-                { type: "DmgPct", value: 50, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 50,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ),
             innerRing2: emptyRingSlotState(),
@@ -2827,12 +2839,22 @@ describe("Pactspirit Ring Mods", () => {
           rings: {
             innerRing1: ringSlotWithOriginalAffix(
               affix([
-                { type: "DmgPct", value: 30, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 30,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ),
             innerRing2: ringSlotWithOriginalAffix(
               affix([
-                { type: "DmgPct", value: 30, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 30,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ),
             innerRing3: emptyRingSlotState(),
@@ -2897,7 +2919,12 @@ describe("Pactspirit Ring Mods", () => {
               },
               originalRingName: "Test Ring",
               originalAffix: affix([
-                { type: "DmgPct", value: 25, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 25,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             },
             innerRing2: emptyRingSlotState(),
@@ -2949,7 +2976,12 @@ describe("Pactspirit Ring Mods", () => {
           rings: {
             innerRing1: ringSlotWithOriginalAffix(
               affix([
-                { type: "DmgPct", value: 20, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 20,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ),
             innerRing2: emptyRingSlotState(),
@@ -2969,7 +3001,12 @@ describe("Pactspirit Ring Mods", () => {
           rings: {
             innerRing1: ringSlotWithOriginalAffix(
               affix([
-                { type: "DmgPct", value: 30, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 30,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ),
             innerRing2: emptyRingSlotState(),
@@ -3025,7 +3062,12 @@ describe("Divinity Slate Mods", () => {
             flippedV: false,
             affixes: [
               affix([
-                { type: "DmgPct", value: 50, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 50,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ],
             metaAffixes: [],
@@ -3072,7 +3114,12 @@ describe("Divinity Slate Mods", () => {
             flippedV: false,
             affixes: [
               affix([
-                { type: "DmgPct", value: 50, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 50,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ],
             metaAffixes: [],
@@ -3122,7 +3169,12 @@ describe("Divinity Slate Mods", () => {
             flippedV: false,
             affixes: [
               affix([
-                { type: "DmgPct", value: 30, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 30,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ],
             metaAffixes: [],
@@ -3135,7 +3187,12 @@ describe("Divinity Slate Mods", () => {
             flippedV: false,
             affixes: [
               affix([
-                { type: "DmgPct", value: 20, dmgModType: "global", addn: false },
+                {
+                  type: "DmgPct",
+                  value: 20,
+                  dmgModType: "global",
+                  addn: false,
+                },
               ]),
             ],
             metaAffixes: [],

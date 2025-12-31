@@ -1716,7 +1716,12 @@ const calculateSkillLevelDmgMods = (
   const a = 1.1 ** Math.min(10, skillLevel - 20);
   if (skillLevel <= 30) {
     return [
-      { type: "DmgPct", value: (a - 1) * 100, addn: true, dmgModType: "global" },
+      {
+        type: "DmgPct",
+        value: (a - 1) * 100,
+        addn: true,
+        dmgModType: "global",
+      },
     ];
   }
 

@@ -125,6 +125,11 @@ export const allParsers = [
     addn: true,
     cond: TARGET_ENEMY_IS_NEARBY,
   })),
+  t("{value:dec%} [additional] damage over time").output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "damage_over_time" as const,
+    addn: c.additional !== undefined,
+  })),
   t("{value:dec%} [additional] [{modType:DmgModType}] damage").output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: c.modType ?? "global",
