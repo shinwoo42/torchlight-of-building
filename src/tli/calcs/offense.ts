@@ -66,13 +66,6 @@ const addValue = <T extends DmgRange | number>(v1: T, v2: T): T => {
   return addDR(v1 as DmgRange, v2 as DmgRange) as T;
 };
 
-const zeroValue = <T extends DmgRange | number>(sample: T): T => {
-  if (typeof sample === "number") {
-    return 0 as T;
-  }
-  return { min: 0, max: 0 } as T;
-};
-
 const addDRs = (drs1: DmgRanges, drs2: DmgRanges): DmgRanges => {
   return {
     physical: addDR(drs1.physical, drs2.physical),
