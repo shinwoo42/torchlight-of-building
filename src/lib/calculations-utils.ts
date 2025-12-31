@@ -98,22 +98,6 @@ export const groupModsByEffect = (mods: Mod[]): GroupedMods => {
   return groups;
 };
 
-export const formatModValue = (mod: Mod): string => {
-  if ("value" in mod) {
-    const value = mod.value;
-    if (typeof value === "number") {
-      if (mod.type.includes("Pct") || mod.type === "FervorEffPct") {
-        return `${value.toFixed(1)}%`;
-      }
-      return value.toFixed(1);
-    }
-    if (typeof value === "object" && "min" in value && "max" in value) {
-      return `${value.min.toFixed(0)}-${value.max.toFixed(0)}`;
-    }
-  }
-  return "";
-};
-
 const getStatDisplayName = (statModType: StatModType): string => {
   switch (statModType) {
     case "str":
@@ -124,51 +108,6 @@ const getStatDisplayName = (statModType: StatModType): string => {
       return "Intelligence";
     case "all":
       return "All Attributes";
-  }
-};
-
-export const getModDisplayName = (mod: Mod): string => {
-  switch (mod.type) {
-    case "DmgPct": {
-      const prefix = mod.addn ? "More" : "Increased";
-      return `${prefix} ${mod.dmgModType} damage`;
-    }
-    case "FlatDmgToAtks":
-      return `Adds ${mod.dmgType} damage to attacks`;
-    case "FlatDmgToSpells":
-      return `Adds ${mod.dmgType} damage to spells`;
-    case "CritRatingPct":
-      return `${mod.modType} critical rating`;
-    case "CritDmgPct": {
-      const prefix = mod.addn ? "Additional" : "Increased";
-      return `${prefix} ${mod.modType} critical damage`;
-    }
-    case "AspdPct": {
-      const prefix = mod.addn ? "More" : "Increased";
-      return `${prefix} attack speed`;
-    }
-    case "GearAspdPct":
-      return "Gear attack speed";
-    case "Stat":
-      return getStatDisplayName(mod.statModType);
-    case "StatPct":
-      return `Increased ${getStatDisplayName(mod.statModType)}`;
-    case "ConvertDmgPct":
-      return `Convert ${mod.from} to ${mod.to}`;
-    case "AddsDmgAsPct":
-      return `Gain ${mod.from} damage as extra ${mod.to}`;
-    case "FlatGearDmg":
-      return `Weapon ${mod.modType} damage`;
-    case "GearPhysDmgPct":
-      return "Weapon physical damage";
-    case "AddnMainHandDmgPct":
-      return "Additional main hand damage";
-    case "FervorEffPct":
-      return "Fervor effectiveness";
-    case "Fervor":
-      return "Fervor";
-    default:
-      return mod.type;
   }
 };
 
