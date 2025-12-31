@@ -68,6 +68,7 @@ export type Stackable =
   | "sealed_life_pct"
   | "focus_blessing"
   | "agility_blessing"
+  | "torment"
   | "num_enemies_affected_by_warcry"
   | "str"
   | "dex"

@@ -1729,8 +1729,21 @@ const calculateAffliction = (mods: Mod[], config: Configuration): Mod[] => {
       dmgModType: "damage_over_time",
       addn: true,
       isEnemyDebuff: true,
+      src: "Additional Damage over Time from Affliction",
     },
   ];
+};
+
+const calculateTorment = (config: Configuration): Mod[] => {
+  const tormentMod: Mod = {
+    type: "DmgPct",
+    value: 5,
+    dmgModType: "damage_over_time",
+    addn: true,
+    per: { stackable: "torment", limit: 3 },
+    src: "Additional Damage over Time from Torment (5% per stack)",
+  };
+  return normalizeStackables([tormentMod], "torment", config.tormentStacks);
 };
 
 const calculateAddedSkillLevels = (
@@ -1837,6 +1850,7 @@ const resolveModsForOffenseSkill = (
   const totalMainStats = calculateTotalMainStats(skill, stats);
   mods.push(...normalizeStackables(prenormMods, "main_stat", totalMainStats));
 
+  mods.push(...calculateTorment(config));
   mods.push(...calculateAffliction(mods, config));
 
   const focusBlessings = calculateNumFocusBlessings(mods, config);
