@@ -307,7 +307,10 @@ export const allParsers = [
     "reaps {duration:dec} s of damage over time when dealing damage over time. the effect has a {cooldown:dec} s cooldown against the same target",
   ).output("Reap", (c) => ({ duration: c.duration, cooldown: c.cooldown })),
   t("{value:dec%} reaping duration").output("ReapDurationPct", (c) => ({ value: c.value })),
-  t("{value:dec%} reaping cooldown recovery speed").output("ReapCdrPct", (c) => ({ value: c.value })),
+  t("{value:dec%} [additional] reaping cooldown recovery speed").output("ReapCdrPct", (c) => ({
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
   t("{value:dec} affliction inflicted per second").output("AfflictionInflictedPerSec", (c) => ({ value: c.value })),
   t("{value:dec%} affliction effect").output("AfflictionEffectPct", (c) => ({ value: c.value })),
   // Sage's Insight resistance reduction mods
