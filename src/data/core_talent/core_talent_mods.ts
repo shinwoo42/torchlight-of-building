@@ -28,7 +28,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
       },
       {
         text: "+30% additional Attack Damage",
-        mods: [{ type: "DmgPct", value: 30, modType: "attack", addn: true }],
+        mods: [{ type: "DmgPct", value: 30, dmgModType: "attack", addn: true }],
       },
       { text: "+30% additional Ailment Damage dealt by attacks" },
     ],
@@ -105,7 +105,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
           {
             type: "DmgPct",
             value: 25,
-            modType: "attack",
+            dmgModType: "attack",
             addn: true,
             cond: "target_enemy_is_in_proximity",
           },
@@ -340,7 +340,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
           {
             type: "DmgPct",
             value: 25,
-            modType: "global",
+            dmgModType: "global",
             addn: true,
             cond: "enemy_has_ailment",
           },
@@ -352,7 +352,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+30% additional Spell Damage",
-        mods: [{ type: "DmgPct", value: 30, modType: "spell", addn: true }],
+        mods: [{ type: "DmgPct", value: 30, dmgModType: "spell", addn: true }],
       },
       { text: "+25% additional Skill Cost" },
     ],
@@ -373,7 +373,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
           {
             type: "DmgPct",
             value: 1,
-            modType: "global",
+            dmgModType: "global",
             addn: true,
             per: { stackable: "frostbite_rating", amt: 2 },
           },
@@ -435,7 +435,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
           {
             type: "DmgPct",
             value: 40,
-            modType: "global",
+            dmgModType: "global",
             addn: true,
             cond: "has_full_mana",
           },
@@ -516,7 +516,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+25% additional Cold Damage",
-        mods: [{ type: "DmgPct", value: 25, modType: "cold", addn: true }],
+        mods: [{ type: "DmgPct", value: 25, dmgModType: "cold", addn: true }],
       },
       { text: "+25% additional Minion Cold Damage" },
       { text: "Skills no longer cost Mana" },
@@ -533,7 +533,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+30% additional Physical Damage",
-        mods: [{ type: "DmgPct", value: 30, modType: "physical", addn: true }],
+        mods: [{ type: "DmgPct", value: 30, dmgModType: "physical", addn: true }],
       },
       { text: "Enemies +20% Injury Buffer" },
     ],
@@ -555,7 +555,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+25% additional Melee Damage",
-        mods: [{ type: "DmgPct", value: 25, modType: "melee", addn: true }],
+        mods: [{ type: "DmgPct", value: 25, dmgModType: "melee", addn: true }],
       },
       { text: "Melee Skill has reversed knockback direction" },
     ],
@@ -570,7 +570,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+33% additional Physical Damage",
-        mods: [{ type: "DmgPct", value: 33, modType: "physical", addn: true }],
+        mods: [{ type: "DmgPct", value: 33, dmgModType: "physical", addn: true }],
       },
       { text: "+30% additional Minion Physical Damage" },
       { text: "-1% additional Elemental Damage for every 3 level(s)." },
@@ -602,7 +602,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
       { text: "-20% additional damage for Weapons" },
       {
         text: "+40% additional Attack Damage",
-        mods: [{ type: "DmgPct", value: 40, modType: "attack", addn: true }],
+        mods: [{ type: "DmgPct", value: 40, dmgModType: "attack", addn: true }],
       },
     ],
   },
@@ -704,7 +704,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+35% additional Erosion Damage",
-        mods: [{ type: "DmgPct", value: 35, modType: "erosion", addn: true }],
+        mods: [{ type: "DmgPct", value: 35, dmgModType: "erosion", addn: true }],
       },
       { text: "-10% Elemental Resistance" },
     ],
@@ -726,7 +726,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "+15% additional Erosion Damage",
-        mods: [{ type: "DmgPct", value: 15, modType: "erosion", addn: true }],
+        mods: [{ type: "DmgPct", value: 15, dmgModType: "erosion", addn: true }],
       },
       { text: "15% additional damage applied to Life" },
     ],

@@ -129,7 +129,7 @@ export const getModDisplayName = (mod: Mod): string => {
   switch (mod.type) {
     case "DmgPct": {
       const prefix = mod.addn ? "More" : "Increased";
-      return `${prefix} ${mod.modType} damage`;
+      return `${prefix} ${mod.dmgModType} damage`;
     }
     case "FlatDmgToAtks":
       return `Adds ${mod.dmgType} damage to attacks`;

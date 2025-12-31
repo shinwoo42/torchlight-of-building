@@ -17,7 +17,7 @@ export const passiveSkillModFactories: Partial<
         type: "DmgPct",
         value: v(vals.attackDmgPct, l),
         addn: true,
-        modType: "attack",
+        dmgModType: "attack",
       },
     ],
     mods: [

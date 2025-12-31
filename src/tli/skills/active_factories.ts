@@ -55,7 +55,7 @@ export const activeSkillModFactories: Partial<
       {
         type: "DmgPct",
         value: v(vals.dmgPctPerProjectile, l),
-        modType: "global",
+        dmgModType: "global",
         addn: true,
         per: { stackable: "projectile" },
       },
@@ -77,7 +77,7 @@ export const activeSkillModFactories: Partial<
         type: "DmgPct",
         value: v(vals.additionalDmgPerMaxChannel, l),
         addn: true,
-        modType: "global",
+        dmgModType: "global",
         per: { stackable: "additional_max_channel_stack" },
       },
       {
@@ -107,7 +107,7 @@ export const activeSkillModFactories: Partial<
         type: "DmgPct",
         value: v(vals.coldDmgPctVsFrostbitten, l),
         addn: true,
-        modType: "cold",
+        dmgModType: "cold",
         cond: "enemy_frostbitten",
       },
     ],
@@ -118,7 +118,7 @@ export const activeSkillModFactories: Partial<
         type: "DmgPct",
         value: v(vals.meleeDmgPct, l),
         addn: true,
-        modType: "melee",
+        dmgModType: "melee",
       },
     ],
   }),
@@ -126,7 +126,7 @@ export const activeSkillModFactories: Partial<
     buffMods: [
       {
         type: "DmgPct",
-        modType: "shadow_strike_skill",
+        dmgModType: "shadow_strike_skill",
         addn: true,
         value: v(vals.shadowStrikeSkillDmgPerEnemy, l),
         per: { stackable: "num_enemies_affected_by_warcry" },

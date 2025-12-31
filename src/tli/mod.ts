@@ -127,7 +127,7 @@ interface ModBase {
 
 // Unique fields for each mod type (excluding type, per, cond, src)
 interface ModDefinitions {
-  DmgPct: { value: number; modType: DmgModType; addn: boolean };
+  DmgPct: { value: number; dmgModType: DmgModType; addn: boolean };
   FlatDmgToAtks: { value: DmgRange; dmgType: DmgChunkType };
   FlatDmgToSpells: { value: DmgRange; dmgType: DmgChunkType };
   CritRatingPct: { value: number; modType: CritRatingModType };

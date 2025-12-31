@@ -13,6 +13,7 @@ export const DMG_MOD_TYPES = [
   "ailment",
   "shadow_strike_skill",
   "hit",
+  "damage_over_time",
 ] as const;
 
 export type DmgModType = (typeof DMG_MOD_TYPES)[number];

@@ -32,7 +32,7 @@ export const allParsers = [
   },
   t("{aspd:dec%} gear attack speed. {dmg:dec%} additional attack damage").outputMany([
     spec("GearAspdPct", (c) => ({ value: c.aspd })),
-    spec("DmgPct", (c) => ({ value: c.dmg, addn: true, modType: ATTACK })),
+    spec("DmgPct", (c) => ({ value: c.dmg, addn: true, dmgModType: ATTACK })),
   ]),
   t(
     "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks and spells for every {amt:int} mana consumed recently. stacks up to {limit:int} time\\(s\\)",
@@ -70,30 +70,30 @@ export const allParsers = [
     "DmgPct",
     (c) => {
       const per: PerStackable = { stackable: MANA_CONSUMED_RECENTLY, amt: c.amt, valueLimit: c.limit };
-      return { value: c.value, modType: c.modType, addn: false, per };
+      return { value: c.value, dmgModType: c.modType, addn: false, per };
     },
   ),
   t("{value:dec%} additional damage for the next skill when mana reaches the max").output("DmgPct", (c) => ({
     value: c.value,
-    modType: GLOBAL,
+    dmgModType: GLOBAL,
     addn: true,
     cond: HAS_FULL_MANA,
   })),
   t("{value:dec%} additional damage against enemies with elemental ailments").output("DmgPct", (c) => ({
     value: c.value,
-    modType: GLOBAL,
+    dmgModType: GLOBAL,
     addn: true,
     cond: ENEMY_HAS_AILMENT,
   })),
   t("{value:dec%} damage when focus blessing is active").output("DmgPct", (c) => ({
     value: c.value,
-    modType: GLOBAL,
+    dmgModType: GLOBAL,
     addn: false,
     cond: HAS_FOCUS_BLESSING,
   })),
   t("{value:dec%} damage if you have blocked recently").output("DmgPct", (c) => ({
     value: c.value,
-    modType: GLOBAL,
+    dmgModType: GLOBAL,
     addn: false,
     cond: HAS_BLOCKED_RECENTLY,
   })),
@@ -101,7 +101,7 @@ export const allParsers = [
     "deals {value:dec%} additional damage to an enemy for every {amt:int} points of frostbite rating the enemy has",
   ).output("DmgPct", (c) => ({
     value: c.value,
-    modType: GLOBAL,
+    dmgModType: GLOBAL,
     addn: true,
     per: { stackable: FROSTBITE_RATING, amt: c.amt },
   })),
@@ -109,25 +109,25 @@ export const allParsers = [
     "deals up to {value:dec%} additional attack damage to enemies in proximity, and this (effect|damage) reduces as the distance from the enemy grows",
   ).output("DmgPct", (c) => ({
     value: c.value,
-    modType: ATTACK,
+    dmgModType: ATTACK,
     addn: true,
     cond: TARGET_ENEMY_IS_IN_PROXIMITY,
   })),
   t(
     "{value:dec%} additional attack damage and ailment damage dealt by attacks when there are elites within 10m nearby",
   ).outputMany([
-    spec("DmgPct", (c) => ({ value: c.value, modType: ATTACK, addn: true, cond: HAS_ELITES_NEARBY })),
-    spec("DmgPct", (c) => ({ value: c.value, modType: AILMENT, addn: true, cond: HAS_ELITES_NEARBY })),
+    spec("DmgPct", (c) => ({ value: c.value, dmgModType: ATTACK, addn: true, cond: HAS_ELITES_NEARBY })),
+    spec("DmgPct", (c) => ({ value: c.value, dmgModType: AILMENT, addn: true, cond: HAS_ELITES_NEARBY })),
   ]),
   t("{value:dec%} additional attack damage dealt to nearby enemies").output("DmgPct", (c) => ({
     value: c.value,
-    modType: ATTACK,
+    dmgModType: ATTACK,
     addn: true,
     cond: TARGET_ENEMY_IS_NEARBY,
   })),
   t("{value:dec%} [additional] [{modType:DmgModType}] damage").output("DmgPct", (c) => ({
     value: c.value,
-    modType: c.modType ?? "global",
+    dmgModType: c.modType ?? "global",
     addn: c.additional !== undefined,
   })),
   t("{value:dec%} [{modType:CritRatingModType}] critical strike rating").output("CritRatingPct", (c) => ({

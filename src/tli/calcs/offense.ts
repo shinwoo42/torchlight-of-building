@@ -580,6 +580,9 @@ const dmgModTypesForSkill = (skill: BaseActiveSkill): DmgModType[] => {
   if (skill.kinds.includes("hit_enemies")) {
     dmgModTypes.push("hit");
   }
+  if (skill.kinds.includes("dot")) {
+    dmgModTypes.push("damage_over_time");
+  }
   return dmgModTypes;
 };
 
@@ -587,7 +590,7 @@ const filterDmgPctMods = (
   dmgPctMods: Extract<Mod, { type: "DmgPct" }>[],
   dmgModTypes: DmgModType[],
 ) => {
-  return dmgPctMods.filter((p) => dmgModTypes.includes(p.modType));
+  return dmgPctMods.filter((p) => dmgModTypes.includes(p.dmgModType));
 };
 
 const calculateDmgInc = (mods: Extract<Mod, { type: "DmgPct" }>[]) => {
@@ -787,7 +790,7 @@ const calculateAddnDmgFromShadows = (
       type: "DmgPct",
       addn: true,
       value: 100, // 100% additional damage (doubles the hit)
-      modType: "global",
+      dmgModType: "global",
       src: `Shadow Strike: ${numShadowHits} hits`,
     };
   }
@@ -803,7 +806,7 @@ const calculateAddnDmgFromShadows = (
     type: "DmgPct",
     addn: true,
     value: geometricSum * 100, // Convert to whole percentage
-    modType: "global",
+    dmgModType: "global",
     src: `Shadow Strike: ${numShadowHits} hits`,
   };
 };
@@ -1119,7 +1122,7 @@ const calculateImplicitMods = (): Mod[] => {
     {
       type: "DmgPct",
       value: 0.5,
-      modType: "global",
+      dmgModType: "global",
       addn: true,
       per: { stackable: "main_stat" },
       src: "Additional Damage from skill Main Stat (.5% per stat)",
@@ -1127,7 +1130,7 @@ const calculateImplicitMods = (): Mod[] => {
     {
       type: "DmgPct",
       value: 15,
-      modType: "global",
+      dmgModType: "global",
       addn: true,
       cond: "enemy_paralyzed",
       src: "Additional Damage when enemy paralyzed",
@@ -1135,7 +1138,7 @@ const calculateImplicitMods = (): Mod[] => {
     {
       type: "DmgPct",
       value: 5,
-      modType: "global",
+      dmgModType: "global",
       addn: true,
       per: { stackable: "focus_blessing" },
       cond: "has_focus_blessing",
@@ -1160,7 +1163,7 @@ const calculateImplicitMods = (): Mod[] => {
     {
       type: "DmgPct",
       value: 2,
-      modType: "global",
+      dmgModType: "global",
       addn: true,
       per: { stackable: "agility_blessing" },
       cond: "has_agility_blessing",
@@ -1177,7 +1180,7 @@ const calculateImplicitMods = (): Mod[] => {
     {
       type: "DmgPct",
       value: 3,
-      modType: "elemental",
+      dmgModType: "elemental",
       addn: true,
       per: { stackable: "unsealed_mana_pct", amt: 10 },
       cond: "realm_of_mercury",
@@ -1713,7 +1716,7 @@ const calculateSkillLevelDmgMods = (
   const a = 1.1 ** Math.min(10, skillLevel - 20);
   if (skillLevel <= 30) {
     return [
-      { type: "DmgPct", value: (a - 1) * 100, addn: true, modType: "global" },
+      { type: "DmgPct", value: (a - 1) * 100, addn: true, dmgModType: "global" },
     ];
   }
 
@@ -1723,14 +1726,14 @@ const calculateSkillLevelDmgMods = (
       type: "DmgPct",
       value: (a - 1) * 100,
       addn: true,
-      modType: "global",
+      dmgModType: "global",
       src: "Added skill levels (21-30)",
     },
     {
       type: "DmgPct",
       value: (b - 1) * 100,
       addn: true,
-      modType: "global",
+      dmgModType: "global",
       src: "Added skill levels (30+)",
     },
   ];

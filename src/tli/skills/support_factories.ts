@@ -18,14 +18,14 @@ export const supportSkillModFactories: Partial<
     {
       type: "DmgPct",
       value: v(vals.dmgPctPerWillpower, l),
-      modType: "global",
+      dmgModType: "global",
       addn: false,
       per: { stackable: "willpower" },
     },
   ],
   Haunt: (l, vals) => [
     { type: "ShadowQuant", value: v(vals.shadowQuant, l) },
-    { type: "DmgPct", value: v(vals.dmgPct, l), modType: "global", addn: true },
+    { type: "DmgPct", value: v(vals.dmgPct, l), dmgModType: "global", addn: true },
   ],
   Steamroll: (l, vals) => [
     // Attack speed penalty is constant (-15%), not level-dependent
@@ -33,13 +33,13 @@ export const supportSkillModFactories: Partial<
     {
       type: "DmgPct",
       value: v(vals.meleeDmgPct, l),
-      modType: "melee",
+      dmgModType: "melee",
       addn: true,
     },
     {
       type: "DmgPct",
       value: v(vals.ailmentDmgPct, l),
-      modType: "ailment",
+      dmgModType: "ailment",
       addn: true,
     },
   ],
@@ -66,7 +66,7 @@ export const supportSkillModFactories: Partial<
     {
       type: "DmgPct",
       value: v(vals.ailmentDmgPct, l),
-      modType: "ailment",
+      dmgModType: "ailment",
       addn: true,
     },
   ],
