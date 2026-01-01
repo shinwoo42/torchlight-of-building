@@ -217,6 +217,7 @@ interface ModDefinitions {
   MaxProjectile: { value: number; override?: boolean };
   SkillEffPct: { value: number; addn?: boolean };
   AuraEffPct: { value: number; addn?: boolean; unscalable?: boolean };
+  CurseEffPct: { value: number; addn?: boolean };
   SealedManaCompPct: { value: number; addn?: boolean };
   ResPenPct: { value: number; penType: ResPenType };
   ArmorPenPct: { value: number };

@@ -1348,6 +1348,8 @@ const resolveBuffSkillMods = (
     );
     const isAuraSkill =
       (skill.type === "Passive" && skill.tags?.includes("Aura")) ?? false;
+    const isCurseSkill =
+      (skill.type === "Active" && skill.tags?.includes("Curse")) ?? false;
 
     // Get support skill mods (includes SkillEffPct, AuraEffPct, etc.)
     const supportMods = resolveSelectedSkillSupportMods(
@@ -1404,12 +1406,8 @@ const resolveBuffSkillMods = (
     }
 
     const prenormMods = [...loadoutMods, ...supportMods, ...levelMods];
-    const { skillEffMult, auraEffMult } = resolveBuffSkillEffMults(
-      prenormMods,
-      loadout,
-      config,
-      derivedCtx,
-    );
+    const { skillEffMult, auraEffMult, curseEffMult } =
+      resolveBuffSkillEffMults(prenormMods, loadout, config, derivedCtx);
 
     // === Apply multipliers to buff mods ===
     for (const mod of rawBuffMods) {
@@ -1422,11 +1420,12 @@ const resolveBuffSkillMods = (
       // Calculate final value
       let finalValue = mod.value;
       if (!("unscalable" in mod && mod.unscalable === true)) {
-        // Apply skill effect multiplier
-        finalValue = multValue(finalValue, skillEffMult);
-        // Apply aura effect multiplier (only for aura skills)
         if (isAuraSkill) {
           finalValue = multValue(finalValue, auraEffMult);
+        } else if (isCurseSkill) {
+          finalValue = multValue(finalValue, curseEffMult);
+        } else {
+          finalValue = multValue(finalValue, skillEffMult);
         }
       }
 
@@ -1650,7 +1649,7 @@ const resolveBuffSkillEffMults = (
   loadout: Loadout,
   config: Configuration,
   derivedCtx: DerivedCtx,
-): { skillEffMult: number; auraEffMult: number } => {
+): { skillEffMult: number; auraEffMult: number; curseEffMult: number } => {
   const buffSkillEffMods = unresolvedModsFromParam.filter(
     (m) => m.type === "AuraEffPct" || m.type === "SkillEffPct",
   );
@@ -1681,8 +1680,9 @@ const resolveBuffSkillEffMults = (
   const skillEffMult = calculateEffMultiplier(skillEffMods);
   const allAuraEffMods = filterMod(mods, "AuraEffPct");
   const auraEffMult = calculateEffMultiplier(allAuraEffMods);
+  const curseEffMult = calculateEffMultiplier(filterMod(mods, "CurseEffPct"));
 
-  return { skillEffMult, auraEffMult };
+  return { skillEffMult, auraEffMult, curseEffMult };
 };
 
 const calcNumFocus = (maxFocus: number, config: Configuration): number => {
