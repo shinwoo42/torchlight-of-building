@@ -64,4 +64,16 @@ export const passiveSkillModFactories: Partial<
       },
     ],
   }),
+  "Corrosion Focus": (l, vals) => ({
+    buffMods: [
+      {
+        type: "DmgPct",
+        value: v(vals.erosionDmgPct, l),
+        addn: true,
+        dmgModType: "erosion",
+      },
+      { type: "InflictWiltPct", value: v(vals.inflictWiltPct, l) },
+      { type: "BaseWiltFlatDmg", value: v(vals.BaseWiltFlatDmg, l) },
+    ],
+  }),
 };

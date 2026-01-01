@@ -106,3 +106,36 @@ export const preciseErosionAmplificationParser: SupportLevelParser = (
 
   return { erosionDmgPct };
 };
+
+export const corrosionFocusParser: SupportLevelParser = (input) => {
+  const { skillName, progressionTable } = input;
+
+  const descriptCol = findColumn(progressionTable, "descript", skillName);
+  const erosionDmgPct: Record<number, number> = {};
+  const inflictWiltPct: Record<number, number> = {};
+
+  for (const [levelStr, text] of Object.entries(descriptCol.rows)) {
+    const level = Number(levelStr);
+
+    const dmgMatch = template("{value:dec%} additional erosion damage").match(
+      text,
+      skillName,
+    );
+    erosionDmgPct[level] = dmgMatch.value;
+
+    const wiltMatch = template("{value:dec%} wilt chance").match(
+      text,
+      skillName,
+    );
+    inflictWiltPct[level] = wiltMatch.value;
+  }
+
+  validateAllLevels(erosionDmgPct, skillName);
+  validateAllLevels(inflictWiltPct, skillName);
+
+  return {
+    erosionDmgPct,
+    inflictWiltPct,
+    BaseWiltFlatDmg: createConstantLevels(2),
+  };
+};

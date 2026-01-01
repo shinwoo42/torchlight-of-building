@@ -8,6 +8,7 @@ import {
   mindControlParser,
 } from "./active_parsers";
 import {
+  corrosionFocusParser,
   preciseCrueltyParser,
   preciseDeepPainParser,
   preciseErosionAmplificationParser,
@@ -156,6 +157,11 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     skillName: "Precise: Erosion Amplification",
     categories: ["passive"],
     parser: preciseErosionAmplificationParser,
+  },
+  {
+    skillName: "Corrosion Focus",
+    categories: ["passive"],
+    parser: corrosionFocusParser,
   },
 ];
 

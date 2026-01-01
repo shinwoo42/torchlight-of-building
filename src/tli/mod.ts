@@ -269,6 +269,7 @@ interface ModDefinitions {
   GearBaseAttackSpeed: { value: number };
   // ailments
   InflictWiltPct: { value: number; isEnemyDebuff?: boolean };
+  BaseWiltFlatDmg: { value: number };
   // skill-specific
   MindControlMaxLink: { value: number };
   InitialMaxChannel: { value: number };
