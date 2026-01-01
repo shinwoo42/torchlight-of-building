@@ -10,14 +10,27 @@ import type {
 import type { EquipmentSlot, EquipmentType } from "../tli/gear_data_types";
 import { readCodexHtml } from "./lib/codex";
 
-const cleanText = (text: string): string => {
-  // Replace en-dash (U+2013) with regular hyphen
-  let cleaned = text.replace(/\u2013/g, "-");
+const cleanHtmlText = (
+  // biome-ignore lint/suspicious/noExplicitAny: cheerio internal type
+  elem: cheerio.Cheerio<any>,
+  $: cheerio.CheerioAPI,
+): string => {
+  // Get HTML content and replace <br> with newlines
+  let html = $(elem).html() ?? "";
+  html = html.replace(/<br\s*\/?>/gi, "\n");
 
-  // Normalize whitespace to single spaces
-  cleaned = cleaned.replace(/\s+/g, " ");
+  // Load into cheerio to get text content (strips remaining HTML)
+  let text = cheerio.load(html).text();
 
-  return cleaned.trim();
+  // Replace en-dash with regular hyphen
+  text = text.replace(/\u2013/g, "-");
+
+  // Normalize whitespace per line, filter empty lines
+  return text
+    .split("\n")
+    .map((line) => line.replace(/\s+/g, " ").trim())
+    .filter((line) => line.length > 0)
+    .join("\n");
 };
 
 interface AffixChoiceCard {
@@ -63,7 +76,7 @@ const extractAffixChoiceCards = (
     const choices: string[] = [];
 
     $card.find(".card-body li").each((_, li) => {
-      const choice = cleanText($(li).text());
+      const choice = cleanHtmlText($(li), $);
       if (choice) {
         choices.push(choice);
       }
@@ -195,14 +208,12 @@ const extractLegendary = (
   const name = mainCard.find("h5.card-title.item_rarity").text().trim();
 
   // Extract baseStat
-  const baseStat = cleanText(
-    mainCard.find('div[data-block="attrs2"]').text() || "",
-  );
+  const baseStat = cleanHtmlText(mainCard.find('div[data-block="attrs2"]'), $);
 
   // Extract normal affixes (div.t1)
   const normalAffixes: LegendaryAffix[] = [];
   mainCard.find("div.t1").each((_, el) => {
-    const affixText = cleanText($(el).text());
+    const affixText = cleanHtmlText($(el), $);
     if (affixText) {
       normalAffixes.push(parseAffix(affixText, choiceCards, false));
     }
@@ -224,7 +235,7 @@ const extractLegendary = (
   const corruptionAffixes: LegendaryAffix[] = [];
   if (corrodedCard !== undefined) {
     corrodedCard.find("div.t0").each((_, el) => {
-      const affixText = cleanText($(el).text());
+      const affixText = cleanHtmlText($(el), $);
       if (affixText) {
         corruptionAffixes.push(parseAffix(affixText, choiceCards, true));
       }

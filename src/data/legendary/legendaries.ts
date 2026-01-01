@@ -127,14 +127,14 @@ export const Legendaries: readonly Legendary[] = [
       "+(272-340) gear Energy Shield",
       "+(20-27)% Cold Resistance",
       "(15-20)% of damage is taken from Mana before life",
-      "+(30-35)% additional Max ManaThe skill cost is fixed at (1-100)",
+      "+(30-35)% additional Max Mana\nThe skill cost is fixed at (1-100)",
       "+1% additional Spell Damage for every (75-100) Max Mana owned, up to 100%",
     ],
     corruptionAffixes: [
       "+(544-680) gear Energy Shield",
       "+(60-68)% Cold Resistance",
       "(30-36)% of damage is taken from Mana before life",
-      "+(42-50)% additional Max ManaThe skill cost is fixed at (1-100)",
+      "+(42-50)% additional Max Mana\nThe skill cost is fixed at (1-100)",
       "1.5% additional Spell Damage for every (75-100) Max Mana owned, up to 150%",
     ],
     equipmentSlot: "Gloves",
@@ -153,8 +153,8 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(1500-2000) Gear Armor",
       "+(70-75) Max Life",
-      "+(2-8)% Life Regain-10% additional Regain Interval",
-      "Double Life Regain-20% additional Life Regain Interval",
+      "+(2-8)% Life Regain\n-10% additional Regain Interval",
+      "Double Life Regain\n-20% additional Life Regain Interval",
     ],
     equipmentSlot: "Gloves",
     equipmentType: "Gloves (STR)",
@@ -162,21 +162,21 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Black Pass Board Axe",
     baseStat:
-      "190 - 190 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "190 - 190 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Arminius Guillotine",
     normalAffixes: [
       "+(100-125)% gear Physical Damage",
       "Adds (20-24) - (30-36) Physical Damage to the gear",
       "+(10-30)% Skill Area",
       "+(50-70)% attack Critical Strike Damage",
-      "[Sacrifice] Changes the base effect of Tenacity Blessing to: +8% additional damageOwn 1 additional stacks of Tenacity Blessing",
+      "[Sacrifice] Changes the base effect of Tenacity Blessing to: +8% additional damage\nOwn 1 additional stacks of Tenacity Blessing",
     ],
     corruptionAffixes: [
       "+(130-155)% gear Physical Damage",
       "Adds (35-40) - (55-60) Physical Damage to the gear",
       "+(50-70)% Skill Area",
       "+(80-100)% attack Critical Strike Damage",
-      "[Sacrifice] Changes the base effect of Tenacity Blessing to: +8% additional damageOwn 2 additional stacks of Tenacity Blessing",
+      "[Sacrifice] Changes the base effect of Tenacity Blessing to: +8% additional damage\nOwn 2 additional stacks of Tenacity Blessing",
     ],
     equipmentSlot: "Two-Handed",
     equipmentType: "Two-Handed Axe",
@@ -195,7 +195,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(12-15)% Intimidating effect",
       "+(352-396) Max Life",
-      "Enemies within 12m are Intimidated+(5-10)% Intimidating effect",
+      "Enemies within 12m are Intimidated\n+(5-10)% Intimidating effect",
       "+(35-40)% additional Life Regeneration Speed when at Low Life",
       "Restores 3% Max Life every second for 4s upon hitting an enemy under at least 3 control effects.",
     ],
@@ -213,7 +213,7 @@ export const Legendaries: readonly Legendary[] = [
       "+10% Armor Effective Rate for Non-Physical Damage",
     ],
     corruptionAffixes: [
-      "GiantismEnlarges Physique by (10-15)%",
+      "Giantism\nEnlarges Physique by (10-15)%",
       "+50% additional Steadfast Aura Effect",
       "+5 Aura Skill Level",
       "+(15-20)% Armor Effective Rate for Non-Physical Damage",
@@ -246,14 +246,14 @@ export const Legendaries: readonly Legendary[] = [
     name: "Awakening Skull",
     normalAffixes: [
       "+(150-220) Max Life",
-      "[Arcane] Converts 100% of Mana Cost to Life Cost+25% additional Max Life",
+      "[Arcane] Converts 100% of Mana Cost to Life Cost\n+25% additional Max Life",
       "+(500-800)% Skill Cost",
       "+(30-40) Skill Cost",
       "+(40-50)% Armor DMG Mitigation Penetration for Attack Skills if you have consumed more than +120% of Max Life recently",
     ],
     corruptionAffixes: [
       "+(250-330) Max Life",
-      "[Arcane] Converts 100% of Mana Cost to Life Cost+25% additional Max Life+10% additional Max Life",
+      "[Arcane] Converts 100% of Mana Cost to Life Cost\n+25% additional Max Life\n+10% additional Max Life",
       "+(300-1000)% Skill Cost",
       "+(10-50) Skill Cost",
       "+(51-60)% Armor DMG Mitigation Penetration for Attack Skills if you have consumed more than +150% of Max Life recently",
@@ -292,7 +292,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(2500-3000) Gear Armor",
       "+50% tracking distance for Sentries",
-      "Max Sentry Quantity +1+1 Sentry quantity that can be deployed at a time",
+      "Max Sentry Quantity +1\n+1 Sentry quantity that can be deployed at a time",
       "+(6-8)% additional Sentry Damage for every nearby Sentry within 10m",
       "+(6-8)% Armor Effective Rate for non-Physical DMG for every nearby Sentry within 10m",
     ],
@@ -370,7 +370,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(35-45)% Max Life and Max Energy Shield",
       "+(60-80)% Attack and Cast Speed",
       "+25% additional Deterioration Damage taken per stack of Deterioration the enemy has. Stacks up to 10 time(s)",
-      "-50% additional Deterioration Duration+(15-30)% Deterioration Damage",
+      "-50% additional Deterioration Duration\n+(15-30)% Deterioration Damage",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (INT)",
@@ -456,7 +456,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(230-250) Max Life",
       "Adds (26-28) - (32-35) Physical Damage to Attacks and Spells",
       "Triggers Lv. (26-30) Groundshaker when inflicting Paralysis. Interval: 1.5s.",
-      "Knockback direction is reversed+30% Knockback distance",
+      "Knockback direction is reversed\n+30% Knockback distance",
     ],
     equipmentSlot: "Gloves",
     equipmentType: "Gloves (STR)",
@@ -536,21 +536,21 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Black Feather Long Bow",
     baseStat:
-      "70 - 70 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "70 - 70 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Bow of Endless Dusk",
     normalAffixes: [
       "Adds (107-112) - (116-121) Physical Damage to the gear",
       "+(14-18)% gear Attack Speed",
       "+(30-40)% Attack Critical Strike Rating for this gear",
       "Adds 40% of Physical Damage as Fire, Cold, and Lightning Damage",
-      "-80% additional Spell Damage-80% additional Minion Damage",
+      "-80% additional Spell Damage\n-80% additional Minion Damage",
     ],
     corruptionAffixes: [
       "Adds (207-214) - (219-226) Physical Damage to the gear",
       "+(22-27)% gear Attack Speed",
       "+(50-60)% Attack Critical Strike Rating for this gear",
       "Adds (45-50)% of Physical Damage as Fire, Cold, and Lightning Damage",
-      "-50% additional Spell Damage-50% additional Minion Damage",
+      "-50% additional Spell Damage\n-50% additional Minion Damage",
     ],
     equipmentSlot: "Two-Handed",
     equipmentType: "Bow",
@@ -566,7 +566,7 @@ export const Legendaries: readonly Legendary[] = [
     ],
     corruptionAffixes: [
       "+(30-45)% Cast Speed",
-      "+1 Max Spell Burst+(10-15)% additional Spell Damage",
+      "+1 Max Spell Burst\n+(10-15)% additional Spell Damage",
       "(-15--10)% additional Spell Burst Charge Speed",
     ],
     equipmentSlot: "Helmet",
@@ -615,7 +615,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Rottenbone Zapper",
     baseStat:
-      "16 - 16 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "16 - 16 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Buzzing",
     normalAffixes: [
       "Adds (56-59) - (64-67) Physical Damage to the gear",
@@ -666,7 +666,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(8-25)% Max Energy Shield",
       "+(20-30) Dexterity and Intelligence",
       "+(20-40)% Erosion Resistance",
-      "Blur gains an additional effect: +1 Affliction inflicted per second for every 5 points of Blur Rating+25% Blur Effect",
+      "Blur gains an additional effect: +1 Affliction inflicted per second for every 5 points of Blur Rating\n+25% Blur Effect",
       "Gains (5-10) points of Blur Rating for every 2 m of movement",
     ],
     equipmentSlot: "Trinket",
@@ -831,10 +831,10 @@ export const Legendaries: readonly Legendary[] = [
           "Adds (8-9) - (125-132) Lightning Damage to Attacks and Spells while Blur is active",
           "+(4500-5000) Evasion while Blur is active",
           "+(13-16)% Projectile Damage per stack of Agility Blessing",
-          "Immune to Numbed when Agility Blessing reaches max stacksCritical Strikes are guaranteed to inflict Numbed.",
+          "Immune to Numbed when Agility Blessing reaches max stacks\nCritical Strikes are guaranteed to inflict Numbed.",
           "+(11-12)% chance to avoid damage while Agility Blessing is active",
           "50% chance to gain Agility Blessing per 2 m you move",
-          "Immune to Freeze when Focus Blessing reaches max stacksInflicts Frostbites when dealing Cold Damage",
+          "Immune to Freeze when Focus Blessing reaches max stacks\nInflicts Frostbites when dealing Cold Damage",
           "+(6-7)% Spell Damage per stack of Focus Blessing owned",
           "+(5-6)% Critical Strike Damage per stack of Focus Blessing owned",
           "+(25-30)% chance for Critical Strikes to grant 1 stack of Focus Blessing",
@@ -861,10 +861,10 @@ export const Legendaries: readonly Legendary[] = [
           "Adds (8-9) - (125-132) Lightning Damage to Attacks and Spells while Blur is active",
           "+(4500-5000) Evasion while Blur is active",
           "+(13-16)% Projectile Damage per stack of Agility Blessing",
-          "Immune to Numbed when Agility Blessing reaches max stacksCritical Strikes are guaranteed to inflict Numbed.",
+          "Immune to Numbed when Agility Blessing reaches max stacks\nCritical Strikes are guaranteed to inflict Numbed.",
           "+(11-12)% chance to avoid damage while Agility Blessing is active",
           "50% chance to gain Agility Blessing per 2 m you move",
-          "Immune to Freeze when Focus Blessing reaches max stacksInflicts Frostbites when dealing Cold Damage",
+          "Immune to Freeze when Focus Blessing reaches max stacks\nInflicts Frostbites when dealing Cold Damage",
           "+(6-7)% Spell Damage per stack of Focus Blessing owned",
           "+(5-6)% Critical Strike Damage per stack of Focus Blessing owned",
           "+(25-30)% chance for Critical Strikes to grant 1 stack of Focus Blessing",
@@ -891,10 +891,10 @@ export const Legendaries: readonly Legendary[] = [
           "Adds (8-9) - (125-132) Lightning Damage to Attacks and Spells while Blur is active",
           "+(4500-5000) Evasion while Blur is active",
           "+(13-16)% Projectile Damage per stack of Agility Blessing",
-          "Immune to Numbed when Agility Blessing reaches max stacksCritical Strikes are guaranteed to inflict Numbed.",
+          "Immune to Numbed when Agility Blessing reaches max stacks\nCritical Strikes are guaranteed to inflict Numbed.",
           "+(11-12)% chance to avoid damage while Agility Blessing is active",
           "50% chance to gain Agility Blessing per 2 m you move",
-          "Immune to Freeze when Focus Blessing reaches max stacksInflicts Frostbites when dealing Cold Damage",
+          "Immune to Freeze when Focus Blessing reaches max stacks\nInflicts Frostbites when dealing Cold Damage",
           "+(6-7)% Spell Damage per stack of Focus Blessing owned",
           "+(5-6)% Critical Strike Damage per stack of Focus Blessing owned",
           "+(25-30)% chance for Critical Strikes to grant 1 stack of Focus Blessing",
@@ -918,14 +918,14 @@ export const Legendaries: readonly Legendary[] = [
       "+1% Max Cold Resistance",
       "+1% Max Lightning Resistance",
       "+(10-16)% Max Life, Max Mana, and Max Energy Shield",
-      "-80% Energy Shield Charge SpeedAdds Elemental Damage equal to (1.1-1.4)% of Max Energy Shield to Attacks and Spells",
+      "-80% Energy Shield Charge Speed\nAdds Elemental Damage equal to (1.1-1.4)% of Max Energy Shield to Attacks and Spells",
     ],
     corruptionAffixes: [
       "+2% Max Fire Resistance",
       "+2% Max Cold Resistance",
       "+2% Max Lightning Resistance",
       "+(20-25)% Max Life, Max Mana, and Max Energy Shield",
-      "(-40-40)% Energy Shield Charge SpeedAdds Elemental Damage equal to (1.3-1.6)% of Max Energy Shield to Attacks and Spells",
+      "(-40-40)% Energy Shield Charge Speed\nAdds Elemental Damage equal to (1.3-1.6)% of Max Energy Shield to Attacks and Spells",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (INT)",
@@ -933,7 +933,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Griffin Greatsword",
     baseStat:
-      "110 - 110 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "110 - 110 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Circular Clearing",
     normalAffixes: [
       "+(150-300)% gear Physical Damage",
@@ -984,7 +984,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+150% Spell Damage for 2s after using a Terra Skill.",
       "+(50-70)% Terra Skill Area",
-      "Enemies taking Damage Over Time from Terra are immune to Ailments+(10-15)% Elemental Resistance",
+      "Enemies taking Damage Over Time from Terra are immune to Ailments\n+(10-15)% Elemental Resistance",
       "+50 Max Life",
     ],
     equipmentSlot: "Trinket",
@@ -1055,13 +1055,13 @@ export const Legendaries: readonly Legendary[] = [
       "+40% chance to cause Ailments",
       "+(15-20)% Elemental Resistance",
       "+(20-30)% Ailment Effective Speed",
-      "Immune to FrostbiteImmune to Slow",
+      "Immune to Frostbite\nImmune to Slow",
     ],
     corruptionAffixes: [
       "+80% chance to cause Ailments",
       "+(21-30)% Elemental Resistance",
       "+(31-40)% Ailment Effective Speed",
-      "Immune to FrostbiteImmune to SlowImmune to curse",
+      "Immune to Frostbite\nImmune to Slow\nImmune to curse",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -1214,7 +1214,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Rock Claymore",
     baseStat:
-      "12 - 12 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "12 - 12 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Crosser",
     normalAffixes: [
       "+(30-40)% gear Physical Damage",
@@ -1228,7 +1228,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(30-40)% Attack Block Chance",
       "+(30-40)% Spell Block Chance",
       "100% chance to gain 1 stack of Tenacity Blessing when Blocking",
-      "[Last Stand] Block Ratio is set to 0%For every +3% Attack or Spell Block Chance, +2% additional damage, up to +90%",
+      "[Last Stand] Block Ratio is set to 0%\nFor every +3% Attack or Spell Block Chance, +2% additional damage, up to +90%",
     ],
     equipmentSlot: "Two-Handed",
     equipmentType: "Two-Handed Sword",
@@ -1276,7 +1276,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Conflict Greatsword",
     baseStat:
-      "20 - 20 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "20 - 20 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Cursed Flame",
     normalAffixes: [
       "+(250-300)% gear Physical Damage",
@@ -1323,7 +1323,7 @@ export const Legendaries: readonly Legendary[] = [
           "+(120-150) Intelligence",
         ],
       },
-      "Have FervorImmune to Trauma while Fervor is active",
+      "Have Fervor\nImmune to Trauma while Fervor is active",
       "Has (70-77) point(s) of fixed Fervor Rating",
       "+2% additional damage per 3 Fervor Rating",
     ],
@@ -1423,7 +1423,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(40-50)% additional Base Damage for Off-Hand Weapons",
       "(-24-24)% Attack Speed",
       "+(36-50)% Critical Strike Rating for the Main-Hand Weapon",
-      "Conspire+(15-20)% additional Base Damage for Off-Hand Weapons",
+      "Conspire\n+(15-20)% additional Base Damage for Off-Hand Weapons",
     ],
     equipmentSlot: "Gloves",
     equipmentType: "Gloves (STR)",
@@ -1538,7 +1538,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(10-13)% Max Life",
       "+(160-216)% Fire Damage",
       "Converts (10-15)% of Physical Damage taken to Fire Damage",
-      "You cannot deal Fire Damage unless you are Ignited+(300-400)% additional Ignite Damage taken",
+      "You cannot deal Fire Damage unless you are Ignited\n+(300-400)% additional Ignite Damage taken",
       "You always receive +(2-3) Ignite Damage when there are enemies nearby",
     ],
     corruptionAffixes: [
@@ -1546,7 +1546,7 @@ export const Legendaries: readonly Legendary[] = [
       "+24% Max Life",
       "+(288-360)% Fire Damage",
       "Converts (20-30)% of Physical Damage taken to Fire Damage",
-      "Damage ignores enemy Fire Resistance when you are Ignited+(30-40)% additional Ignite Damage taken",
+      "Damage ignores enemy Fire Resistance when you are Ignited\n+(30-40)% additional Ignite Damage taken",
       "You always receive +1 Ignite Damage when there are enemies nearby",
     ],
     equipmentSlot: "Chest Armor",
@@ -1566,7 +1566,7 @@ export const Legendaries: readonly Legendary[] = [
       "+254 Max Life",
       "Regenerates 126 Life per second while moving",
       "+30% Movement Speed",
-      "Immune to Trauma+(20-30)% Erosion Resistance",
+      "Immune to Trauma\n+(20-30)% Erosion Resistance",
     ],
     equipmentSlot: "Boots",
     equipmentType: "Boots (STR)",
@@ -1574,7 +1574,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Blue Sea War Crossbow",
     baseStat:
-      "90 - 90 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "90 - 90 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Dumb Voice",
     normalAffixes: [
       "+30% gear Physical Damage",
@@ -1636,7 +1636,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Primeval War Claw",
     baseStat:
-      "73 - 73 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "73 - 73 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Elemental Whirl",
     normalAffixes: [
       "+(120-140)% gear Physical Damage",
@@ -1987,7 +1987,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Frenzy Battle Axe",
     baseStat:
-      "73 - 73 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "73 - 73 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "End Night Banquet",
     normalAffixes: [
       "+40% gear Attack Speed",
@@ -2014,7 +2014,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(3-5)% Attack and Spell Block Chance",
       "+(12-18)% additional damage for Minions when they are at Low Life",
       "(-2-2) to Max Summonable Synthetic Troops",
-      "[Arcane] Converts 100% of Mana Cost to Life Cost+25% additional Max Life",
+      "[Arcane] Converts 100% of Mana Cost to Life Cost\n+25% additional Max Life",
     ],
     corruptionAffixes: [
       "+(544-578) gear Energy Shield",
@@ -2022,7 +2022,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(12-16)% Attack and Spell Block Chance",
       "+(30-36)% additional damage for Minions when they are at Low Life",
       "+2 to Max Summonable Synthetic Troops",
-      "[Ward] Adds 13% of Sealed Mana as Energy ShieldAdds 13% of Sealed Life as Energy Shield",
+      "[Ward] Adds 13% of Sealed Mana as Energy Shield\nAdds 13% of Sealed Life as Energy Shield",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (INT)",
@@ -2039,8 +2039,8 @@ export const Legendaries: readonly Legendary[] = [
       "+(250-330) Max Life",
     ],
     corruptionAffixes: [
-      "Has Lv. (35-40) Precise: Rejuvenation while standing still+20% Life Regeneration Speed",
-      "Gains a stack of Tenacity Blessing per 1 s while standing stillMax Tenacity Blessing Stacks +1",
+      "Has Lv. (35-40) Precise: Rejuvenation while standing still\n+20% Life Regeneration Speed",
+      "Gains a stack of Tenacity Blessing per 1 s while standing still\nMax Tenacity Blessing Stacks +1",
       "(-4--2)% Movement Speed for every 10% of Life lost",
       "+(12-15)% Elemental Resistance",
       "+(380-460) Max Life",
@@ -2050,7 +2050,8 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Pickaxe Claw",
-    baseStat: "8 - 8 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+    baseStat:
+      "8 - 8 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Eternal Moon",
     normalAffixes: [
       "Adds (25-30) - (40-52) Physical Damage to the gear",
@@ -2085,7 +2086,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(7-20)% Defense",
       "+(7-10)% Elemental Resistance",
       "(-10-30)% Blur Effect",
-      "Blur gains an additional effect: +0.3% Movement Speed for every point of Blur RatingGains 5 points of Blur Rating for every 5 m of movement",
+      "Blur gains an additional effect: +0.3% Movement Speed for every point of Blur Rating\nGains 5 points of Blur Rating for every 5 m of movement",
       "+20% Movement Speed for 1 s when Blur is lost",
       "+100% chance to gain Blur when evading",
     ],
@@ -2166,14 +2167,14 @@ export const Legendaries: readonly Legendary[] = [
       "(-40--20)% Erosion Resistance",
       "Adds 3 Base Ailment Damage",
       "+(40-60)% additional Ailment Damage",
-      "[Vile] Duration of Ailments caused by Critical Strikes is doubledFor every +3% Critical Strike Damage, +1% additional Ailment Damage",
+      "[Vile] Duration of Ailments caused by Critical Strikes is doubled\nFor every +3% Critical Strike Damage, +1% additional Ailment Damage",
     ],
     corruptionAffixes: [
       "+(3200-3400) gear Evasion",
       "(-20--1)% Erosion Resistance",
       "Adds 5 Base Ailment Damage",
       "+(50-75)% additional Ailment Damage",
-      "[Vile] Duration of Ailments caused by Critical Strikes is doubledFor every +3% Critical Strike Damage, +1% additional Ailment Damage+(20-24)% Ailment Duration",
+      "[Vile] Duration of Ailments caused by Critical Strikes is doubled\nFor every +3% Critical Strike Damage, +1% additional Ailment Damage\n+(20-24)% Ailment Duration",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (DEX)",
@@ -2287,7 +2288,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Bone Stinger Sword",
     baseStat:
-      "89 - 89 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "89 - 89 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Farewell Desire",
     normalAffixes: [
       "+(100-130)% gear Physical Damage",
@@ -2366,14 +2367,14 @@ export const Legendaries: readonly Legendary[] = [
       "+30% Minion Elemental Resistance",
       "+(15-20)% Aura Effect",
       "+(70-90)% Minion Critical Strike Damage",
-      "Minions gain Lucky upon a Critical Strike+100 Minion Critical Strike Rating",
+      "Minions gain Lucky upon a Critical Strike\n+100 Minion Critical Strike Rating",
     ],
     equipmentSlot: "Helmet",
     equipmentType: "Helmet (INT)",
   },
   {
     baseItem: "Wiseman's Wand",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Fiery Oath",
     normalAffixes: [
       "+(1-2) Fire Skill Level",
@@ -2420,7 +2421,7 @@ export const Legendaries: readonly Legendary[] = [
       "+154 Max Life",
       "+11% Fire Resistance",
       "+8% Movement Speed",
-      "Regenerates 3% Life per secondRegenerates 3% Life per second when taking Damage Over Time",
+      "Regenerates 3% Life per second\nRegenerates 3% Life per second when taking Damage Over Time",
       "Immune to Slow",
     ],
     corruptionAffixes: [
@@ -2428,7 +2429,7 @@ export const Legendaries: readonly Legendary[] = [
       "+264 Max Life",
       "+24% Fire Resistance",
       "+18% Movement Speed",
-      "Regenerates (4-5)% Life per secondRegenerates (4-5)% Life per second when taking Damage Over Time",
+      "Regenerates (4-5)% Life per second\nRegenerates (4-5)% Life per second when taking Damage Over Time",
       "Immune to crowd control effects",
     ],
     equipmentSlot: "Boots",
@@ -2436,7 +2437,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "White Crystal Wand",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Fire Lord's Promise",
     normalAffixes: [
       "+(60-80)% Spell Damage",
@@ -2471,7 +2472,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(300-400) Max Life",
       "+(7-8)% Max Fire Resistance",
-      "Max Terra Quantity bonus is set to 1-50% Terra Skill Cost",
+      "Max Terra Quantity bonus is set to 1\n-50% Terra Skill Cost",
       "+(90-100)% Movement Speed when standing on a Terra Skill. The effect lasts 2s.",
       "+3% Terra Charge Restoration Speed and +3% Terra Skill Area for every 2% overflown Fire Resistance",
     ],
@@ -2523,19 +2524,19 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Gilt Longsword",
     baseStat:
-      "73 - 73 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "73 - 73 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Fleeting Regret",
     normalAffixes: [
       "+(75-120)% gear Physical Damage",
       "Adds (24-27) - (36-40) Physical Damage to the gear",
-      "+(5-20)% Attack and Spell Block while Dual Wielding+(5-20)% Block Ratio when holding a Shield",
+      "+(5-20)% Attack and Spell Block while Dual Wielding\n+(5-20)% Block Ratio when holding a Shield",
       "+(200-270)% Critical Strike Rating if you have Blocked recently",
       "+(36-48)% Attack Speed if you have Blocked recently",
     ],
     corruptionAffixes: [
       "+(150-180)% gear Physical Damage",
       "Adds (34-37) - (55-60) Physical Damage to the gear",
-      "+(7-25)% Attack and Spell Block while Dual Wielding+(7-25)% Block Ratio when holding a Shield",
+      "+(7-25)% Attack and Spell Block while Dual Wielding\n+(7-25)% Block Ratio when holding a Shield",
       "+(400-450)% Critical Strike Rating if you have Blocked recently",
       "+(50-72)% Attack Speed if you have Blocked recently",
     ],
@@ -2566,7 +2567,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Primeval War Claw",
     baseStat:
-      "73 - 73 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "73 - 73 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Flying Bird",
     normalAffixes: [
       "+(75-100)% gear Physical Damage",
@@ -2681,7 +2682,7 @@ export const Legendaries: readonly Legendary[] = [
       "(-30-10)% additional Attack and Cast Speed for Sentry Skills",
       "+72% Skill Area",
       "+45% additional damage taken by enemies in proximity to Sentries",
-      "Gains Demolisher Charge when using Sentry Skills+1 Melee Skill Level",
+      "Gains Demolisher Charge when using Sentry Skills\n+1 Melee Skill Level",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Belt",
@@ -2689,7 +2690,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Godslaughter Short Dagger",
     baseStat:
-      "49 - 49 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "49 - 49 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Frantic Shadow",
     normalAffixes: [
       "Adds (157-167) - (175-185) Physical Damage to the gear",
@@ -2836,7 +2837,8 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Pocket Boomstick",
-    baseStat: "8 - 8 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+    baseStat:
+      "8 - 8 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Frozen Sight",
     normalAffixes: [
       "Adds (35-39) - (44-49) Cold Damage to the gear",
@@ -2858,7 +2860,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Thorny Hammer",
     baseStat:
-      "41 - 41 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "41 - 41 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Frozen Will",
     normalAffixes: [
       "Adds (15-18) - (24-27) Physical Damage to the gear",
@@ -2873,7 +2875,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(35-45)% gear Attack Speed",
       "+(80-100)% Cold Damage",
       "+35% Frostbite inflicted",
-      "Converts 100% of Physical Damage to Cold Damage+(40-50)% Cold Damage",
+      "Converts 100% of Physical Damage to Cold Damage\n+(40-50)% Cold Damage",
       "Hitting an enemy with Max Frostbite Rating will trigger Shattering",
     ],
     equipmentSlot: "One-Handed",
@@ -2933,7 +2935,7 @@ export const Legendaries: readonly Legendary[] = [
       "50% chance to get the max stacks of Agility Blessing when Agility Blessing is gained",
       "-18% Critical Strike Rating per stack of Agility Blessing. Stacks up to 4 time(s)",
       "+(140-160) Attack and Spell Critical Strike Rating when Agility Blessing reaches max stacks",
-      "Max Agility Blessing Stacks +1+(5-8)% additional damage",
+      "Max Agility Blessing Stacks +1\n+(5-8)% additional damage",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Ring",
@@ -2949,9 +2951,9 @@ export const Legendaries: readonly Legendary[] = [
       "-2% additional damage per stack of Blessing (multiplies)",
     ],
     corruptionAffixes: [
-      "Max Agility Blessing Stacks +1+10% additional damage",
-      "Max Focus Blessing Stacks +1+10% additional damage",
-      "Max Tenacity Blessing Stacks +1+10% additional damage",
+      "Max Agility Blessing Stacks +1\n+10% additional damage",
+      "Max Focus Blessing Stacks +1\n+10% additional damage",
+      "Max Tenacity Blessing Stacks +1\n+10% additional damage",
       "-1% additional damage per stack of Blessing (multiplies)",
     ],
     equipmentSlot: "Chest Armor",
@@ -2963,7 +2965,7 @@ export const Legendaries: readonly Legendary[] = [
     name: "Genius Battlegear",
     normalAffixes: [
       "+(60-80) Max Life",
-      "-100% Critical Strike Rating+100% Critical Strike Damage",
+      "-100% Critical Strike Rating\n+100% Critical Strike Damage",
       "+40% Spell Critical Strike Rating for every 1 Spell Burst Charge consumed for 10s. Stacks up to 10 times",
     ],
     corruptionAffixes: [
@@ -2987,7 +2989,7 @@ export const Legendaries: readonly Legendary[] = [
     ],
     corruptionAffixes: [
       "+(300-440) Max Life",
-      "Fervor gains an additional base effect: +1% Skill Area for every 3 Fervor Rating+(30-50)% Skill Area",
+      "Fervor gains an additional base effect: +1% Skill Area for every 3 Fervor Rating\n+(30-50)% Skill Area",
       "Fervor gains an additional base effect: +1% additional Attack and Ailment Damage for every 1 Fervor Rating",
       "Consumes (6-8)% of current Life and Energy Shield per second while Fervor is active",
       "Consumes all Fervor Rating when at Low Life. Restores 0.5% Life for every Fervor Rating consumed. Interval: 4s.",
@@ -2998,7 +3000,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Black Feather Long Bow",
     baseStat:
-      "70 - 70 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "70 - 70 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Glacial Abyss Arrow",
     normalAffixes: [
       "Adds (175-178) - (182-185) Cold Damage to the gear",
@@ -3012,7 +3014,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(100-120)% Critical Strike Damage",
       "+50% Numbed chance",
       "+(50-75)% additional Lightning Damage against Numbed enemies",
-      "[Winter] Deals +1% additional damage to an enemy for every 2 points of Frostbite Rating the enemy hasAdds (33-37) - (43-47) Physical Damage to Spells",
+      "[Winter] Deals +1% additional damage to an enemy for every 2 points of Frostbite Rating the enemy has\nAdds (33-37) - (43-47) Physical Damage to Spells",
     ],
     equipmentSlot: "Two-Handed",
     equipmentType: "Bow",
@@ -3105,13 +3107,13 @@ export const Legendaries: readonly Legendary[] = [
       "+(5-10)% Elemental Resistance",
       "+20% Elemental Resistance for enemies within 12m",
       "+ (50-70)% Spell Elemental Damage",
-      "[Penetrating] When inflicting Ignite, Numbed, Frostbite/Freeze, inflicts Fire Infiltration, Lightning Infiltration, or Cold Infiltration respectively.Upon inflicting damage, +8% additional Elemental Damage for each type of Infiltration Effect the enemy has",
+      "[Penetrating] When inflicting Ignite, Numbed, Frostbite/Freeze, inflicts Fire Infiltration, Lightning Infiltration, or Cold Infiltration respectively.\nUpon inflicting damage, +8% additional Elemental Damage for each type of Infiltration Effect the enemy has",
     ],
     corruptionAffixes: [
       "+(12-16)% Elemental Resistance",
       "+(10-15)% Elemental Resistance for enemies within 12m",
       "+ (100-120)% Spell Elemental Damage",
-      "[Translucent] +25% additional Lightning Damage if you have dealt Fire Damage recently+25% additional Cold Damage if you have dealt Lightning Damage recently+25% additional Fire Damage if you have dealt Cold Damage recently",
+      "[Translucent] +25% additional Lightning Damage if you have dealt Fire Damage recently\n+25% additional Cold Damage if you have dealt Lightning Damage recently\n+25% additional Fire Damage if you have dealt Cold Damage recently",
     ],
     equipmentSlot: "Gloves",
     equipmentType: "Gloves (INT)",
@@ -3119,7 +3121,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Swarm Pistol",
     baseStat:
-      "73 - 73 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "73 - 73 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Gravel",
     normalAffixes: [
       "+(100-130)% gear Physical Damage",
@@ -3189,12 +3191,12 @@ export const Legendaries: readonly Legendary[] = [
     baseStat: "+1920 gear Evasion",
     name: "Hanging Two-Tone Mask",
     normalAffixes: [
-      "+(25-30)% additional Ranged Damage taken by nearby enemies+(25-30)% additional Melee Damage against distant enemies",
-      "+20% chance to avoid damage when there are no enemies nearby+40% Injury Buffer when there are only 1 enemies nearby",
+      "+(25-30)% additional Ranged Damage taken by nearby enemies\n+(25-30)% additional Melee Damage against distant enemies",
+      "+20% chance to avoid damage when there are no enemies nearby\n+40% Injury Buffer when there are only 1 enemies nearby",
     ],
     corruptionAffixes: [
-      "+(35-40)% additional Ranged Damage taken by nearby enemies+(35-40)% additional Melee Damage against distant enemies",
-      "+25% chance to avoid damage when there are no enemies nearby+50% Injury Buffer when there are only 1 enemies nearby",
+      "+(35-40)% additional Ranged Damage taken by nearby enemies\n+(35-40)% additional Melee Damage against distant enemies",
+      "+25% chance to avoid damage when there are no enemies nearby\n+50% Injury Buffer when there are only 1 enemies nearby",
     ],
     equipmentSlot: "Helmet",
     equipmentType: "Helmet (DEX)",
@@ -3202,7 +3204,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Wolfsoul Claymore",
     baseStat:
-      "70 - 70 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "70 - 70 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Harbinger's Reversed Plumes",
     normalAffixes: [
       "Adds 400 - 400 Erosion Damage to the gear",
@@ -3252,7 +3254,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(300-330) Max Life and Max Energy Shield",
       "(-25--20)% additional damage taken for 0.5 s after using Combo Skills",
-      "+1 Combo Finisher charge(s)+(10-30)% additional Combo Skill Damage",
+      "+1 Combo Finisher charge(s)\n+(10-30)% additional Combo Skill Damage",
       "+(25-30)% Combo Finisher Amplification",
       "Gains (2-3) Combo Point(s) on Critical Strike from Combo Finishers. Each skill cast can only trigger this effect once. During Spell Burst, this effect only takes effect on the first skill cast when Spell Burst is activated",
     ],
@@ -3273,7 +3275,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(160-215) Max Energy Shield",
       "50% chance to get the max stacks of Focus Blessing when Focus Blessing is gained",
       "+(15-20)% additional Spell Damage at Max Focus Blessings",
-      "Max Focus Blessing Stacks +1+(5-8)% additional damage",
+      "Max Focus Blessing Stacks +1\n+(5-8)% additional damage",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Ring",
@@ -3292,7 +3294,7 @@ export const Legendaries: readonly Legendary[] = [
       "50% chance to get the max stacks of Tenacity Blessing when Tenacity Blessing is gained",
       "+(5-8)% damage taken when at Max Tenacity Blessing",
       "+(25-30)% Fire Damage per stack of Tenacity Blessing owned. Stacks up to 6 time(s)",
-      "Max Tenacity Blessing Stacks +1+(5-8)% additional damage",
+      "Max Tenacity Blessing Stacks +1\n+(5-8)% additional damage",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Ring",
@@ -3303,12 +3305,12 @@ export const Legendaries: readonly Legendary[] = [
     name: "Heart of the Storm",
     normalAffixes: [
       "+(12-16)% Max Life and Max Energy Shield",
-      "Automatically generates a windfield centered on yourself for 8 s. Cooldown: 10 sYou gain Storm while inside the windfield",
+      "Automatically generates a windfield centered on yourself for 8 s. Cooldown: 10 s\nYou gain Storm while inside the windfield",
       "For each Attack Horizontal Projectile Skill used recently, +(5-6)% Storm Effect. Stacks up to 10 time(s)",
     ],
     corruptionAffixes: [
       "+(20-24)% Max Life and Max Energy Shield",
-      "Automatically generates a windfield centered on yourself for 8 s. Cooldown: 10 sYou gain Storm while inside the windfield+(15-20)% additional Attack Projectile Damage",
+      "Automatically generates a windfield centered on yourself for 8 s. Cooldown: 10 s\nYou gain Storm while inside the windfield\n+(15-20)% additional Attack Projectile Damage",
       "For each Attack Horizontal Projectile Skill used recently, +(9-10)% Storm Effect. Stacks up to 10 time(s)",
     ],
     equipmentSlot: "Trinket",
@@ -3401,7 +3403,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Blue Sea Greataxe",
     baseStat:
-      "90 - 90 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "90 - 90 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Highest Glance",
     normalAffixes: [
       "+(180-220)% gear Physical Damage",
@@ -3467,7 +3469,7 @@ export const Legendaries: readonly Legendary[] = [
     ],
     corruptionAffixes: [
       "Eliminate enemies under 15% Life on hit",
-      "[Gale] 60% of the Projectile Speed bonus is also applied to the additional bonus for Projectile Damage+(30-45)% Projectile Speed",
+      "[Gale] 60% of the Projectile Speed bonus is also applied to the additional bonus for Projectile Damage\n+(30-45)% Projectile Speed",
       "+(170-230)% Ranged Attack Critical Strike Rating",
     ],
     equipmentSlot: "Trinket",
@@ -3569,7 +3571,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(5-8)% additional Max Life, Max Mana, and Max Energy Shield",
       "Adds (82-86) - (94-98) Fire Damage to Attacks and Spells",
       "+8% Fire Resistance",
-      "[Tenacity] +100% chance to gain 1 stack(s) of Tenacity Blessing when hitting an enemyMax Tenacity Blessing Stacks +1",
+      "[Tenacity] +100% chance to gain 1 stack(s) of Tenacity Blessing when hitting an enemy\nMax Tenacity Blessing Stacks +1",
       "Triggers Lv. (20-30) Scorch Curse on hit. Cooldown: 1 s.",
       "Converts 75% of Erosion Damage taken to Fire Damage",
     ],
@@ -3592,7 +3594,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(5-8)% additional Max Life, Max Mana, and Max Energy Shield",
       "Adds (86-88) - (92-94) Cold Damage to Attacks and Spells",
       "+8% Cold Resistance",
-      "[Chilly] +100% chance to gain 1 stack of Focus Blessing on hitMax Focus Blessing Stacks +1",
+      "[Chilly] +100% chance to gain 1 stack of Focus Blessing on hit\nMax Focus Blessing Stacks +1",
       "Triggers Lv. (20-30) Biting Cold Curse on hit. Cooldown: 1 s.",
       "Converts 75% of Erosion Damage taken to Cold Damage",
     ],
@@ -3682,9 +3684,9 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(15-25)% Max Life and Max Energy Shield",
       "+(110-130)% additional Sentry Damage",
-      "Main-Hand Weapon's Critical Strike Rating is also set as the Base Critical Strike Rating of Spell Sentry Skills+(30-40)% weapon Critical Strike Rating",
+      "Main-Hand Weapon's Critical Strike Rating is also set as the Base Critical Strike Rating of Spell Sentry Skills\n+(30-40)% weapon Critical Strike Rating",
       "Restores (1-4)% Life and Energy Shield when a Sentry lands a Critical Strike. Interval: 0.3 s",
-      "Enemies nearby to Sentries receive Lv. 40 Timid Curse+(30-50)% Sentry Duration",
+      "Enemies nearby to Sentries receive Lv. 40 Timid Curse\n+(30-50)% Sentry Duration",
     ],
     equipmentSlot: "Helmet",
     equipmentType: "Helmet (INT)",
@@ -3709,7 +3711,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Poisoned Dagger",
     baseStat:
-      "10 - 10 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "10 - 10 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Imploration Dagger",
     normalAffixes: [
       "+(90-100)% gear Physical Damage",
@@ -3731,7 +3733,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "A Corner of Divinity",
     baseStat:
-      "20 - 20 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "20 - 20 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Incorrect Arbitration",
     normalAffixes: [
       "+(1000-2000)% Attack Critical Strike Rating for this gear",
@@ -3758,7 +3760,7 @@ export const Legendaries: readonly Legendary[] = [
       "Adds (3-7) - (120-150) Lightning Damage to Attacks and Spells",
       "+(25-35)% Lightning Resistance",
       "+(1500-4000) Evasion while a Defensive Skill Effect is active",
-      "Spell Damage will not further reduce Evasion by default while a Defensive Skill Effect is active.+(10-20)% additional Evasion on Spell Damage",
+      "Spell Damage will not further reduce Evasion by default while a Defensive Skill Effect is active.\n+(10-20)% additional Evasion on Spell Damage",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Belt",
@@ -3766,7 +3768,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Prayer Hammer",
     baseStat:
-      "20 - 20 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "20 - 20 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Interlocking Soul",
     normalAffixes: [
       "+(16-20) Strength and Intelligence",
@@ -3792,20 +3794,20 @@ export const Legendaries: readonly Legendary[] = [
     baseStat: "",
     name: "Iron Nest",
     normalAffixes: [
-      "Command decreases every second instead of increasing every secondLoses Command instead of gaining it when using Dark Gate",
-      "Synthetic Troop Minions are unable to move+200% Synthetic Troop Minion Duration",
-      "When Command is lower than -20 , for every -1 Command, -2% Aura Area and +1% Aura Effect+5 to Synthetic Troop Minions' stack(s) of Horizontal Projectile Jumps",
-      "When Command is lower than -40 , Nearby Synthetic Troop Minions deal +25% additional Projectile Damage to enemies in Proximity, and this damage reduces with the distance traveled by the ProjectilesMinions' Horizontal Projectiles cannot Penetrate",
-      "When Command is lower than -60 , +30% to the physique of Nearby Synthetic Troop Minions+100% Multistrike chance and +25% Multistrike Damage Increment for Nearby Synthetic Troops",
-      "+20% Movement Speed+20% Cooldown Recovery Speed for Mobility Skills",
+      "Command decreases every second instead of increasing every second\nLoses Command instead of gaining it when using Dark Gate",
+      "Synthetic Troop Minions are unable to move\n+200% Synthetic Troop Minion Duration",
+      "When Command is lower than -20 , for every -1 Command, -2% Aura Area and +1% Aura Effect\n+5 to Synthetic Troop Minions' stack(s) of Horizontal Projectile Jumps",
+      "When Command is lower than -40 , Nearby Synthetic Troop Minions deal +25% additional Projectile Damage to enemies in Proximity, and this damage reduces with the distance traveled by the Projectiles\nMinions' Horizontal Projectiles cannot Penetrate",
+      "When Command is lower than -60 , +30% to the physique of Nearby Synthetic Troop Minions\n+100% Multistrike chance and +25% Multistrike Damage Increment for Nearby Synthetic Troops",
+      "+20% Movement Speed\n+20% Cooldown Recovery Speed for Mobility Skills",
     ],
     corruptionAffixes: [
-      "Command decreases every second instead of increasing every secondLoses Command instead of gaining it when using Dark Gate+(15-20)% Empower Skill Effect",
-      "Synthetic Troop Minions are unable to move+300% Synthetic Troop Minion Duration",
-      "When Command is lower than -20 , for every -1 Command, -1% Aura Area and 1.5% Aura Effect+5 to Synthetic Troop Minions' stack(s) of Horizontal Projectile Jumps",
-      "When Command is lower than -40 , Nearby Synthetic Troop Minions deal +(35-45)% additional Projectile Damage to enemies in Proximity, and this damage reduces with the distance traveled by the ProjectilesMinions' Horizontal Projectiles cannot Penetrate",
-      "When Command is lower than -60 , +30% to the physique of Nearby Synthetic Troop Minions+150% Multistrike chance and +40% Multistrike Damage Increment for Nearby Synthetic Troops",
-      "+30% Movement Speed+30% Cooldown Recovery Speed for Mobility Skills",
+      "Command decreases every second instead of increasing every second\nLoses Command instead of gaining it when using Dark Gate\n+(15-20)% Empower Skill Effect",
+      "Synthetic Troop Minions are unable to move\n+300% Synthetic Troop Minion Duration",
+      "When Command is lower than -20 , for every -1 Command, -1% Aura Area and 1.5% Aura Effect\n+5 to Synthetic Troop Minions' stack(s) of Horizontal Projectile Jumps",
+      "When Command is lower than -40 , Nearby Synthetic Troop Minions deal +(35-45)% additional Projectile Damage to enemies in Proximity, and this damage reduces with the distance traveled by the Projectiles\nMinions' Horizontal Projectiles cannot Penetrate",
+      "When Command is lower than -60 , +30% to the physique of Nearby Synthetic Troop Minions\n+150% Multistrike chance and +40% Multistrike Damage Increment for Nearby Synthetic Troops",
+      "+30% Movement Speed\n+30% Cooldown Recovery Speed for Mobility Skills",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -3850,7 +3852,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Sage Wand",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Jumble Ice",
     normalAffixes: [
       "+(180-240) Max Mana",
@@ -3874,12 +3876,12 @@ export const Legendaries: readonly Legendary[] = [
     normalAffixes: [
       "+66 Max Life",
       "+(7-10)% Attack and Cast Speed",
-      "Gains the following buffs by turns. Each buff lasts for 8 s: +(35-50)% additional Erosion Damage +(35-50)% additional Elemental Damage +(35-50)% additional Physical Damage",
+      "Gains the following buffs by turns. Each buff lasts for 8 s:\n+(35-50)% additional Erosion Damage\n+(35-50)% additional Elemental Damage\n+(35-50)% additional Physical Damage",
     ],
     corruptionAffixes: [
       "+(154-198) Max Life",
       "+(17-22)% Attack and Cast Speed",
-      "Gains the following buffs by turns. Each buff lasts for 8 s: +(55-65)% additional Erosion Damage +(55-65)% additional Elemental Damage +(55-65)% additional Physical Damage",
+      "Gains the following buffs by turns. Each buff lasts for 8 s:\n+(55-65)% additional Erosion Damage\n+(55-65)% additional Elemental Damage\n+(55-65)% additional Physical Damage",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Ring",
@@ -3887,7 +3889,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "War Rifle",
     baseStat:
-      "70 - 70 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "70 - 70 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "King Lionheart's Ambition",
     normalAffixes: [
       "+(250-300)% gear Physical Damage",
@@ -3914,7 +3916,7 @@ export const Legendaries: readonly Legendary[] = [
       "Reaps 0.3 s of Damage Over Time when dealing Damage Over Time. The effect has a 6 s cooldown against the same target",
       "(-10-10)% additional Damage Over Time taken",
       "+(10-30)% Movement Speed",
-      "[More With Less] +30% additional Damage Over Time-10% additional Damage Over Time Duration",
+      "[More With Less] +30% additional Damage Over Time\n-10% additional Damage Over Time Duration",
     ],
     corruptionAffixes: [
       "+(340-408) gear Energy Shield",
@@ -3922,7 +3924,7 @@ export const Legendaries: readonly Legendary[] = [
       "Reaps 0.4 s of Damage Over Time when dealing Damage Over Time. The effect has a 6 s cooldown against the same target",
       "(-20--11)% additional Damage Over Time taken",
       "+(20-40)% Movement Speed",
-      "[More With Less] +30% additional Damage Over Time-10% additional Damage Over Time Duration+10% Skill Effect Duration",
+      "[More With Less] +30% additional Damage Over Time\n-10% additional Damage Over Time Duration\n+10% Skill Effect Duration",
     ],
     equipmentSlot: "Boots",
     equipmentType: "Boots (INT)",
@@ -3941,7 +3943,7 @@ export const Legendaries: readonly Legendary[] = [
     ],
     corruptionAffixes: [
       "+(10-12)% Max Life and Max Energy Shield",
-      "Max Terra Charge Stacks +1+(30-50)% Terra Skill Duration",
+      "Max Terra Charge Stacks +1\n+(30-50)% Terra Skill Duration",
       "+2 Main Skill Level",
       "+(25-30)% Erosion Resistance",
       "Terra Charge's Restoration Speed is set to (300-400)% of the default value",
@@ -3961,8 +3963,8 @@ export const Legendaries: readonly Legendary[] = [
       "+(2080-2480) Armor and Evasion",
     ],
     corruptionAffixes: [
-      "For each different Warcry cast, +(7-9) to the minimum number of enemies affected by Warcry for 8 s+(25-30)% Warcry Effect",
-      "+1% additional duration for the current Warcry for each enemy affected by Warcry+(25-30)% Warcry Effect",
+      "For each different Warcry cast, +(7-9) to the minimum number of enemies affected by Warcry for 8 s\n+(25-30)% Warcry Effect",
+      "+1% additional duration for the current Warcry for each enemy affected by Warcry\n+(25-30)% Warcry Effect",
       "For each different Warcry cast, +9% additional Warcry Effect and +(21-24)% additional Warcry Cooldown Recovery Speed for 8 s",
       "+(3380-3680) Armor and Evasion",
     ],
@@ -3980,10 +3982,10 @@ export const Legendaries: readonly Legendary[] = [
       "Spirit Magi are immune to Elemental Damage",
     ],
     corruptionAffixes: [
-      "+1 Passive Skill Level+(3-4)% additional Spirit Magus Ultimate Damage and Ailment Damage dealt by Ultimate.",
+      "+1 Passive Skill Level\n+(3-4)% additional Spirit Magus Ultimate Damage and Ailment Damage dealt by Ultimate.",
       "+(10-21)% additional Spirit Magus Ultimate Damage and Ailment Damage dealt by Ultimate.",
       "While Reconjuring, Spirit Magi regenerate (31-40)% Life per second",
-      "Spirit Magi are immune to Elemental Damage+(3-4)% additional Spirit Magus Ultimate Damage and Ailment Damage dealt by Ultimate.",
+      "Spirit Magi are immune to Elemental Damage\n+(3-4)% additional Spirit Magus Ultimate Damage and Ailment Damage dealt by Ultimate.",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -4057,14 +4059,14 @@ export const Legendaries: readonly Legendary[] = [
     name: "Legendary Soldier Spectacles",
     normalAffixes: [
       "Creates an Arena after using a Mobility Skill. Interval: 2 s",
-      "Enemies with Notoriety have Giantism-50% additional damage against Distant enemies",
+      "Enemies with Notoriety have Giantism\n-50% additional damage against Distant enemies",
       "Gains 1 stack of Renown every 1 s while inside the Arena. Renown lasts for 10 s",
       "Ignores enemy Armor when you have at least 4 stack(s) of Renown",
       "+(80-100) Max Life",
     ],
     corruptionAffixes: [
       "Creates an Arena after using a Mobility Skill. Interval: 1.5 s",
-      "Enemies with Notoriety have Giantism(-49--45)% additional damage against Distant enemies",
+      "Enemies with Notoriety have Giantism\n(-49--45)% additional damage against Distant enemies",
       "Gains 1 stack of Renown every 1 s while inside the Arena. Renown lasts for 15 s",
       "+(40-50)% Armor DMG Mitigation Penetration when having at least 4 stack(s) of Renown",
       "+(300-330) Max Life",
@@ -4105,7 +4107,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(450-600) Max Energy Shield",
       "+(54-64)% Max Energy Shield",
-      "(-50--25)% additional Energy Shield Charge IntervalEnergy Shield charge cannot be interrupted",
+      "(-50--25)% additional Energy Shield Charge Interval\nEnergy Shield charge cannot be interrupted",
       "-4% additional Energy Shield Charge Speed for every 5% Energy Shield currently owned",
       "(-40--35)% additional damage taken while Energy Shield is active",
     ],
@@ -4126,7 +4128,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(8000-10000) gear Evasion",
       "+2 Horizontal Projectile Skill Level",
       "Adds 1 - (260-300) Lightning Damage to Attacks",
-      "[Master Escapist] +1 Max Deflection stacksGains 1 stacks of Deflection on Evasion",
+      "[Master Escapist] +1 Max Deflection stacks\nGains 1 stacks of Deflection on Evasion",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (DEX)",
@@ -4262,7 +4264,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(4320-5184) Gear Armor",
       "+16% Strength",
       "Adds (2-3) - (4-5) Fire Damage per (7-8) Strength",
-      "The main stat base no longer additionally increases damage+20 all stats",
+      "The main stat base no longer additionally increases damage\n+20 all stats",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (STR)",
@@ -4302,7 +4304,7 @@ export const Legendaries: readonly Legendary[] = [
       "+2 Fire Skill Level",
       "+(19-22)% Fire Resistance",
       "+(18-19)% Fire Penetration",
-      "[True Flame] When an enemy is Ignited, 60% of the additional bonus to Damage Over Time taken from Affliction is also applied to your Fire Hit Damage+100% Skill Area",
+      "[True Flame] When an enemy is Ignited, 60% of the additional bonus to Damage Over Time taken from Affliction is also applied to your Fire Hit Damage\n+100% Skill Area",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -4321,7 +4323,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(22-24)% Strength",
       "+3 Max Life per 5 Strength",
       "+(9-10)% additional Fire Damage for every 10 Strength",
-      "The main stat base no longer additionally increases damage+20 all stats",
+      "The main stat base no longer additionally increases damage\n+20 all stats",
     ],
     equipmentSlot: "Helmet",
     equipmentType: "Helmet (STR)",
@@ -4384,7 +4386,7 @@ export const Legendaries: readonly Legendary[] = [
       "(-6--4)% Max Fire Resistance",
       "Converts (65-70)% of Ice and Lightning Damage to Fire Damage",
       "+(90-100)% additional Fire Damage",
-      "Inflicts Fire Infiltration on hitInflicts Scorch on hit",
+      "Inflicts Fire Infiltration on hit\nInflicts Scorch on hit",
     ],
     equipmentSlot: "Helmet",
     equipmentType: "Helmet (STR)",
@@ -4413,7 +4415,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Hatred Dirk",
     baseStat:
-      "73 - 73 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "73 - 73 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Memory",
     normalAffixes: [
       "+(20-30)% Spell Damage",
@@ -4465,7 +4467,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(3900-4000) Gear Armor",
       "+(80-120) Max Life",
-      "+24% Armor Effective Rate for Non-Physical Damage+50% Armor",
+      "+24% Armor Effective Rate for Non-Physical Damage\n+50% Armor",
       "When Armor is no lower than 50000 , +(20-25)% Injury Buffer",
       "+(65-70)% Critical Strike Damage Mitigation",
       "When Armor is no lower than 65000 , +(90-100)% Life Regeneration Speed",
@@ -4519,7 +4521,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Oblivion Maul",
     baseStat:
-      "16 - 16 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "16 - 16 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Misube's Refusal",
     normalAffixes: [
       "+(120-150)% gear Physical Damage",
@@ -4532,8 +4534,8 @@ export const Legendaries: readonly Legendary[] = [
       "+(160-250)% gear Physical Damage",
       "+80% Skill Area",
       "+100% Knockback distance",
-      "Sweep Slash can cause Reversed Knockback.+30% Knockback distance",
-      "Causes a Knockback when you launch a Steep Strike+30% Knockback distance",
+      "Sweep Slash can cause Reversed Knockback.\n+30% Knockback distance",
+      "Causes a Knockback when you launch a Steep Strike\n+30% Knockback distance",
     ],
     equipmentSlot: "One-Handed",
     equipmentType: "One-Handed Hammer",
@@ -4550,9 +4552,9 @@ export const Legendaries: readonly Legendary[] = [
     ],
     corruptionAffixes: [
       "+(300-330) Max Life",
-      "For every (900-1000) Focus Pts of the same skill consumed, gain Transcendence for 4 s+(15-20)% additional damage for Focus Skills",
-      "+(30-40)% additional Focus Speed and +(40-48)% Focus Skill Area while Transcendence is active+(25-30)% additional damage for Focus Skills while Transcendence is active",
-      "In transcendence, when a Focus skill is triggered, there is a (30-40)% chance to trigger it an additional time. 50% of the Focus Speed bonus is also applied to the additional trigger chance+(15-20)% additional damage for Focus Skills",
+      "For every (900-1000) Focus Pts of the same skill consumed, gain Transcendence for 4 s\n+(15-20)% additional damage for Focus Skills",
+      "+(30-40)% additional Focus Speed and +(40-48)% Focus Skill Area while Transcendence is active\n+(25-30)% additional damage for Focus Skills while Transcendence is active",
+      "In transcendence, when a Focus skill is triggered, there is a (30-40)% chance to trigger it an additional time. 50% of the Focus Speed bonus is also applied to the additional trigger chance\n+(15-20)% additional damage for Focus Skills",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -4581,7 +4583,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Unholy Hunting Bow",
     baseStat:
-      "110 - 110 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "110 - 110 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Mountain Howling",
     normalAffixes: [
       "+(120-150)% gear Physical Damage",
@@ -4616,7 +4618,7 @@ export const Legendaries: readonly Legendary[] = [
     ],
     corruptionAffixes: [
       "+(264-330) Max Life",
-      "Shadow Quantity +1+(20-30)% Shadows Tracking Area",
+      "Shadow Quantity +1\n+(20-30)% Shadows Tracking Area",
       "+(140-160)% additional Shadow Damage",
       "+(38-44)% Lightning Resistance",
     ],
@@ -4629,15 +4631,15 @@ export const Legendaries: readonly Legendary[] = [
     name: "Necklace of Firebird",
     normalAffixes: [
       "+(8-12)% Max Life and Max Energy Shield",
-      "(-25--5)% Elemental Resistance-30% Movement Speed",
+      "(-25--5)% Elemental Resistance\n-30% Movement Speed",
       "When you have a Barrier, triggers the Main Skill upon taking damage, then removes Barrier",
-      "+20% additional Barrier Shield-100% additional Armor",
+      "+20% additional Barrier Shield\n-100% additional Armor",
     ],
     corruptionAffixes: [
       "+(14-16)% Max Life and Max Energy Shield",
-      "(-20-5)% Elemental Resistance-30% Movement Speed",
+      "(-20-5)% Elemental Resistance\n-30% Movement Speed",
       "When you have a Barrier, triggers the Main Skill upon taking damage, then removes Barrier",
-      "+(30-40)% additional Barrier Shield-100% additional Armor",
+      "+(30-40)% additional Barrier Shield\n-100% additional Armor",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -4662,7 +4664,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Hero's Longsword",
     baseStat:
-      "57 - 57 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "57 - 57 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Oathkeeper",
     normalAffixes: [
       "Adds (25-26) - (33-36) Fire Damage to the gear",
@@ -4676,7 +4678,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(13-16)% gear Attack Speed",
       "+52% Elemental Damage for the gear",
       "+32% additional Elemental Damage for Attack Skills",
-      "+100% Attack Skill Mana Cost+10% additional damage for Attack Skills",
+      "+100% Attack Skill Mana Cost\n+10% additional damage for Attack Skills",
     ],
     equipmentSlot: "One-Handed",
     equipmentType: "One-Handed Sword",
@@ -4688,13 +4690,13 @@ export const Legendaries: readonly Legendary[] = [
     normalAffixes: [
       "+(132-176) Max Life",
       "+(210-280) Max Energy Shield",
-      "[Shrink Back] Gains Barrier every 1s+50% Barrier Shield",
+      "[Shrink Back] Gains Barrier every 1s\n+50% Barrier Shield",
       "Adds (10-15)% of Max Life to Energy Shield",
     ],
     corruptionAffixes: [
       "+(242-286) Max Life",
       "+(385-455) Max Energy Shield",
-      "[Shrink Back] Gains Barrier every 1s+50% Barrier Shield(-20--10)% additional Regain Interval",
+      "[Shrink Back] Gains Barrier every 1s\n+50% Barrier Shield\n(-20--10)% additional Regain Interval",
       "Adds (16-20)% of Max Life to Energy Shield",
     ],
     equipmentSlot: "Trinket",
@@ -4703,7 +4705,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Scarlet Axe",
     baseStat:
-      "89 - 89 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "89 - 89 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Ominous Gift",
     normalAffixes: [
       "Adds (28-32) - (47-53) Physical Damage to the gear",
@@ -4733,7 +4735,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(2700-3744) gear Evasion",
       "+(220-330) Max Life",
       "+(70-90)% Critical Strike Damage",
-      "[Endless Fervor] Have Fervor+12% Fervor effect",
+      "[Endless Fervor] Have Fervor\n+12% Fervor effect",
       "+(10-20)% additional Damage dealt by enemies in Proximity",
     ],
     equipmentSlot: "Helmet",
@@ -4741,7 +4743,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Wraith Wand",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Oversight",
     normalAffixes: [
       "+(3-4) Spell Skill Level",
@@ -4800,12 +4802,12 @@ export const Legendaries: readonly Legendary[] = [
     name: "Passing of Time",
     normalAffixes: [
       "Consumes 10% of current Life and Energy Shield per second",
-      "+10% Cooldown Recovery Speed-30% Ailment Duration",
+      "+10% Cooldown Recovery Speed\n-30% Ailment Duration",
       "+3% additional damage for every type of Ailment or Crowd Control Effect inflicted recently (multiplies)",
     ],
     corruptionAffixes: [
       "Consumes (12-15)% of current Life and Energy Shield per second",
-      "+15% Cooldown Recovery Speed-30% Skill Effect Duration",
+      "+15% Cooldown Recovery Speed\n-30% Skill Effect Duration",
       "+4% additional damage for every type of Ailment or Crowd Control Effect inflicted recently (multiplies)",
     ],
     equipmentSlot: "Trinket",
@@ -4978,7 +4980,7 @@ export const Legendaries: readonly Legendary[] = [
       "When activating Spell Burst,there's -5% additional Skill Area for each time Spell Burst is activated.",
     ],
     corruptionAffixes: [
-      "[Beacon] +2 Max Spell Burst+(10-20)% Spell Burst Charge Speed",
+      "[Beacon] +2 Max Spell Burst\n+(10-20)% Spell Burst Charge Speed",
       "When activating Spell Burst,there's (5-10)% additional Skill Area for each time Spell Burst is activated.",
     ],
     equipmentSlot: "Trinket",
@@ -4987,7 +4989,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Soldier's Light Crossbow",
     baseStat:
-      "16 - 16 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "16 - 16 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Plain Echo",
     normalAffixes: [
       "+(80-100)% gear Physical Damage",
@@ -5109,9 +5111,9 @@ export const Legendaries: readonly Legendary[] = [
       {
         choiceDescriptor: "Random Max Blessing Stacks affix",
         choices: [
-          "Max Tenacity Blessing Stacks +1+(5-10)% additional damage",
-          "Max Agility Blessing Stacks +1+(5-10)% additional damage",
-          "Max Focus Blessing Stacks +1+(5-10)% additional damage",
+          "Max Tenacity Blessing Stacks +1\n+(5-10)% additional damage",
+          "Max Agility Blessing Stacks +1\n+(5-10)% additional damage",
+          "Max Focus Blessing Stacks +1\n+(5-10)% additional damage",
         ],
       },
       "(-15--11)% additional damage taken if the max stacks of Tenacity Blessing is not lower than the stacks of other Blessings",
@@ -5145,7 +5147,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Beastfang Light Crossbow",
     baseStat:
-      "31 - 31 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "31 - 31 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Ralph's Ambition",
     normalAffixes: [
       "Adds (15-17) - (23-25) Physical Damage to the gear",
@@ -5156,7 +5158,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "Adds (35-38) - (42-45) Physical Damage to the gear",
       "+(17-22)% gear Attack Speed",
-      "Have Fervor+(45-50)% Fervor effect",
+      "Have Fervor\n+(45-50)% Fervor effect",
       "+(5-6)% Projectile Damage for every point of Fervor Rating",
     ],
     equipmentSlot: "Two-Handed",
@@ -5176,7 +5178,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(4320-5184) gear Evasion",
       "+16% Dexterity",
       "Adds (1-2) - (5-6) Lightning Damage for every (7-8) Dexterity",
-      "The main stat base no longer additionally increases damage+20 all stats",
+      "The main stat base no longer additionally increases damage\n+20 all stats",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (DEX)",
@@ -5193,7 +5195,7 @@ export const Legendaries: readonly Legendary[] = [
     ],
     corruptionAffixes: [
       "+(280-350) Max Life and Max Energy Shield",
-      "Fervor gains an additional base effect: +1% Movement Speed for every 5 Fervor Rating+20% Fervor effect",
+      "Fervor gains an additional base effect: +1% Movement Speed for every 5 Fervor Rating\n+20% Fervor effect",
       "+70% additional Fervor Duration",
       "+(24-26)% Lightning Resistance",
     ],
@@ -5214,7 +5216,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(22-24)% Dexterity",
       "+1% Movement Speed per 15 Dexterity",
       "+(9-10)% additional Lightning Damage per 10 Dexterity",
-      "The main stat base no longer additionally increases damage+20 all stats",
+      "The main stat base no longer additionally increases damage\n+20 all stats",
     ],
     equipmentSlot: "Boots",
     equipmentType: "Boots (DEX)",
@@ -5266,14 +5268,14 @@ export const Legendaries: readonly Legendary[] = [
       "+(30-40)% Movement Speed",
       "For every 1 Evasion(s) in the last 10s, +(7-10)% additional damage. Stacks up to 5 times (multiplies)",
       "+10% Elemental Resistance",
-      "[Master Escapist] +1 Max Deflection stacksGains 1 stacks of Deflection on Evasion",
+      "[Master Escapist] +1 Max Deflection stacks\nGains 1 stacks of Deflection on Evasion",
     ],
     corruptionAffixes: [
       "+(2622-3744) gear Evasion",
       "+(50-60)% Movement Speed",
       "For every 1 Evasion(s) in the last 10s, +(11-13)% additional damage. Stacks up to 5 times (multiplies)",
       "+15% Elemental Resistance",
-      "[Master Escapist] +1 Max Deflection stacksGains 1 stacks of Deflection on Evasion+(30-50)% additional Evasion on Spell Damage",
+      "[Master Escapist] +1 Max Deflection stacks\nGains 1 stacks of Deflection on Evasion\n+(30-50)% additional Evasion on Spell Damage",
     ],
     equipmentSlot: "Boots",
     equipmentType: "Boots (DEX)",
@@ -5286,13 +5288,13 @@ export const Legendaries: readonly Legendary[] = [
       "+(65-75)% Critical Strike Damage",
       "+(6-30)% additional max damage",
       "(-30--6)% additional min damage",
-      "Randomly triggers one of the following effects every 5 s for 5 sLucky Critical StrikeUnlucky DamageLucky DamageUnlucky Critical Strike",
+      "Randomly triggers one of the following effects every 5 s for 5 s\nLucky Critical Strike\nUnlucky Damage\nLucky Damage\nUnlucky Critical Strike",
     ],
     corruptionAffixes: [
       "+(105-155)% Critical Strike Damage",
       "+(10-40)% additional max damage",
       "(-20--1)% additional min damage",
-      "Randomly triggers one of the following effects every 3 s for 3 sLucky Critical StrikeUnlucky DamageLucky DamageUnlucky Critical Strike",
+      "Randomly triggers one of the following effects every 3 s for 3 s\nLucky Critical Strike\nUnlucky Damage\nLucky Damage\nUnlucky Critical Strike",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -5305,14 +5307,14 @@ export const Legendaries: readonly Legendary[] = [
       "+(1728-2304) Gear Armor",
       "+(65-165) Max Life",
       "+(10-30)% Movement Speed",
-      "[Rebirth] Converts 50% of Life Regain and Energy Shield Regain to Restoration Over Time-50% additional Regain Interval",
+      "[Rebirth] Converts 50% of Life Regain and Energy Shield Regain to Restoration Over Time\n-50% additional Regain Interval",
       "+5% Elemental Resistance while Tenacity Blessing is active",
     ],
     corruptionAffixes: [
       "+(2880-3456) Gear Armor",
       "+(200-275) Max Life",
       "+(30-50)% Movement Speed",
-      "[Poisoned Relief] +25% injury buffer-15% additional damage taken at Low Life",
+      "[Poisoned Relief] +25% injury buffer\n-15% additional damage taken at Low Life",
       "+12% Elemental Resistance while Tenacity Blessing is active",
     ],
     equipmentSlot: "Boots",
@@ -5433,13 +5435,13 @@ export const Legendaries: readonly Legendary[] = [
     normalAffixes: [
       "+(20-30)% Erosion Resistance",
       "+(15-30)% additional Deterioration Duration",
-      "Every 0.5 s, your next non-Channeled Main Skill is enhanced by ObliterateSkills not enhanced by Obliterate cannot inflict Deterioration",
+      "Every 0.5 s, your next non-Channeled Main Skill is enhanced by Obliterate\nSkills not enhanced by Obliterate cannot inflict Deterioration",
       "Deterioration no longer deals True Damage when it expires. Instead, it deals True Damage once every 0.33s while it lasts. The damage gains a 40% additional damage increment each time, up to 6 times",
     ],
     corruptionAffixes: [
       "+(30-40)% Erosion Resistance",
       "+(30-45)% additional Deterioration Duration",
-      "Every 0.4 s, your next non-Channeled Main Skill is enhanced by ObliterateSkills not enhanced by Obliterate cannot inflict Deterioration",
+      "Every 0.4 s, your next non-Channeled Main Skill is enhanced by Obliterate\nSkills not enhanced by Obliterate cannot inflict Deterioration",
       "Deterioration no longer deals True Damage when it expires. Instead, it deals True Damage once every 0.33s while it lasts. The damage gains a 60% additional damage increment each time, up to 6 times",
     ],
     equipmentSlot: "Chest Armor",
@@ -5447,7 +5449,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Ivory Staff",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Sage's Foresight",
     normalAffixes: [
       "+(100-120)% Spell Damage",
@@ -5519,7 +5521,7 @@ export const Legendaries: readonly Legendary[] = [
       "+1 Max Deflection stacks",
     ],
     corruptionAffixes: [
-      "MiniaturizationEnlarges Physique by (-15--10)%",
+      "Miniaturization\nEnlarges Physique by (-15--10)%",
       "+50% additional Nimbleness Aura Effect",
       "+5 Aura Skill Level",
       "+(1-2) Max Deflection stacks",
@@ -5548,7 +5550,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Voodoo Wand",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Scepter of Excommunication",
     normalAffixes: [
       "+(20-30) Intelligence",
@@ -5565,7 +5567,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Voodoo Staff",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Scorching Tempo",
     normalAffixes: [
       "You have a Lv. (1-20) Charged Flames",
@@ -5577,7 +5579,7 @@ export const Legendaries: readonly Legendary[] = [
       "You have a Lv. (21-30) Charged Flames",
       "+(100-199)% Spell Fire Damage",
       "Adds (100-149) - (150-200) Fire Damage to Spells",
-      "Only Fire Damage can be dealt+10% additional Fire Damage",
+      "Only Fire Damage can be dealt\n+10% additional Fire Damage",
     ],
     equipmentSlot: "Two-Handed",
     equipmentType: "Tin Staff",
@@ -5585,16 +5587,16 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Recruit's Musket",
     baseStat:
-      "10 - 10 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "10 - 10 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Scorching Wave",
     normalAffixes: [
-      "+(40-60)% Ignite damage+(40-60)% chance to Ignite targets",
+      "+(40-60)% Ignite damage\n+(40-60)% chance to Ignite targets",
       "Adds (32-37) - (41-45) Fire Damage to the gear",
       "Adds (40-50)% of Fire Damage of the Main-Hand Weapon to Base Ignite Damage",
       "50% chance to spread Ignite to Nearby enemies upon inflicting Ignite",
     ],
     corruptionAffixes: [
-      "+100% Ignite damage+100% chance to Ignite targets",
+      "+100% Ignite damage\n+100% chance to Ignite targets",
       "Adds (52-57) - (69-74) Fire Damage to the gear",
       "Adds (50-55)% of Fire Damage of the Main-Hand Weapon to Base Ignite Damage",
       "100% chance to spread Ignite to Nearby enemies upon inflicting Ignite",
@@ -5604,7 +5606,8 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Rusted Wooden Hammer",
-    baseStat: "8 - 8 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+    baseStat:
+      "8 - 8 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Scorching Words",
     normalAffixes: [
       "+1 Fire Skill Level",
@@ -5660,7 +5663,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Shadow Boomstick",
     baseStat:
-      "89 - 89 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "89 - 89 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Severed Wrist",
     normalAffixes: [
       "+(60-90)% Attack Critical Strike Rating",
@@ -5673,7 +5676,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(120-160)% Attack Critical Strike Rating",
       "+2 Projectile Skill Level",
       "+30% Attack Speed for 2 s upon hitting an Elite. Effect cannot stack",
-      "[Joined Force] Off-Hand Weapons do not participate in Attacks while Dual WieldingAdds 60% of the damage of the Off-Hand Weapon to the final damage of the Main-Hand Weapon",
+      "[Joined Force] Off-Hand Weapons do not participate in Attacks while Dual Wielding\nAdds 60% of the damage of the Off-Hand Weapon to the final damage of the Main-Hand Weapon",
       "+(25-30)% Main-Hand Weapon Attack Speed",
     ],
     equipmentSlot: "One-Handed",
@@ -5697,7 +5700,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Poisoned Dagger",
     baseStat:
-      "10 - 10 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "10 - 10 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Shadow of Thunderlight's Eyes",
     normalAffixes: [
       "+1 Lightning Skill Level",
@@ -5716,7 +5719,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Wiseman's Wand",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Shadow of Thunderlight's Fury",
     normalAffixes: [
       "+(80-100)% Spell Damage",
@@ -5736,7 +5739,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Bonewood Hunting Bow",
     baseStat:
-      "16 - 16 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "16 - 16 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Shadow of Thunderlight's Touch",
     normalAffixes: [
       "Adds (15-17) - (23-25) Physical Damage to the gear",
@@ -5758,7 +5761,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Iron Greatsword",
     baseStat:
-      "16 - 16 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "16 - 16 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Shamed",
     normalAffixes: [
       "Adds (15-18) - (21-24) Physical Damage to the gear",
@@ -5770,7 +5773,7 @@ export const Legendaries: readonly Legendary[] = [
       "Adds (25-28) - (31-35) Physical Damage to the gear",
       "+(40-60)% gear Physical Damage",
       "+1% Attack Critical Strike Rating for this gear",
-      "[Momentum] +30% additional Attack Damage for the next Main Skill every 0.5 s. Refreshes the interval on defeat.+10% additional Critical Strike Rating",
+      "[Momentum] +30% additional Attack Damage for the next Main Skill every 0.5 s. Refreshes the interval on defeat.\n+10% additional Critical Strike Rating",
     ],
     equipmentSlot: "Two-Handed",
     equipmentType: "Two-Handed Sword",
@@ -5788,7 +5791,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(450-470) gear Energy Shield",
       "Main Skill is supported by Lv. (25-35) Psychic Burst",
-      "Beacon+(30-40)% Spell Burst Charge Speed",
+      "Beacon\n+(30-40)% Spell Burst Charge Speed",
       "Restoration Skills: +50% Restoration Duration",
     ],
     equipmentSlot: "Chest Armor",
@@ -5828,7 +5831,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(200-300) Max Life",
       "+50% chance to cause Ailments",
-      "Triggers the Main Active Skill every 1.5 s+(1-2) Main Skill Level",
+      "Triggers the Main Active Skill every 1.5 s\n+(1-2) Main Skill Level",
       "-99% additional Damage Over Time",
     ],
     equipmentSlot: "Trinket",
@@ -5894,13 +5897,13 @@ export const Legendaries: readonly Legendary[] = [
     normalAffixes: [
       "+(250-350) gear Energy Shield",
       "For every +75% Spell Burst Charge Speed, +(15-20)% additional Hit Damage for skills cast by Spell Burst, up to +80%",
-      "When Burst Charge Recovery Speed is at least 300% of the base value, reaching the Max Spell Burst Charge triggers the Main Skill on the nearest enemy within 25m and attempts to activate the Main Spell Skill's Spell Burst-30% Movement Speed",
+      "When Burst Charge Recovery Speed is at least 300% of the base value, reaching the Max Spell Burst Charge triggers the Main Skill on the nearest enemy within 25m and attempts to activate the Main Spell Skill's Spell Burst\n-30% Movement Speed",
       "Restores 10% of Lost Life and Energy Shield when activating Spell Burst",
     ],
     corruptionAffixes: [
       "+(400-450) gear Energy Shield",
       "For every +50% Spell Burst Charge Speed, +(15-20)% additional Hit Damage for skills cast by Spell Burst, up to +120%",
-      "When Burst Charge Recovery Speed is at least (240-260)% of the base value, reaching the Max Spell Burst Charge triggers the Main Skill on the nearest enemy within 25m and attempts to activate the Main Spell Skill's Spell Burst-30% Movement Speed",
+      "When Burst Charge Recovery Speed is at least (240-260)% of the base value, reaching the Max Spell Burst Charge triggers the Main Skill on the nearest enemy within 25m and attempts to activate the Main Spell Skill's Spell Burst\n-30% Movement Speed",
       "Restores 15% of Lost Life and Energy Shield when activating Spell Burst",
     ],
     equipmentSlot: "Helmet",
@@ -5908,7 +5911,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Rambone Wand",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Spring Resurrection",
     normalAffixes: [
       "+(100-120)% Spell Damage",
@@ -5928,7 +5931,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Redgold Hammer",
     baseStat:
-      "89 - 89 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "89 - 89 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Steel Stagnation",
     normalAffixes: [
       "+(120-140)% gear Physical Damage",
@@ -5985,8 +5988,8 @@ export const Legendaries: readonly Legendary[] = [
       "+(14-16)% Elemental Resistance",
       "+90 Intelligence",
       "-60% Barrage Wave Interval and +(15-20)% additional Barrage Skill Damage",
-      "Barrage Skills +(20-30)% damage increase per wave+(15-20)% additional damage for Barrage Skills",
-      "+(85-100)% chance to launch one more wave when casting a Barrage Skill+(15-20)% additional damage for Barrage Skills",
+      "Barrage Skills +(20-30)% damage increase per wave\n+(15-20)% additional damage for Barrage Skills",
+      "+(85-100)% chance to launch one more wave when casting a Barrage Skill\n+(15-20)% additional damage for Barrage Skills",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (INT)",
@@ -6023,8 +6026,8 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(3744-4493) gear Evasion",
       "+2 Attack Projectile Skill Level",
-      "Attack Horizontal Projectiles will return after reaching their max range and will hit enemies on their path again+(20-30)% additional Returning Projectile Damage",
-      "Stray Bird+(20-30)% additional Returning Projectile Damage",
+      "Attack Horizontal Projectiles will return after reaching their max range and will hit enemies on their path again\n+(20-30)% additional Returning Projectile Damage",
+      "Stray Bird\n+(20-30)% additional Returning Projectile Damage",
     ],
     equipmentSlot: "Gloves",
     equipmentType: "Gloves (DEX)",
@@ -6072,7 +6075,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Beastbone Bow",
     baseStat:
-      "10 - 10 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "10 - 10 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Sun-shooter Long Bow",
     normalAffixes: [
       "+(120-200)% gear Physical Damage",
@@ -6112,7 +6115,7 @@ export const Legendaries: readonly Legendary[] = [
   },
   {
     baseItem: "Deception Scepter",
-    baseStat: "500 Critical Strike Rating1.2 Attack Speed",
+    baseStat: "500 Critical Strike Rating\n1.2 Attack Speed",
     name: "Supreme Throne",
     normalAffixes: [
       "Adds (46-48) - (55-60) Cold, Fire, Lightning, and Physical Damage to Spells",
@@ -6164,7 +6167,7 @@ export const Legendaries: readonly Legendary[] = [
       "Paralyze enemies Nearby when Blocking",
     ],
     corruptionAffixes: [
-      "Corroded HeartIgnores Armor when an Elite is Nearby",
+      "Corroded Heart\nIgnores Armor when an Elite is Nearby",
       "+(60-75) Max Life and Max Energy Shield",
       "+(38-48)% Attack and Spell Block Chance",
       "+30% Block Ratio",
@@ -6176,7 +6179,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Battlefield Longsword",
     baseStat:
-      "16 - 16 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "16 - 16 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Thunder Branch",
     normalAffixes: [
       "Adds (1-2) - (90-96) Lightning Damage to the gear",
@@ -6221,13 +6224,13 @@ export const Legendaries: readonly Legendary[] = [
     normalAffixes: [
       "+(1500-2000) gear Evasion",
       "+15% additional Lightning Damage",
-      "+50% Numbed chance+50% Numbed Duration",
+      "+50% Numbed chance\n+50% Numbed Duration",
       "+(30-40)% Numbed Effect",
     ],
     corruptionAffixes: [
       "+(2000-3000) gear Evasion",
       "+20% additional Lightning Damage",
-      "+70% Numbed chance+70% Numbed Duration",
+      "+70% Numbed chance\n+70% Numbed Duration",
       "+(41-55)% Numbed Effect",
     ],
     equipmentSlot: "Helmet",
@@ -6239,14 +6242,14 @@ export const Legendaries: readonly Legendary[] = [
     name: "Thunder Manipulator",
     normalAffixes: [
       "+(2400-2600) gear Evasion",
-      "+(30-40)% additional Lightning Damage against Numbed enemies+(30-40)% additional Max Lightning Damage to an enemy when they have at least (6-10) stack(s) of Numbed",
+      "+(30-40)% additional Lightning Damage against Numbed enemies\n+(30-40)% additional Max Lightning Damage to an enemy when they have at least (6-10) stack(s) of Numbed",
       "+(25-30)% Lightning Resistance",
       "Inflicts 1 additional stack(s) of Numbed per +30% Numbed chance",
       "+(20-30)% additional Numbed Effect on Critical Strike with Lightning Damage for 2 s",
     ],
     corruptionAffixes: [
       "+(3240-3400) gear Evasion",
-      "+(50-60)% additional Lightning Damage against Numbed enemies+(50-60)% additional Max Lightning Damage to an enemy when they have at least (6-10) stack(s) of Numbed",
+      "+(50-60)% additional Lightning Damage against Numbed enemies\n+(50-60)% additional Max Lightning Damage to an enemy when they have at least (6-10) stack(s) of Numbed",
       "+(10-15)% Max Lightning Resistance",
       "Inflicts 1 additional stack(s) of Numbed per +(20-25)% Numbed chance",
       "+(30-40)% additional Numbed Effect on Critical Strike with Lightning Damage for 2 s",
@@ -6271,7 +6274,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(70-80)% Critical Strike Damage",
       "+15% damage for every 4000 Life consumed recently",
       "+1% Attack Speed for every 4500 Life consumed recently",
-      "Non-Full Life state will be considered as Low Life+40% Movement Speed at Full Life",
+      "Non-Full Life state will be considered as Low Life\n+40% Movement Speed at Full Life",
       "Cannot regenerate Mana",
     ],
     equipmentSlot: "Helmet",
@@ -6283,12 +6286,12 @@ export const Legendaries: readonly Legendary[] = [
     name: "Time of Vow",
     normalAffixes: [
       "Restores 10% Missing Life and Energy Shield per second",
-      "+10% Skill Effect Duration-30% Cooldown Recovery Speed",
+      "+10% Skill Effect Duration\n-30% Cooldown Recovery Speed",
       "-3% additional damage for every type of Ailment or Crowd Control Effect the enemy has (multiplies)",
     ],
     corruptionAffixes: [
       "Restores (12-15)% Missing Life and Energy Shield per second",
-      "+15% Skill Effect Duration-30% Attack and Cast Speed",
+      "+15% Skill Effect Duration\n-30% Attack and Cast Speed",
       "-4% additional damage for every type of Ailment or Crowd Control Effect the enemy has (multiplies)",
     ],
     equipmentSlot: "Trinket",
@@ -6361,13 +6364,13 @@ export const Legendaries: readonly Legendary[] = [
       "+(2000-2880) gear Evasion",
       "+(1-2) TraumaLimit",
       "Gains Hasten when inflicting Trauma for 1.5 s",
-      "-35% additional Trauma Damage-35% additional Trauma Duration",
+      "-35% additional Trauma Damage\n-35% additional Trauma Duration",
     ],
     corruptionAffixes: [
       "+(3100-3744) gear Evasion",
-      "+(1-2) TraumaLimit+(10-15)% additional Trauma Damage dealt by Critical Strikes",
+      "+(1-2) TraumaLimit\n+(10-15)% additional Trauma Damage dealt by Critical Strikes",
       "Gains Hasten when inflicting Trauma for 2 s",
-      "-30% additional Trauma Damage-30% additional Trauma Duration",
+      "-30% additional Trauma Damage\n-30% additional Trauma Duration",
     ],
     equipmentSlot: "Helmet",
     equipmentType: "Helmet (DEX)",
@@ -6385,7 +6388,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(4-8)% Max Elemental Resistance",
       "+(6-12)% Elemental Resistance",
-      "Gains Elemental Resistance Penetration equal to your minimum effective Elemental Resistance+(18-20)% additional Elemental Damage",
+      "Gains Elemental Resistance Penetration equal to your minimum effective Elemental Resistance\n+(18-20)% additional Elemental Damage",
       "Edict of Trinity",
     ],
     equipmentSlot: "Chest Armor",
@@ -6469,7 +6472,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Fallen Pactspirital Short Staff",
     baseStat:
-      "109 - 109 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "109 - 109 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Twisted Branch",
     normalAffixes: [
       "(10-20)% of the increase/decrease on Skill Area is also applied to Projectile Speed",
@@ -6520,7 +6523,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "Adds 80 - 100 Fire Damage to Attacks",
       "+(30-35)% Fire Resistance",
-      "Lucky Critical Strike+(20-30)% Critical Strike Damage",
+      "Lucky Critical Strike\n+(20-30)% Critical Strike Damage",
       "Unable to use Empower Skills",
     ],
     equipmentSlot: "Gloves",
@@ -6559,7 +6562,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(400-450) gear Energy Shield",
       "+3 Passive Skill Level",
-      "[Ward] Adds 13% of Sealed Mana as Energy ShieldAdds 13% of Sealed Life as Energy Shield",
+      "[Ward] Adds 13% of Sealed Mana as Energy Shield\nAdds 13% of Sealed Life as Energy Shield",
       "+(30-36)% additional damage at Low Life",
       "+(12-15)% Aura Effect when at Low Life",
     ],
@@ -6575,7 +6578,7 @@ export const Legendaries: readonly Legendary[] = [
       "Gains 1 stack of Agility Blessing upon inflicting damage. Interval: 1 s",
     ],
     corruptionAffixes: [
-      "Max Agility Blessing Stacks +1+10% additional damage",
+      "Max Agility Blessing Stacks +1\n+10% additional damage",
       "Gains 1 stack of Agility Blessing upon inflicting damage. Interval: 0.5 s",
     ],
     equipmentSlot: "Trinket",
@@ -6594,7 +6597,7 @@ export const Legendaries: readonly Legendary[] = [
     corruptionAffixes: [
       "+(2881-3774) gear Evasion",
       "+(17-20)% Attack and Cast Speed",
-      "+30% Life Regain and Shield Regain for Combo Finishers(-15--10)% additional Regain Interval",
+      "+30% Life Regain and Shield Regain for Combo Finishers\n(-15--10)% additional Regain Interval",
       "+(32-38)% additional Combo Finisher Damage to an enemy for every Infiltration Effect the enemy has",
     ],
     equipmentSlot: "Gloves",
@@ -6609,7 +6612,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(2500-4000) gear Evasion",
       "Loses 20 Blur Rating when landing a Critical Strike. Interval: 1 s",
       "Refreshes Blur upon gaining Blur, Interval: 1s. +(5-10)% Blur Effect",
-      "[Stealth Stab] -25% additional damage taken while Blur is active+25% additional damage for 3 s after Blur ends",
+      "[Stealth Stab] -25% additional damage taken while Blur is active\n+25% additional damage for 3 s after Blur ends",
       "+(30-40)% Movement Speed",
     ],
     corruptionAffixes: [
@@ -6617,7 +6620,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(3500-4500) gear Evasion",
       "Loses (10-30) Blur Rating when landing a Critical Strike. Interval: 1 s",
       "Refreshes Blur upon gaining Blur, Interval: 1s. +(20-30)% Blur Effect",
-      "[Stealth Stab] -25% additional damage taken while Blur is active+25% additional damage for 3 s after Blur endsWeaken Nearby enemies when Blur is removed",
+      "[Stealth Stab] -25% additional damage taken while Blur is active\n+25% additional damage for 3 s after Blur ends\nWeaken Nearby enemies when Blur is removed",
       "+(40-50)% Movement Speed",
     ],
     equipmentSlot: "Boots",
@@ -6647,7 +6650,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Doomsday Board Axe",
     baseStat:
-      "43 - 43 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "43 - 43 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Varagon's Attack",
     normalAffixes: [
       "+(30-50)% gear Physical Damage",
@@ -6678,7 +6681,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(200-250) Max Life",
       "+(20-30)% Cold Resistance",
       "+(50-70)% Frostbite inflicted",
-      "Inflicts Cold Infiltration when dealing damage to Frozen enemies+(10-15)% additional damage against Frozen enemies",
+      "Inflicts Cold Infiltration when dealing damage to Frozen enemies\n+(10-15)% additional damage against Frozen enemies",
     ],
     equipmentSlot: "Chest Armor",
     equipmentType: "Chest Armor (STR)",
@@ -6807,14 +6810,14 @@ export const Legendaries: readonly Legendary[] = [
       "+(42-54)% Critical Strike Damage",
       "+(84-108)% Critical Strike Rating",
       "(-40--30)% Skill Area",
-      "[Focused Strike] Area Skills deal up to +32% additional damage to enemies at the centerMinions' Area Skills deal up to 32% additional damage to enemies at the center",
+      "[Focused Strike] Area Skills deal up to +32% additional damage to enemies at the center\nMinions' Area Skills deal up to 32% additional damage to enemies at the center",
     ],
     corruptionAffixes: [
       "Adds (64-68) - (74-78) Physical Damage to Attacks and Spells",
       "+(90-100)% Critical Strike Damage",
       "+(200-225)% Critical Strike Rating",
       "(-30-10)% Skill Area",
-      "[Sweep] +25% additional Attack Damage when holding a Two-Handed Weapon+25% Attack Skill Area when holding a Two-Handed Weapon",
+      "[Sweep] +25% additional Attack Damage when holding a Two-Handed Weapon\n+25% Attack Skill Area when holding a Two-Handed Weapon",
     ],
     equipmentSlot: "Trinket",
     equipmentType: "Necklace",
@@ -6895,7 +6898,7 @@ export const Legendaries: readonly Legendary[] = [
       "+(198-242) Max Life",
       "+20% Skill Cost",
       "+(8-12)% Elemental Resistance",
-      "+(40-50)% chance to launch one more wave when casting a Barrage Skill-20% Barrage Skill Wave Interval",
+      "+(40-50)% chance to launch one more wave when casting a Barrage Skill\n-20% Barrage Skill Wave Interval",
       "Randomly -1% enemy Elemental Resistance or -2.5% enemy Armor per Barrage wave. Stacks up to (8-25) times. Lasts 1 s",
     ],
     equipmentSlot: "Helmet",
@@ -6904,7 +6907,7 @@ export const Legendaries: readonly Legendary[] = [
   {
     baseItem: "Ripping Claymore",
     baseStat:
-      "25 - 25 Physical Damage500 Critical Strike Rating1.5 Attack Speed",
+      "25 - 25 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
     name: "Will",
     normalAffixes: [
       "Adds (44-48) - (57-63) Physical Damage to the gear",
