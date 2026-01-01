@@ -240,6 +240,7 @@ export const SLATE_SHAPES = [
   "O",
   "L",
   "Z",
+  "T",
   "Single",
   "CornerL",
   "Vertical2",

@@ -24,6 +24,15 @@ export const SHAPE_CELLS: Record<SlateShape, [number, number][]> = {
     [1, 1],
     [1, 2],
   ],
+  // T shape:
+  // OOO
+  //  O
+  T: [
+    [0, 0],
+    [0, 1],
+    [0, 2],
+    [1, 1],
+  ],
   // Legendary slate shapes
   Single: [[0, 0]],
   // "A Corner of Divinity" - L shape:
@@ -61,6 +70,7 @@ export const SHAPE_BOUNDS: Record<SlateShape, { rows: number; cols: number }> =
     O: { rows: 2, cols: 2 },
     L: { rows: 3, cols: 2 },
     Z: { rows: 2, cols: 3 },
+    T: { rows: 2, cols: 3 },
     // Legendary slate shapes
     Single: { rows: 1, cols: 1 },
     CornerL: { rows: 2, cols: 2 },
