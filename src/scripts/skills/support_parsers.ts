@@ -345,20 +345,20 @@ export const cataclysmParser: SupportLevelParser = (input) => {
   );
 
   // Extract additional damage percentage from progression table
-  const dmgCol = findColumn(
+  const afflictionEffCol = findColumn(
     progressionTable,
     "affliction grants an additional",
     skillName,
   );
-  const additionalDmgPct: Record<number, number> = {};
-  for (const [levelStr, text] of Object.entries(dmgCol.rows)) {
-    additionalDmgPct[Number(levelStr)] = parseNumericValue(text);
+  const addnAfflictionEffPct: Record<number, number> = {};
+  for (const [levelStr, text] of Object.entries(afflictionEffCol.rows)) {
+    addnAfflictionEffPct[Number(levelStr)] = parseNumericValue(text);
   }
 
-  validateAllLevels(additionalDmgPct, skillName);
+  validateAllLevels(addnAfflictionEffPct, skillName);
 
   return {
     afflictionInflictedPerSec: createConstantLevels(afflictionMatch.value),
-    additionalDmgPct,
+    addnAfflictionEffPct,
   };
 };

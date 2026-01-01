@@ -134,10 +134,9 @@ export const supportSkillModFactories: Partial<
       value: v(vals.afflictionInflictedPerSec, l),
     },
     {
-      type: "DmgPct",
-      value: v(vals.additionalDmgPct, l),
+      type: "AfflictionEffectPct",
+      value: v(vals.addnAfflictionEffPct, l),
       addn: true,
-      dmgModType: "global",
       cond: "enemy_at_max_affliction",
     },
   ],
