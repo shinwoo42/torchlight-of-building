@@ -147,6 +147,11 @@ export const allParsers = [
     dmgModType: "damage_over_time" as const,
     addn: c.additional !== undefined,
   })),
+  t("{value:dec%} additional damage applied to life").output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: true,
+  })),
   t("{value:dec%} [additional] damage for channeled skills").output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: "channeled" as const,

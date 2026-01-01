@@ -223,6 +223,18 @@ test("parse blur additional damage over time effect", () => {
   ]);
 });
 
+test("parse additional damage applied to life", () => {
+  const result = parseMod("8% additional damage applied to Life");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 8,
+      dmgModType: "global",
+      addn: true,
+    },
+  ]);
+});
+
 test("parse damage for channeled skills", () => {
   const result = parseMod("+27% damage for Channeled Skills");
   expect(result).toEqual([
