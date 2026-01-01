@@ -248,6 +248,8 @@ interface ModDefinitions {
   CannotInflictWilt: object;
   // enemy mods
   EnemyRes: { value: number; resType: ResType };
+  // core talent specific
+  ReapPurificationPct: { value: number };
   // hero-specific mods
   Blasphemer: object;
 }

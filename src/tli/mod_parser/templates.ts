@@ -107,12 +107,12 @@ export const allParsers = [
     addn: true,
     per: { stackable: FROSTBITE_RATING, amt: c.amt },
   })),
-  t("{value:dec%} additional damage for every \\+{amt:int} additional max channeled stack\\(s\\)").output(
+  t("{value:dec%} [additional] damage for every \\+{amt:int} additional max channeled stack\\(s\\)").output(
     "DmgPct",
     (c) => ({
       value: c.value,
       dmgModType: GLOBAL,
-      addn: true,
+      addn: c.additional !== undefined,
       per: { stackable: ADDITIONAL_MAX_CHANNEL_STACK, amt: c.amt },
     }),
   ),
@@ -347,6 +347,9 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
+  t(
+    "additionally settles {value:dec%} of the remaining total damage when reaping, then removes all damage over time acting on the target",
+  ).output("ReapPurificationPct", (c) => ({ value: c.value })),
   // Sage's Insight resistance reduction mods
   t(
     "when a spell hit inflicts fire damage, {value:dec%} cold, lightning, and erosion resistance for the target for {dur:dec} s",

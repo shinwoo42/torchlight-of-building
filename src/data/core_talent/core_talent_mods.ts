@@ -775,7 +775,10 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
           { type: "DmgPct", value: 15, dmgModType: "erosion", addn: true },
         ],
       },
-      { text: "15% additional damage applied to Life" },
+      {
+        text: "15% additional damage applied to Life",
+        mods: [{ type: "DmgPct", value: 15, dmgModType: "global", addn: true }],
+      },
     ],
   },
   "Stealth Stab": {
@@ -836,6 +839,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
     affixLines: [
       {
         text: "Additionally settles 25% of the remaining total damage when Reaping, then removes all Damage Over Time acting on the target",
+        mods: [{ type: "ReapPurificationPct", value: 25 }],
       },
     ],
   },
