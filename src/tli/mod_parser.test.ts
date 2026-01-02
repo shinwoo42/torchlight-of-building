@@ -654,6 +654,16 @@ test("parse evasion", () => {
   ]);
 });
 
+test("parse defense", () => {
+  const result = parseMod("+40% Defense");
+  expect(result).toEqual([
+    {
+      type: "DefensePct",
+      value: 40,
+    },
+  ]);
+});
+
 test("parse life regain", () => {
   const result = parseMod("1.5% Life Regain");
   expect(result).toEqual([

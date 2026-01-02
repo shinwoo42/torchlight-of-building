@@ -320,6 +320,7 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
+  t("{value:dec%} defense").output("DefensePct", (c) => ({ value: c.value })),
   t("{value:int} gear energy shield").output("GearEnergyShield", (c) => ({ value: c.value })),
   t("{value:int} gear evasion").output("GearEvasion", (c) => ({ value: c.value })),
   t("{value:int} armor and evasion").outputMany([
