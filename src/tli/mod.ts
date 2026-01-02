@@ -245,6 +245,8 @@ interface ModDefinitions {
   MaxWillpowerStacks: { value: number };
   ShadowQuant: { value: number };
   ShadowDmgPct: { value: number; addn: boolean };
+  LuckyDmg: object;
+  Jump: { value: number };
   Projectile: { value: number };
   MaxProjectile: { value: number; override?: boolean };
   SkillAreaPct: {
