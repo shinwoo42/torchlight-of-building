@@ -22,8 +22,13 @@ export interface Affix {
   src?: string;
 }
 
-export interface SkillAffix {
+export interface ActivationMediumMod {
+  mod: Mod;
+}
+
+export interface ActivationMediumAffix {
   text: string;
+  mods?: ActivationMediumMod[];
 }
 
 export interface BaseStatLine {
@@ -348,7 +353,7 @@ export interface ActivationMediumSkillSlot {
   skillType: "activation_medium";
   name: ActivationMediumSkillNmae;
   tier: 0 | 1 | 2 | 3;
-  affixes: SkillAffix[];
+  affixes: ActivationMediumAffix[];
 }
 
 export type BaseSupportSkillSlot =

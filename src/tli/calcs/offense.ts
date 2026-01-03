@@ -1550,7 +1550,19 @@ const resolveSelectedSkillSupportMods = (
         });
       }
     }
-    // Activation Medium skills don't have mods implemented yet
+    // Handle activation medium skills
+    else if (ss.skillType === "activation_medium") {
+      for (const affix of ss.affixes) {
+        if (affix.mods !== undefined) {
+          for (const { mod } of affix.mods) {
+            supportMods.push({
+              ...mod,
+              src: `Activation Medium: ${ss.name} T${ss.tier}`,
+            });
+          }
+        }
+      }
+    }
   }
   return supportMods;
 };

@@ -71,6 +71,7 @@ import type {
   TalentTrees,
 } from "../core";
 import { parseMod } from "../mod_parser/index";
+import { parseActivationMediumAffixes } from "../skills/activation_medium_parsers";
 import {
   convertAffixTextToAffix,
   getPrismAffixesForNode,
@@ -793,13 +794,19 @@ const convertSupportSkillSlot = (
         ...slot,
         name: slot.name as NobleSupportSkillName,
       };
-    case "activation_medium":
+    case "activation_medium": {
+      const affixTexts = slot.affixes ?? [];
+      const parsedMods = parseActivationMediumAffixes(slot.name, affixTexts);
       return {
         skillType: "activation_medium",
         name: slot.name as ActivationMediumSkillNmae,
         tier: slot.tier ?? 3,
-        affixes: (slot.affixes ?? []).map((text) => ({ text })),
+        affixes: affixTexts.map((text, i) => ({
+          text,
+          mods: parsedMods?.[i],
+        })),
       };
+    }
   }
 };
 
