@@ -83,6 +83,7 @@ export const createEmptyConfigurationPage = (): ConfigurationPage => ({
   enemyArmor: undefined,
   enemyParalyzed: false,
   hasFullMana: false,
+  targetEnemyIsElite: false,
   targetEnemyIsNearby: false,
   targetEnemyIsInProximity: false,
   numEnemiesNearby: 0,

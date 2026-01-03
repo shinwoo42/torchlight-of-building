@@ -120,6 +120,7 @@ export const EMPTY_SAVE_DATA: SaveData = {
     hasTenacityBlessing: false,
     hasFullMana: false,
     enemyParalyzed: false,
+    targetEnemyIsElite: false,
     targetEnemyIsNearby: false,
     targetEnemyIsInProximity: false,
     numEnemiesNearby: 0,

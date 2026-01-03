@@ -91,6 +91,7 @@ export const useConfiguration = (): Configuration => {
     enemyArmor: configPage.enemyArmor,
     enemyParalyzed: configPage.enemyParalyzed,
     hasFullMana: configPage.hasFullMana,
+    targetEnemyIsElite: configPage.targetEnemyIsElite,
     targetEnemyIsNearby: configPage.targetEnemyIsNearby,
     targetEnemyIsInProximity: configPage.targetEnemyIsInProximity,
     numEnemiesNearby: configPage.numEnemiesNearby,
