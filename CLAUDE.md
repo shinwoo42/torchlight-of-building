@@ -223,15 +223,6 @@ describe("feature", () => {
 });
 ```
 
-## HTML Scraping (cheerio)
-
-Scripts in `src/scripts/`. Key patterns:
-
-1. **Fix malformed HTML:** Wrap `<tbody>` in `<table>`
-2. **Value ranges:** `<span class="val">` → backticks
-3. **Line breaks:** Use marker (`<<BR>>`) to distinguish `<br>` from HTML whitespace
-4. **Multiple classes:** `$('tr[class*="thing"]')`
-
 ## UI Development
 
 For UI work, read [docs/claude/ui-development.md](docs/claude/ui-development.md).
