@@ -2407,6 +2407,18 @@ const calcAvgAttackDps = (
   };
 };
 
+export interface OffenseSpellDpsSummary {
+  critChange: number;
+  critDmgMult: number;
+  castsPerSec: number;
+  avgHitWithCrit: number;
+  avgDps: number;
+}
+
+const _calcAvgSpellDps = (): OffenseSpellDpsSummary | undefined => {
+  return undefined;
+};
+
 // Calculates offense for all enabled implemented skills
 export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const { loadout, configuration: config } = input;
