@@ -105,6 +105,19 @@ test("parse damage against cursed enemies (non-additional)", () => {
   ]);
 });
 
+test("parse additional erosion area damage against elites", () => {
+  const result = parseMod("+10% additional Erosion Area Damage against Elites");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 10,
+      dmgModType: "erosion_area",
+      addn: true,
+      cond: "target_enemy_is_elite",
+    },
+  ]);
+});
+
 test("parse curse damage dealt and damage taken", () => {
   const result = parseMod(
     "+20% additional damage dealt to Cursed enemies. -20% additional damage taken from Cursed enemies",

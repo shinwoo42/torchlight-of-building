@@ -543,6 +543,9 @@ const dmgModTypesForSkill = (skill: BaseActiveSkill): DmgModType[] => {
   if (skill.kinds.includes("dot")) {
     dmgModTypes.push("damage_over_time");
   }
+  if (skill.tags.includes("Area") && skill.tags.includes("Erosion")) {
+    dmgModTypes.push("erosion_area");
+  }
   return dmgModTypes;
 };
 
@@ -982,6 +985,7 @@ const filterModsByCond = (
       .with("enemy_has_desecration", () => config.enemyHasDesecration)
       .with("enemy_paralyzed", () => config.enemyParalyzed)
       .with("has_full_mana", () => config.hasFullMana)
+      .with("target_enemy_is_elite", () => config.targetEnemyIsElite)
       .with("target_enemy_is_nearby", () => config.targetEnemyIsNearby)
       .with(
         "target_enemy_is_in_proximity",

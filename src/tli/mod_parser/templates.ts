@@ -25,6 +25,7 @@ const ADDITIONAL_MAX_CHANNEL_STACK = "additional_max_channel_stack" as const;
 const AT_MAX_CHANNELED_STACKS = "at_max_channeled_stacks" as const;
 const ENEMY_IS_CURSED = "enemy_is_cursed" as const;
 const HAVE_BOTH_SEALED_MANA_AND_LIFE = "have_both_sealed_mana_and_life" as const;
+const TARGET_ENEMY_IS_ELITE = "target_enemy_is_elite" as const;
 
 const coreTalentNameSet = new Set(CoreTalentNames.map((name) => name.toLowerCase()));
 
@@ -103,6 +104,12 @@ export const allParsers = [
     dmgModType: GLOBAL,
     addn: c.additional !== undefined,
     cond: ENEMY_IS_CURSED,
+  })),
+  t("{value:dec%} additional erosion area damage against elites").output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "erosion_area" as const,
+    addn: true,
+    cond: TARGET_ENEMY_IS_ELITE,
   })),
   t("{value:dec%} [additional] damage when having both sealed mana and life").output("DmgPct", (c) => ({
     value: c.value,
