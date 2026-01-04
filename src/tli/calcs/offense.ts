@@ -1702,8 +1702,8 @@ interface EnemyRes {
 }
 
 const calculateEnemyRes = (mods: Mod[], config: Configuration): EnemyRes => {
-  // enemyRes is stored as whole percentage (50 for 50%)
-  const res = config.enemyRes ?? 50;
+  // enemyRes is stored as whole percentage (30 for 30%)
+  const res = config.enemyRes ?? 30;
   const enemyResMods = filterMod(mods, "EnemyRes");
   const sumEnemyResMods = (resTypes: ResType[]) => {
     return sumByValue(enemyResMods.filter((m) => resTypes.includes(m.resType)));

@@ -371,7 +371,7 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
 
           <label className="text-right text-zinc-50">
             Enemy Resistance %
-            <InfoTooltip text="Enemy elemental resistance. Defaults to 50%." />
+            <InfoTooltip text="Enemy elemental resistance. Defaults to 30%." />
           </label>
           <NumberInput
             value={

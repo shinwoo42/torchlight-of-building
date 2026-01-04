@@ -7,7 +7,7 @@ import mcTheaGolden from "./mc-thea-3-golden-1.json";
 import rosaGolden from "./rosa-2-golden.json";
 
 describe("offense golden tests", () => {
-  it("rosa-2-golden: Frost Spike should calculate ~14.39 trillion DPS", () => {
+  it("rosa-2-golden: Frost Spike should calculate ~17.70 trillion DPS", () => {
     const saveData = rosaGolden as unknown as SaveData;
     const loadout = loadSave(saveData);
     const config = saveData.configurationPage as Configuration;
@@ -21,7 +21,7 @@ describe("offense golden tests", () => {
 
     const avgDps = frostSpike.attackDpsSummary?.avgDps;
     // With projectile damage from frostbite: trunc(100/35) = 2 projectiles × 8% = 16% additional damage
-    const expectedDps = 14.39e12; // ~14.39 trillion
+    const expectedDps = 17.7e12; // ~17.70 trillion (with 30% enemy res default)
     const tolerance = 0.01; // 1% tolerance
 
     expect(avgDps).toBeGreaterThan(expectedDps * (1 - tolerance));
@@ -53,9 +53,9 @@ describe("offense golden tests", () => {
 
     const tolerance = 0.01; // 1% tolerance
 
-    // DOT DPS: ~23.28 billion (persistent damage ignores armor)
+    // DOT DPS: ~26.31 billion (persistent damage ignores armor, with 30% enemy res default)
     const dotDps = mindControl.persistentDpsSummary?.total;
-    const expectedDotDps = 23.28e9;
+    const expectedDotDps = 26.31e9;
     expect(dotDps).toBeGreaterThan(expectedDotDps * (1 - tolerance));
     expect(dotDps).toBeLessThan(expectedDotDps * (1 + tolerance));
 
@@ -63,9 +63,9 @@ describe("offense golden tests", () => {
     const dotDuration = mindControl.persistentDpsSummary?.duration;
     expect(dotDuration).toBeCloseTo(2.28, 2);
 
-    // Reap DPS: ~245.7 billion (scales with DOT)
+    // Reap DPS: ~277.82 billion (scales with DOT, with 30% enemy res default)
     const reapDps = mindControl.totalReapDpsSummary?.totalReapDps;
-    const expectedReapDps = 245.7e9;
+    const expectedReapDps = 277.82e9;
     expect(reapDps).toBeGreaterThan(expectedReapDps * (1 - tolerance));
     expect(reapDps).toBeLessThan(expectedReapDps * (1 + tolerance));
 
@@ -77,9 +77,9 @@ describe("offense golden tests", () => {
     const reapDuration = mindControl.totalReapDpsSummary?.reapDurationBonusPct;
     expect(reapDuration).toBeCloseTo(182, 0);
 
-    // Total DPS: ~269.0 billion (DOT + Reap)
+    // Total DPS: ~304.13 billion (DOT + Reap, with 30% enemy res default)
     const totalDps = mindControl.totalDps;
-    const expectedTotalDps = 269.0e9;
+    const expectedTotalDps = 304.13e9;
     expect(totalDps).toBeGreaterThan(expectedTotalDps * (1 - tolerance));
     expect(totalDps).toBeLessThan(expectedTotalDps * (1 + tolerance));
   });
