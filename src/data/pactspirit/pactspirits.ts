@@ -43,6 +43,52 @@ export const Pactspirits = [
       "50% chance for Damage Over Time to spread to targets in Proximity\n+35% additional Reaping Cooldown Recovery Speed\n+20% Movement Speed if you have caused Reaping recently\n+4% additional damage",
   },
   {
+    type: "Survival",
+    rarity: "Legendary",
+    name: "Anthem",
+    innerRing1: { name: "Max Life I", affix: "+4% Max Life" },
+    innerRing2: { name: "Max Life I", affix: "+4% Max Life" },
+    innerRing3: {
+      name: "Mana Restoration I",
+      affix: "+15% Mana Regeneration Speed",
+    },
+    innerRing4: {
+      name: "Mana Restoration I",
+      affix: "+15% Mana Regeneration Speed",
+    },
+    innerRing5: {
+      name: "XP Balance I",
+      affix:
+        "-10% XP falloff caused by the level difference between the player and the map",
+    },
+    innerRing6: {
+      name: "XP Balance I",
+      affix:
+        "-10% XP falloff caused by the level difference between the player and the map",
+    },
+    midRing1: { name: "Max Life II", affix: "+8% Max Life" },
+    midRing2: {
+      name: "Mana Restoration II",
+      affix: "+30% Mana Regeneration Speed",
+    },
+    midRing3: {
+      name: "XP Balance II",
+      affix:
+        "-20% XP falloff caused by the level difference between the player and the map",
+    },
+    affix1: "+10% additional Life\nRegenerates 0.6% Life per second",
+    affix2:
+      "+10% additional Life\nRegenerates 0.6% Life per second\n-2% additional damage taken",
+    affix3:
+      "+10% additional Life\nRegenerates 0.6% Life per second\nRegenerates 1% Life per second\n-2% additional damage taken",
+    affix4:
+      "+10% additional Life\nRegenerates 0.6% Life per second\nRegenerates 1% Life per second\n-4% additional damage taken",
+    affix5:
+      "+10% additional Life\nRegenerates 0.6% Life per second\nRegenerates 2% Life per second\n-4% additional damage taken",
+    affix6:
+      "+14% additional Life\nRegenerates 0.9% Life per second\nRegenerates 2% Life per second\n-4% additional damage taken",
+  },
+  {
     type: "Persistent",
     rarity: "Magic",
     name: "Awooawoo - Amber",
@@ -706,6 +752,41 @@ export const Pactspirits = [
       "+55% Origin of Spirit Magus effect\n+7% additional Spirit Magus Skill Damage\n+8% additional Spirit Magus Skill Damage\n+4% additional Minion Damage",
   },
   {
+    type: "Spell",
+    rarity: "Legendary",
+    name: "Dreamweaver",
+    innerRing1: { name: "Elemental Damage I", affix: "+12% Elemental Damage" },
+    innerRing2: { name: "Elemental Damage I", affix: "+12% Elemental Damage" },
+    innerRing3: {
+      name: "Elemental Penetration I",
+      affix: "Damage Penetrates 2% Elemental Resistance",
+    },
+    innerRing4: {
+      name: "Elemental Penetration I",
+      affix: "Damage Penetrates 2% Elemental Resistance",
+    },
+    innerRing5: { name: "Cast Speed I", affix: "+4% Cast Speed" },
+    innerRing6: { name: "Cast Speed I", affix: "+4% Cast Speed" },
+    midRing1: { name: "Elemental Damage II", affix: "+24% Elemental Damage" },
+    midRing2: {
+      name: "Elemental Penetration II",
+      affix: "Damage Penetrates 4% Elemental Resistance",
+    },
+    midRing3: { name: "Cast Speed II", affix: "+8% Cast Speed" },
+    affix1:
+      "+14% additional Elemental Damage dealt by Spell Skills\n+1% Elemental Resistance Penetration when hitting an enemy with Elemental Damage, stacking up to 4 times",
+    affix2:
+      "+14% additional Elemental Damage dealt by Spell Skills\n+1% Elemental Resistance Penetration when hitting an enemy with Elemental Damage, stacking up to 4 times\n+2% additional damage",
+    affix3:
+      "+14% additional Elemental Damage dealt by Spell Skills\n+1% Elemental Resistance Penetration when hitting an enemy with Elemental Damage, stacking up to 4 times\n1.5% Elemental Resistance Penetration every time you hit an enemy with Elemental Damage recently. Stacks up to 4 times\n+2% additional damage",
+    affix4:
+      "+14% additional Elemental Damage dealt by Spell Skills\n+1% Elemental Resistance Penetration when hitting an enemy with Elemental Damage, stacking up to 4 times\n1.5% Elemental Resistance Penetration every time you hit an enemy with Elemental Damage recently. Stacks up to 4 times\n+4% additional damage",
+    affix5:
+      "+14% additional Elemental Damage dealt by Spell Skills\n+1% Elemental Resistance Penetration when hitting an enemy with Elemental Damage, stacking up to 4 times\n+3% Elemental Resistance Penetration every time you hit an enemy with Elemental Damage recently. Stacks up to 4 times\n+4% additional damage",
+    affix6:
+      "+19% additional Elemental Damage dealt by Spell Skills\n1.2% Elemental Resistance Penetration when hitting an enemy with Elemental Damage, stacking up to 4 times\n+3% Elemental Resistance Penetration every time you hit an enemy with Elemental Damage recently. Stacks up to 4 times\n+4% additional damage",
+  },
+  {
     type: "Survival",
     rarity: "Magic",
     name: "Explorer Otter - Mudstone",
@@ -1006,6 +1087,47 @@ export const Pactspirits = [
       "Reaps 0.8 s of Damage Over Time when inflicting an Ailment. The effect has a 6 s cooldown against the same target\n+4% Reaping Duration for each recent Reaping, stacks up to 4 times\n+14% Reaping Duration for each Reap dealt, stacking up to 4 times.\n+4% additional damage",
     affix6:
       "Reaps 1 s of Damage Over Time when inflicting an Ailment. The effect has a 6 s cooldown against the same target\n+6% Reaping Duration for each recent Reaping, stacks up to 4 times\n+14% Reaping Duration for each Reap dealt, stacking up to 4 times.\n+4% additional damage",
+  },
+  {
+    type: "Persistent",
+    rarity: "Legendary",
+    name: "Firewing",
+    innerRing1: { name: "Damage Over Time I", affix: "+12% Damage Over Time" },
+    innerRing2: { name: "Damage Over Time I", affix: "+12% Damage Over Time" },
+    innerRing3: {
+      name: "Skill Duration I",
+      affix: "+5% Skill Effect Duration",
+    },
+    innerRing4: {
+      name: "Skill Duration I",
+      affix: "+5% Skill Effect Duration",
+    },
+    innerRing5: {
+      name: "Damage Affliction I",
+      affix: "+10% Affliction Effect",
+    },
+    innerRing6: {
+      name: "Damage Affliction I",
+      affix: "+10% Affliction Effect",
+    },
+    midRing1: { name: "Damage Over Time II", affix: "+24% Damage Over Time" },
+    midRing2: {
+      name: "Skill Duration II",
+      affix: "+10% Skill Effect Duration",
+    },
+    midRing3: { name: "Damage Affliction II", affix: "+20% Affliction Effect" },
+    affix1:
+      "+80% Affliction effect at Full Life.\n10.5 Affliction inflicted per second on Full Life.",
+    affix2:
+      "+80% Affliction effect at Full Life.\n10.5 Affliction inflicted per second on Full Life.\n+2% additional damage",
+    affix3:
+      "+80% Affliction effect at Full Life.\n10.5 Affliction inflicted per second on Full Life.\n+15 Affliction inflicted per second at Full Life.\n+2% additional damage",
+    affix4:
+      "+80% Affliction effect at Full Life.\n10.5 Affliction inflicted per second on Full Life.\n+15 Affliction inflicted per second at Full Life.\n+4% additional damage",
+    affix5:
+      "+80% Affliction effect at Full Life.\n10.5 Affliction inflicted per second on Full Life.\n+30 Affliction inflicted per second at Full Life.\n+4% additional damage",
+    affix6:
+      "+105% Affliction effect at Full Life.\n+14 Affliction inflicted per second on Full Life.\n+30 Affliction inflicted per second at Full Life.\n+4% additional damage",
   },
   {
     type: "Attack",
@@ -2946,6 +3068,76 @@ export const Pactspirits = [
       "+5% additional damage; +5% additional Minion Damage\n+14% Erosion Damage\n+4% additional damage",
     affix6:
       "+7% additional damage; +7% additional Minion Damage\n+14% Erosion Damage\n+4% additional damage",
+  },
+  {
+    type: "Spell",
+    rarity: "Legendary",
+    name: "Squiddle",
+    innerRing1: { name: "Spell Damage I", affix: "+12% Spell Damage" },
+    innerRing2: { name: "Spell Damage I", affix: "+12% Spell Damage" },
+    innerRing3: {
+      name: "Spell Critical Strike I",
+      affix: "+22% Spell Critical Strike Rating",
+    },
+    innerRing4: {
+      name: "Spell Critical Strike I",
+      affix: "+22% Spell Critical Strike Rating",
+    },
+    innerRing5: { name: "Cast Speed I", affix: "+4% Cast Speed" },
+    innerRing6: { name: "Cast Speed I", affix: "+4% Cast Speed" },
+    midRing1: { name: "Spell Damage II", affix: "+24% Spell Damage" },
+    midRing2: {
+      name: "Spell Critical Strike II",
+      affix: "+45% Spell Critical Strike Rating",
+    },
+    midRing3: { name: "Cast Speed II", affix: "+8% Cast Speed" },
+    affix1:
+      'Activating Spell Burst with at least 6 stack(s) of Max Spell Burst grants 1 stack of Spell Burst for 10s.">Squidnova',
+    affix2:
+      'Activating Spell Burst with at least 6 stack(s) of Max Spell Burst grants 1 stack of Spell Burst for 10s.">Squidnova\n+25% Spell Burst for 10s.">Squidnova Effect',
+    affix3:
+      'Activating Spell Burst with at least 6 stack(s) of Max Spell Burst grants 1 stack of Spell Burst for 10s.">Squidnova\n+25% Spell Burst for 10s.">Squidnova Effect\n+4% additional Spell Damage when having Spell Burst for 10s.">Squidnova',
+    affix4:
+      'Activating Spell Burst with at least 6 stack(s) of Max Spell Burst grants 1 stack of Spell Burst for 10s.">Squidnova\n+50% Spell Burst for 10s.">Squidnova Effect\n+4% additional Spell Damage when having Spell Burst for 10s.">Squidnova',
+    affix5:
+      'Activating Spell Burst with at least 6 stack(s) of Max Spell Burst grants 1 stack of Spell Burst for 10s.">Squidnova\n+50% Spell Burst for 10s.">Squidnova Effect\n+8% additional Spell Damage when having Spell Burst for 10s.">Squidnova',
+    affix6:
+      'Activating Spell Burst with at least 6 stack(s) of Max Spell Burst grants 1 stack of Spell Burst for 10s.">Squidnova\n+50% Spell Burst for 10s.">Squidnova Effect\n+8% additional Spell Damage when having Spell Burst for 10s.">Squidnova\n+1 to Max Spell Burst when having Spell Burst for 10s.">Squidnova',
+  },
+  {
+    type: "Spell",
+    rarity: "Legendary",
+    name: "Starcatcher",
+    innerRing1: {
+      name: "Double Spell I",
+      affix: "+2% chance for Spells to deal Double Damage",
+    },
+    innerRing2: {
+      name: "Double Spell I",
+      affix: "+2% chance for Spells to deal Double Damage",
+    },
+    innerRing3: { name: "Spell Damage I", affix: "+12% Spell Damage" },
+    innerRing4: { name: "Spell Damage I", affix: "+12% Spell Damage" },
+    innerRing5: { name: "Cast Speed I", affix: "+4% Cast Speed" },
+    innerRing6: { name: "Cast Speed I", affix: "+4% Cast Speed" },
+    midRing1: {
+      name: "Double Spell II",
+      affix: "+4% chance for Spells to deal Double Damage",
+    },
+    midRing2: { name: "Spell Damage II", affix: "+24% Spell Damage" },
+    midRing3: { name: "Cast Speed II", affix: "+8% Cast Speed" },
+    affix1:
+      "+6% additional Cast Speed per second when an Elite is Nearby, up to +18%\n+3% Movement Speed when an Elite is Nearby, up to +9%",
+    affix2:
+      "+6% additional Cast Speed per second when an Elite is Nearby, up to +18%\n+3% Movement Speed when an Elite is Nearby, up to +9%\n+2% additional damage",
+    affix3:
+      "+6% additional Cast Speed per second when an Elite is Nearby, up to +18%\n+3% Movement Speed when an Elite is Nearby, up to +9%\n+5% Movement Speed per second when an Elite is nearby, up to +3 stack(s)\n+2% additional damage",
+    affix4:
+      "+6% additional Cast Speed per second when an Elite is Nearby, up to +18%\n+3% Movement Speed when an Elite is Nearby, up to +9%\n+5% Movement Speed per second when an Elite is nearby, up to +3 stack(s)\n+4% additional damage",
+    affix5:
+      "+6% additional Cast Speed per second when an Elite is Nearby, up to +18%\n+3% Movement Speed when an Elite is Nearby, up to +9%\n+10% Movement Speed per second when an Elite is nearby, up to +3 stack(s)\n+4% additional damage",
+    affix6:
+      "+8% additional Cast Speed per second when an Elite is Nearby, up to +24%\n+4% Movement Speed when an Elite is Nearby, up to +12%\n+10% Movement Speed per second when an Elite is nearby, up to +3 stack(s)\n+4% additional damage",
   },
   {
     type: "Attack",

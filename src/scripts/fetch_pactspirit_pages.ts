@@ -50,7 +50,6 @@ const extractNonDropPactspiritLinks = (html: string): string[] => {
         !href.startsWith("#") &&
         !href.startsWith("/") &&
         !href.includes(".") &&
-        href.includes("_") &&
         !href.includes("?")
       ) {
         links.push(href);
