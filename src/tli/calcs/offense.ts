@@ -1975,8 +1975,12 @@ const calculateSkillLevelDmgMods = (
   ];
 };
 
-// resolves mods, replacing core talents, removing unmatched conditions,
-//   and normalizing per mods
+interface DerivedOffenseCtx {
+  maxSpellBurst: number;
+  mods: Mod[];
+}
+
+// resolves mods, removing unmatched conditions, and normalizing per mods
 const resolveModsForOffenseSkill = (
   prenormModsFromParam: Mod[],
   skill: BaseActiveSkill | BasePassiveSkill,
@@ -1986,7 +1990,7 @@ const resolveModsForOffenseSkill = (
   loadout: Loadout,
   config: Configuration,
   derivedCtx: DerivedCtx,
-): Mod[] => {
+): DerivedOffenseCtx => {
   const {
     stats,
     maxMana,
@@ -2017,6 +2021,12 @@ const resolveModsForOffenseSkill = (
       "movement_speed_bonus_pct",
       defenses.movementSpeedBonusPct,
     ),
+  );
+
+  // must happen after movement_speed_bonus_pct normalization
+  const maxSpellBurst = sumByValue(filterMod(mods, "MaxSpellBurst"));
+  mods.push(
+    ...normalizeStackables(prenormMods, "max_spell_burst", maxSpellBurst),
   );
 
   mods.push(
@@ -2136,7 +2146,7 @@ const resolveModsForOffenseSkill = (
     ),
   );
 
-  return mods;
+  return { mods, maxSpellBurst };
 };
 
 export interface ResourcePool {
@@ -2571,6 +2581,7 @@ export interface OffenseSpellBurstDpsSummary {
 const calcAvgSpellBurstDps = (
   mods: Mod[],
   avgHit: number,
+  maxSpellBurst: number,
 ): OffenseSpellBurstDpsSummary => {
   const playSafe = findMod(mods, "PlaySafe");
   const baseBurstsPerSec = 0.5;
@@ -2584,7 +2595,6 @@ const calcAvgSpellBurstDps = (
   ];
   const burstsPerSecMult = calculateEffMultiplier(chargeSpeedMods);
   const burstsPerSec = baseBurstsPerSec * burstsPerSecMult;
-  const maxSpellBurst = sumByValue(filterMod(mods, "MaxSpellBurst"));
   const spellBurstDmgMult = calculateAddn(
     filterMod(mods, "SpellBurstAdditionalDmgPct").map((m) => m.value),
   );
@@ -2651,7 +2661,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
         derivedCtx,
       );
 
-    const mods = resolveModsForOffenseSkill(
+    const { mods, maxSpellBurst } = resolveModsForOffenseSkill(
       [...unresolvedLoadoutAndBuffMods, ...perSkillContext.mods],
       perSkillContext.skill,
       skillLevel,
@@ -2680,7 +2690,11 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
 
     const spellBurstDpsSummary =
       spellDpsSummary !== undefined
-        ? calcAvgSpellBurstDps(mods, spellDpsSummary.avgHitWithCrit)
+        ? calcAvgSpellBurstDps(
+            mods,
+            spellDpsSummary.avgHitWithCrit,
+            maxSpellBurst,
+          )
         : undefined;
 
     const persistentDpsSummary = calcAvgPersistentDps({

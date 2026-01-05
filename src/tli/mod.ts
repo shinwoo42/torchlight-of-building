@@ -85,6 +85,7 @@ export type Stackable =
   | "dex"
   | "int"
   | "level"
+  | "max_spell_burst"
   // max channel stacks beyond initial skill channel stacks
   | "additional_max_channel_stack"
   | "channel_stack"
