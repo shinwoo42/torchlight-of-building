@@ -4761,6 +4761,44 @@ describe("spell burst", () => {
     expect(skill?.spellBurstDpsSummary?.maxSpellBurst).toBe(0);
     expect(skill?.spellBurstDpsSummary?.avgDps).toBe(0);
   });
+
+  test("PlaySafe applies cast speed bonus to spell burst charge speed", () => {
+    // PlaySafe: 100% of cast speed bonus applies to spell burst charge speed
+    // CspdPct = 50%, PlaySafe = 100% → effective charge speed = 50%
+    // burstsPerSec = 0.5 * (100 + 50) / 100 = 0.75
+    const input = createSpellBurstInput(
+      affixLines([
+        { type: "MaxSpellBurst", value: 3 },
+        { type: "CspdPct", value: 50, addn: false },
+        { type: "PlaySafe", value: 100 },
+      ]),
+    );
+    const results = calculateOffense(input);
+    const skill = results.skills[skillName];
+    expect(skill?.spellBurstDpsSummary).toBeDefined();
+    expect(skill?.spellBurstDpsSummary?.burstsPerSec).toBeCloseTo(0.75);
+    expect(skill?.spellBurstDpsSummary?.avgDps).toBeCloseTo(
+      0.75 * 3 * 100 * baseCritMult,
+    );
+  });
+
+  test("cast speed does not affect spell burst charge speed without PlaySafe", () => {
+    // Without PlaySafe, CspdPct should not affect spell burst charge speed
+    // burstsPerSec should remain at base 0.5
+    const input = createSpellBurstInput(
+      affixLines([
+        { type: "MaxSpellBurst", value: 3 },
+        { type: "CspdPct", value: 50, addn: false },
+      ]),
+    );
+    const results = calculateOffense(input);
+    const skill = results.skills[skillName];
+    expect(skill?.spellBurstDpsSummary).toBeDefined();
+    expect(skill?.spellBurstDpsSummary?.burstsPerSec).toBeCloseTo(0.5);
+    expect(skill?.spellBurstDpsSummary?.avgDps).toBeCloseTo(
+      0.5 * 3 * 100 * baseCritMult,
+    );
+  });
 });
 
 describe("persistent damage", () => {
