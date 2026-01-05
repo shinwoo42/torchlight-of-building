@@ -4696,6 +4696,70 @@ describe("spell damage", () => {
   });
 });
 
+describe("spell burst", () => {
+  const skillName = "[Test] Simple Spell" as const;
+  const baseCritMult = 1.025;
+
+  const createSpellBurstInput = (mods: AffixLine[], config?: Configuration) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: {}, inventory: [] },
+      customAffixLines: mods,
+      skillPage: simpleSpellSkillPage(),
+    }),
+    configuration: config ?? defaultConfiguration,
+  });
+
+  test("spell burst DPS with max burst stacks and no charge speed", () => {
+    // Base spell: 100 damage, avgHitWithCrit = 100 * 1.025 = 102.5
+    // maxSpellBurst = 3, base burstsPerSec = 0.5 (2s full charge)
+    // Expected DPS = 0.5 * 3 * 102.5 = 153.75
+    const input = createSpellBurstInput(
+      affixLines([{ type: "MaxSpellBurst", value: 3 }]),
+    );
+    const results = calculateOffense(input);
+    const skill = results.skills[skillName];
+    expect(skill?.spellBurstDpsSummary).toBeDefined();
+    expect(skill?.spellBurstDpsSummary?.maxSpellBurst).toBe(3);
+    expect(skill?.spellBurstDpsSummary?.burstsPerSec).toBeCloseTo(0.5);
+    expect(skill?.spellBurstDpsSummary?.dps).toBeCloseTo(
+      0.5 * 3 * 100 * baseCritMult,
+    );
+  });
+
+  test("spell burst charge speed increases bursts per second", () => {
+    // Base spell: 100 damage, avgHitWithCrit = 102.5
+    // maxSpellBurst = 3, chargeSpeed = 100%
+    // burstsPerSec = 0.5 * (100 + 100) / 100 = 1
+    // Expected DPS = 1 * 3 * 102.5 = 307.5
+    const input = createSpellBurstInput(
+      affixLines([
+        { type: "MaxSpellBurst", value: 3 },
+        { type: "SpellBurstChargeSpeedPct", value: 100 },
+      ]),
+    );
+    const results = calculateOffense(input);
+    const skill = results.skills[skillName];
+    expect(skill?.spellBurstDpsSummary).toBeDefined();
+    expect(skill?.spellBurstDpsSummary?.burstsPerSec).toBeCloseTo(1);
+    expect(skill?.spellBurstDpsSummary?.dps).toBeCloseTo(
+      1 * 3 * 100 * baseCritMult,
+    );
+  });
+
+  test("spell burst DPS is zero when max burst is zero", () => {
+    // No MaxSpellBurst mod means maxSpellBurst = 0
+    // DPS should be 0 regardless of charge speed
+    const input = createSpellBurstInput(
+      affixLines([{ type: "SpellBurstChargeSpeedPct", value: 100 }]),
+    );
+    const results = calculateOffense(input);
+    const skill = results.skills[skillName];
+    expect(skill?.spellBurstDpsSummary).toBeDefined();
+    expect(skill?.spellBurstDpsSummary?.maxSpellBurst).toBe(0);
+    expect(skill?.spellBurstDpsSummary?.dps).toBe(0);
+  });
+});
+
 describe("persistent damage", () => {
   const skillName = "[Test] Simple Persistent Spell" as const;
 

@@ -156,6 +156,7 @@ export interface OffenseAttackDpsSummary {
 interface OffenseSummary {
   attackDpsSummary?: OffenseAttackDpsSummary;
   spellDpsSummary?: OffenseSpellDpsSummary;
+  spellBurstDpsSummary?: OffenseSpellBurstDpsSummary;
   persistentDpsSummary?: PersistentDpsSummary;
   totalReapDpsSummary?: TotalReapDpsSummary;
   totalDps: number;
@@ -2560,19 +2561,26 @@ const calcAvgSpellDps = (
   };
 };
 
-const _calcAvgSpellBurstDps = (
+interface OffenseSpellBurstDpsSummary {
+  burstsPerSec: number;
+  maxSpellBurst: number;
+  dps: number;
+}
+
+const calcAvgSpellBurstDps = (
   mods: Mod[],
-  _loadout: Loadout,
-  config: Configuration,
   avgHit: number,
-) => {
+): OffenseSpellBurstDpsSummary => {
   const baseBurstsPerSec = 0.5;
-  const burstsPerSecMult = sumByValue(
+  const burstsPerSecMult = calculateEffMultiplier(
     filterMod(mods, "SpellBurstChargeSpeedPct"),
   );
-  const burstPerSec = baseBurstsPerSec * burstsPerSecMult;
-
+  const burstsPerSec = baseBurstsPerSec * burstsPerSecMult;
   const maxSpellBurst = sumByValue(filterMod(mods, "MaxSpellBurst"));
+
+  const dps = burstsPerSec * maxSpellBurst * avgHit;
+
+  return { burstsPerSec, maxSpellBurst, dps };
 };
 
 // Calculates offense for all enabled implemented skills
@@ -2659,6 +2667,11 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       config,
     );
 
+    const spellBurstDpsSummary =
+      spellDpsSummary !== undefined
+        ? calcAvgSpellBurstDps(mods, spellDpsSummary.avgHitWithCrit)
+        : undefined;
+
     const persistentDpsSummary = calcAvgPersistentDps({
       mods,
       loadout,
@@ -2681,6 +2694,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     skills[slot.skillName as ImplementedActiveSkillName] = {
       attackDpsSummary: attackHitSummary,
       spellDpsSummary,
+      spellBurstDpsSummary,
       persistentDpsSummary,
       totalReapDpsSummary,
       totalDps,
