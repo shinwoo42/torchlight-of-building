@@ -1505,6 +1505,51 @@ test("parse play safe cast speed to spell burst", () => {
   ]);
 });
 
+test("parse max spell burst when having squidnova", () => {
+  const result = parseMod("+1 to Max Spell Burst when having Squidnova");
+  expect(result).toEqual([
+    {
+      type: "MaxSpellBurst",
+      value: 1,
+      cond: "has_squidnova",
+    },
+  ]);
+});
+
+test("parse generates squidnova", () => {
+  const result = parseMod(
+    "Activating Spell Burst with at least 6 stack(s) of Max Spell Burst grants 1 stack of Squidnova",
+  );
+  expect(result).toEqual([
+    {
+      type: "GeneratesSquidnova",
+    },
+  ]);
+});
+
+test("parse squidnova effect", () => {
+  const result = parseMod("+50% Squidnova Effect");
+  expect(result).toEqual([
+    {
+      type: "SquidnovaEffPct",
+      value: 50,
+    },
+  ]);
+});
+
+test("parse additional spell damage when having squidnova", () => {
+  const result = parseMod("+8% additional Spell Damage when having Squidnova");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 8,
+      dmgModType: "spell",
+      addn: true,
+      cond: "has_squidnova",
+    },
+  ]);
+});
+
 test("parse max channeled stacks", () => {
   const result = parseMod("Max Channeled Stacks +1");
   expect(result).toEqual([

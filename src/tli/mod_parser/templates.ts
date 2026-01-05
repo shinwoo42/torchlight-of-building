@@ -15,6 +15,7 @@ const HAS_BLOCKED_RECENTLY = "has_blocked_recently" as const;
 const HAS_CRIT_RECENTLY = "has_crit_recently" as const;
 const HAS_BLUR = "has_blur" as const;
 const BLUR_ENDED_RECENTLY = "blur_ended_recently" as const;
+const HAS_SQUIDNOVA = "has_squidnova" as const;
 const FROSTBITE_RATING = "frostbite_rating" as const;
 const FERVOR = "fervor" as const;
 const MANA_CONSUMED_RECENTLY = "mana_consumed_recently" as const;
@@ -427,6 +428,20 @@ export const allParsers = [
   t("max tenacity blessing stacks {value:+int}").output("MaxTenacityBlessing", (c) => ({ value: c.value })),
   t("{value:+int} max repentance stacks").output("MaxRepentance", (c) => ({ value: c.value })),
   t("{value:+int} max spell burst").output("MaxSpellBurst", (c) => ({ value: c.value })),
+  t("{value:+int} to max spell burst when having squidnova").output("MaxSpellBurst", (c) => ({
+    value: c.value,
+    cond: HAS_SQUIDNOVA,
+  })),
+  t(
+    "activating spell burst with at least {stacks:int} stack\\(s\\) of max spell burst grants {grant:int} stack of squidnova",
+  ).output("GeneratesSquidnova", () => ({})),
+  t("{value:+dec%} squidnova effect").output("SquidnovaEffPct", (c) => ({ value: c.value })),
+  t("{value:+dec%} additional spell damage when having squidnova").output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "spell" as const,
+    addn: true,
+    cond: HAS_SQUIDNOVA,
+  })),
   t("{value:+dec%} [additional] spell burst charge speed").output("SpellBurstChargeSpeedPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,

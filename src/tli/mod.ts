@@ -152,7 +152,8 @@ export type Condition =
   | "enemy_has_lightning_infiltration"
   | "enemy_has_fire_infiltration"
   // pactspirits
-  | "has_portrait_of_a_fallen_saintess_pactspirit";
+  | "has_portrait_of_a_fallen_saintess_pactspirit"
+  | "has_squidnova";
 
 export type ConditionThresholdTarget =
   | "num_enemies_nearby"
@@ -325,6 +326,7 @@ interface ModDefinitions {
   Blasphemer: object;
   // pactspirit stuff
   SquidnovaEffPct: { value: number };
+  GeneratesSquidnova: object;
 }
 
 // Generate the Mod union type from ModDefinitions

@@ -1065,6 +1065,7 @@ const filterModsByCond = (
         "enemy_has_fire_infiltration",
         () => config.targetEnemyHasFireInfiltration,
       )
+      .with("has_squidnova", () => config.hasSquidnova)
       .exhaustive();
   });
 };
@@ -2074,7 +2075,7 @@ const resolveModsForOffenseSkill = (
       value: squidNovaDmgPctValue,
       dmgModType: "hit",
       addn: true,
-      src: "Squid Nova",
+      src: "Squidnova",
     });
   }
 
