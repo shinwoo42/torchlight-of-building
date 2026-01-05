@@ -95,6 +95,13 @@ const allSupportParsers = [
       addn: true,
     }),
   ),
+  t(
+    "{value:dec%} additional {dmgType:DmgModType} damage for the supported skill",
+  ).output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: c.dmgType,
+    addn: true,
+  })),
   t("{value:+dec%} additional ailment damage for the supported skill").output(
     "DmgPct",
     (c) => ({
@@ -253,6 +260,13 @@ const allSupportParsers = [
     dmgModType: GLOBAL,
     addn: true,
     per: { stackable: "unused_mind_control_link" as const },
+  })),
+  t(
+    "converts {value:int%} of the supported skill's {from:DmgChunkType} damage to {to:DmgChunkType} damage",
+  ).output("ConvertDmgPct", (c) => ({
+    value: c.value,
+    from: c.from,
+    to: c.to,
   })),
 ];
 
