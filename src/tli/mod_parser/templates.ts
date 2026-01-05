@@ -86,6 +86,14 @@ export const allParsers = [
     const per: PerStackable = { stackable: MOVEMENT_SPEED_BONUS_PCT, amt: c.amt, valueLimit: c.limit };
     return { value: c.value, dmgModType: GLOBAL, addn: true, per };
   }),
+  t(
+    "for every stack of max spell burst, {value:+dec%} additional spell damage, up to {limit:+dec%} additional spell damage",
+  ).output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "spell" as const,
+    addn: true,
+    per: { stackable: "max_spell_burst" as const, valueLimit: c.limit },
+  })),
   t("{value:+dec%} additional damage for the next skill when mana reaches the max").output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: GLOBAL,

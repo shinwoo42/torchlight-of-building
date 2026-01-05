@@ -1280,6 +1280,21 @@ test("parse spell damage per mana consumed recently with value limit", () => {
   ]);
 });
 
+test("parse additional spell damage per max spell burst stack", () => {
+  const result = parseMod(
+    "For every stack of Max Spell Burst, +6% additional Spell Damage, up to +24% additional Spell Damage",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 6,
+      dmgModType: "spell",
+      addn: true,
+      per: { stackable: "max_spell_burst", valueLimit: 24 },
+    },
+  ]);
+});
+
 test("parse critical strike rating and damage combined", () => {
   const result = parseMod(
     "+5% Critical Strike Rating and Critical Strike Damage",
