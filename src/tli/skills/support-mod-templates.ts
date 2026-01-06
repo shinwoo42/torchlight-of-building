@@ -214,6 +214,9 @@ const allSupportParsers = [
       value: c.value,
     }),
   ),
+  t("{value:+int} jumps for the supported skill").output("Jump", (c) => ({
+    value: c.value,
+  })),
   t("stacks up to {value:int} time(s)").output("MaxWillpowerStacks", (c) => ({
     value: c.value,
   })),
