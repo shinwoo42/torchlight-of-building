@@ -356,6 +356,13 @@ export const PassiveSkills = [
       "Activates the Aura, and enemies within 12m gain the following debuff:\n25% additional Cold Damage taken.",
       "Activates the Aura, and enemies within 12m gain the following debuff:\n+44% additional Cold Damage against enemies affected by the skill",
     ],
+    levelValues: {
+      coldDmgPct: [
+        25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+        43, 44, 45, 45.5, 46, 46.5, 47, 47.5, 48, 48.5, 49, 49.5, 50, 50.5, 51,
+        51.5, 52, 52.5, 53, 53.5, 54, 54.5,
+      ],
+    },
   },
   {
     type: "Passive",

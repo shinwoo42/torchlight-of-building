@@ -227,6 +227,27 @@ export const frigidDomainParser: SupportLevelParser = (input) => {
   return { coldDmgPct };
 };
 
+export const preciseFrigidDomainParser: SupportLevelParser = (input) => {
+  const { skillName, progressionTable } = input;
+
+  const descriptCol = findColumn(progressionTable, "descript", skillName);
+  const coldDmgPct: Record<number, number> = {};
+
+  for (const [levelStr, text] of Object.entries(descriptCol.rows)) {
+    const level = Number(levelStr);
+
+    // Match "+25% additional Cold Damage against enemies" or "54.5% additional Cold Damage against enemies"
+    const dmgMatch = template(
+      "{value:dec%} additional cold damage against enemies",
+    ).match(text, skillName);
+    coldDmgPct[level] = dmgMatch.value;
+  }
+
+  validateAllLevels(coldDmgPct, skillName);
+
+  return { coldDmgPct };
+};
+
 export const summonThunderMagusParser: SupportLevelParser = (input) => {
   const { skillName, progressionTable } = input;
 

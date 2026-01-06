@@ -21,6 +21,7 @@ import {
   preciseCrueltyParser,
   preciseDeepPainParser,
   preciseErosionAmplificationParser,
+  preciseFrigidDomainParser,
   spellAmplificationParser,
   summonThunderMagusParser,
 } from "./passive_parsers";
@@ -134,6 +135,11 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     skillName: "Frigid Domain",
     categories: ["passive"],
     parser: frigidDomainParser,
+  },
+  {
+    skillName: "Precise: Frigid Domain",
+    categories: ["passive"],
+    parser: preciseFrigidDomainParser,
   },
   {
     skillName: "Summon Thunder Magus",

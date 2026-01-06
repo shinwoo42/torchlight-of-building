@@ -117,6 +117,17 @@ export const passiveSkillModFactories: Partial<
       },
     ],
   }),
+  "Precise: Frigid Domain": (l, vals) => ({
+    buffMods: [
+      {
+        type: "DmgPct",
+        value: v(vals.coldDmgPct, l),
+        addn: true,
+        dmgModType: "cold",
+        isEnemyDebuff: true,
+      },
+    ],
+  }),
   "Summon Thunder Magus": (l, vals) => ({
     buffMods: [
       {
