@@ -76,7 +76,7 @@ import type {
   TalentTrees,
 } from "../core";
 import { parseMod } from "../mod_parser/index";
-import { parseSupportAffixes } from "../skills/support_mod_parsers";
+import { parseSupportAffixes } from "../skills/support-mod-templates";
 import {
   convertAffixTextToAffix,
   getPrismAffixesForNode,

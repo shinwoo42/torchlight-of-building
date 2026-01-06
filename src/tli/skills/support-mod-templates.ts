@@ -286,6 +286,14 @@ const allSupportParsers = [
     from: c.from,
     to: c.to,
   })),
+  t(
+    "{value:dec%} additional damage for the supported skill for every stack of focus blessing, stacking up to {limit:int} times",
+  ).output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: true,
+    per: { stackable: "focus_blessing" as const, limit: c.limit },
+  })),
 ];
 
 const parseSupportAffix = (text: string): SupportMod[] | undefined => {

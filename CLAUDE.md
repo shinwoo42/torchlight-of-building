@@ -68,7 +68,7 @@ src/tli/                 # Game engine (pure TypeScript, no React)
 │   ├── active_mods.ts         # Active skill mod application
 │   ├── passive_factories.ts   # Passive skill mod factories
 │   ├── passive_mods.ts        # Passive skill mod application
-│   ├── support_mod_parsers.ts # Support skill mod parser (template → regex)
+│   ├── support-mod-templates.ts # Support skill mod templates (template → regex)
 │   └── is-implemented.ts      # Skill implementation status checks
 ├── hero/                # Hero-related logic
 │   └── hero_trait_mods.ts
@@ -198,7 +198,7 @@ generateItemId(); // crypto.randomUUID()
 | Add mod type           | `src/tli/mod.ts` → `mod_parser/templates.ts` → `calcs/offense.ts` → test                                      |
 | Add skill              | `src/tli/calcs/skill_confs.ts` (skill configurations)                                                         |
 | Add skill mods         | `src/tli/skills/` (active, passive, or support mods/factories) - use `/implementing-game-skill-parsers` skill |
-| Add support skill mods | `src/tli/skills/support_mod_parsers.ts` - uses template-based parsing                                         |
+| Add support skill mods | `src/tli/skills/support-mod-templates.ts` - uses template-based parsing                                       |
 | Add utility helper     | Create `src/lib/{feature}-utils.ts`                                                                           |
 | Update talent trees    | `pnpm exec tsx src/scripts/generate_talent_tree_data.ts`                                                      |
 | Regenerate affixes     | `pnpm exec tsx src/scripts/generate_gear_affix_data.ts`                                                       |
