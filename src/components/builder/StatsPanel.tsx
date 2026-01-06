@@ -257,12 +257,14 @@ export const StatsPanel = (): React.ReactNode => {
             </div>
           </div>
         </div>
-        <div className="rounded bg-zinc-800 p-2">
-          <div className="text-xs text-zinc-500">Movement Speed</div>
-          <div className="font-medium text-green-400">
-            {formatStatValue.pct(defenses.movementSpeedBonusPct)}
+        {offenseSummary !== undefined && (
+          <div className="rounded bg-zinc-800 p-2">
+            <div className="text-xs text-zinc-500">Movement Speed</div>
+            <div className="font-medium text-green-400">
+              {formatStatValue.pct(offenseSummary.movementSpeedBonusPct)}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {offenseSummary?.attackDpsSummary !== undefined ||

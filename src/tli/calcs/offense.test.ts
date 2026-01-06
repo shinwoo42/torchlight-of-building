@@ -4251,7 +4251,6 @@ describe("resistance calculations", () => {
       lightningRes: { max: 60, potential: 0, actual: 0 },
       fireRes: { max: 60, potential: 0, actual: 0 },
       erosionRes: { max: 60, potential: 0, actual: 0 },
-      movementSpeedBonusPct: 0,
     });
   });
 

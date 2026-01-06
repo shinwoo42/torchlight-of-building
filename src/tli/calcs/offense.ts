@@ -160,6 +160,7 @@ interface OffenseSummary {
   persistentDpsSummary?: PersistentDpsSummary;
   totalReapDpsSummary?: TotalReapDpsSummary;
   totalDps: number;
+  movementSpeedBonusPct: number;
   resolvedMods: Mod[];
 }
 
@@ -2041,6 +2042,7 @@ const calculateSkillLevelDmgMods = (
 
 interface DerivedOffenseCtx {
   maxSpellBurst: number;
+  movementSpeedBonusPct: number;
   mods: Mod[];
 }
 
@@ -2050,7 +2052,6 @@ const resolveModsForOffenseSkill = (
   skill: BaseActiveSkill | BasePassiveSkill,
   skillLevel: number,
   resourcePool: ResourcePool,
-  defenses: Defenses,
   loadout: Loadout,
   config: Configuration,
   derivedCtx: DerivedCtx,
@@ -2085,11 +2086,13 @@ const resolveModsForOffenseSkill = (
   const sumStats = stats.dex + stats.int + stats.str;
   mods.push(...normalizeStackables(prenormMods, "stat", sumStats));
 
+  const movementSpeedBonusPct =
+    (calculateEffMultiplier(filterMod(mods, "MovementSpeedPct")) - 1) * 100;
   mods.push(
     ...normalizeStackables(
       prenormMods,
       "movement_speed_bonus_pct",
-      defenses.movementSpeedBonusPct,
+      movementSpeedBonusPct,
     ),
   );
 
@@ -2261,7 +2264,7 @@ const resolveModsForOffenseSkill = (
     ),
   );
 
-  return { mods, maxSpellBurst };
+  return { mods, maxSpellBurst, movementSpeedBonusPct };
 };
 
 export interface ResourcePool {
@@ -2362,9 +2365,6 @@ export interface Defenses {
   lightningRes: Resistance;
   fireRes: Resistance;
   erosionRes: Resistance;
-  // TODO: this needs to be moved into offense summary instead, since some main
-  //   skills like mind control lower your movement speed
-  movementSpeedBonusPct: number;
 }
 
 export const calculateDefenses = (
@@ -2397,15 +2397,11 @@ export const calculateDefenses = (
     return { max, potential, actual };
   };
 
-  const movementSpeedBonusPct =
-    (calculateEffMultiplier(filterMod(mods, "MovementSpeedPct")) - 1) * 100;
-
   return {
     coldRes: calcRes(["cold", "elemental"]),
     lightningRes: calcRes(["lightning", "elemental"]),
     fireRes: calcRes(["fire", "elemental"]),
     erosionRes: calcRes(["erosion"]),
-    movementSpeedBonusPct,
   };
 };
 
@@ -2776,16 +2772,16 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
         derivedCtx,
       );
 
-    const { mods, maxSpellBurst } = resolveModsForOffenseSkill(
-      [...unresolvedLoadoutAndBuffMods, ...perSkillContext.mods],
-      perSkillContext.skill,
-      skillLevel,
-      resourcePool,
-      defenses,
-      loadout,
-      config,
-      derivedCtx,
-    );
+    const { mods, maxSpellBurst, movementSpeedBonusPct } =
+      resolveModsForOffenseSkill(
+        [...unresolvedLoadoutAndBuffMods, ...perSkillContext.mods],
+        perSkillContext.skill,
+        skillLevel,
+        resourcePool,
+        loadout,
+        config,
+        derivedCtx,
+      );
 
     const attackHitSummary = calcAvgAttackDps(
       mods,
@@ -2839,6 +2835,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       persistentDpsSummary,
       totalReapDpsSummary,
       totalDps,
+      movementSpeedBonusPct,
       resolvedMods: mods,
     };
   }
