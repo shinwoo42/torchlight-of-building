@@ -111,8 +111,9 @@ HTML sources from TLIDB are also cached in a gitignore'd directory: `.garbage`
 - Percentages are represented as percentage points, e.g. 25% is equivalent to 25
 - Only add comments that explain complex logic or non-obvious decisions
 - ALWAYS: Run `pnpm test`, `pnpm typecheck`, and `pnpm check` before finalizing changes
-- NEVER throw exceptions in any code that is used by the frontend. Instead, find a reasonable default, and console.error the issue
-- For scripts, fail early instead of trying to infer intent
+- NEVER throw exceptions in any code that is used by the frontend. Instead, find a reasonable default, and console.error the issue.
+  - This includes any calculations like damage calculations, or loading save data into loadout
+- For scripts in src/scripts, fail early instead of trying to infer intent
 
 ## Data Flow
 
