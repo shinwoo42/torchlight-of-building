@@ -493,6 +493,12 @@ export const allParsers = [
   t("max agility blessing stacks {value:+int}").output("MaxAgilityBlessing", (c) => ({ value: c.value })),
   t("max tenacity blessing stacks {value:+int}").output("MaxTenacityBlessing", (c) => ({ value: c.value })),
   t("{value:+int} max repentance stacks").output("MaxRepentance", (c) => ({ value: c.value })),
+  // TODO: Properly implement condition threshold for movement speed (add to ConditionThresholdTarget type
+  // and handle in offense.ts). For now, we parse the value but ignore the threshold condition.
+  t("{value:+int} max spell burst when movement speed is not higher than {threshold:int%} of base").output(
+    "MaxSpellBurst",
+    (c) => ({ value: c.value }),
+  ),
   t("{value:+int} max spell burst").output("MaxSpellBurst", (c) => ({ value: c.value })),
   t("{value:+int} to max spell burst when having squidnova").output("MaxSpellBurst", (c) => ({
     value: c.value,

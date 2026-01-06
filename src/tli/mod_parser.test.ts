@@ -1572,6 +1572,18 @@ test("parse max spell burst", () => {
   ]);
 });
 
+test("parse max spell burst with movement speed condition", () => {
+  const result = parseMod(
+    "+1 Max Spell Burst when Movement Speed is not higher than 200% of base",
+  );
+  expect(result).toEqual([
+    {
+      type: "MaxSpellBurst",
+      value: 1,
+    },
+  ]);
+});
+
 test("parse spell burst charge speed with additional", () => {
   const result = parseMod("-20% additional Spell Burst Charge Speed");
   expect(result).toEqual([
