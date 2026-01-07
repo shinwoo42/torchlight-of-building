@@ -827,6 +827,18 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             onChange={(v) => onUpdate({ chainLightningInstancesOnTarget: v })}
             min={1}
           />
+
+          <label className="text-right text-zinc-50">
+            Used Mobility Skill Recently
+          </label>
+          <input
+            type="checkbox"
+            checked={config.hasUsedMobilitySkillRecently}
+            onChange={(e) =>
+              onUpdate({ hasUsedMobilitySkillRecently: e.target.checked })
+            }
+            className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-amber-500"
+          />
         </div>
       </div>
     </div>

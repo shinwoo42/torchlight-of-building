@@ -739,6 +739,10 @@ const filterModsByCond = (
         );
       })
       .with("enemy_numbed", () => config.enemyNumbed)
+      .with(
+        "has_used_mobility_skill_recently",
+        () => config.hasUsedMobilitySkillRecently,
+      )
       .exhaustive();
   });
 };

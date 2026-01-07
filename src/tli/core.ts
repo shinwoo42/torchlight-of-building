@@ -159,6 +159,8 @@ export interface Configuration {
   numSpellSkillsUsedRecently: number;
   // default to max
   chainLightningInstancesOnTarget?: number;
+  // default to false
+  hasUsedMobilitySkillRecently: boolean;
 
   // --------------------
   // hero-specific config
@@ -239,6 +241,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   hasHitEnemyWithElementalDmgRecently: 0,
   numSpellSkillsUsedRecently: 0,
   chainLightningInstancesOnTarget: undefined,
+  hasUsedMobilitySkillRecently: false,
   realmOfMercuryEnabled: false,
   baptismOfPurityEnabled: false,
   enemyColdRes: undefined,
