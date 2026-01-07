@@ -2688,3 +2688,58 @@ test("parse spell ripple", () => {
     },
   ]);
 });
+
+test("parse jumps", () => {
+  const result = parseMod("+1 Jumps");
+  expect(result).toEqual([
+    {
+      type: "Jump",
+      value: 1,
+    },
+  ]);
+});
+
+test("parse inflict paralysis chance (cursed target)", () => {
+  const result = parseMod(
+    "Upon dealing damage to a Cursed target, there is a +25% chance to Paralyze it",
+  );
+  expect(result).toEqual([
+    {
+      type: "InflictParalysisPct",
+      value: 25,
+    },
+  ]);
+});
+
+test("parse generates agility blessing on crit", () => {
+  const result = parseMod(
+    "100% chance to gain Agility Blessing on Critical Strike",
+  );
+  expect(result).toEqual([
+    {
+      type: "GeneratesAgilityBlessing",
+    },
+  ]);
+});
+
+test("parse generates blur on crowd control", () => {
+  const result = parseMod(
+    "+10% chance to gain Blur when inflicting crowd control effects",
+  );
+  expect(result).toEqual([
+    {
+      type: "GeneratesBlur",
+      value: 10,
+    },
+  ]);
+});
+
+test("parse numbed effect", () => {
+  const result = parseMod("+18% Numbed effect");
+  expect(result).toEqual([
+    {
+      type: "NumbedEffPct",
+      value: 18,
+    },
+  ]);
+});

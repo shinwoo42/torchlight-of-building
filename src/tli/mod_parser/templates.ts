@@ -755,4 +755,19 @@ export const allParsers = [
       cond: "enemy_at_max_affliction" as const,
     })),
   ]),
+  // Jumps
+  t("{value:+int} jumps").output("Jump", (c) => ({ value: c.value })),
+  // Paralysis
+  t("upon dealing damage to a cursed target, there is a {value:+dec%} chance to paralyze it").output(
+    "InflictParalysisPct",
+    (c) => ({ value: c.value }),
+  ),
+  // Agility Blessing generation
+  t("{value:dec%} chance to gain agility blessing on critical strike").output("GeneratesAgilityBlessing", () => ({})),
+  // Blur generation (ignoring condition)
+  t("{value:+dec%} chance to gain blur when inflicting crowd control effects").output("GeneratesBlur", (c) => ({
+    value: c.value,
+  })),
+  // Numbed effect
+  t("{value:+dec%} numbed effect").output("NumbedEffPct", (c) => ({ value: c.value })),
 ];
