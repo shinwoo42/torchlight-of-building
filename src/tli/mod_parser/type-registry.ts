@@ -1,4 +1,4 @@
-import type { CoreTalentName } from "../../data/core_talent";
+import type { CoreTalentName } from "../../data/core-talent";
 import type {
   CritDmgModType,
   CritRatingModType,

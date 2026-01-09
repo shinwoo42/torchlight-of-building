@@ -6,8 +6,8 @@ import type {
   TalentNodeData,
   TalentTreeData,
   TreeName,
-} from "../data/talent_tree/types";
-import { ALL_TREES, isTreeName } from "../data/talent_tree/types";
+} from "../data/talent-tree/types";
+import { ALL_TREES, isTreeName } from "../data/talent-tree/types";
 
 interface NodeData {
   cx: number;
@@ -182,7 +182,7 @@ export const TalentTrees: readonly TalentTreeData[] = ${JSON.stringify(trees)};
 };
 
 const main = async (): Promise<void> => {
-  const outDir = join(process.cwd(), "src", "data", "talent_tree");
+  const outDir = join(process.cwd(), "src", "data", "talent-tree");
 
   console.log(`Scraping ${ALL_TREES.length} talent trees from tlidb.com...\n`);
 
@@ -215,9 +215,9 @@ const main = async (): Promise<void> => {
 
   await mkdir(outDir, { recursive: true });
 
-  const dataPath = join(outDir, "talent_trees.ts");
+  const dataPath = join(outDir, "talent-trees.ts");
   await writeFile(dataPath, generateDataFile(trees), "utf-8");
-  console.log(`Generated talent_trees.ts`);
+  console.log(`Generated talent-trees.ts`);
 
   console.log("\nCode generation complete!");
   execSync("pnpm format", { stdio: "inherit" });

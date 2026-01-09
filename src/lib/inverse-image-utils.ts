@@ -1,4 +1,4 @@
-import type { TalentNodeData } from "@/src/data/talent_tree";
+import type { TalentNodeData } from "@/src/data/talent-tree";
 import type { CraftedInverseImage, PlacedInverseImage } from "@/src/tli/core";
 
 // Reflection formula: source (x, y) -> target (6-x, 4-y)

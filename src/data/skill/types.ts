@@ -1,11 +1,11 @@
 import type { DmgRange } from "@/src/tli/core";
 import type { DmgChunkType } from "@/src/tli/mod";
-import type { ActivationMediumSkills } from "./activation_medium";
+import type { ActivationMediumSkills } from "./activation-medium";
 import { ActiveSkills } from "./active";
 import type { PassiveSkills } from "./passive";
 import type { SupportSkills } from "./support";
-import type { MagnificentSupportSkills } from "./support_magnificent";
-import type { NobleSupportSkills } from "./support_noble";
+import type { MagnificentSupportSkills } from "./support-magnificent";
+import type { NobleSupportSkills } from "./support-noble";
 
 export const SKILL_TYPES = [
   "Activation Medium",

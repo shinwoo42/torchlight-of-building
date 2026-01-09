@@ -2,7 +2,7 @@ import {
   type TalentNodeData,
   TalentTrees,
   type TreeName,
-} from "@/src/data/talent_tree";
+} from "@/src/data/talent-tree";
 import type { PlacedPrism as SaveDataPlacedPrism } from "@/src/lib/save-data";
 import type { Affix, AffixLine } from "./core";
 import { parseMod } from "./mod_parser/index";

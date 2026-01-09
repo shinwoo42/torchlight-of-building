@@ -1,4 +1,4 @@
-import { CoreTalentNames } from "../../data/core_talent";
+import { CoreTalentNames } from "../../data/core-talent";
 import {
   CRIT_DMG_MOD_TYPES,
   CRIT_RATING_MOD_TYPES,

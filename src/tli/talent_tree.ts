@@ -5,7 +5,7 @@ import {
   type TalentTreeData,
   TalentTrees,
   type TreeName,
-} from "@/src/data/talent_tree";
+} from "@/src/data/talent-tree";
 import {
   isInTargetArea,
   isInverseImagePosition,

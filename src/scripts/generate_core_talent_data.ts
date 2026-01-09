@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
-import type { BaseCoreTalent } from "../data/core_talent/types";
+import type { BaseCoreTalent } from "../data/core-talent/types";
 import { isTree } from "../data/talent";
 import type { Affix, AffixLine } from "../tli/core";
 import { parseMod } from "../tli/mod_parser";
@@ -113,7 +113,7 @@ const main = async (): Promise<void> => {
     "talent",
     "core_talent_node.html",
   );
-  const outDir = join(process.cwd(), "src", "data", "core_talent");
+  const outDir = join(process.cwd(), "src", "data", "core-talent");
 
   console.log("Reading HTML file from:", inputPath);
   const html = await readFile(inputPath, "utf-8");
@@ -125,13 +125,13 @@ const main = async (): Promise<void> => {
 
   await mkdir(outDir, { recursive: true });
 
-  const dataPath = join(outDir, "core_talents.ts");
+  const dataPath = join(outDir, "core-talents.ts");
   await writeFile(dataPath, generateDataFile(talents), "utf-8");
-  console.log(`Generated core_talents.ts`);
+  console.log(`Generated core-talents.ts`);
 
-  const modsPath = join(outDir, "core_talent_mods.ts");
+  const modsPath = join(outDir, "core-talent-mods.ts");
   await writeFile(modsPath, generateModsFile(talents), "utf-8");
-  console.log(`Generated core_talent_mods.ts`);
+  console.log(`Generated core-talent-mods.ts`);
 
   console.log("\nCode generation complete!");
   execSync("pnpm format", { stdio: "inherit" });

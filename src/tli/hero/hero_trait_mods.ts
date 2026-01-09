@@ -1,4 +1,4 @@
-import type { HeroTraitName } from "@/src/data/hero_trait";
+import type { HeroTraitName } from "@/src/data/hero-trait";
 import type { Mod } from "../mod";
 
 type ModFactory = (levelIndex: number) => Mod[];

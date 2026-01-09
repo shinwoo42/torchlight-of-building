@@ -399,17 +399,17 @@ const SKILL_TYPE_CONFIG = {
     supportType: "generic",
   },
   "Support (Magnificent)": {
-    fileKey: "support_magnificent",
+    fileKey: "support-magnificent",
     constName: "MagnificentSupportSkills",
     supportType: "magnificent",
   },
   "Support (Noble)": {
-    fileKey: "support_noble",
+    fileKey: "support-noble",
     constName: "NobleSupportSkills",
     supportType: "noble",
   },
   "Activation Medium": {
-    fileKey: "activation_medium",
+    fileKey: "activation-medium",
     constName: "ActivationMediumSkills",
     supportType: "activation_medium",
   },

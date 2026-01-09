@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
-import type { BaseHeroTrait } from "../data/hero_trait/types";
+import type { BaseHeroTrait } from "../data/hero-trait/types";
 import { cleanEffectText, readCodexHtml } from "./lib/codex";
 
 const extractHeroTraitData = (html: string): BaseHeroTrait[] => {
@@ -59,12 +59,12 @@ const main = async (): Promise<void> => {
   const traits = extractHeroTraitData(html);
   console.log(`Extracted ${traits.length} hero traits`);
 
-  const outDir = join(process.cwd(), "src", "data", "hero_trait");
+  const outDir = join(process.cwd(), "src", "data", "hero-trait");
   await mkdir(outDir, { recursive: true });
 
-  const heroTraitsPath = join(outDir, "hero_traits.ts");
+  const heroTraitsPath = join(outDir, "hero-traits.ts");
   await writeFile(heroTraitsPath, generateHeroTraitsFile(traits), "utf-8");
-  console.log(`Generated hero_traits.ts (${traits.length} traits)`);
+  console.log(`Generated hero-traits.ts (${traits.length} traits)`);
 
   console.log("\nCode generation complete!");
   execSync("pnpm format", { stdio: "inherit" });

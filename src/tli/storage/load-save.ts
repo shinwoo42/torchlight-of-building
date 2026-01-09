@@ -1,17 +1,17 @@
 import * as R from "remeda";
-import { CoreTalentMods } from "@/src/data/core_talent/core_talent_mods";
-import { CoreTalents } from "@/src/data/core_talent/core_talents";
+import { CoreTalentMods } from "@/src/data/core-talent/core-talent-mods";
+import { CoreTalents } from "@/src/data/core-talent/core-talents";
 import {
   type CoreTalentName,
   CoreTalentNames,
-} from "@/src/data/core_talent/types";
-import type { HeroName, HeroTraitName } from "@/src/data/hero_trait/types";
+} from "@/src/data/core-talent/types";
+import type { HeroName, HeroTraitName } from "@/src/data/hero-trait/types";
 import { Pactspirits } from "@/src/data/pactspirit/pactspirits";
 import type { Pactspirit } from "@/src/data/pactspirit/types";
 import { Prisms } from "@/src/data/prism/prisms";
 import { SupportSkills as SupportSkillsData } from "@/src/data/skill/support";
-import { MagnificentSupportSkills } from "@/src/data/skill/support_magnificent";
-import { NobleSupportSkills } from "@/src/data/skill/support_noble";
+import { MagnificentSupportSkills } from "@/src/data/skill/support-magnificent";
+import { NobleSupportSkills } from "@/src/data/skill/support-noble";
 import type {
   ActivationMediumSkillNmae,
   BaseSupportSkill,
@@ -19,7 +19,7 @@ import type {
   NobleSupportSkillName,
   SupportSkillName,
 } from "@/src/data/skill/types";
-import type { TalentNodeData, TreeName } from "@/src/data/talent_tree";
+import type { TalentNodeData, TreeName } from "@/src/data/talent-tree";
 import { findSlateAtCell } from "@/src/lib/divinity-grid";
 import {
   getEffectModifierForType,

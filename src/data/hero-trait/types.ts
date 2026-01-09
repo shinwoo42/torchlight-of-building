@@ -1,4 +1,4 @@
-import type { HeroTraits } from "./hero_traits";
+import type { HeroTraits } from "./hero-traits";
 
 export interface BaseHeroTrait {
   hero: string;

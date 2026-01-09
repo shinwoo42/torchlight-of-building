@@ -521,11 +521,11 @@ const main = async (): Promise<void> => {
     console.log(`Generated ${fileName} (${affixes.length} affixes)`);
   }
 
-  // Generate all_affixes.ts
-  const allAffixesPath = join(outDir, "all_affixes.ts");
+  // Generate all-affixes.ts
+  const allAffixesPath = join(outDir, "all-affixes.ts");
   const allAffixesContent = generateAllAffixesFile(fileKeys.sort());
   await writeFile(allAffixesPath, allAffixesContent, "utf-8");
-  console.log(`Generated all_affixes.ts`);
+  console.log(`Generated all-affixes.ts`);
 
   console.log("\nCode generation complete!");
   console.log(

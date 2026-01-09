@@ -1,6 +1,6 @@
 import * as R from "remeda";
 import { match } from "ts-pattern";
-import { bing2, type HeroName } from "@/src/data/hero_trait";
+import { bing2, type HeroName } from "@/src/data/hero-trait";
 import type { PactspiritName } from "@/src/data/pactspirit";
 import {
   type ActiveSkillName,

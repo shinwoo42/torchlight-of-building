@@ -1,5 +1,5 @@
 import type { Tree } from "../talent";
-import { CoreTalents } from "./core_talents";
+import { CoreTalents } from "./core-talents";
 
 export interface BaseCoreTalent {
   name: string;

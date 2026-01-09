@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
-import type { HeroMemory } from "../data/hero_memory/types";
+import type { HeroMemory } from "../data/hero-memory/types";
 
 const TLIDB_HTML_PATH = join(
   process.cwd(),
@@ -144,12 +144,12 @@ const main = async (): Promise<void> => {
     console.log(`  ${type}: ${count}`);
   }
 
-  const outDir = join(process.cwd(), "src", "data", "hero_memory");
+  const outDir = join(process.cwd(), "src", "data", "hero-memory");
   await mkdir(outDir, { recursive: true });
 
-  const dataPath = join(outDir, "hero_memories.ts");
+  const dataPath = join(outDir, "hero-memories.ts");
   await writeFile(dataPath, generateDataFile(items), "utf-8");
-  console.log(`Generated hero_memories.ts (${items.length} items)`);
+  console.log(`Generated hero-memories.ts (${items.length} items)`);
 
   console.log("\nCode generation complete!");
   execSync("pnpm format", { stdio: "inherit" });

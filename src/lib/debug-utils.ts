@@ -1,4 +1,4 @@
-import type { HeroTraitName } from "@/src/data/hero_trait/types";
+import type { HeroTraitName } from "@/src/data/hero-trait/types";
 import {
   ActiveSkills,
   type BaseSkill,

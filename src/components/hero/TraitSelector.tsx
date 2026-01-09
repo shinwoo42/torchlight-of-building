@@ -4,7 +4,7 @@ import {
   TooltipContent,
   TooltipTitle,
 } from "@/src/components/ui/Tooltip";
-import type { BaseHeroTrait, HeroTraitName } from "@/src/data/hero_trait/types";
+import type { BaseHeroTrait, HeroTraitName } from "@/src/data/hero-trait/types";
 import { useTooltip } from "@/src/hooks/useTooltip";
 import type { HeroMemorySlot } from "@/src/lib/save-data";
 import { getAffixText, type HeroMemory, type HeroPage } from "@/src/tli/core";
