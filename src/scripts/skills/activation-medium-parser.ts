@@ -1,5 +1,5 @@
 import type { ActivationMediumAffixDef } from "@/src/data/skill/types";
-import type { ActivationMediumTierRow } from "./progression_table";
+import type { ActivationMediumTierRow } from "./progression-table";
 
 /**
  * Patterns that indicate mutually exclusive affixes.

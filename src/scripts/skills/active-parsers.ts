@@ -2,7 +2,7 @@ import {
   findColumn,
   parseNumericValue,
   validateAllLevels,
-} from "./progression_table";
+} from "./progression-table";
 import { template } from "./template-compiler";
 import type { SupportLevelParser } from "./types";
 import { createConstantLevels } from "./utils";

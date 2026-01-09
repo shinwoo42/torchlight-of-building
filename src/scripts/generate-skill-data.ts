@@ -17,14 +17,14 @@ import {
   type SupportTarget,
 } from "../data/skill/types";
 import { readAllTlidbSkills, type TlidbSkillFile } from "./lib/tlidb";
-import { classifyWithRegex } from "./skill_kind_patterns";
+import { classifyWithRegex } from "./skill-kind-patterns";
 import { getParserForSkill } from "./skills";
-import { buildActivationMediumAffixDefs } from "./skills/activation_medium_parser";
+import { buildActivationMediumAffixDefs } from "./skills/activation-medium-parser";
 import {
   extractActivationMediumProgressionTable,
   extractProgressionTable,
   parseNumericValue,
-} from "./skills/progression_table";
+} from "./skills/progression-table";
 import type {
   ProgressionColumn,
   SkillCategory,

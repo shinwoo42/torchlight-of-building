@@ -14,7 +14,7 @@ import {
   secretOriginUnleashParser,
   thunderSpikeParser,
   timidParser,
-} from "./active_parsers";
+} from "./active-parsers";
 import {
   corrosionFocusParser,
   deepPainParser,
@@ -32,7 +32,7 @@ import {
   spellAmplificationParser,
   summonFireMagusParser,
   summonThunderMagusParser,
-} from "./passive_parsers";
+} from "./passive-parsers";
 import type { SkillCategory, SkillParserEntry } from "./types";
 
 // Note: Support skill parsers have been removed. Support skills now use

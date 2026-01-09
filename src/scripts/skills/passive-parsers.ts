@@ -1,4 +1,4 @@
-import { findColumn, validateAllLevels } from "./progression_table";
+import { findColumn, validateAllLevels } from "./progression-table";
 import { template } from "./template-compiler";
 import type { SupportLevelParser } from "./types";
 import { createConstantLevels } from "./utils";
