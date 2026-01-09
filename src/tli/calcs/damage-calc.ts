@@ -395,12 +395,32 @@ export const calculateDmgAddn = (mods: ModT<"DmgPct">[]): number => {
 
 // === Damage Pool Calculations ===
 
+// Filter AddnMinDmgPct/AddnMaxDmgPct mods by applicable damage types
+const filterAddnMinDmgMods = (
+  allMods: Mod[],
+  applicableTypes: DmgChunkType[],
+): ModT<"AddnMinDmgPct">[] => {
+  return filterMods(allMods, "AddnMinDmgPct").filter(
+    (m) => m.dmgType === undefined || applicableTypes.includes(m.dmgType),
+  );
+};
+
+const filterAddnMaxDmgMods = (
+  allMods: Mod[],
+  applicableTypes: DmgChunkType[],
+): ModT<"AddnMaxDmgPct">[] => {
+  return filterMods(allMods, "AddnMaxDmgPct").filter(
+    (m) => m.dmgType === undefined || applicableTypes.includes(m.dmgType),
+  );
+};
+
 // Apply damage % bonuses to a single chunk, considering its conversion history
 export const calculateChunkDmg = <T extends DmgRange | number>(
   chunk: DmgChunk<T>,
   currentType: DmgChunkType,
   allDmgPctMods: ModT<"DmgPct">[],
   baseDmgModTypes: DmgModType[],
+  allMods: Mod[],
 ): T => {
   // Chunk benefits from bonuses for current type AND all types in its history
   const allApplicableTypes: DmgChunkType[] = [currentType, ...chunk.history];
@@ -419,7 +439,21 @@ export const calculateChunkDmg = <T extends DmgRange | number>(
   const addn = calculateDmgAddn(applicableMods);
   const mult = (1 + inc) * addn;
 
-  return multValue(chunk.value, mult);
+  const scaledValue = multValue(chunk.value, mult);
+
+  // Apply additional min/max damage multipliers (only for DmgRange values)
+  if (typeof scaledValue === "number") {
+    return scaledValue;
+  }
+
+  const addnMinMods = filterAddnMinDmgMods(allMods, allApplicableTypes);
+  const addnMaxMods = filterAddnMaxDmgMods(allMods, allApplicableTypes);
+
+  const minMult = calcEffMult(addnMinMods);
+  const maxMult = calcEffMult(addnMaxMods);
+
+  const range = scaledValue as DmgRange;
+  return { min: range.min * minMult, max: range.max * maxMult } as T;
 };
 
 // Sum all chunks in a pool, applying bonuses to each based on its history
@@ -428,6 +462,7 @@ export const calculatePoolTotal = <T extends DmgRange | number>(
   poolType: DmgChunkType,
   allDmgPctMods: ModT<"DmgPct">[],
   baseDmgModTypes: DmgModType[],
+  allMods: Mod[],
   zero: T,
 ): T => {
   return pool.reduce((total, chunk) => {
@@ -436,6 +471,7 @@ export const calculatePoolTotal = <T extends DmgRange | number>(
       poolType,
       allDmgPctMods,
       baseDmgModTypes,
+      allMods,
     );
     return addValue(total, chunkDmg);
   }, zero);
@@ -446,6 +482,7 @@ export const calculateAllPoolTotals = <T extends DmgRange | number>(
   dmgPools: DmgPools<T>,
   allDmgPcts: ModT<"DmgPct">[],
   baseDmgModTypes: DmgModType[],
+  allMods: Mod[],
   zero: T,
 ): Record<DmgChunkType, T> => ({
   physical: calculatePoolTotal(
@@ -453,6 +490,7 @@ export const calculateAllPoolTotals = <T extends DmgRange | number>(
     "physical",
     allDmgPcts,
     baseDmgModTypes,
+    allMods,
     zero,
   ),
   cold: calculatePoolTotal(
@@ -460,6 +498,7 @@ export const calculateAllPoolTotals = <T extends DmgRange | number>(
     "cold",
     allDmgPcts,
     baseDmgModTypes,
+    allMods,
     zero,
   ),
   lightning: calculatePoolTotal(
@@ -467,6 +506,7 @@ export const calculateAllPoolTotals = <T extends DmgRange | number>(
     "lightning",
     allDmgPcts,
     baseDmgModTypes,
+    allMods,
     zero,
   ),
   fire: calculatePoolTotal(
@@ -474,6 +514,7 @@ export const calculateAllPoolTotals = <T extends DmgRange | number>(
     "fire",
     allDmgPcts,
     baseDmgModTypes,
+    allMods,
     zero,
   ),
   erosion: calculatePoolTotal(
@@ -481,6 +522,7 @@ export const calculateAllPoolTotals = <T extends DmgRange | number>(
     "erosion",
     allDmgPcts,
     baseDmgModTypes,
+    allMods,
     zero,
   ),
 });
@@ -537,6 +579,7 @@ export function applyDmgBonusesAndPen(
       dmgPools as DmgPools<DmgRange>,
       allDmgPcts,
       baseDmgModTypes,
+      mods,
       { min: 0, max: 0 },
     ) as DmgRanges;
     return calculatePenetration({ dmg: beforePen, mods, config, ignoreArmor });
@@ -546,6 +589,7 @@ export function applyDmgBonusesAndPen(
     dmgPools as DmgPools<number>,
     allDmgPcts,
     baseDmgModTypes,
+    mods,
     0,
   ) as NumDmgValues;
   return calculatePenetration({ dmg: beforePen, mods, config, ignoreArmor });

@@ -221,8 +221,8 @@ interface ModDefinitions {
     addn: boolean;
     isEnemyDebuff?: boolean;
   };
-  AddnMaxDmgPct: { value: number; addn: true };
-  AddnMinDmgPct: { value: number; addn: true };
+  AddnMaxDmgPct: { value: number; addn: true; dmgType?: DmgChunkType };
+  AddnMinDmgPct: { value: number; addn: true; dmgType?: DmgChunkType };
   ElementalSpellDmgPct: { value: number; addn: boolean };
   FlatDmgToAtks: { value: DmgRange; dmgType: DmgChunkType };
   FlatDmgToSpells: { value: DmgRange; dmgType: DmgChunkType };

@@ -569,14 +569,23 @@ export const allParsers = [
   t(
     "{minValue:+dec%} additional min physical damage, and {maxValue:+dec%} additional max physical damage",
   ).outputMany([
-    spec("AddnMinDmgPct", (c) => ({ value: c.minValue, addn: true as const })),
-    spec("AddnMaxDmgPct", (c) => ({ value: c.maxValue, addn: true as const })),
+    spec("AddnMinDmgPct", (c) => ({
+      value: c.minValue,
+      addn: true as const,
+      dmgType: "physical" as const,
+    })),
+    spec("AddnMaxDmgPct", (c) => ({
+      value: c.maxValue,
+      addn: true as const,
+      dmgType: "physical" as const,
+    })),
   ]),
   // Additional max damage with Numbed threshold
   t(
     "{value:+dec%} additional max {dmgType:DmgChunkType} damage to an enemy when they have at least {threshold:int} stack\\(s\\) of numbed",
   ).output("AddnMaxDmgPct", (c) => ({
     value: c.value,
+    dmgType: "lightning" as const,
     addn: true as const,
     condThreshold: {
       target: "enemy_numbed_stacks" as const,

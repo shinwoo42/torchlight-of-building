@@ -370,6 +370,66 @@ describe("basic damage modifiers", () => {
   });
 });
 
+describe("additional min/max damage", () => {
+  const skillName = "[Test] Simple Attack" as const;
+
+  // Bespoke helper: 100 phys weapon + custom mods
+  const createModsInput = (mods: AffixLine[]) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      customAffixLines: mods,
+      skillPage: simpleAttackSkillPage(),
+    }),
+    configuration: createDefaultConfiguration(),
+  });
+
+  test("global additional min/max damage applies to all damage types", () => {
+    // Base weapon: 100-100 physical damage
+    // -50% additional min damage, +100% additional max damage (global, no dmgType)
+    // Result: min becomes 50, max becomes 200
+    // avgHit = (50 + 200) / 2 = 125
+    const input = createModsInput(
+      affixLines([
+        { type: "AddnMinDmgPct", value: -50, addn: true },
+        { type: "AddnMaxDmgPct", value: 100, addn: true },
+      ]),
+    );
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 125 });
+  });
+
+  test("typed additional damage does not apply to non-matching damage type", () => {
+    // Base weapon: 100-100 physical damage
+    // +50% additional max cold damage (dmgType: cold)
+    // Physical damage should be unaffected since dmgType doesn't match
+    // avgHit = (100 + 100) / 2 = 100
+    const input = createModsInput(
+      affixLines([
+        { type: "AddnMaxDmgPct", value: 50, addn: true, dmgType: "cold" },
+      ]),
+    );
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 100 });
+  });
+
+  test("typed additional damage applies to converted damage via history", () => {
+    // Base weapon: 100-100 physical damage
+    // 100% physical to cold conversion
+    // +50% additional max physical damage (dmgType: physical)
+    // Converted cold damage retains physical in its history, so the bonus applies
+    // Result: 0 physical, 100-150 cold
+    // avgHit = (100 + 150) / 2 = 125
+    const input = createModsInput(
+      affixLines([
+        { type: "ConvertDmgPct", from: "physical", to: "cold", value: 100 },
+        { type: "AddnMaxDmgPct", value: 50, addn: true, dmgType: "physical" },
+      ]),
+    );
+    const results = calculateOffense(input);
+    validate(results, skillName, { avgHit: 125 });
+  });
+});
+
 describe("fervor mechanics", () => {
   const skillName = "[Test] Simple Attack" as const;
 

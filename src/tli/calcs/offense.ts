@@ -463,22 +463,11 @@ interface BaseHitOverview {
 
 const calcBaseHitOverview = (
   dmgRanges: DmgRanges,
-  mods: Mod[],
   derivedCtx: DerivedCtx,
 ): BaseHitOverview => {
-  const maxHitMult = calcEffMult(mods, "AddnMaxDmgPct");
-  const minHitMult = calcEffMult(mods, "AddnMinDmgPct");
+  // AddnMinDmgPct/AddnMaxDmgPct are now applied in calculateChunkDmg
+  // which properly respects the dmgType property for damage type filtering
   const { physical, cold, lightning, fire, erosion } = dmgRanges;
-  physical.max *= maxHitMult;
-  cold.max *= maxHitMult;
-  lightning.max *= maxHitMult;
-  fire.max *= maxHitMult;
-  erosion.max *= maxHitMult;
-  physical.min *= minHitMult;
-  cold.min *= minHitMult;
-  lightning.min *= minHitMult;
-  fire.min *= minHitMult;
-  erosion.min *= minHitMult;
   const min = physical.min + cold.min + lightning.min + fire.min + erosion.min;
   const max = physical.max + cold.max + lightning.max + fire.max + erosion.max;
   const total = { min, max };
@@ -618,7 +607,7 @@ const calculateAtkHit = (
     config,
     ignoreArmor: false,
   });
-  return calcBaseHitOverview(finalDmgRanges, mods, derivedCtx);
+  return calcBaseHitOverview(finalDmgRanges, derivedCtx);
 };
 
 export interface OffenseInput {
@@ -2187,7 +2176,7 @@ const calcSpellHit = (
     config,
     ignoreArmor: false,
   });
-  const baseHitOverview = calcBaseHitOverview(finalDmgRanges, mods, derivedCtx);
+  const baseHitOverview = calcBaseHitOverview(finalDmgRanges, derivedCtx);
   return { ...baseHitOverview, castTime };
 };
 

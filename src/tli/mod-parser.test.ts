@@ -2256,8 +2256,8 @@ test("parse combined additional min and max physical damage", () => {
     "-90% additional Min Physical Damage, and +80% additional Max Physical Damage",
   );
   expect(result).toEqual([
-    { type: "AddnMinDmgPct", value: -90, addn: true },
-    { type: "AddnMaxDmgPct", value: 80, addn: true },
+    { type: "AddnMinDmgPct", value: -90, addn: true, dmgType: "physical" },
+    { type: "AddnMaxDmgPct", value: 80, addn: true, dmgType: "physical" },
   ]);
 });
 
@@ -2318,6 +2318,7 @@ test("parse additional max lightning damage with numbed threshold", () => {
       type: "AddnMaxDmgPct",
       value: 35,
       addn: true,
+      dmgType: "lightning",
       condThreshold: {
         target: "enemy_numbed_stacks",
         comparator: "gte",
