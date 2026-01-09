@@ -121,6 +121,8 @@ export interface Configuration {
   channeling: boolean;
   // Defaults to max channeled stacks
   channeledStacks?: number;
+  // default to max
+  stalkerStacks?: number;
   // default to false
   sagesInsightFireActivated: boolean;
   // default to false
@@ -232,6 +234,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   hasCritRecently: false,
   channeling: false,
   channeledStacks: undefined,
+  stalkerStacks: undefined,
   sagesInsightFireActivated: false,
   sagesInsightColdActivated: false,
   sagesInsightLightningActivated: false,

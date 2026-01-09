@@ -45,6 +45,7 @@ export const ConfigurationPageSchema = z
     hasCritRecently: z.boolean().catch(d.hasCritRecently),
     channeling: z.boolean().catch(d.channeling),
     channeledStacks: z.number().optional().catch(d.channeledStacks),
+    stalkerStacks: z.number().optional().catch(d.stalkerStacks),
     sagesInsightFireActivated: z.boolean().catch(d.sagesInsightFireActivated),
     sagesInsightColdActivated: z.boolean().catch(d.sagesInsightColdActivated),
     sagesInsightLightningActivated: z

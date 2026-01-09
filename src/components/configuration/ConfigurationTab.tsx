@@ -611,6 +611,16 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
           />
 
           <label className="text-right text-zinc-50">
+            Stalker Stacks
+            <InfoTooltip text="Cateye Erika: Wind Stalker stacks. Defaults to max." />
+          </label>
+          <NumberInput
+            value={config.stalkerStacks}
+            onChange={(v) => onUpdate({ stalkerStacks: v })}
+            min={0}
+          />
+
+          <label className="text-right text-zinc-50">
             Sage&apos;s Insight (Fire)
             <InfoTooltip text="Enemy affected by Sage's Insight &quot;When a Spell hit inflicts Fire Damage&quot; condition" />
           </label>
