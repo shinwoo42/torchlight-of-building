@@ -1626,7 +1626,7 @@ const pushMainStatDmgPct = (mods: Mod[], totalMainStats: number): void => {
   });
 };
 
-const _pushErika1 = (mods: Mod[], config: Configuration): void => {
+const pushErika1 = (mods: Mod[], config: Configuration): void => {
   if (modExists(mods, "WindStalker")) {
     const stacks = config.stalkerStacks ?? 3;
     // This assumes that the player's multistrike chance is >= 100%
@@ -1808,7 +1808,11 @@ const resolveModsForOffenseSkill = (
     spellBurstChargeSpeedBonusPct,
   );
 
+  // miust happen before multistrike
+  pushErika1(mods, config);
+
   // Must happen after any multistrike chance normalization
+  // must happen after erika1
   const multistrikeChancePct = sumByValue(
     filterMods(mods, "MultistrikeChancePct"),
   );
