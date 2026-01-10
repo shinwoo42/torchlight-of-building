@@ -1,13 +1,54 @@
 import { execSync } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
+import { program } from "commander";
 import type {
   TalentNodeData,
   TalentTreeData,
   TreeName,
 } from "../data/talent-tree/types";
 import { ALL_TREES, isTreeName } from "../data/talent-tree/types";
+
+// ============================================================================
+// Fetching
+// ============================================================================
+
+const BASE_URL = "https://tlidb.com/en";
+const TALENT_TREE_DIR = join(process.cwd(), ".garbage", "tlidb", "talent_tree");
+
+const fetchPage = async (url: string): Promise<string> => {
+  console.log(`Fetching: ${url}`);
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.status}`);
+  }
+  return response.text();
+};
+
+const fetchTalentTreePages = async (): Promise<void> => {
+  await mkdir(TALENT_TREE_DIR, { recursive: true });
+
+  for (let i = 0; i < ALL_TREES.length; i++) {
+    const treeName = ALL_TREES[i];
+    const url = `${BASE_URL}/${treeName}`;
+    const filepath = join(TALENT_TREE_DIR, `${treeName}.html`);
+
+    try {
+      const html = await fetchPage(url);
+      await writeFile(filepath, html);
+      console.log(`[${i + 1}/${ALL_TREES.length}] Saved: ${filepath}`);
+    } catch (error) {
+      console.error(`Error fetching ${treeName}:`, error);
+    }
+  }
+
+  console.log("Fetching complete!");
+};
+
+// ============================================================================
+// Parsing
+// ============================================================================
 
 interface NodeData {
   cx: number;
@@ -56,19 +97,11 @@ const parseAffix = (htmlContent: string): string => {
   return affix;
 };
 
-const scrapeProfessionTree = async (
+const parseProfessionTree = async (
   professionName: TreeName,
 ): Promise<TalentTreeData> => {
-  const url = `https://tlidb.com/en/${professionName}#ProfessionTree`;
-
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch: ${response.status} ${response.statusText}`,
-    );
-  }
-
-  const html = await response.text();
+  const filepath = join(TALENT_TREE_DIR, `${professionName}.html`);
+  const html = await readFile(filepath, "utf-8");
   const $ = cheerio.load(html, { xmlMode: false });
 
   const nodesData: NodeData[] = [];
@@ -181,30 +214,40 @@ export const TalentTrees: readonly TalentTreeData[] = ${JSON.stringify(trees)};
 `;
 };
 
-const main = async (): Promise<void> => {
+interface Options {
+  refetch: boolean;
+}
+
+const main = async (options: Options): Promise<void> => {
+  if (options.refetch) {
+    console.log("Refetching talent tree pages from tlidb...\n");
+    await fetchTalentTreePages();
+    console.log("");
+  }
+
   const outDir = join(process.cwd(), "src", "data", "talent-tree");
 
-  console.log(`Scraping ${ALL_TREES.length} talent trees from tlidb.com...\n`);
+  console.log(`Parsing ${ALL_TREES.length} talent trees...\n`);
 
   const trees: TalentTreeData[] = [];
   let successCount = 0;
 
   for (let i = 0; i < ALL_TREES.length; i++) {
     const treeName = ALL_TREES[i];
-    console.log(`[${i + 1}/${ALL_TREES.length}] Scraping ${treeName}...`);
+    console.log(`[${i + 1}/${ALL_TREES.length}] Parsing ${treeName}...`);
 
     if (!isTreeName(treeName)) {
-      console.error(`  ✗ Invalid tree name: ${treeName}`);
+      console.error(`  Invalid tree name: ${treeName}`);
       continue;
     }
 
     try {
-      const tree = await scrapeProfessionTree(treeName);
+      const tree = await parseProfessionTree(treeName);
       trees.push(tree);
-      console.log(`  ✓ Found ${tree.nodes.length} nodes`);
+      console.log(`  Found ${tree.nodes.length} nodes`);
       successCount++;
     } catch (error) {
-      console.error(`  ✗ Failed to scrape ${treeName}:`, error);
+      console.error(`  Failed to parse ${treeName}:`, error);
     }
   }
 
@@ -223,11 +266,15 @@ const main = async (): Promise<void> => {
   execSync("pnpm format", { stdio: "inherit" });
 };
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error("Script failed:", error);
-    process.exit(1);
-  });
-
-export { main as generateTalentTreeData };
+program
+  .description("Generate talent tree data from cached HTML pages")
+  .option("--refetch", "Refetch HTML pages from tlidb before generating")
+  .action((options: Options) => {
+    main(options)
+      .then(() => process.exit(0))
+      .catch((error) => {
+        console.error("Script failed:", error);
+        process.exit(1);
+      });
+  })
+  .parse();
