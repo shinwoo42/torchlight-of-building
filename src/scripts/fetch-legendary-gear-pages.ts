@@ -9,6 +9,28 @@ const LEGENDARY_GEAR_DIR = `${OUTPUT_DIR}/legendary_gear`;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const CONCURRENCY_LIMIT = 10;
+
+const processInBatches = async <T, R>(
+  items: T[],
+  processor: (item: T) => Promise<R>,
+): Promise<R[]> => {
+  const results: R[] = [];
+  for (let i = 0; i < items.length; i += CONCURRENCY_LIMIT) {
+    const batch = items.slice(i, i + CONCURRENCY_LIMIT);
+    console.log(
+      `Processing batch ${Math.floor(i / CONCURRENCY_LIMIT) + 1}/${Math.ceil(items.length / CONCURRENCY_LIMIT)} (${batch.length} items)`,
+    );
+    const batchResults = await Promise.all(batch.map(processor));
+    results.push(...batchResults);
+    // Delay between batches to be polite to the server
+    if (i + CONCURRENCY_LIMIT < items.length) {
+      await delay(500);
+    }
+  }
+  return results;
+};
+
 const fetchPage = async (url: string): Promise<string> => {
   console.log(`Fetching: ${url}`);
   const response = await fetch(url);
@@ -105,16 +127,28 @@ const main = async () => {
     return;
   }
 
-  // Fetch each legendary gear page
-  for (const { href, name } of gearLinks) {
+  // Filter out already-fetched pages
+  const toFetch = gearLinks.filter(({ name }) => {
     const snakeCaseName = toSnakeCase(name);
     const filename = `${snakeCaseName}.html`;
     const filepath = path.join(LEGENDARY_GEAR_DIR, filename);
 
     if (existsSync(filepath)) {
       console.log(`Skipping (already exists): ${filename}`);
-      continue;
+      return false;
     }
+    return true;
+  });
+
+  console.log(
+    `Fetching ${toFetch.length} pages (${gearLinks.length - toFetch.length} cached)`,
+  );
+
+  // Fetch pages in parallel batches
+  await processInBatches(toFetch, async ({ href, name }) => {
+    const snakeCaseName = toSnakeCase(name);
+    const filename = `${snakeCaseName}.html`;
+    const filepath = path.join(LEGENDARY_GEAR_DIR, filename);
 
     try {
       // Decode first to handle already-encoded characters
@@ -123,13 +157,10 @@ const main = async () => {
       const html = await fetchPage(url);
       await writeFile(filepath, html);
       console.log(`Saved: ${filepath}`);
-
-      // Be polite to the server
-      await delay(200);
     } catch (error) {
       console.error(`Error fetching ${name} (${href}):`, error);
     }
-  }
+  });
 
   console.log("Done!");
 };

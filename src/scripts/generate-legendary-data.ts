@@ -180,24 +180,24 @@ const extractLegendary = (
   filename: string,
   choiceCards: Map<string, AffixChoiceCard>,
 ): TlidbLegendary | undefined => {
-  // Find the SS10Season card (not the previousItem one)
+  // Find the SS11Season card (not the previousItem one)
   // biome-ignore lint/suspicious/noExplicitAny: cheerio internal type
   let mainCard: cheerio.Cheerio<any> | undefined;
 
   $(".card.ui_item").each((_, card) => {
     const $card = $(card);
-    // Skip if it's a previousItem (SS9 card)
+    // Skip if it's a previousItem (SS10 card)
     if ($card.hasClass("previousItem")) return;
-    // Check if it has item_ver with SS10Season
+    // Check if it has item_ver with SS11Season
     const itemVer = $card.find(".item_ver").text().trim();
-    if (itemVer === "SS10Season") {
+    if (itemVer === "SS11Season") {
       mainCard = $card;
       return false; // break loop
     }
   });
 
   if (!mainCard) {
-    console.log(`  Skipping ${filename}: No SS10Season card found`);
+    console.log(`  Skipping ${filename}: No SS11Season card found`);
     return undefined;
   }
 
