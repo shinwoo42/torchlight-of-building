@@ -1,0 +1,938 @@
+{
+  "equipmentPage": {
+    "equippedGear": {
+      "helmet": {
+        "id": "ef1f5d35-81fe-4547-b6d3-0a55a800ad3c",
+        "equipmentType": "Helmet (INT)",
+        "prefixes": ["+49 Dexterity", "+253 gear Energy Shield", "+67% damage"],
+        "suffixes": [
+          "+54% Critical Strike Damage",
+          "+21% Erosion Resistance",
+          "+21% Fire Resistance"
+        ],
+        "sweet_dream_affix": "+7% Elemental and Erosion Resistance Penetration\n+7% Elemental and Erosion Resistance Penetration for Minions"
+      },
+      "chest": {
+        "id": "7f092b48-02ec-4ec1-abba-f83379e549d9",
+        "equipmentType": "Chest Armor (INT)",
+        "prefixes": [
+          "+52 Dexterity",
+          "+61% gear Energy Shield",
+          "+373 gear Energy Shield"
+        ],
+        "suffixes": [
+          "+27% Cold Resistance",
+          "+26% Fire Resistance",
+          "+26% Lightning Resistance"
+        ]
+      },
+      "neck": {
+        "id": "2e2dad21-163a-46f3-bf4c-265b413a63cb",
+        "equipmentType": "Necklace",
+        "rarity": "legendary",
+        "legendaryName": "Mourner's Shadow",
+        "baseStats": "+3 Intelligence",
+        "legendary_affixes": [
+          "+220 Max Life",
+          "Shadow Quantity +1",
+          "+148% additional Shadow Damage",
+          "+25% Lightning Resistance"
+        ]
+      },
+      "gloves": {
+        "id": "105e1f98-b5e0-4d43-8067-d9b341cb7d83",
+        "equipmentType": "Gloves (DEX)",
+        "rarity": "legendary",
+        "legendaryName": "Thunder Manipulator",
+        "baseStats": "+1920 gear Evasion",
+        "legendary_affixes": [
+          "+3320 gear Evasion",
+          "+35% additional Lightning Damage against Numbed enemies\n+35% additional Max Lightning Damage to an enemy when they have at least 8 stack(s) of Numbed",
+          "+27% Lightning Resistance",
+          "Inflicts 1 additional stack(s) of Numbed per +30% Numbed chance",
+          "+24% additional Numbed Effect on Critical Strike with Lightning Damage for 2 s"
+        ]
+      },
+      "belt": {
+        "id": "9d38ca6a-4e71-4cd9-a010-789cfc5ddaa1",
+        "equipmentType": "Belt",
+        "rarity": "legendary",
+        "legendaryName": "Dawn Break",
+        "baseStats": "+35 Max Life",
+        "blend_affix": "+1 to Attack Skill Level",
+        "legendary_affixes": [
+          "+720 Armor and Evasion",
+          "+91 Dexterity",
+          "Have Fervor",
+          "Has 64 point(s) of fixed Fervor Rating",
+          "+2% additional damage per 3 Fervor Rating"
+        ]
+      },
+      "boots": {
+        "id": "82372b24-8c0c-424d-acf4-0cd8845654d1",
+        "equipmentType": "Boots (DEX)",
+        "rarity": "legendary",
+        "legendaryName": "Ralph's Journey",
+        "baseStats": "+1920 gear Evasion",
+        "legendary_affixes": [
+          "+19% Dexterity",
+          "+1% Movement Speed per 20 Dexterity",
+          "+9% additional Lightning Damage per 10 Dexterity",
+          "The main stat base no longer additionally increases damage"
+        ]
+      },
+      "leftRing": {
+        "id": "ff81ea34-9c13-4a87-b7f3-c80623bcb0b9",
+        "equipmentType": "Ring",
+        "baseStats": "+12% Cold Resistance",
+        "prefixes": ["+68% damage", "+275 Max Energy Shield", "+48 Dexterity"],
+        "suffixes": [
+          "+22% Cold Resistance",
+          "+25% Erosion Resistance",
+          "100% chance to gain a Barrier for every 5 m you move"
+        ]
+      },
+      "rightRing": {
+        "id": "1ccd2ee6-0ffe-4777-bf95-4329da779df8",
+        "equipmentType": "Ring",
+        "baseStats": "+12% Cold Resistance",
+        "prefixes": ["+68% damage", "+59 Dexterity", "+299 Max Energy Shield"],
+        "suffixes": [
+          "+27% Erosion Resistance",
+          "+46% Critical Strike Rating",
+          "+22% Fire Resistance"
+        ]
+      },
+      "mainHand": {
+        "id": "15799d2a-1db5-4a8f-84fa-b1c2b1bb3d6e",
+        "equipmentType": "Claw",
+        "baseStats": "178 - 178 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
+        "prefixes": [
+          "+68 Dexterity",
+          "+87% Melee Damage",
+          "Adds 16 - 278 Lightning Damage to the gear"
+        ],
+        "suffixes": [
+          "+40% Attack Critical Strike Rating for this gear",
+          "+49% Gear Attack Speed. -12% additional Attack Damage",
+          "+82% Elemental Damage"
+        ],
+        "sweet_dream_affix": "+8% Elemental and Erosion Resistance Penetration",
+        "tower_sequence_affix": "+10% all stats"
+      },
+      "offHand": {
+        "id": "0445f30c-7bae-415e-a941-fbf4ff0a1353",
+        "equipmentType": "One-Handed Sword",
+        "baseStats": "178 - 178 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
+        "base_affixes": ["+31% chance to Multistrike"],
+        "prefixes": [
+          "+80 Dexterity",
+          "Adds 15 - 277 Lightning Damage to the gear",
+          "+22% Armor DMG Mitigation Penetration"
+        ],
+        "suffixes": [
+          "+80% Critical Strike Damage",
+          "+39% chance to deal Double Damage",
+          "+106% Elemental Damage"
+        ],
+        "tower_sequence_affix": "+10% additional damage on Critical Strike"
+      }
+    },
+    "inventory": [
+      {
+        "id": "ef1f5d35-81fe-4547-b6d3-0a55a800ad3c",
+        "equipmentType": "Helmet (INT)",
+        "prefixes": ["+49 Dexterity", "+253 gear Energy Shield", "+67% damage"],
+        "suffixes": [
+          "+54% Critical Strike Damage",
+          "+21% Erosion Resistance",
+          "+21% Fire Resistance"
+        ],
+        "sweet_dream_affix": "+7% Elemental and Erosion Resistance Penetration\n+7% Elemental and Erosion Resistance Penetration for Minions"
+      },
+      {
+        "id": "7f092b48-02ec-4ec1-abba-f83379e549d9",
+        "equipmentType": "Chest Armor (INT)",
+        "prefixes": [
+          "+52 Dexterity",
+          "+61% gear Energy Shield",
+          "+373 gear Energy Shield"
+        ],
+        "suffixes": [
+          "+27% Cold Resistance",
+          "+26% Fire Resistance",
+          "+26% Lightning Resistance"
+        ]
+      },
+      {
+        "id": "2e2dad21-163a-46f3-bf4c-265b413a63cb",
+        "equipmentType": "Necklace",
+        "rarity": "legendary",
+        "legendaryName": "Mourner's Shadow",
+        "baseStats": "+3 Intelligence",
+        "legendary_affixes": [
+          "+220 Max Life",
+          "Shadow Quantity +1",
+          "+148% additional Shadow Damage",
+          "+25% Lightning Resistance"
+        ]
+      },
+      {
+        "id": "105e1f98-b5e0-4d43-8067-d9b341cb7d83",
+        "equipmentType": "Gloves (DEX)",
+        "rarity": "legendary",
+        "legendaryName": "Thunder Manipulator",
+        "baseStats": "+1920 gear Evasion",
+        "legendary_affixes": [
+          "+3320 gear Evasion",
+          "+35% additional Lightning Damage against Numbed enemies\n+35% additional Max Lightning Damage to an enemy when they have at least 8 stack(s) of Numbed",
+          "+27% Lightning Resistance",
+          "Inflicts 1 additional stack(s) of Numbed per +30% Numbed chance",
+          "+24% additional Numbed Effect on Critical Strike with Lightning Damage for 2 s"
+        ]
+      },
+      {
+        "id": "9d38ca6a-4e71-4cd9-a010-789cfc5ddaa1",
+        "equipmentType": "Belt",
+        "rarity": "legendary",
+        "legendaryName": "Dawn Break",
+        "baseStats": "+35 Max Life",
+        "blend_affix": "+1 to Attack Skill Level",
+        "legendary_affixes": [
+          "+720 Armor and Evasion",
+          "+91 Dexterity",
+          "Have Fervor",
+          "Has 64 point(s) of fixed Fervor Rating",
+          "+2% additional damage per 3 Fervor Rating"
+        ]
+      },
+      {
+        "id": "82372b24-8c0c-424d-acf4-0cd8845654d1",
+        "equipmentType": "Boots (DEX)",
+        "rarity": "legendary",
+        "legendaryName": "Ralph's Journey",
+        "baseStats": "+1920 gear Evasion",
+        "legendary_affixes": [
+          "+19% Dexterity",
+          "+1% Movement Speed per 20 Dexterity",
+          "+9% additional Lightning Damage per 10 Dexterity",
+          "The main stat base no longer additionally increases damage"
+        ]
+      },
+      {
+        "id": "ff81ea34-9c13-4a87-b7f3-c80623bcb0b9",
+        "equipmentType": "Ring",
+        "baseStats": "+12% Cold Resistance",
+        "prefixes": ["+68% damage", "+275 Max Energy Shield", "+48 Dexterity"],
+        "suffixes": [
+          "+22% Cold Resistance",
+          "+25% Erosion Resistance",
+          "100% chance to gain a Barrier for every 5 m you move"
+        ]
+      },
+      {
+        "id": "1ccd2ee6-0ffe-4777-bf95-4329da779df8",
+        "equipmentType": "Ring",
+        "baseStats": "+12% Cold Resistance",
+        "prefixes": ["+68% damage", "+59 Dexterity", "+299 Max Energy Shield"],
+        "suffixes": [
+          "+27% Erosion Resistance",
+          "+46% Critical Strike Rating",
+          "+22% Fire Resistance"
+        ]
+      },
+      {
+        "id": "15799d2a-1db5-4a8f-84fa-b1c2b1bb3d6e",
+        "equipmentType": "Claw",
+        "baseStats": "178 - 178 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
+        "prefixes": [
+          "+68 Dexterity",
+          "+87% Melee Damage",
+          "Adds 16 - 278 Lightning Damage to the gear"
+        ],
+        "suffixes": [
+          "+40% Attack Critical Strike Rating for this gear",
+          "+49% Gear Attack Speed. -12% additional Attack Damage",
+          "+82% Elemental Damage"
+        ],
+        "sweet_dream_affix": "+8% Elemental and Erosion Resistance Penetration",
+        "tower_sequence_affix": "+10% all stats"
+      },
+      {
+        "id": "0445f30c-7bae-415e-a941-fbf4ff0a1353",
+        "equipmentType": "One-Handed Sword",
+        "baseStats": "178 - 178 Physical Damage\n500 Critical Strike Rating\n1.5 Attack Speed",
+        "base_affixes": ["+31% chance to Multistrike"],
+        "prefixes": [
+          "+80 Dexterity",
+          "Adds 15 - 277 Lightning Damage to the gear",
+          "+22% Armor DMG Mitigation Penetration"
+        ],
+        "suffixes": [
+          "+80% Critical Strike Damage",
+          "+39% chance to deal Double Damage",
+          "+106% Elemental Damage"
+        ],
+        "tower_sequence_affix": "+10% additional damage on Critical Strike"
+      },
+      {
+        "id": "6f1d07c5-f6d4-4a40-a314-148b5a5fef1a",
+        "equipmentType": "Gloves (INT)",
+        "rarity": "legendary",
+        "legendaryName": "Aeterna Martyr",
+        "baseStats": "+120 gear Energy Shield",
+        "legendary_affixes": [
+          "+50% chance to inflict Trauma",
+          "+79 Attack and Spell Critical Strike Rating",
+          "-17% additional Physical Damage taken",
+          "+97% Reaping Cooldown Recovery Speed",
+          "+19% additional Trauma Damage for each Critical Strike dealt recently. Stacks up to 3 time(s) (multiplies)"
+        ]
+      }
+    ]
+  },
+  "talentPage": {
+    "talentTrees": {
+      "tree1": {
+        "name": "Goddess_of_Hunting",
+        "allocatedNodes": [
+          { "x": 0, "y": 2, "points": 3 },
+          { "x": 1, "y": 2, "points": 1 },
+          { "x": 1, "y": 1, "points": 3 },
+          { "x": 2, "y": 1, "points": 3 },
+          { "x": 3, "y": 1, "points": 3 },
+          { "x": 4, "y": 1, "points": 3 },
+          { "x": 4, "y": 0, "points": 3 },
+          { "x": 5, "y": 0, "points": 3 },
+          { "x": 6, "y": 0, "points": 1 },
+          { "x": 4, "y": 4, "points": 3 },
+          { "x": 5, "y": 4, "points": 1 }
+        ],
+        "selectedCoreTalents": ["Impermanence", "Rushed"]
+      },
+      "tree2": {
+        "name": "Bladerunner",
+        "allocatedNodes": [
+          { "x": 0, "y": 2, "points": 3 },
+          { "x": 1, "y": 2, "points": 3 },
+          { "x": 1, "y": 1, "points": 3 },
+          { "x": 2, "y": 1, "points": 3 },
+          { "x": 3, "y": 1, "points": 1 },
+          { "x": 4, "y": 0, "points": 3 },
+          { "x": 5, "y": 1, "points": 3 },
+          { "x": 6, "y": 1, "points": 1 },
+          { "x": 6, "y": 2, "points": 1 },
+          { "x": 4, "y": 3, "points": 3 },
+          { "x": 5, "y": 3, "points": 3 },
+          { "x": 6, "y": 3, "points": 1 }
+        ],
+        "selectedCoreTalents": ["Joined Force"]
+      },
+      "tree3": {
+        "name": "Ronin",
+        "allocatedNodes": [
+          { "x": 0, "y": 2, "points": 3 },
+          { "x": 1, "y": 2, "points": 3 },
+          { "x": 2, "y": 0, "points": 3 },
+          { "x": 3, "y": 0, "points": 3 },
+          { "x": 4, "y": 0, "points": 3 },
+          { "x": 5, "y": 0, "points": 1 },
+          { "x": 5, "y": 1, "points": 3 },
+          { "x": 6, "y": 2, "points": 1 },
+          { "x": 4, "y": 3, "points": 3 },
+          { "x": 5, "y": 3, "points": 3 }
+        ],
+        "selectedCoreTalents": ["Tradeoff"]
+      },
+      "tree4": {
+        "name": "Assassin",
+        "allocatedNodes": [
+          { "x": 0, "y": 4, "points": 1 },
+          { "x": 2, "y": 4, "points": 3 },
+          { "x": 3, "y": 4, "points": 2 },
+          { "x": 4, "y": 4, "points": 1 },
+          { "x": 4, "y": 0, "points": 3 },
+          { "x": 5, "y": 0, "points": 3 },
+          { "x": 6, "y": 0, "points": 1 },
+          { "x": 6, "y": 1, "points": 1 },
+          { "x": 5, "y": 4, "points": 3 },
+          { "x": 6, "y": 4, "points": 1 }
+        ],
+        "selectedCoreTalents": ["Queer Angle"]
+      },
+      "placedPrism": {
+        "prism": {
+          "id": "672b38e4-df55-4be2-a56e-3c4f1f141238",
+          "rarity": "rare",
+          "baseAffix": "Adds an additional effect to the Core Talent on the God of Might/Goddess of Hunting/Goddess of Knowledge/God of War/Goddess of Deception/God of Machines Advanced Talent Panel:\n+20% additional Attack Damage when holding a One-Handed Weapon\n+20% additional Base Damage for Two-Handed Weapons",
+          "gaugeAffixes": [
+            "All Medium Talent within the area also gain: +5% Numbed chance, and 2.5% Numbed Effect",
+            "All Legendary Medium Talent within the area also gain: Multistrikes deal 8% increasing damage"
+          ]
+        },
+        "treeSlot": "tree2",
+        "position": { "x": 5, "y": 2 }
+      },
+      "placedInverseImage": {
+        "inverseImage": {
+          "id": "382a5de3-5d70-4917-b457-a223be150684",
+          "microTalentEffect": 140,
+          "mediumTalentEffect": -87,
+          "legendaryTalentEffect": 22
+        },
+        "treeSlot": "tree4",
+        "position": { "x": 5, "y": 3 },
+        "reflectedAllocatedNodes": [
+          { "x": 0, "y": 0, "sourceX": 6, "sourceY": 4, "points": 1 },
+          { "x": 0, "y": 2, "sourceX": 6, "sourceY": 2, "points": 1 },
+          { "x": 1, "y": 2, "sourceX": 5, "sourceY": 2, "points": 3 },
+          { "x": 1, "y": 1, "sourceX": 5, "sourceY": 3, "points": 1 },
+          { "x": 1, "y": 0, "sourceX": 5, "sourceY": 4, "points": 3 },
+          { "x": 2, "y": 0, "sourceX": 4, "sourceY": 4, "points": 1 }
+        ]
+      }
+    },
+    "inventory": {
+      "prismList": [
+        {
+          "id": "672b38e4-df55-4be2-a56e-3c4f1f141238",
+          "rarity": "rare",
+          "baseAffix": "Adds an additional effect to the Core Talent on the God of Might/Goddess of Hunting/Goddess of Knowledge/God of War/Goddess of Deception/God of Machines Advanced Talent Panel:\n+20% additional Attack Damage when holding a One-Handed Weapon\n+20% additional Base Damage for Two-Handed Weapons",
+          "gaugeAffixes": [
+            "All Medium Talent within the area also gain: +5% Numbed chance, and 2.5% Numbed Effect",
+            "All Legendary Medium Talent within the area also gain: Multistrikes deal 8% increasing damage"
+          ]
+        }
+      ],
+      "inverseImageList": []
+    }
+  },
+  "skillPage": {
+    "activeSkills": {
+      "1": {
+        "skillName": "Thunder Spike",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "skillType": "activation_medium",
+            "name": "Activation Medium: Motionless",
+            "tier": 0,
+            "affixes": [
+              "Auto-used supported skills +15% additional damage",
+              "Automatically and continuously cast the supported skill at the nearest enemy within 25m while standing still"
+            ]
+          },
+          "2": { "skillType": "support", "name": "Haunt", "level": 20 },
+          "3": { "skillType": "support", "name": "Steamroll", "level": 20 },
+          "4": { "skillType": "support", "name": "Willpower", "level": 20 },
+          "5": {
+            "skillType": "support",
+            "name": "Electric Overload",
+            "level": 20
+          }
+        }
+      },
+      "2": {
+        "skillName": "Spiral Strike",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Quick Mobility",
+            "level": 20
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Periodic Burst",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Precision Strike",
+            "level": 20
+          }
+        }
+      },
+      "3": {
+        "skillName": "Delayed Pain",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "skillType": "activation_medium",
+            "name": "Activation Medium: Multistrike",
+            "tier": 3,
+            "affixes": [
+              "The supported skill -25% additional Cooldown Recovery Speed",
+              "Triggers the supported skill upon reaching the max Multistrike Count. Interval: 0.1s"
+            ]
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Defense Layers",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Iron Fortification",
+            "level": 20
+          }
+        }
+      },
+      "4": {
+        "skillName": "Bull's Rage",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "skillType": "activation_medium",
+            "name": "Activation Medium: Multistrike",
+            "tier": 3,
+            "affixes": [
+              "The supported skill -25% additional Cooldown Recovery Speed",
+              "Triggers the supported skill upon reaching the max Multistrike Count. Interval: 0.1s"
+            ]
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Well-Fought Battle",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Cooldown Reduction",
+            "level": 20
+          }
+        }
+      },
+      "5": {
+        "skillName": "Electrocute",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "skillType": "activation_medium",
+            "name": "Activation Medium: Multistrike",
+            "tier": 3,
+            "affixes": [
+              "The supported skill -25% additional Cooldown Recovery Speed",
+              "Triggers the supported skill upon reaching the max Multistrike Count. Interval: 0.1s"
+            ]
+          },
+          "2": {
+            "skillType": "support",
+            "name": "Terrain of Malice",
+            "level": 20
+          },
+          "3": {
+            "skillType": "support",
+            "name": "Cooldown Reduction",
+            "level": 20
+          }
+        }
+      }
+    },
+    "passiveSkills": {
+      "1": {
+        "skillName": "Precise: Cruelty",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Aura Amplification",
+            "level": 20
+          },
+          "2": { "skillType": "support", "name": "Restrain", "level": 20 }
+        }
+      },
+      "2": {
+        "skillName": "Precise: Fearless",
+        "enabled": true,
+        "supportSkills": {
+          "1": {
+            "skillType": "support",
+            "name": "Aura Amplification",
+            "level": 20
+          },
+          "2": { "skillType": "support", "name": "Restrain", "level": 20 }
+        }
+      },
+      "3": {
+        "skillName": "Precise: Swiftness",
+        "enabled": true,
+        "supportSkills": {
+          "1": { "skillType": "support", "name": "Restrain", "level": 20 }
+        }
+      }
+    }
+  },
+  "heroPage": {
+    "selectedHero": "Cateye Erika: Wind Stalker (#1)",
+    "traits": {
+      "level1": { "name": "Wind Stalker" },
+      "level45": { "name": "Have Fun" },
+      "level60": { "name": "Cat's Vision" },
+      "level75": { "name": "Cat's Punches" }
+    },
+    "memorySlots": {
+      "slot45": {
+        "id": "8e49e54d-ad05-4bd3-b5b3-02bdcc056d04",
+        "memoryType": "Memory of Origin",
+        "baseStat": "+90 Dexterity",
+        "fixedAffixes": [
+          "+12% Critical Strike Damage",
+          "+80% Critical Strike Rating"
+        ],
+        "randomAffixes": [
+          "+80% Attack Critical Strike Rating",
+          "+37% Lightning Skill Critical Strike Damage"
+        ]
+      },
+      "slot60": {
+        "id": "fef293c4-4f77-4db2-9dfe-15cd0bb9a826",
+        "memoryType": "Memory of Discipline",
+        "baseStat": "+525 Max Energy Shield",
+        "fixedAffixes": [
+          "+12% Critical Strike Damage",
+          "+80% Critical Strike Rating"
+        ],
+        "randomAffixes": [
+          "+80% Attack Critical Strike Rating",
+          "+48% Lightning Skill Critical Strike Damage"
+        ]
+      },
+      "slot75": {
+        "id": "8ac99aa5-3239-4d72-9c02-3c9f4efa0d05",
+        "memoryType": "Memory of Progress",
+        "baseStat": "+36% Attack Speed",
+        "fixedAffixes": ["+6% Attack Speed", "+26% damage"],
+        "randomAffixes": [
+          "+80% Attack Critical Strike Rating",
+          "+25% Lightning Skill Critical Strike Damage"
+        ]
+      }
+    },
+    "memoryInventory": [
+      {
+        "id": "8e49e54d-ad05-4bd3-b5b3-02bdcc056d04",
+        "memoryType": "Memory of Origin",
+        "baseStat": "+90 Dexterity",
+        "fixedAffixes": [
+          "+12% Critical Strike Damage",
+          "+80% Critical Strike Rating"
+        ],
+        "randomAffixes": [
+          "+80% Attack Critical Strike Rating",
+          "+37% Lightning Skill Critical Strike Damage"
+        ]
+      },
+      {
+        "id": "fef293c4-4f77-4db2-9dfe-15cd0bb9a826",
+        "memoryType": "Memory of Discipline",
+        "baseStat": "+525 Max Energy Shield",
+        "fixedAffixes": [
+          "+12% Critical Strike Damage",
+          "+80% Critical Strike Rating"
+        ],
+        "randomAffixes": [
+          "+80% Attack Critical Strike Rating",
+          "+48% Lightning Skill Critical Strike Damage"
+        ]
+      },
+      {
+        "id": "8ac99aa5-3239-4d72-9c02-3c9f4efa0d05",
+        "memoryType": "Memory of Progress",
+        "baseStat": "+36% Attack Speed",
+        "fixedAffixes": ["+6% Attack Speed", "+26% damage"],
+        "randomAffixes": [
+          "+80% Attack Critical Strike Rating",
+          "+25% Lightning Skill Critical Strike Damage"
+        ]
+      }
+    ]
+  },
+  "pactspiritPage": {
+    "slot1": {
+      "pactspiritName": "Traveling Lizard - Green Leaf",
+      "level": 6,
+      "rings": {
+        "innerRing1": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Micro Fate",
+            "resolvedAffix": "+14 Dexterity"
+          }
+        },
+        "innerRing2": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Micro Fate",
+            "resolvedAffix": "+13 Dexterity"
+          }
+        },
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Micro Fate",
+            "resolvedAffix": "+14 Dexterity"
+          }
+        },
+        "innerRing6": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Micro Fate",
+            "resolvedAffix": "+13 Dexterity"
+          }
+        },
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Medium Fate",
+            "resolvedAffix": "+26 Dexterity"
+          }
+        }
+      }
+    },
+    "slot2": {
+      "pactspiritName": "Plaintive Ball of Thread - Violet",
+      "level": 6,
+      "rings": {
+        "innerRing1": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Micro Fate",
+            "resolvedAffix": "+14 Dexterity"
+          }
+        },
+        "innerRing2": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Micro Fate",
+            "resolvedAffix": "+14 Dexterity"
+          }
+        },
+        "innerRing3": {},
+        "innerRing4": {},
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Medium Fate",
+            "resolvedAffix": "+29 Dexterity"
+          }
+        },
+        "midRing3": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Medium Fate",
+            "resolvedAffix": "+29 Dexterity"
+          }
+        }
+      }
+    },
+    "slot3": {
+      "pactspiritName": "Awooawoo - Violet",
+      "level": 6,
+      "rings": {
+        "innerRing1": {},
+        "innerRing2": {},
+        "innerRing3": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Micro Fate",
+            "resolvedAffix": "+12 Dexterity"
+          }
+        },
+        "innerRing4": {
+          "installedDestiny": {
+            "destinyName": "Dexterity",
+            "destinyType": "Micro Fate",
+            "resolvedAffix": "+14 Dexterity"
+          }
+        },
+        "innerRing5": {},
+        "innerRing6": {},
+        "midRing1": {},
+        "midRing2": {},
+        "midRing3": {}
+      }
+    }
+  },
+  "divinityPage": {
+    "placedSlates": [
+      {
+        "slateId": "a469a1da-56c9-4315-9faf-891be709d728",
+        "position": { "row": 2, "col": 3 }
+      },
+      {
+        "slateId": "5a1d4867-f063-467e-b4ed-7e80b95f3eab",
+        "position": { "row": 0, "col": 3 }
+      },
+      {
+        "slateId": "81a8c61a-699a-470a-899d-5fafdbe0f150",
+        "position": { "row": 0, "col": 1 }
+      },
+      {
+        "slateId": "299a75c5-15c2-4f7f-b2d9-1abf5775fe6a",
+        "position": { "row": 2, "col": 0 }
+      },
+      {
+        "slateId": "7e56e55e-5aed-4e7e-8dd1-cd808971ad3c",
+        "position": { "row": 4, "col": 1 }
+      },
+      {
+        "slateId": "d266b795-ac8f-4a3f-aa33-4a146ba54f77",
+        "position": { "row": 2, "col": 1 }
+      }
+    ],
+    "inventory": [
+      {
+        "id": "a469a1da-56c9-4315-9faf-891be709d728",
+        "shape": "Pedigree",
+        "rotation": 0,
+        "flippedH": true,
+        "flippedV": false,
+        "affixes": [
+          "+12% additional max damage\n+12% additional Max Damage for Minions",
+          "+3% Max Life",
+          "+6% Max Life\n+6% Max Energy Shield",
+          "Conductive"
+        ],
+        "metaAffixes": [],
+        "isLegendary": true,
+        "legendaryName": "Pedigree of Gods"
+      },
+      {
+        "id": "5a1d4867-f063-467e-b4ed-7e80b95f3eab",
+        "shape": "CornerL",
+        "rotation": 270,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "Multistrikes deal 16% increasing damage",
+          "+10% additional damage for 4s after using Mobility Skills"
+        ],
+        "metaAffixes": [],
+        "isLegendary": true,
+        "legendaryName": "A Corner of Divinity"
+      },
+      {
+        "id": "81a8c61a-699a-470a-899d-5fafdbe0f150",
+        "shape": "CornerL",
+        "rotation": 180,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+1 to Attack Skill Level",
+          "Restores 3% of Energy Shield on defeat (Max Divinity Effect: 1)"
+        ],
+        "metaAffixes": [],
+        "isLegendary": true,
+        "legendaryName": "A Corner of Divinity"
+      },
+      {
+        "id": "299a75c5-15c2-4f7f-b2d9-1abf5775fe6a",
+        "shape": "CornerL",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+6% additional Attack Speed while Dual Wielding (Max Divinity Effect: 1)",
+          "Gains a stack of Fortitude when using a Melee Skill (Max Divinity Effect: 1)"
+        ],
+        "metaAffixes": [],
+        "isLegendary": true,
+        "legendaryName": "A Corner of Divinity"
+      },
+      {
+        "id": "7e56e55e-5aed-4e7e-8dd1-cd808971ad3c",
+        "god": "Hunting",
+        "shape": "Z",
+        "rotation": 0,
+        "flippedH": false,
+        "flippedV": false,
+        "affixes": [
+          "+20% Numbed Effect (Max Divinity Effect: 1)",
+          "+5% additional Attack Damage for each unique type of weapon equipped while Dual Wielding",
+          "+16% Lightning Damage\n+12% Numbed chance",
+          "Max Agility Blessing Stacks +1 (Max Divinity Effect: 1)",
+          "For each Spell Skill used recently, +4% Critical Strike Damage, stacking up to 12 time(s) (Max Divinity Effect: 1)"
+        ],
+        "metaAffixes": []
+      },
+      {
+        "id": "d266b795-ac8f-4a3f-aa33-4a146ba54f77",
+        "god": "War",
+        "shape": "Z",
+        "rotation": 0,
+        "flippedH": true,
+        "flippedV": false,
+        "affixes": [
+          "Shadow Quantity +1 (Max Divinity Effect: 1)",
+          "+32% chance to Multistrike",
+          "+8% Fervor effect",
+          "+40% Defense from Shield",
+          "+1% Movement Speed per 10 Fervor Rating"
+        ],
+        "metaAffixes": []
+      }
+    ]
+  },
+  "configurationPage": {
+    "level": 97,
+    "fervorEnabled": false,
+    "enemyFrostbittenEnabled": false,
+    "crueltyBuffStacks": 40,
+    "sealedManaPct": 1,
+    "sealedLifePct": 1,
+    "hasFocusBlessing": true,
+    "hasAgilityBlessing": true,
+    "hasTenacityBlessing": false,
+    "hasFullMana": false,
+    "enemyParalyzed": false,
+    "enemyNumbed": true,
+    "targetEnemyIsElite": false,
+    "targetEnemyIsNearby": true,
+    "targetEnemyIsInProximity": false,
+    "targetEnemyHasFrail": false,
+    "targetEnemyHasWhimsySignal": false,
+    "targetEnemyMarked": false,
+    "numEnemiesNearby": 0,
+    "numEnemiesAffectedByWarcry": 0,
+    "hasBlockedRecently": false,
+    "hasElitesNearby": false,
+    "enemyHasAilment": false,
+    "hasCritRecently": true,
+    "channeling": false,
+    "sagesInsightFireActivated": false,
+    "sagesInsightColdActivated": false,
+    "sagesInsightLightningActivated": false,
+    "sagesInsightErosionActivated": false,
+    "enemyHasAffliction": false,
+    "enemyHasDesecration": false,
+    "tormentStacks": 0,
+    "hasBlur": false,
+    "blurEndedRecently": false,
+    "hasSquidnova": false,
+    "targetEnemyIsFrozen": false,
+    "targetEnemyFrozenRecently": false,
+    "targetEnemyHasColdInfiltration": false,
+    "targetEnemyHasLightningInfiltration": true,
+    "targetEnemyHasFireInfiltration": false,
+    "hasHitEnemyWithElementalDmgRecently": 0,
+    "numSpellSkillsUsedRecently": 0,
+    "hasUsedMobilitySkillRecently": true,
+    "hasMovedRecently": true,
+    "hasCastCurseRecently": false,
+    "hasAttackAggression": true,
+    "hasSpellAggression": false,
+    "numMaxMultistrikesRecently": 3,
+    "realmOfMercuryEnabled": false,
+    "baptismOfPurityEnabled": false,
+    "customAffixLines": ["// nightmare affix", "max agility blessing stacks -1"]
+  },
+  "calculationsPage": { "selectedSkillName": "Thunder Spike" }
+}

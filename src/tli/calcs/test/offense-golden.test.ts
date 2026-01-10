@@ -6,6 +6,7 @@ import { calculateOffense } from "../offense";
 import bing2Golden from "./bing-2-golden-1.json";
 import bing2Golden2 from "./bing-2-golden-2.json";
 import bing2Golden3 from "./bing-2-golden-3.json";
+import erika1Golden from "./erika-1-golden-1.json";
 import mcTheaGolden from "./mc-thea-3-golden-1.json";
 import rosaGolden from "./rosa-2-golden.json";
 
@@ -239,5 +240,39 @@ describe("offense golden tests", () => {
     expect(lightningRes).toEqual({ max: 60, potential: 9, actual: 9 });
     expect(fireRes).toEqual({ max: 60, potential: 9, actual: 9 });
     expect(erosionRes).toEqual({ max: 90, potential: 275, actual: 90 });
+  });
+
+  it("erika-1-golden-1: Thunder Spike should calculate expected attack DPS values", () => {
+    const saveData = erika1Golden as unknown as SaveData;
+    const loadout = loadSave(saveData);
+    const config = saveData.configurationPage as Configuration;
+
+    const results = calculateOffense({ loadout, configuration: config });
+
+    const thunderSpike = results.skills["Thunder Spike"];
+    if (thunderSpike === undefined) {
+      throw new Error("Thunder Spike skill not found in results");
+    }
+
+    const tolerance = 0.01; // 1% tolerance
+
+    // Attack DPS: ~515.89 billion (dual wield lightning melee build with multistrike)
+    const attackDps = thunderSpike.attackDpsSummary?.avgDps;
+    const expectedAttackDps = 515.89e9;
+    expect(attackDps).toBeGreaterThan(expectedAttackDps * (1 - tolerance));
+    expect(attackDps).toBeLessThan(expectedAttackDps * (1 + tolerance));
+
+    // Total DPS: ~515.89 billion
+    const totalDps = thunderSpike.totalDps;
+    const expectedTotalDps = 515.89e9;
+    expect(totalDps).toBeGreaterThan(expectedTotalDps * (1 - tolerance));
+    expect(totalDps).toBeLessThan(expectedTotalDps * (1 + tolerance));
+
+    // Resistance checks
+    const { coldRes, lightningRes, fireRes, erosionRes } = results.defenses;
+    expect(coldRes).toEqual({ max: 60, potential: 73, actual: 60 });
+    expect(lightningRes).toEqual({ max: 60, potential: 78, actual: 60 });
+    expect(fireRes).toEqual({ max: 60, potential: 69, actual: 60 });
+    expect(erosionRes).toEqual({ max: 60, potential: 73, actual: 60 });
   });
 });
