@@ -608,3 +608,104 @@ export const electrocuteParser: SupportLevelParser = (input) => {
 
   return { lightningDmgPct };
 };
+
+export const berserkingBladeParser: SupportLevelParser = (input) => {
+  const { skillName, progressionTable } = input;
+
+  // This skill has duplicate column headers:
+  // [0] "Effectiveness of added damage" (Sweep)
+  // [1] "damage" (Sweep)
+  // [2] "Effectiveness of added damage" (Steep)
+  // [3] "damage" (Steep)
+  // [4] "Descript"
+  // Access by index since findColumn would return the first match
+  const sweepAddedDmgEffCol = progressionTable[0];
+  const steepAddedDmgEffCol = progressionTable[2];
+  const descriptCol = progressionTable[4];
+
+  if (
+    sweepAddedDmgEffCol === undefined ||
+    steepAddedDmgEffCol === undefined ||
+    descriptCol === undefined
+  ) {
+    throw new Error(
+      `${skillName}: missing expected columns in progression table`,
+    );
+  }
+
+  const sweepWeaponAtkDmgPct: Record<number, number> = {};
+  const sweepAddedDmgEffPct: Record<number, number> = {};
+  const steepWeaponAtkDmgPct: Record<number, number> = {};
+  const steepAddedDmgEffPct: Record<number, number> = {};
+
+  // Parse levels 1-20 from the columns
+  for (const [levelStr, text] of Object.entries(sweepAddedDmgEffCol.rows)) {
+    const level = Number(levelStr);
+    if (level <= 20 && text !== "") {
+      const value = parseNumericValue(text);
+      sweepWeaponAtkDmgPct[level] = value;
+      sweepAddedDmgEffPct[level] = value;
+    }
+  }
+
+  for (const [levelStr, text] of Object.entries(steepAddedDmgEffCol.rows)) {
+    const level = Number(levelStr);
+    if (level <= 20 && text !== "") {
+      const value = parseNumericValue(text);
+      steepWeaponAtkDmgPct[level] = value;
+      steepAddedDmgEffPct[level] = value;
+    }
+  }
+
+  // Fill levels 21-40 with level 20 values
+  const level20SweepValue = sweepWeaponAtkDmgPct[20];
+  const level20SteepValue = steepWeaponAtkDmgPct[20];
+  if (level20SweepValue === undefined || level20SteepValue === undefined) {
+    throw new Error(`${skillName}: level 20 values missing`);
+  }
+  for (let level = 21; level <= 40; level++) {
+    sweepWeaponAtkDmgPct[level] = level20SweepValue;
+    sweepAddedDmgEffPct[level] = level20SweepValue;
+    steepWeaponAtkDmgPct[level] = level20SteepValue;
+    steepAddedDmgEffPct[level] = level20SteepValue;
+  }
+
+  // Extract constant values from descript
+  const descript = descriptCol.rows[1];
+  if (descript === undefined) {
+    throw new Error(`${skillName}: no descript found for level 1`);
+  }
+
+  const skillAreaBuffPct = findMatch(
+    descript,
+    ts("this skill {value:dec}% skill area for each stack of buff"),
+    skillName,
+  ).value;
+
+  const maxBerserkingBladeStacks = findMatch(
+    descript,
+    ts("stacks up to {value:int} times"),
+    skillName,
+  ).value;
+
+  const steepStrikeChancePct = findMatch(
+    descript,
+    ts("this skill {value:+int}% steep strike chance"),
+    skillName,
+  ).value;
+
+  validateAllLevels(sweepWeaponAtkDmgPct, skillName);
+  validateAllLevels(sweepAddedDmgEffPct, skillName);
+  validateAllLevels(steepWeaponAtkDmgPct, skillName);
+  validateAllLevels(steepAddedDmgEffPct, skillName);
+
+  return {
+    sweepWeaponAtkDmgPct,
+    sweepAddedDmgEffPct,
+    steepWeaponAtkDmgPct,
+    steepAddedDmgEffPct,
+    skillAreaBuffPct: createConstantLevels(skillAreaBuffPct),
+    maxBerserkingBladeStacks: createConstantLevels(maxBerserkingBladeStacks),
+    steepStrikeChancePct: createConstantLevels(steepStrikeChancePct),
+  };
+};

@@ -269,4 +269,25 @@ export const activeSkillModFactories: Partial<
       { type: "InflictNumbed" },
     ],
   }),
+  "Berserking Blade": (l, vals) => ({
+    offense: {
+      sweepWeaponAtkDmgPct: { value: v(vals.sweepWeaponAtkDmgPct, l) },
+      sweepAddedDmgEffPct: { value: v(vals.sweepAddedDmgEffPct, l) },
+      steepWeaponAtkDmgPct: { value: v(vals.steepWeaponAtkDmgPct, l) },
+      steepAddedDmgEffPct: { value: v(vals.steepAddedDmgEffPct, l) },
+    },
+    mods: [
+      {
+        type: "SkillAreaPct",
+        skillAreaModType: "global" as const,
+        value: v(vals.skillAreaBuffPct, l),
+        per: { stackable: "berserking_blade_buff" },
+      },
+      {
+        type: "MaxBerserkingBladeStacks",
+        value: v(vals.maxBerserkingBladeStacks, l),
+      },
+      { type: "SteepStrikeChancePct", value: v(vals.steepStrikeChancePct, l) },
+    ],
+  }),
 };

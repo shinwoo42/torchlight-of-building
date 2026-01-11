@@ -95,8 +95,25 @@ export interface OffenseAttackDpsSummary {
   multistrikeIncDmgPct: number;
 }
 
+interface SlashStrikeModeStats {
+  mainhand: WeaponAttackSummary;
+  offhand?: WeaponAttackSummary;
+  avgDps: number;
+}
+
+export interface OffenseSlashStrikeDpsSummary {
+  sweep: SlashStrikeModeStats;
+  steep: SlashStrikeModeStats;
+  steepStrikeChancePct: number;
+  critDmgMult: number;
+  avgDps: number;
+  multistrikeChancePct: number;
+  multistrikeIncDmgPct: number;
+}
+
 interface OffenseSummary {
   attackDpsSummary?: OffenseAttackDpsSummary;
+  slashStrikeDpsSummary?: OffenseSlashStrikeDpsSummary;
   spellDpsSummary?: OffenseSpellDpsSummary;
   spellBurstDpsSummary?: OffenseSpellBurstDpsSummary;
   persistentDpsSummary?: PersistentDpsSummary;
@@ -557,6 +574,39 @@ const calculateAtkHit = (
     : dmgModTypesForSkill(skill);
 
   // Damage conversion happens after flat damage, before % bonuses
+  const dmgPools = convertDmg(skillBaseDmg, mods);
+  const finalDmgRanges = applyDmgBonusesAndPen({
+    dmgPools,
+    mods,
+    baseDmgModTypes,
+    config,
+    ignoreArmor: false,
+  });
+  return calcBaseHitOverview(finalDmgRanges, derivedCtx);
+};
+
+const calculateAtkHitWithOffense = (
+  gearDmg: DmgRanges,
+  flatDmg: DmgRanges,
+  mods: Mod[],
+  skill: BaseActiveSkill,
+  derivedCtx: DerivedCtx,
+  config: Configuration,
+  weaponAtkDmgPct: number,
+  addedDmgEffPct: number,
+): SkillHitOverview => {
+  const skillWeaponDR = multDRs(gearDmg, weaponAtkDmgPct / 100);
+  const skillFlatDR = multDRs(flatDmg, addedDmgEffPct / 100);
+  const skillBaseDmg = addDRs(skillWeaponDR, skillFlatDR);
+
+  const addSpellTag =
+    skill.tags.includes("Attack") &&
+    findMod(mods, "SpellDmgBonusAppliesToAtkDmg") !== undefined;
+
+  const baseDmgModTypes: DmgModType[] = addSpellTag
+    ? [...dmgModTypesForSkill(skill), "spell"]
+    : dmgModTypesForSkill(skill);
+
   const dmgPools = convertDmg(skillBaseDmg, mods);
   const finalDmgRanges = applyDmgBonusesAndPen({
     dmgPools,
@@ -1725,6 +1775,9 @@ const resolveModsForOffenseSkill = (
     R.unique([mainHand?.equipmentType ?? "", offHand?.equipmentType ?? ""])
       .length,
   );
+  const maxBBStacks = sumByValue(filterMods(mods, "MaxBerserkingBladeStacks"));
+  const bbStacks = config.numBerserkingBladeBuffStacks || maxBBStacks;
+  normalize("berserking_blade_buff", bbStacks);
 
   pushTradeoff(mods, resourcePool);
   pushMainStatDmgPct(mods, totalMainStats);
@@ -2133,6 +2186,62 @@ const calcWeaponAttack = (
   return { avgHit, aspd, critChance, avgHitWithCrit };
 };
 
+interface CalcSlashStrikeWeaponAttackInput extends CalcWeaponAttackInput {
+  weaponAtkDmgPct: number;
+  addedDmgEffPct: number;
+}
+
+const calcSlashStrikeWeaponAttack = (
+  weapon: Gear,
+  extraJoinedForceAvgHitDmg: number,
+  input: CalcSlashStrikeWeaponAttackInput,
+): WeaponAttackSummary => {
+  const {
+    mods,
+    skill,
+    derivedCtx,
+    config,
+    critDmgMult,
+    weaponAtkDmgPct,
+    addedDmgEffPct,
+  } = input;
+  const gearDmg = calculateGearDmg(weapon, mods);
+  const flatDmg = calculateFlatDmg(mods, "attack");
+  const skillHit = calculateAtkHitWithOffense(
+    gearDmg.mainHand,
+    flatDmg,
+    mods,
+    skill,
+    derivedCtx,
+    config,
+    weaponAtkDmgPct,
+    addedDmgEffPct,
+  );
+
+  const avgHit = skillHit.avg + extraJoinedForceAvgHitDmg;
+  const aspd = calculateAspd(weapon, mods, skill);
+  const critChance = calculateCritChance(mods, skill);
+  const avgHitWithCrit =
+    avgHit * critChance * critDmgMult + avgHit * (1 - critChance);
+  return { avgHit, aspd, critChance, avgHitWithCrit };
+};
+
+const calcDualWieldDps = (
+  mainhandAtk: WeaponAttackSummary,
+  offhandAtk: WeaponAttackSummary | undefined,
+  disableOffhand: boolean,
+): number => {
+  if (offhandAtk === undefined || disableOffhand) {
+    return mainhandAtk.aspd * mainhandAtk.avgHitWithCrit;
+  }
+  const mainhandAtkInterval = 1 / mainhandAtk.aspd;
+  const offhandAtkInterval = 1 / offhandAtk.aspd;
+  const fullInterval = mainhandAtkInterval + offhandAtkInterval;
+  return (
+    (mainhandAtk.avgHitWithCrit + offhandAtk.avgHitWithCrit) / fullInterval
+  );
+};
+
 const calcAvgAttackDps = (
   mods: Mod[],
   loadout: Loadout,
@@ -2177,17 +2286,12 @@ const calcAvgAttackDps = (
     return undefined;
   }
 
-  let avgDpsWithoutExtras: number;
   const disableOffhand = modExists(mods, "JoinedForceDisableOffhand");
-  if (offhandAtk === undefined || disableOffhand) {
-    avgDpsWithoutExtras = mainhandAtk.aspd * mainhandAtk.avgHitWithCrit;
-  } else {
-    const mainhandAtkInterval = 1 / mainhandAtk.aspd;
-    const offhandAtkInterval = 1 / offhandAtk.aspd;
-    const fullInterval = mainhandAtkInterval + offhandAtkInterval;
-    avgDpsWithoutExtras =
-      (mainhandAtk.avgHitWithCrit + offhandAtk.avgHitWithCrit) / fullInterval;
-  }
+  const avgDpsWithoutExtras = calcDualWieldDps(
+    mainhandAtk,
+    offhandAtk,
+    disableOffhand,
+  );
 
   const doubleDmgMult = calculateDoubleDmgMult(mods, skill);
   const extraMult = calculateExtraOffenseMults(mods, config);
@@ -2196,6 +2300,145 @@ const calcAvgAttackDps = (
   return {
     mainhand: mainhandAtk,
     offhand: disableOffhand ? undefined : offhandAtk,
+    critDmgMult,
+    avgDps,
+    multistrikeChancePct: derivedOffenseCtx.multistrikeChancePct,
+    multistrikeIncDmgPct: derivedOffenseCtx.multistrikeIncDmgPct,
+  };
+};
+
+const calcAvgSlashStrikeDps = (
+  mods: Mod[],
+  loadout: Loadout,
+  perSkillContext: PerSkillModContext,
+  skillLevel: number,
+  derivedOffenseCtx: DerivedOffenseCtx,
+  derivedCtx: DerivedCtx,
+  config: Configuration,
+): OffenseSlashStrikeDpsSummary | undefined => {
+  const skill = perSkillContext.skill;
+  const skillMods = getActiveSkillMods(
+    skill.name as ActiveSkillName,
+    skillLevel,
+  );
+  const offense = skillMods.offense;
+
+  // Validate sweep/steep offense properties exist
+  if (
+    offense?.sweepWeaponAtkDmgPct === undefined ||
+    offense?.sweepAddedDmgEffPct === undefined ||
+    offense?.steepWeaponAtkDmgPct === undefined ||
+    offense?.steepAddedDmgEffPct === undefined
+  ) {
+    return undefined;
+  }
+
+  const mainhand = loadout.gearPage.equippedGear.mainHand;
+  if (mainhand === undefined) {
+    return undefined;
+  }
+  const offhand = loadout.gearPage.equippedGear.offHand;
+
+  // Get steep strike chance (capped at 100%)
+  const steepStrikeChancePct = Math.min(
+    100,
+    sumByValue(filterMods(mods, "SteepStrikeChancePct")),
+  );
+  const steepChance = steepStrikeChancePct / 100;
+
+  const critDmgMult = calculateCritDmg(mods, skill);
+  const disableOffhand = modExists(mods, "JoinedForceDisableOffhand");
+
+  // Build base input for weapon attack calculations
+  const baseInput: CalcWeaponAttackInput = {
+    mods,
+    skill,
+    skillLevel,
+    derivedCtx,
+    config,
+    critDmgMult,
+  };
+
+  // Calculate joined force bonus (uses sweep offense since it's the base attack)
+  const sweepInput: CalcSlashStrikeWeaponAttackInput = {
+    ...baseInput,
+    weaponAtkDmgPct: offense.sweepWeaponAtkDmgPct.value,
+    addedDmgEffPct: offense.sweepAddedDmgEffPct.value,
+  };
+  const sweepOffhandAtk =
+    offhand !== undefined && isOneHandedWeapon(offhand)
+      ? calcSlashStrikeWeaponAttack(offhand, 0, sweepInput)
+      : undefined;
+
+  const joinedForceAddedDmgPct = findMod(
+    mods,
+    "JoinedForceAddOffhandToMainhandPct",
+  );
+  const joinedForceAddedDmg =
+    ((joinedForceAddedDmgPct?.value ?? 0) / 100) *
+    (sweepOffhandAtk?.avgHit ?? 0);
+
+  // Calculate sweep mode attacks
+  const sweepMainhandAtk = calcSlashStrikeWeaponAttack(
+    mainhand,
+    joinedForceAddedDmg,
+    sweepInput,
+  );
+
+  // Calculate steep mode attacks
+  const steepInput: CalcSlashStrikeWeaponAttackInput = {
+    ...baseInput,
+    weaponAtkDmgPct: offense.steepWeaponAtkDmgPct.value,
+    addedDmgEffPct: offense.steepAddedDmgEffPct.value,
+  };
+  const steepOffhandAtk =
+    offhand !== undefined && isOneHandedWeapon(offhand)
+      ? calcSlashStrikeWeaponAttack(offhand, 0, steepInput)
+      : undefined;
+
+  // For steep mode, recalculate joined force bonus with steep offhand damage
+  const steepJoinedForceAddedDmg =
+    ((joinedForceAddedDmgPct?.value ?? 0) / 100) *
+    (steepOffhandAtk?.avgHit ?? 0);
+  const steepMainhandAtk = calcSlashStrikeWeaponAttack(
+    mainhand,
+    steepJoinedForceAddedDmg,
+    steepInput,
+  );
+
+  // Calculate DPS for each mode
+  const sweepDpsWithoutExtras = calcDualWieldDps(
+    sweepMainhandAtk,
+    sweepOffhandAtk,
+    disableOffhand,
+  );
+  const steepDpsWithoutExtras = calcDualWieldDps(
+    steepMainhandAtk,
+    steepOffhandAtk,
+    disableOffhand,
+  );
+
+  // Apply final multipliers
+  const doubleDmgMult = calculateDoubleDmgMult(mods, skill);
+  const extraMult = calculateExtraOffenseMults(mods, config);
+  const sweepDps = sweepDpsWithoutExtras * doubleDmgMult * extraMult;
+  const steepDps = steepDpsWithoutExtras * doubleDmgMult * extraMult;
+
+  // Weighted average based on steep strike chance
+  const avgDps = (1 - steepChance) * sweepDps + steepChance * steepDps;
+
+  return {
+    sweep: {
+      mainhand: sweepMainhandAtk,
+      offhand: disableOffhand ? undefined : sweepOffhandAtk,
+      avgDps: sweepDps,
+    },
+    steep: {
+      mainhand: steepMainhandAtk,
+      offhand: disableOffhand ? undefined : steepOffhandAtk,
+      avgDps: steepDps,
+    },
+    steepStrikeChancePct,
     critDmgMult,
     avgDps,
     multistrikeChancePct: derivedOffenseCtx.multistrikeChancePct,
@@ -2476,6 +2719,16 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       config,
     );
 
+    const slashStrikeDpsSummary = calcAvgSlashStrikeDps(
+      mods,
+      loadout,
+      perSkillContext,
+      skillLevel,
+      derivedOffenseCtx,
+      derivedCtx,
+      config,
+    );
+
     const spellDpsSummary = calcAvgSpellDps(
       mods,
       loadout,
@@ -2510,6 +2763,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
 
     const totalDps =
       (attackHitSummary?.avgDps ?? 0) +
+      (slashStrikeDpsSummary?.avgDps ?? 0) +
       (spellDpsSummary?.avgDps ?? 0) +
       (spellBurstDpsSummary?.avgDps ?? 0) +
       (spellBurstDpsSummary?.ingenuityOverload?.avgDps ?? 0) +
@@ -2518,6 +2772,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
 
     skills[slot.skillName as ImplementedActiveSkillName] = {
       attackDpsSummary: attackHitSummary,
+      slashStrikeDpsSummary,
       spellDpsSummary,
       spellBurstDpsSummary,
       persistentDpsSummary,

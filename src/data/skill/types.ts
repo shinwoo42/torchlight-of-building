@@ -186,6 +186,10 @@ export interface SkillOffense {
   addedDmgEffPct?: { value: number };
   persistentDmg?: { value: number; dmgType: DmgChunkType; duration: number };
   spellDmg?: { value: DmgRange; dmgType: DmgChunkType; castTime: number };
+  sweepWeaponAtkDmgPct?: { value: number };
+  sweepAddedDmgEffPct?: { value: number };
+  steepWeaponAtkDmgPct?: { value: number };
+  steepAddedDmgEffPct?: { value: number };
 }
 
 export interface BaseActiveSkill extends BaseSkill {

@@ -55,7 +55,7 @@ import { v } from "./types";
       type: "DmgPct",
       value: v(vals.coldDmgPctVsFrostbitten, l),  // Define key name here
       addn: true,
-      modType: "cold",
+      dmgModType: "cold",
       cond: "enemy_frostbitten",
     },
   ],
@@ -63,8 +63,23 @@ import { v } from "./types";
 ```
 
 **Factory return types:**
-- **Active skills:** `{ offense?: SkillOffense[], mods?: Mod[], buffMods?: Mod[] }`
-- **Passive skills:** `{ mods?: Mod[], buffMods?: Mod[] }`
+- **Active skills:** `{ offense?: SkillOffense; mods?: Mod[]; buffMods?: Mod[] }`
+- **Passive skills:** `{ mods?: Mod[]; buffMods?: Mod[] }`
+
+**SkillOffense is a structured interface, NOT an array:**
+```typescript
+interface SkillOffense {
+  weaponAtkDmgPct?: { value: number };
+  addedDmgEffPct?: { value: number };
+  persistentDmg?: { value: number; dmgType: DmgChunkType; duration: number };
+  spellDmg?: { value: DmgRange; dmgType: DmgChunkType; castTime: number };
+  // Multi-phase attack skills (e.g., Berserking Blade)
+  sweepWeaponAtkDmgPct?: { value: number };
+  sweepAddedDmgEffPct?: { value: number };
+  steepWeaponAtkDmgPct?: { value: number };
+  steepAddedDmgEffPct?: { value: number };
+}
+```
 
 The `v(arr, level)` helper safely accesses `arr[level - 1]` with bounds checking.
 
@@ -151,16 +166,16 @@ export const frostSpikeParser: SupportLevelParser = (input) => {
 **Factory** uses those keys:
 ```typescript
 "Frost Spike": (l, vals) => ({
-  offense: [
-    { type: "WeaponAtkDmgPct", value: v(vals.weaponAtkDmgPct, l) },
-    { type: "AddedDmgEffPct", value: v(vals.addedDmgEffPct, l) },
-  ],
+  offense: {
+    weaponAtkDmgPct: { value: v(vals.weaponAtkDmgPct, l) },
+    addedDmgEffPct: { value: v(vals.addedDmgEffPct, l) },
+  },
   mods: [
     { type: "ConvertDmgPct", value: v(vals.convertPhysicalToColdPct, l), from: "physical", to: "cold" },
     { type: "MaxProjectile", value: v(vals.maxProjectile, l), override: true },
     { type: "Projectile", value: v(vals.projectilePerFrostbiteRating, l), per: { stackable: "frostbite_rating", amt: 35 } },
-    { type: "Projectile", value: v(vals.baseProjectile, l) },
-    { type: "DmgPct", value: v(vals.dmgPctPerProjectile, l), modType: "global", addn: true, per: { stackable: "projectile" } },
+    { type: "BaseProjectileQuant", value: v(vals.baseProjectile, l) },
+    { type: "DmgPct", value: v(vals.dmgPctPerProjectile, l), dmgModType: "global", addn: true, per: { stackable: "projectile" } },
   ],
 }),
 ```
@@ -178,10 +193,57 @@ levelValues: {
 }
 ```
 
+## Example: Multi-Phase Attack Skill (Berserking Blade)
+
+For skills with multiple attack phases, use the dedicated offense properties:
+
+```typescript
+"Berserking Blade": (l, vals) => ({
+  offense: {
+    // Sweep phase stats
+    sweepWeaponAtkDmgPct: { value: v(vals.sweepWeaponAtkDmgPct, l) },
+    sweepAddedDmgEffPct: { value: v(vals.sweepAddedDmgEffPct, l) },
+    // Steep strike phase stats
+    steepWeaponAtkDmgPct: { value: v(vals.steepWeaponAtkDmgPct, l) },
+    steepAddedDmgEffPct: { value: v(vals.steepAddedDmgEffPct, l) },
+  },
+  mods: [
+    {
+      type: "SkillAreaPct",
+      skillAreaModType: "global" as const,
+      value: v(vals.skillAreaBuffPct, l),
+      per: { stackable: "berserking_blade_buff" },
+    },
+    { type: "MaxBerserkingBladeStacks", value: v(vals.maxBerserkingBladeStacks, l) },
+    { type: "SteepStrikeChancePct", value: v(vals.steepStrikeChancePct, l) },
+  ],
+}),
+```
+
+## Example: Spell Skill (Chain Lightning)
+
+Spell skills use `spellDmg` with damage range and cast time:
+
+```typescript
+"Chain Lightning": (l, vals) => ({
+  offense: {
+    addedDmgEffPct: { value: v(vals.addedDmgEffPct, l) },
+    spellDmg: {
+      value: { min: v(vals.spellDmgMin, l), max: v(vals.spellDmgMax, l) },
+      dmgType: "lightning",
+      castTime: v(vals.castTime, l),
+    },
+  },
+  mods: [{ type: "Jump", value: v(vals.jump, l) }],
+}),
+```
+
 ## Common Mistakes
 
 | Mistake | Fix |
 |---------|-----|
+| Using array for offense | `offense` is a `SkillOffense` object, NOT an array. Use `offense: { weaponAtkDmgPct: { value: ... } }` |
+| Using `modType` in DmgPct mods | Use `dmgModType` instead of `modType` |
 | Using HTML regex on clean text | Input is already `.text().trim()` - no HTML tags |
 | Parser key doesn't match factory key | Keys must match exactly: `vals.dmgPct` needs parser to return `{ dmgPct: ... }` |
 | Forgetting parser registration | Add to SKILL_PARSERS array in `index.ts` |

@@ -175,6 +175,8 @@ export interface Configuration {
   hasSpellAggression: boolean;
   // default to 0
   numMaxMultistrikesRecently: number;
+  // default to max
+  numBerserkingBladeBuffStacks?: number;
 
   // --------------------
   // hero-specific config
@@ -263,6 +265,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   hasAttackAggression: false,
   hasSpellAggression: false,
   numMaxMultistrikesRecently: 0,
+  numBerserkingBladeBuffStacks: undefined,
   realmOfMercuryEnabled: false,
   baptismOfPurityEnabled: false,
   enemyColdRes: undefined,

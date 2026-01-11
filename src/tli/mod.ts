@@ -123,6 +123,7 @@ export type Stackable =
   | "mind_control_link"
   | "unused_mind_control_link"
   | "arcane_circle_stack"
+  | "berserking_blade_buff"
   // hero-specific
   | "stalker"
   // pactspirit-specific
@@ -416,6 +417,7 @@ interface ModDefinitions {
   IgniteDurationPct: { value: number; addn?: boolean };
   ChainLightningWebOfLightning: object;
   ChainLightningMerge: { shotgunFalloffCoefficient: number };
+  MaxBerserkingBladeStacks: { value: number };
   // enemy mods
   EnemyRes: { value: number; resType: ResType };
   // core talent specific

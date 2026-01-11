@@ -92,6 +92,10 @@ export const ConfigurationPageSchema = z
     hasAttackAggression: z.boolean().catch(d.hasAttackAggression),
     hasSpellAggression: z.boolean().catch(d.hasSpellAggression),
     numMaxMultistrikesRecently: z.number().catch(d.numMaxMultistrikesRecently),
+    numBerserkingBladeBuffStacks: z
+      .number()
+      .optional()
+      .catch(d.numBerserkingBladeBuffStacks),
     realmOfMercuryEnabled: z.boolean().catch(d.realmOfMercuryEnabled),
     baptismOfPurityEnabled: z.boolean().catch(d.baptismOfPurityEnabled),
     enemyColdRes: z.number().optional().catch(d.enemyColdRes),

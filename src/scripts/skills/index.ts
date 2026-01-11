@@ -1,5 +1,6 @@
 import {
   arcaneCircleParser,
+  berserkingBladeParser,
   bitingColdParser,
   bullsRageParser,
   chainLightningParser,
@@ -169,6 +170,11 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     skillName: "Precise: Swiftness",
     categories: ["passive"],
     parser: preciseSwiftnessParser,
+  },
+  {
+    skillName: "Berserking Blade",
+    categories: ["active"],
+    parser: berserkingBladeParser,
   },
 ];
 

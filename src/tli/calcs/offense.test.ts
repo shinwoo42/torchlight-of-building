@@ -5744,3 +5744,131 @@ describe("MainSkillSupportedBy mods", () => {
     validate(results, skillName, { avgHit: 100 });
   });
 });
+
+describe("slash-strike damage (Berserking Blade)", () => {
+  const skillName = "Berserking Blade" as const;
+
+  const berserkingBladeSkillPage = () => ({
+    activeSkills: {
+      1: { skillName, enabled: true, level: 20, supportSkills: {} },
+    },
+    passiveSkills: {},
+  });
+
+  const createSlashStrikeInput = (mods: AffixLine[]) => ({
+    loadout: initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      customAffixLines: mods,
+      skillPage: berserkingBladeSkillPage(),
+    }),
+    configuration: defaultConfiguration,
+  });
+
+  test("basic sweep/steep calculation at level 20", () => {
+    // 100 phys weapon, level 20:
+    // - sweep weaponAtkDmgPct: 210%, addedDmgEffPct: 210%
+    // - steep weaponAtkDmgPct: 421%, addedDmgEffPct: 421%
+    // - steepStrikeChancePct: 20%
+    const input = createSlashStrikeInput([]);
+    const results = calculateOffense(input);
+    const summary =
+      results.skills[skillName as ImplementedActiveSkillName]
+        ?.slashStrikeDpsSummary;
+
+    expect(summary).toBeDefined();
+    expect(summary?.steepStrikeChancePct).toBe(20);
+
+    // Sweep avgHit = 100 * 2.10 = 210
+    expect(summary?.sweep.mainhand.avgHit).toBeCloseTo(210);
+    // Steep avgHit = 100 * 4.21 = 421
+    expect(summary?.steep.mainhand.avgHit).toBeCloseTo(421);
+  });
+
+  test("weighted average DPS based on steep strike chance", () => {
+    // With 20% steep strike chance:
+    // avgDps = 0.8 * sweepDps + 0.2 * steepDps
+    const input = createSlashStrikeInput([]);
+    const results = calculateOffense(input);
+    const summary =
+      results.skills[skillName as ImplementedActiveSkillName]
+        ?.slashStrikeDpsSummary;
+
+    expect(summary).toBeDefined();
+    if (summary === undefined) return;
+    const sweepDps = summary.sweep.avgDps;
+    const steepDps = summary.steep.avgDps;
+    const expectedAvgDps = 0.8 * sweepDps + 0.2 * steepDps;
+    expect(summary.avgDps).toBeCloseTo(expectedAvgDps);
+  });
+
+  test("steep strike chance stacks from mods", () => {
+    // Add +30% steep strike chance from gear
+    // Total should be 20 (base) + 30 (gear) = 50%
+    const input = createSlashStrikeInput(
+      affixLines([{ type: "SteepStrikeChancePct", value: 30 }]),
+    );
+    const results = calculateOffense(input);
+    const summary =
+      results.skills[skillName as ImplementedActiveSkillName]
+        ?.slashStrikeDpsSummary;
+
+    expect(summary).toBeDefined();
+    if (summary === undefined) return;
+    expect(summary.steepStrikeChancePct).toBe(50);
+
+    // Verify weighted average uses 50/50 split
+    const sweepDps = summary.sweep.avgDps;
+    const steepDps = summary.steep.avgDps;
+    const expectedAvgDps = 0.5 * sweepDps + 0.5 * steepDps;
+    expect(summary.avgDps).toBeCloseTo(expectedAvgDps);
+  });
+
+  test("steep strike chance caps at 100%", () => {
+    // Add excessive steep strike chance from gear (base 20 + 90 = 110, should cap at 100)
+    const input = createSlashStrikeInput(
+      affixLines([{ type: "SteepStrikeChancePct", value: 90 }]),
+    );
+    const results = calculateOffense(input);
+    const summary =
+      results.skills[skillName as ImplementedActiveSkillName]
+        ?.slashStrikeDpsSummary;
+
+    expect(summary).toBeDefined();
+    if (summary === undefined) return;
+    expect(summary.steepStrikeChancePct).toBe(100);
+
+    // At 100% steep strike chance, avgDps should equal steepDps
+    expect(summary.avgDps).toBeCloseTo(summary.steep.avgDps);
+  });
+
+  test("damage mods apply to both sweep and steep", () => {
+    // Add +100% global damage
+    const input = createSlashStrikeInput(
+      affixLines([
+        { type: "DmgPct", value: 100, dmgModType: "global", addn: false },
+      ]),
+    );
+    const results = calculateOffense(input);
+    const summary =
+      results.skills[skillName as ImplementedActiveSkillName]
+        ?.slashStrikeDpsSummary;
+
+    expect(summary).toBeDefined();
+    // Sweep: 100 * 2.1 * 2.0 = 420
+    expect(summary?.sweep.mainhand.avgHit).toBeCloseTo(420);
+    // Steep: 100 * 4.21 * 2.0 = 842
+    expect(summary?.steep.mainhand.avgHit).toBeCloseTo(842);
+  });
+
+  test("totalDps includes slash strike DPS", () => {
+    const input = createSlashStrikeInput([]);
+    const results = calculateOffense(input);
+    const skillResults =
+      results.skills[skillName as ImplementedActiveSkillName];
+
+    expect(skillResults).toBeDefined();
+    expect(skillResults?.totalDps).toBeCloseTo(
+      skillResults?.slashStrikeDpsSummary?.avgDps ?? 0,
+    );
+  });
+});

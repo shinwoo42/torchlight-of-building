@@ -907,6 +907,16 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             onChange={(v) => onUpdate({ numMaxMultistrikesRecently: v ?? 0 })}
             min={0}
           />
+
+          <label className="text-right text-zinc-50">
+            Berserking Blade Buff Stacks
+            <InfoTooltip text="Defaults to max stacks" />
+          </label>
+          <NumberInput
+            value={config.numBerserkingBladeBuffStacks}
+            onChange={(v) => onUpdate({ numBerserkingBladeBuffStacks: v })}
+            min={0}
+          />
         </div>
       </div>
     </div>
