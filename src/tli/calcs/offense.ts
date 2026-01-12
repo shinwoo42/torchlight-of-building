@@ -1857,6 +1857,7 @@ const resolveModsForOffenseSkill = (
     });
   };
   const pushSpellBurstChargeSpeed = () => {
+    // cast speed required for burst charge speed so we verify all cast speed deps have been resolved
     step("castSpeed");
     step("spellBurstChargeSpeed");
     const spellBurstChargeSpeedBonusPct =
