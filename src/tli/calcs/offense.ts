@@ -635,6 +635,7 @@ export interface OffenseInput {
 }
 
 export interface OffenseResults {
+  errors: string[];
   skills: Partial<Record<ImplementedActiveSkillName, OffenseSummary>>;
   resourcePool: ResourcePool;
   defenses: Defenses;
@@ -1701,29 +1702,6 @@ const pushMainStatDmgPct = (mods: Mod[], totalMainStats: number): void => {
   });
 };
 
-const pushErika1 = (
-  mods: Mod[],
-  prenormMods: Mod[],
-  config: Configuration,
-): void => {
-  if (!modExists(mods, "WindStalker")) {
-    return;
-  }
-  const addedMaxStacks = sumByValue(filterMods(mods, "MaxStalker"));
-  const defaultStacks = 3 + addedMaxStacks;
-  const stacks = config.stalkerStacks ?? defaultStacks;
-  // This assumes that the player's multistrike chance is >= 100%
-  // Therefore, it's an overestimation if not. However, if your
-  // multistrike is below, 100%, why tf are you using e1
-  mods.push({
-    type: "DmgPct",
-    dmgModType: "global",
-    addn: true,
-    value: 13 * stacks,
-  });
-  mods.push(...normalizeStackables(prenormMods, "stalker", stacks));
-};
-
 interface DerivedOffenseCtx {
   maxSpellBurst: number;
   spellBurstChargeSpeedBonusPct: number;
@@ -1731,7 +1709,29 @@ interface DerivedOffenseCtx {
   multistrikeChancePct: number;
   multistrikeIncDmgPct: number;
   mods: Mod[];
+  errors: string[];
 }
+
+// over-engineered way to get type safety on self-referential associative graph
+const createSelfReferential = <T extends Record<string, (keyof T)[]>>(
+  obj: T,
+): T => {
+  return obj;
+};
+
+// dependency graph of mod resolution steps that much be done in order
+// examples:
+//   * stalker, from erika1's hero trait, affects multistrike calculations
+//     and this is a dependency of multistrike_calc
+//   * spell burst charge speed may be dependent on dependent on cast speed (from core talent playsafe)
+const stepDeps = createSelfReferential({
+  stalker: [],
+  multistrike_calc: ["stalker"],
+});
+
+const modSteps = Object.keys(stepDeps) as (keyof typeof stepDeps)[];
+
+type ModStep = (typeof modSteps)[number];
 
 // resolves mods, removing unmatched conditions, and normalizing per mods
 const resolveModsForOffenseSkill = (
@@ -1760,12 +1760,66 @@ const resolveModsForOffenseSkill = (
     derivedCtx,
   );
   const mods = [...baseMods, ...calculateSkillLevelDmgMods(skillLevel)];
+  const steps: ModStep[] = [];
+  // collect and verify in unit tests, rather than throw error
+  // in case this somehow makes it past CI, we'd rather the user get
+  //   potentially wrong results than simply crashing the app.
+  const errors: string[] = [];
+  const step = (stepName: ModStep) => {
+    if (steps.includes(stepName)) {
+      errors.push(`Duplicate step calculation occuring ${stepName}`);
+    } else {
+      steps.push(stepName);
+    }
+    const deps = stepDeps[stepName];
+    if (R.intersection(steps, deps).length !== deps.length) {
+      errors.push(
+        `Step ${stepName} has deps ${deps}, but not all have been resolved yet`,
+      );
+    }
+  };
+  const pm = (...ms: Mod[]) => {
+    mods.push(...ms);
+  };
 
   // Local helper - captures mods and prenormMods in closure
   const normalize = (stackable: Stackable, value: number | undefined): void => {
     if (value !== undefined) {
-      mods.push(...normalizeStackables(prenormMods, stackable, value));
+      pm(...normalizeStackables(prenormMods, stackable, value));
     }
+  };
+
+  // actual mod resolvers below
+  const pushErika1 = (): void => {
+    step("stalker");
+    if (!modExists(mods, "WindStalker")) {
+      return;
+    }
+    const addedMaxStacks = sumByValue(filterMods(mods, "MaxStalker"));
+    const defaultStacks = 3 + addedMaxStacks;
+    const stacks = config.stalkerStacks ?? defaultStacks;
+    // This assumes that the player's multistrike chance is >= 100%
+    // Therefore, it's an overestimation if not. However, if your
+    // multistrike is below, 100%, why tf are you using e1
+    mods.push({
+      type: "DmgPct",
+      dmgModType: "global",
+      addn: true,
+      value: 13 * stacks,
+    });
+    mods.push(...normalizeStackables(prenormMods, "stalker", stacks));
+  };
+  const pushMultistrike = () => {
+    step("multistrike_calc");
+    const multistrikeChancePct = sumByValue(
+      filterMods(mods, "MultistrikeChancePct"),
+    );
+    const multistrikeIncDmgPct = sumByValue(
+      filterMods(mods, "MultistrikeIncDmgPct"),
+    );
+    pushMultistrikeAspd(mods, multistrikeChancePct);
+    pushMultistrikeDmgBonus(mods, multistrikeChancePct, multistrikeIncDmgPct);
+    return { multistrikeChancePct, multistrikeIncDmgPct };
   };
 
   const totalMainStats = calculateTotalMainStats(skill, stats);
@@ -1897,22 +1951,12 @@ const resolveModsForOffenseSkill = (
     spellBurstChargeSpeedBonusPct,
   );
 
-  // miust happen before multistrike
-  pushErika1(mods, prenormMods, config);
-
-  // Must happen after any multistrike chance normalization
-  // must happen after erika1
-  const multistrikeChancePct = sumByValue(
-    filterMods(mods, "MultistrikeChancePct"),
-  );
-  const multistrikeIncDmgPct = sumByValue(
-    filterMods(mods, "MultistrikeIncDmgPct"),
-  );
-  pushMultistrikeAspd(mods, multistrikeChancePct);
-  pushMultistrikeDmgBonus(mods, multistrikeChancePct, multistrikeIncDmgPct);
+  pushErika1();
+  const { multistrikeChancePct, multistrikeIncDmgPct } = pushMultistrike();
 
   return {
     mods,
+    errors,
     maxSpellBurst,
     movementSpeedBonusPct,
     multistrikeChancePct,
@@ -2656,6 +2700,7 @@ const calcAvgSpellBurstDps = (
 
 // Calculates offense for all enabled implemented skills
 export const calculateOffense = (input: OffenseInput): OffenseResults => {
+  const errors: string[] = [];
   const { loadout, configuration: config } = input;
   const loadoutMods = [
     ...collectMods(loadout),
@@ -2721,6 +2766,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       derivedCtx,
     );
     const { mods, movementSpeedBonusPct } = derivedOffenseCtx;
+    errors.push(...derivedOffenseCtx.errors);
 
     const attackHitSummary = calcAvgAttackDps(
       mods,
@@ -2796,5 +2842,5 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     };
   }
 
-  return { skills, resourcePool, defenses };
+  return { errors, skills, resourcePool, defenses };
 };

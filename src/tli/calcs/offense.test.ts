@@ -6135,3 +6135,15 @@ describe("defense calculation (ES, Eva, Armor)", () => {
     expect(results.defenses.evasion).toBeCloseTo(1250);
   });
 });
+
+describe("step dependency resolution", () => {
+  test("no errors", () => {
+    // input does not matter, as all steps should be run, regardless of
+    // if they're actually used, as long as we have valid skill
+    const { errors } = calculateOffense({
+      loadout: initLoadout({ skillPage: simpleAttackSkillPage() }),
+      configuration: createDefaultConfiguration(),
+    });
+    expect(errors).toStrictEqual([]);
+  });
+});
