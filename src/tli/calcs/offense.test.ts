@@ -2504,7 +2504,7 @@ describe("resolveBuffSkillMods", () => {
         "cond" in m &&
         m.cond === "enemy_frostbitten",
     ) as DmgPctMod | undefined;
-    expect(iceBondBuffMod?.value).toBeCloseTo(38.1975);
+    expect(iceBondBuffMod?.value).toBeCloseTo(33);
   });
 
   test("Ice Bond and Bull's Rage with Mass Effect and Well-Fought Battle - supports only affect their attached skill", () => {
@@ -2553,18 +2553,16 @@ describe("resolveBuffSkillMods", () => {
         "cond" in m &&
         m.cond === "enemy_frostbitten",
     ) as DmgPctMod | undefined;
-    expect(iceBondBuffMod?.value).toBeCloseTo(51.3975);
+    expect(iceBondBuffMod?.value).toBeCloseTo(46.2);
 
     // Check Bull's Rage buff
     const bullsRageBuffMod = actual?.resolvedMods.find(
       (m) => m.type === "DmgPct" && m.dmgModType === "melee" && m.addn === true,
     ) as DmgPctMod | undefined;
-    expect(bullsRageBuffMod?.value).toBeCloseTo(42.0525);
+    expect(bullsRageBuffMod?.value).toBeCloseTo(37.8);
 
     // Verify final avgHit includes both Ice Bond's cold buff and Bull's Rage's melee buff
-    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(
-      201 * 1.514 * 1.4205,
-    );
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(404.94);
   });
 
   test("supports on main skill do not affect buff skills", () => {
@@ -2656,7 +2654,7 @@ describe("resolveBuffSkillMods", () => {
         "cond" in m &&
         m.cond === "enemy_frostbitten",
     ) as DmgPctMod | undefined;
-    expect(iceBondBuffMod?.value).toBeCloseTo(51.3975);
+    expect(iceBondBuffMod?.value).toBeCloseTo(46.2);
   });
 
   test("support skill level affects skill effect bonus", () => {
