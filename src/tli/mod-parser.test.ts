@@ -1362,6 +1362,13 @@ test("parse all skills level", () => {
   ]);
 });
 
+test("parse all skills levels with 'to' prefix", () => {
+  const result = parseMod("+1 to All Skills' Levels");
+  expect(result).toEqual([
+    { type: "SkillLevel", value: 1, skillLevelType: "all" },
+  ]);
+});
+
 test("parse main skill level per sealed life at full mana", () => {
   const result = parseMod(
     "For every 11% Life Sealed when at Full Mana, Main Skill's level +1",
