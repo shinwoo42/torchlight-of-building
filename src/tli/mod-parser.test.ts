@@ -2504,3 +2504,35 @@ test("parse additional attack speed when performing multistrikes", () => {
     { type: "AspdWhenMultistrikingPct", value: 9, addn: true },
   ]);
 });
+
+test("parse aura effect", () => {
+  const result = parseMod("+10% Aura Effect");
+  expect(result).toEqual([{ type: "AuraEffPct", value: 10, addn: false }]);
+});
+
+test("parse additional aura effect", () => {
+  const result = parseMod("+15% additional Aura Effect");
+  expect(result).toEqual([{ type: "AuraEffPct", value: 15, addn: true }]);
+});
+
+test("parse max mana + skill cost combo", () => {
+  const result = parseMod("+10% Max Mana. +80 Skill Cost");
+  expect(result).toEqual([
+    { type: "MaxManaPct", value: 10, addn: false },
+    { type: "SkillCost", value: 80 },
+  ]);
+});
+
+test("parse additional projectile damage", () => {
+  const result = parseMod("+10% additional Projectile Damage");
+  expect(result).toEqual([
+    { type: "DmgPct", value: 10, dmgModType: "projectile", addn: true },
+  ]);
+});
+
+test("parse projectile damage", () => {
+  const result = parseMod("+100% Projectile Damage");
+  expect(result).toEqual([
+    { type: "DmgPct", value: 100, dmgModType: "projectile", addn: false },
+  ]);
+});

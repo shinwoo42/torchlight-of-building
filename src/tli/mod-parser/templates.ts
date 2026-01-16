@@ -1489,4 +1489,20 @@ export const allParsers = [
     "DmgTakenPct",
     (c) => ({ value: c.value }),
   ),
+  // Aura effect
+  t("{value:+dec%} [additional] aura effect").output("AuraEffPct", (c) => ({
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  // Combined max mana + skill cost
+  t("{mana:+dec%} max mana. {cost:+int} skill cost").outputMany([
+    spec("MaxManaPct", (c) => ({ value: c.mana, addn: false })),
+    spec("SkillCost", (c) => ({ value: c.cost })),
+  ]),
+  // Projectile damage
+  t("{value:+dec%} [additional] projectile damage").output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "projectile" as const,
+    addn: c.additional !== undefined,
+  })),
 ];

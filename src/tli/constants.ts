@@ -16,6 +16,7 @@ export const DMG_MOD_TYPES = [
   "damage_over_time",
   "channeled",
   "erosion_area",
+  "projectile",
 ] as const;
 
 export type DmgModType = (typeof DMG_MOD_TYPES)[number];
