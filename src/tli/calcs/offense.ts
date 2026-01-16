@@ -1430,152 +1430,6 @@ const calcInfiltration = (
   };
 };
 
-const pushInfiltrations = (mods: Mod[], config: Configuration): void => {
-  const coldInfiltration = calcInfiltration(mods, "cold", config);
-  if (coldInfiltration !== undefined) {
-    mods.push(coldInfiltration);
-  }
-  const lightningInfiltration = calcInfiltration(mods, "lightning", config);
-  if (lightningInfiltration !== undefined) {
-    mods.push(lightningInfiltration);
-  }
-  const fireInfiltration = calcInfiltration(mods, "fire", config);
-  if (fireInfiltration !== undefined) {
-    mods.push(fireInfiltration);
-  }
-};
-
-const pushWhimsy = (mods: Mod[], config: Configuration): void => {
-  if (!config.targetEnemyHasWhimsySignal) return;
-
-  const whimsySignalEffMult = calcEffMult(mods, "WhimsySignalEffPct");
-  const whimsySignalDmgPctVal = 30 * whimsySignalEffMult;
-  mods.push({
-    type: "DmgPct",
-    value: whimsySignalDmgPctVal,
-    addn: true,
-    dmgModType: "spell",
-    isEnemyDebuff: true,
-    src: "Whimsy Signal",
-  });
-};
-
-const pushNumbed = (mods: Mod[], config: Configuration): void => {
-  if (!config.enemyNumbed) return;
-
-  const numbedStacks = config.enemyNumbedStacks ?? 10;
-  const numbedEffMult = calcEffMult(mods, "NumbedEffPct");
-
-  const conductive = findMod(mods, "Conductive");
-  if (conductive === undefined) {
-    const baseNumbedValPerStack = 5;
-    const numbedVal = baseNumbedValPerStack * numbedEffMult * numbedStacks;
-    mods.push({
-      type: "DmgPct",
-      value: numbedVal,
-      dmgModType: "global",
-      addn: true,
-      isEnemyDebuff: true,
-      src: "Numbed",
-    });
-  } else {
-    const baseNumbedValPerStack = 11;
-    const numbedVal = baseNumbedValPerStack * numbedEffMult * numbedStacks;
-    mods.push({
-      type: "DmgPct",
-      value: numbedVal,
-      dmgModType: "lightning",
-      addn: true,
-      isEnemyDebuff: true,
-      src: "Numbed:Conductive",
-    });
-  }
-};
-
-const pushChainLightning = (
-  mods: Mod[],
-  config: Configuration,
-  jumps: number,
-): void => {
-  const chainLightningInstances = calcChainLightningInstances(
-    mods,
-    config,
-    jumps,
-  );
-
-  const chainLightningMerge = findMod(mods, "ChainLightningMerge");
-  if (chainLightningMerge !== undefined) {
-    mods.push({
-      type: "DmgPct",
-      value:
-        (chainLightningInstances - 1) *
-        (100 - chainLightningMerge.shotgunFalloffCoefficient),
-      addn: true,
-      dmgModType: "global",
-      src: "Chain Lightning: Merge (Noble)",
-    });
-  }
-};
-
-const pushFrail = (mods: Mod[], config: Configuration) => {
-  if (!config.targetEnemyHasFrail) return;
-
-  const frailEffMult = calcEffMult(mods, "FrailEffPct");
-  const frailSpellDmgPctValue = 15 * frailEffMult;
-  mods.push({
-    type: "DmgPct",
-    value: frailSpellDmgPctValue,
-    dmgModType: "spell",
-    addn: true,
-    isEnemyDebuff: true,
-    src: "Frail",
-  });
-};
-
-const pushAttackAggression = (mods: Mod[], config: Configuration): void => {
-  if (!config.hasAttackAggression) {
-    return;
-  }
-  const aspdBase = 5;
-  const dmgBase = 5;
-  const mspdBase = 10;
-  const mult = calcEffMult(mods, "AttackAggressionEffPct");
-  mods.push({
-    type: "AspdPct",
-    value: aspdBase * mult,
-    addn: true,
-    src: "Attack Aggression",
-  });
-  mods.push({
-    type: "DmgPct",
-    value: dmgBase * mult,
-    dmgModType: "attack",
-    addn: true,
-    src: "Attack Aggression",
-  });
-  mods.push({
-    type: "MovementSpeedPct",
-    value: mspdBase * mult,
-    src: "Attack Aggression",
-  });
-};
-
-const pushMark = (mods: Mod[], config: Configuration): void => {
-  if (!config.targetEnemyMarked) {
-    return;
-  }
-  const markEffMult = calcEffMult(mods, "MarkEffPct");
-  const baseValue = 20;
-  mods.push({
-    type: "CritDmgPct",
-    value: baseValue * markEffMult,
-    addn: true,
-    modType: "global",
-    isEnemyDebuff: true,
-    src: "Mark",
-  });
-};
-
 const calcSpellBurstChargeSpeedBonusPct = (mods: Mod[]): number => {
   const playSafe = findMod(mods, "PlaySafe");
   const chargeSpeedMods = [
@@ -1646,43 +1500,6 @@ const pushMultistrikeDmgBonus = (
     dmgModType: "global",
     addn: true,
     src: "Multistrike Increasing Damage",
-  });
-};
-
-const pushTradeoff = (mods: Mod[], resourcePool: ResourcePool) => {
-  const { str, dex } = resourcePool.stats;
-  const tradeoffDexGteStrAspdPct = findMod(mods, "TradeoffDexGteStrAspdPct");
-  const tradeoffStrGteDexDmgPct = findMod(mods, "TradeoffStrGteDexDmgPct");
-  if (tradeoffDexGteStrAspdPct !== undefined && dex >= str) {
-    mods.push({
-      type: "AspdPct",
-      addn: true,
-      value: tradeoffDexGteStrAspdPct.value,
-      src: "Tradeoff",
-    });
-  }
-  if (tradeoffStrGteDexDmgPct !== undefined && str >= dex) {
-    mods.push({
-      type: "DmgPct",
-      addn: true,
-      dmgModType: "attack",
-      value: tradeoffStrGteDexDmgPct.value,
-      src: "Tradeoff",
-    });
-  }
-};
-
-const pushMainStatDmgPct = (mods: Mod[], totalMainStats: number): void => {
-  if (findMod(mods, "DisableMainStatDmg") !== undefined) {
-    return;
-  }
-  const value = 0.5 * totalMainStats;
-  mods.push({
-    type: "DmgPct",
-    value,
-    dmgModType: "global",
-    addn: true,
-    src: "Additional Damage from skill Main Stat (.5% per stat)",
   });
 };
 
@@ -1911,6 +1728,176 @@ const resolveModsForOffenseSkill = (
     const stacks = config.pureHeartStacks ?? maxStacks;
     normalize("pure_heart", stacks);
   };
+  const pushTradeoff = (): void => {
+    const { str, dex } = resourcePool.stats;
+    const tradeoffDexGteStrAspdPct = findMod(mods, "TradeoffDexGteStrAspdPct");
+    const tradeoffStrGteDexDmgPct = findMod(mods, "TradeoffStrGteDexDmgPct");
+    if (tradeoffDexGteStrAspdPct !== undefined && dex >= str) {
+      mods.push({
+        type: "AspdPct",
+        addn: true,
+        value: tradeoffDexGteStrAspdPct.value,
+        src: "Tradeoff",
+      });
+    }
+    if (tradeoffStrGteDexDmgPct !== undefined && str >= dex) {
+      mods.push({
+        type: "DmgPct",
+        addn: true,
+        dmgModType: "attack",
+        value: tradeoffStrGteDexDmgPct.value,
+        src: "Tradeoff",
+      });
+    }
+  };
+  const pushMainStatDmgPct = (): void => {
+    if (findMod(mods, "DisableMainStatDmg") !== undefined) {
+      return;
+    }
+    const value = 0.5 * totalMainStats;
+    mods.push({
+      type: "DmgPct",
+      value,
+      dmgModType: "global",
+      addn: true,
+      src: "Additional Damage from skill Main Stat (.5% per stat)",
+    });
+  };
+  const pushWhimsy = (): void => {
+    if (!config.targetEnemyHasWhimsySignal) return;
+
+    const whimsySignalEffMult = calcEffMult(mods, "WhimsySignalEffPct");
+    const whimsySignalDmgPctVal = 30 * whimsySignalEffMult;
+    mods.push({
+      type: "DmgPct",
+      value: whimsySignalDmgPctVal,
+      addn: true,
+      dmgModType: "spell",
+      isEnemyDebuff: true,
+      src: "Whimsy Signal",
+    });
+  };
+  const pushAttackAggression = (): void => {
+    if (!config.hasAttackAggression) {
+      return;
+    }
+    const aspdBase = 5;
+    const dmgBase = 5;
+    const mspdBase = 10;
+    const mult = calcEffMult(mods, "AttackAggressionEffPct");
+    mods.push({
+      type: "AspdPct",
+      value: aspdBase * mult,
+      addn: true,
+      src: "Attack Aggression",
+    });
+    mods.push({
+      type: "DmgPct",
+      value: dmgBase * mult,
+      dmgModType: "attack",
+      addn: true,
+      src: "Attack Aggression",
+    });
+    mods.push({
+      type: "MovementSpeedPct",
+      value: mspdBase * mult,
+      src: "Attack Aggression",
+    });
+  };
+  const pushMark = (): void => {
+    if (!config.targetEnemyMarked) {
+      return;
+    }
+    const markEffMult = calcEffMult(mods, "MarkEffPct");
+    const baseValue = 20;
+    mods.push({
+      type: "CritDmgPct",
+      value: baseValue * markEffMult,
+      addn: true,
+      modType: "global",
+      isEnemyDebuff: true,
+      src: "Mark",
+    });
+  };
+  const pushInfiltrations = (): void => {
+    const coldInfiltration = calcInfiltration(mods, "cold", config);
+    if (coldInfiltration !== undefined) {
+      mods.push(coldInfiltration);
+    }
+    const lightningInfiltration = calcInfiltration(mods, "lightning", config);
+    if (lightningInfiltration !== undefined) {
+      mods.push(lightningInfiltration);
+    }
+    const fireInfiltration = calcInfiltration(mods, "fire", config);
+    if (fireInfiltration !== undefined) {
+      mods.push(fireInfiltration);
+    }
+  };
+  const pushNumbed = (): void => {
+    if (!config.enemyNumbed) return;
+
+    const numbedStacks = config.enemyNumbedStacks ?? 10;
+    const numbedEffMult = calcEffMult(mods, "NumbedEffPct");
+
+    const conductive = findMod(mods, "Conductive");
+    if (conductive === undefined) {
+      const baseNumbedValPerStack = 5;
+      const numbedVal = baseNumbedValPerStack * numbedEffMult * numbedStacks;
+      mods.push({
+        type: "DmgPct",
+        value: numbedVal,
+        dmgModType: "global",
+        addn: true,
+        isEnemyDebuff: true,
+        src: "Numbed",
+      });
+    } else {
+      const baseNumbedValPerStack = 11;
+      const numbedVal = baseNumbedValPerStack * numbedEffMult * numbedStacks;
+      mods.push({
+        type: "DmgPct",
+        value: numbedVal,
+        dmgModType: "lightning",
+        addn: true,
+        isEnemyDebuff: true,
+        src: "Numbed:Conductive",
+      });
+    }
+  };
+  const pushChainLightning = (): void => {
+    const chainLightningInstances = calcChainLightningInstances(
+      mods,
+      config,
+      jumps,
+    );
+
+    const chainLightningMerge = findMod(mods, "ChainLightningMerge");
+    if (chainLightningMerge !== undefined) {
+      mods.push({
+        type: "DmgPct",
+        value:
+          (chainLightningInstances - 1) *
+          (100 - chainLightningMerge.shotgunFalloffCoefficient),
+        addn: true,
+        dmgModType: "global",
+        src: "Chain Lightning: Merge (Noble)",
+      });
+    }
+  };
+  const pushFrail = (): void => {
+    if (!config.targetEnemyHasFrail) return;
+
+    const frailEffMult = calcEffMult(mods, "FrailEffPct");
+    const frailSpellDmgPctValue = 15 * frailEffMult;
+    mods.push({
+      type: "DmgPct",
+      value: frailSpellDmgPctValue,
+      dmgModType: "spell",
+      addn: true,
+      isEnemyDebuff: true,
+      src: "Frail",
+    });
+  };
 
   const totalMainStats = calculateTotalMainStats(skill, stats);
   const highestStat = Math.max(stats.dex, stats.int, stats.str);
@@ -1934,26 +1921,26 @@ const resolveModsForOffenseSkill = (
   const bbStacks = config.numBerserkingBladeBuffStacks || maxBBStacks;
   normalize("berserking_blade_buff", bbStacks);
 
-  pushTradeoff(mods, resourcePool);
-  pushMainStatDmgPct(mods, totalMainStats);
-  pushWhimsy(mods, config);
-  pushAttackAggression(mods, config); // must happen before movement speed
+  pushTradeoff();
+  pushMainStatDmgPct();
+  pushWhimsy();
+  pushAttackAggression(); // must happen before movement speed
   pushSpellAggression();
-  pushMark(mods, config);
+  pushMark();
 
   // must happen before max_spell_burst normalization, after attack aggression
   const movementSpeedBonusPct =
     (calcEffMult(mods, "MovementSpeedPct") - 1) * 100;
   normalize("movement_speed_bonus_pct", movementSpeedBonusPct);
 
-  pushInfiltrations(mods, config);
-  pushNumbed(mods, config);
+  pushInfiltrations();
+  pushNumbed();
 
   const jumps = sumByValue(filterMods(mods, "Jump"));
   normalize("jump", jumps);
 
-  pushChainLightning(mods, config, jumps);
-  pushFrail(mods, config);
+  pushChainLightning();
+  pushFrail();
   pushYouga2();
 
   // must happen after movement_speed_bonus_pct normalization
