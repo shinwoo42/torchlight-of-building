@@ -2536,3 +2536,44 @@ test("parse projectile damage", () => {
     { type: "DmgPct", value: 100, dmgModType: "projectile", addn: false },
   ]);
 });
+
+test("parse projectile quantity +1", () => {
+  const result = parseMod("Projectile Quantity +1");
+  expect(result).toEqual([{ type: "Projectile", value: 1 }]);
+});
+
+test("parse projectile quantity +2", () => {
+  const result = parseMod("Projectile Quantity +2");
+  expect(result).toEqual([{ type: "Projectile", value: 2 }]);
+});
+
+test("parse nearby enemies within 15 m have frail", () => {
+  const result = parseMod("Nearby enemies within 15 m have Frail");
+  expect(result).toEqual([{ type: "InflictFrail" }]);
+});
+
+test("parse inflicts frail when dealing spell damage", () => {
+  const result = parseMod("Inflicts Frail when dealing Spell Damage");
+  expect(result).toEqual([{ type: "InflictFrail" }]);
+});
+
+test("parse main skill supported by single word skill", () => {
+  const result = parseMod("Main Skill is supported by Lv. 25 Cataclysm");
+  expect(result).toEqual([
+    { type: "MainSkillSupportedBy", skillName: "Cataclysm", level: 25 },
+  ]);
+});
+
+test("parse main skill supported by multi-word skill", () => {
+  const result = parseMod("Main Skill is supported by Lv. 10 Chain Lightning");
+  expect(result).toEqual([
+    { type: "MainSkillSupportedBy", skillName: "Chain Lightning", level: 10 },
+  ]);
+});
+
+test("parse main skill supported by Multistrike", () => {
+  const result = parseMod("Main Skill is supported by Lv. 15 Multistrike");
+  expect(result).toEqual([
+    { type: "MainSkillSupportedBy", skillName: "Multistrike", level: 15 },
+  ]);
+});

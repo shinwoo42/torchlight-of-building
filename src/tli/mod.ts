@@ -392,7 +392,6 @@ interface ModDefinitions {
   AttackAggressionEffPct: { value: number };
   GeneratesSpellAggression: object;
   SpellAggressionEffPct: { value: number };
-  // TODO: IMPLEMENT THIS
   MainSkillSupportedBy: { skillName: string; level: number };
   // infiltrations
   InflictsInfiltration: { infiltrationType: InfiltrationType };

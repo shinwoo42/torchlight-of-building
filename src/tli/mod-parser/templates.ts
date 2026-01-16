@@ -366,7 +366,6 @@ export const allParsers = [
     dmgModType: "damage_over_time" as const,
     addn: c.additional !== undefined,
   })),
-  // Additional damage against Numbed enemies
   t(
     "{value:+dec%} additional {modType:DmgModType} damage against numbed enemies",
   ).output("DmgPct", (c) => ({
@@ -601,7 +600,6 @@ export const allParsers = [
       dmgType: "physical" as const,
     })),
   ]),
-  // Additional max damage with Numbed threshold
   t(
     "{value:+dec%} additional max {dmgType:DmgChunkType} damage to an enemy when they have at least {threshold:int} stack\\(s\\) of numbed",
   ).output("AddnMaxDmgPct", (c) => ({
@@ -937,7 +935,6 @@ export const allParsers = [
     value: c.value,
     statModType: "all" as const,
   })),
-  // TODO - Remove this old parser once we figure out if it's unused S11 moved to use the format below
   t("max focus blessing stacks {value:+int}").output(
     "MaxFocusBlessing",
     (c) => ({ value: c.value }),
@@ -1019,7 +1016,6 @@ export const allParsers = [
     value: c.value,
     cond: "equipped_in_left_ring_slot" as const,
   })),
-  // TODO - Remove this old parser once we figure out if it's unused S11 moved to use the format below
   t("max channeled stacks {value:+int}").output("MaxChannel", (c) => ({
     value: c.value,
   })),
@@ -1358,7 +1354,6 @@ export const allParsers = [
   t(
     "upon dealing damage to a cursed target, there is a {value:+dec%} chance to paralyze it",
   ).output("InflictParalysisPct", (c) => ({ value: c.value })),
-  // Agility Blessing generation
   t("{value:dec%} chance to gain agility blessing on critical strike").output(
     "GeneratesAgilityBlessing",
     () => ({}),
@@ -1367,68 +1362,55 @@ export const allParsers = [
     "GeneratesAgilityBlessing",
     () => ({}),
   ),
-  // Blur generation (ignoring condition)
   t(
     "{value:+dec%} chance to gain blur when inflicting crowd control effects",
   ).output("GeneratesBlur", (c) => ({ value: c.value })),
-  // Numbed effect
   t("{value:+dec%} numbed effect").output("NumbedEffPct", (c) => ({
     value: c.value,
   })),
-  // Numbed effect on critical strike with damage type
   t(
     "{value:+dec%} additional numbed effect on critical strike with {dmgType:DmgChunkType} damage for {dur:int} s",
   ).output("NumbedEffPct", (c) => ({
     value: c.value,
     cond: HAS_CRIT_RECENTLY,
   })),
-  // Inflicts Numbed
   t("inflicts {value:int} additional stack\\(s\\) of numbed").output(
     "InflictNumbed",
     () => ({}),
   ),
-  // Inflicts Numbed per Numbed chance
   t(
     "inflicts {stacks:int} additional stack\\(s\\) of numbed per {value:+dec%} numbed chance",
   ).output("InflictNumbed", () => ({})),
-  // Numbed chance
   t("{value:+dec%} numbed chance").output("NumbedChancePct", (c) => ({
     value: c.value,
   })),
-  // Numbed chance and effect combined
   t("{chance:+dec%} numbed chance, and {effect:dec%} numbed effect").outputMany(
     [
       spec("NumbedChancePct", (c) => ({ value: c.chance })),
       spec("NumbedEffPct", (c) => ({ value: c.effect })),
     ],
   ),
-  // Mark effect
   t("{value:+dec%} mark effect").output("MarkEffPct", (c) => ({
     value: c.value,
   })),
-  // Mark chance on crit
   t("{value:+dec%} chance to mark the enemy on critical strike").output(
     "InflictsMark",
     () => ({}),
   ),
-  // Mana regen with focus blessing
   t(
     "regenerates {value:dec%} mana per second when focus blessing is active",
   ).output("ManaRegenPerSecPct", (c) => ({
     value: c.value,
     cond: HAS_FOCUS_BLESSING,
   })),
-  // Damage taken from cursed enemies (standalone)
   t("{value:+int%} additional damage taken from cursed enemies").output(
     "DmgTakenPct",
     (c) => ({ value: c.value, cond: ENEMY_IS_CURSED }),
   ),
-  // Additional skill cost
   t("{value:+dec%} additional skill cost").output("SkillCostPct", (c) => ({
     value: c.value,
     addn: true,
   })),
-  // Lucky damage against numbed enemies
   t("you and minions deal lucky damage against numbed enemies").output(
     "LuckyDmg",
     () => ({ cond: "enemy_numbed" as const }),
@@ -1489,20 +1471,32 @@ export const allParsers = [
     "DmgTakenPct",
     (c) => ({ value: c.value }),
   ),
-  // Aura effect
   t("{value:+dec%} [additional] aura effect").output("AuraEffPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  // Combined max mana + skill cost
   t("{mana:+dec%} max mana. {cost:+int} skill cost").outputMany([
     spec("MaxManaPct", (c) => ({ value: c.mana, addn: false })),
     spec("SkillCost", (c) => ({ value: c.cost })),
   ]),
-  // Projectile damage
   t("{value:+dec%} [additional] projectile damage").output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: "projectile" as const,
     addn: c.additional !== undefined,
   })),
+  t("projectile quantity {value:+int}").output("Projectile", (c) => ({
+    value: c.value,
+  })),
+  t("nearby enemies within {distance:int} m have frail").output(
+    "InflictFrail",
+    () => ({}),
+  ),
+  t("inflicts frail when dealing spell damage").output(
+    "InflictFrail",
+    () => ({}),
+  ),
+  t("main skill is supported by lv\\. {level:int} {skillName:words}").output(
+    "MainSkillSupportedBy",
+    (c) => ({ skillName: c.skillName, level: c.level }),
+  ),
 ];

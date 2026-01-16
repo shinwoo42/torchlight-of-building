@@ -33,6 +33,10 @@ const getCapturePattern = (type: string): string => {
         pattern = "(\\d+(?:\\.\\d+)?)";
       }
       break;
+    case "words":
+      // Match one or more words (letters, possibly with spaces between)
+      pattern = "([a-z]+(?:\\s+[a-z]+)*)";
+      break;
     default:
       // Enum type - use word pattern
       pattern = "(\\w+)";
@@ -63,6 +67,13 @@ const getExtractor = (
       return (s) => parseInt(s, 10);
     case "dec":
       return (s) => parseFloat(s);
+    case "words":
+      // Return the matched words as title case (input is lowercased before matching)
+      return (s) =>
+        s
+          .split(/\s+/)
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
     default: {
       // Check if there's a custom enum mapping
       const mapping = enumMappings.get(baseType);
