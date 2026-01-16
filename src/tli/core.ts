@@ -168,6 +168,8 @@ export interface Configuration {
   // default to false
   hasMovedRecently: boolean;
   // default to false
+  isMoving: boolean;
+  // default to false
   hasCastCurseRecently: boolean;
   // default to false
   hasAttackAggression: boolean;
@@ -266,6 +268,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   chainLightningInstancesOnTarget: undefined,
   hasUsedMobilitySkillRecently: false,
   hasMovedRecently: false,
+  isMoving: false,
   hasCastCurseRecently: false,
   hasAttackAggression: false,
   hasSpellAggression: false,

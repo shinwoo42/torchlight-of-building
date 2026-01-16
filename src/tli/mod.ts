@@ -199,6 +199,7 @@ export type Condition =
   | "enemy_numbed"
   | "has_used_mobility_skill_recently"
   | "has_moved_recently"
+  | "is_moving"
   | "has_cast_curse_recently"
   // pactspirits
   | "has_portrait_of_a_fallen_saintess_pactspirit"
