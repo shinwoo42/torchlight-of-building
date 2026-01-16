@@ -1499,4 +1499,17 @@ export const allParsers = [
     "MainSkillSupportedBy",
     (c) => ({ skillName: c.skillName, level: c.level }),
   ),
+  // Life regeneration
+  t("regenerates {value:dec%} life per second").output(
+    "LifeRegenPerSecPct",
+    (c) => ({ value: c.value }),
+  ),
+  t("regenerates {value:int} life per second").output(
+    "FlatLifeRegenPerSec",
+    (c) => ({ value: c.value }),
+  ),
+  // Minion damage penetration
+  t(
+    "minion damage penetrates {value:dec%} {penType:ResPenType} resistance",
+  ).output("MinionResPenPct", (c) => ({ value: c.value, penType: c.penType })),
 ];

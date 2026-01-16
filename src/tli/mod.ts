@@ -360,6 +360,8 @@ interface ModDefinitions {
   SpellDmgBonusAppliesToAtkDmg: object;
   MaxLife: { value: number };
   MaxLifePct: { value: number; addn: boolean };
+  LifeRegenPerSecPct: { value: number };
+  FlatLifeRegenPerSec: { value: number };
   MaxMana: { value: number };
   MaxManaPct: { value: number; addn: boolean };
   ManaRegenPerSecPct: { value: number };

@@ -2577,3 +2577,20 @@ test("parse main skill supported by Multistrike", () => {
     { type: "MainSkillSupportedBy", skillName: "Multistrike", level: 15 },
   ]);
 });
+
+test("parse regenerates life per second (percentage)", () => {
+  const result = parseMod("Regenerates 3% Life per second");
+  expect(result).toEqual([{ type: "LifeRegenPerSecPct", value: 3 }]);
+});
+
+test("parse regenerates life per second (flat)", () => {
+  const result = parseMod("Regenerates 139 Life per second");
+  expect(result).toEqual([{ type: "FlatLifeRegenPerSec", value: 139 }]);
+});
+
+test("parse minion damage penetrates elemental resistance", () => {
+  const result = parseMod("Minion Damage penetrates 14% Elemental Resistance");
+  expect(result).toEqual([
+    { type: "MinionResPenPct", value: 14, penType: "elemental" },
+  ]);
+});
