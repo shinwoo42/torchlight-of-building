@@ -1530,9 +1530,12 @@ const createSelfReferential = <T extends Record<string, (keyof T)[]>>(
 const stepDeps = createSelfReferential({
   stalker: [],
   multistrike: ["stalker"],
+  attackAggression: [],
   spellAggression: [],
   castSpeed: ["spellAggression"],
   spellBurstChargeSpeed: ["castSpeed"],
+  maxSpellBurst: ["movementSpeed"],
+  movementSpeed: ["attackAggression"],
 });
 
 const modSteps = Object.keys(stepDeps) as (keyof typeof stepDeps)[];
@@ -1778,6 +1781,7 @@ const resolveModsForOffenseSkill = (
     });
   };
   const pushAttackAggression = (): void => {
+    step("attackAggression");
     if (!config.hasAttackAggression) {
       return;
     }
@@ -1924,11 +1928,11 @@ const resolveModsForOffenseSkill = (
   pushTradeoff();
   pushMainStatDmgPct();
   pushWhimsy();
-  pushAttackAggression(); // must happen before movement speed
+  pushAttackAggression();
   pushSpellAggression();
   pushMark();
 
-  // must happen before max_spell_burst normalization, after attack aggression
+  step("movementSpeed");
   const movementSpeedBonusPct =
     (calcEffMult(mods, "MovementSpeedPct") - 1) * 100;
   normalize("movement_speed_bonus_pct", movementSpeedBonusPct);
@@ -1943,7 +1947,7 @@ const resolveModsForOffenseSkill = (
   pushFrail();
   pushYouga2();
 
-  // must happen after movement_speed_bonus_pct normalization
+  step("maxSpellBurst");
   const maxSpellBurst = sumByValue(filterMods(mods, "MaxSpellBurst"));
   normalize("max_spell_burst", maxSpellBurst);
   normalize("additional_max_channel_stack", additionalMaxChanneledStacks);
@@ -1998,8 +2002,6 @@ const resolveModsForOffenseSkill = (
 
   pushPactspirits();
 
-  // must happen after spell aggression and any other normalizations that can
-  // affect cast speed
   const { spellBurstChargeSpeedBonusPct } = pushSpellBurstChargeSpeed();
   pushErika1();
   const { multistrikeChancePct, multistrikeIncDmgPct } = pushMultistrike();
