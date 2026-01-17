@@ -342,6 +342,7 @@ interface ModDefinitions {
   SpellBurstChargeSpeedPct: { value: number; addn?: boolean };
   SpellBurstAdditionalDmgPct: { value: number; addn: true };
   PlaySafe: { value: number };
+  CdrPct: { value: number };
   SkillAreaPct: {
     value: number;
     skillAreaModType: SkillAreaModType;
@@ -415,6 +416,7 @@ interface ModDefinitions {
     addn?: boolean;
   };
   // ailments
+  AilmentDurationPct: { value: number };
   InflictWiltPct: { value: number; isEnemyDebuff?: boolean };
   BaseWiltFlatDmg: { value: number };
   InflictFrostbitePct: { value: number; isEnemyDebugg?: boolean };

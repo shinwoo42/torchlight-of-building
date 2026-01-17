@@ -717,6 +717,10 @@ export const allParsers = [
   t("{value:+dec%} fervor effect").output("FervorEffPct", (c) => ({
     value: c.value,
   })),
+  t("{value:+dec%} steep strike chance\\.").output(
+    "SteepStrikeChancePct",
+    (c) => ({ value: c.value }),
+  ),
   t("{value:+dec%} steep strike chance").output(
     "SteepStrikeChancePct",
     (c) => ({ value: c.value }),
@@ -927,10 +931,17 @@ export const allParsers = [
     (c) => ({ value: c.value, resType: c.resType }),
   ),
 
+  t("{value:+dec%} energy shield regain").output(
+    "EnergyShieldRegainPct",
+    (c) => ({ value: c.value }),
+  ),
   t("{value:dec%} energy shield regain").output(
     "EnergyShieldRegainPct",
     (c) => ({ value: c.value }),
   ),
+  t("{value:+dec%} life regain").output("LifeRegainPct", (c) => ({
+    value: c.value,
+  })),
   t("{value:dec%} life regain").output("LifeRegainPct", (c) => ({
     value: c.value,
   })),
@@ -1189,6 +1200,9 @@ export const allParsers = [
     value: c.value,
     addn: false,
   })),
+  t("{value:+dec%} cooldown recovery speed").output("CdrPct", (c) => ({
+    value: c.value,
+  })),
   t("{value:+dec} affliction inflicted per second").output(
     "AfflictionInflictedPerSec",
     (c) => ({ value: c.value }),
@@ -1319,6 +1333,9 @@ export const allParsers = [
     (c) => ({ value: c.value }),
   ),
   t("{value:+dec%} freeze duration").output("FreezeDurationPct", (c) => ({
+    value: c.value,
+  })),
+  t("{value:+dec%} ailment duration").output("AilmentDurationPct", (c) => ({
     value: c.value,
   })),
   t("inflicts frail on spell hit").output("InflictFrail", () => ({})),

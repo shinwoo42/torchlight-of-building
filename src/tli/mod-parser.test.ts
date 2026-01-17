@@ -2752,3 +2752,28 @@ test("parse reaping recovery speed", () => {
   const result = parseMod("+107% Reaping Recovery Speed");
   expect(result).toEqual([{ type: "ReapCdrPct", value: 107, addn: false }]);
 });
+
+test("parse cooldown recovery speed", () => {
+  const result = parseMod("+12% Cooldown Recovery Speed");
+  expect(result).toEqual([{ type: "CdrPct", value: 12 }]);
+});
+
+test("parse ailment duration", () => {
+  const result = parseMod("+12% Ailment Duration");
+  expect(result).toEqual([{ type: "AilmentDurationPct", value: 12 }]);
+});
+
+test("parse energy shield regain (signed)", () => {
+  const result = parseMod("+12% Energy Shield Regain");
+  expect(result).toEqual([{ type: "EnergyShieldRegainPct", value: 12 }]);
+});
+
+test("parse life regain (signed)", () => {
+  const result = parseMod("+12% Life Regain");
+  expect(result).toEqual([{ type: "LifeRegainPct", value: 12 }]);
+});
+
+test("parse steep strike chance (signed with period)", () => {
+  const result = parseMod("+12% Steep Strike chance.");
+  expect(result).toEqual([{ type: "SteepStrikeChancePct", value: 12 }]);
+});
