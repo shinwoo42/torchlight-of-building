@@ -2869,3 +2869,64 @@ test("parse sweep slash damage", () => {
   const result = parseMod("+56% additional Sweep Slash Damage");
   expect(result).toEqual([{ type: "SweepSlashDmgPct", value: 56, addn: true }]);
 });
+
+// Immunity mods
+test("parse immune to blinding", () => {
+  const result = parseMod("Immune to Blinding");
+  expect(result).toEqual([{ type: "ImmuneToBlinding" }]);
+});
+
+test("parse immune to elemental ailments", () => {
+  const result = parseMod("Immune to Elemental Ailments");
+  expect(result).toEqual([{ type: "ImmuneToElementalAilments" }]);
+});
+
+test("parse immune to frostbite", () => {
+  const result = parseMod("Immune to Frostbite");
+  expect(result).toEqual([{ type: "ImmuneToFrostbite" }]);
+});
+
+test("parse immune to ignite", () => {
+  const result = parseMod("Immune to Ignite");
+  expect(result).toEqual([{ type: "ImmuneToIgnite" }]);
+});
+
+test("parse immune to numbed", () => {
+  const result = parseMod("Immune to Numbed");
+  expect(result).toEqual([{ type: "ImmuneToNumbed" }]);
+});
+
+test("parse immune to paralysis", () => {
+  const result = parseMod("Immune to Paralysis");
+  expect(result).toEqual([{ type: "ImmuneToParalysis" }]);
+});
+
+test("parse immune to slow", () => {
+  const result = parseMod("Immune to Slow");
+  expect(result).toEqual([{ type: "ImmuneToSlow" }]);
+});
+
+test("parse immune to trauma", () => {
+  const result = parseMod("Immune to Trauma");
+  expect(result).toEqual([{ type: "ImmuneToTrauma" }]);
+});
+
+test("parse immune to weaken", () => {
+  const result = parseMod("Immune to Weaken");
+  expect(result).toEqual([{ type: "ImmuneToWeaken" }]);
+});
+
+test("parse immune to wilt", () => {
+  const result = parseMod("Immune to Wilt");
+  expect(result).toEqual([{ type: "ImmuneToWilt" }]);
+});
+
+test("parse immune to crowd control effects", () => {
+  const result = parseMod("Immune to crowd control effects");
+  expect(result).toEqual([{ type: "ImmuneToCrowdControl" }]);
+});
+
+test("parse immune to curse", () => {
+  const result = parseMod("Immune to curse");
+  expect(result).toEqual([{ type: "ImmuneToCurse" }]);
+});

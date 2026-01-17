@@ -1672,4 +1672,23 @@ export const allParsers = [
     "ManaBeforeLifePct",
     (c) => ({ value: c.value }),
   ),
+  // Immunities
+  t("immune to blinding").output("ImmuneToBlinding", () => ({})),
+  t("immune to elemental ailments").output(
+    "ImmuneToElementalAilments",
+    () => ({}),
+  ),
+  t("immune to frostbite").output("ImmuneToFrostbite", () => ({})),
+  t("immune to ignite").output("ImmuneToIgnite", () => ({})),
+  t("immune to numbed").output("ImmuneToNumbed", () => ({})),
+  t("immune to paralysis").output("ImmuneToParalysis", () => ({})),
+  t("immune to slow").output("ImmuneToSlow", () => ({})),
+  t("immune to trauma").output("ImmuneToTrauma", () => ({})),
+  t("immune to weaken").output("ImmuneToWeaken", () => ({})),
+  t("immune to wilt").output("ImmuneToWilt", () => ({})),
+  t("immune to crowd control effects").output(
+    "ImmuneToCrowdControl",
+    () => ({}),
+  ),
+  t("immune to curse").output("ImmuneToCurse", () => ({})),
 ];

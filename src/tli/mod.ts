@@ -479,6 +479,19 @@ interface ModDefinitions {
   MaxPureHeartStacks: { value: number };
   // legendary gear
   DisableMainStatDmg: object;
+  // immunities
+  ImmuneToBlinding: object;
+  ImmuneToElementalAilments: object;
+  ImmuneToFrostbite: object;
+  ImmuneToIgnite: object;
+  ImmuneToNumbed: object;
+  ImmuneToParalysis: object;
+  ImmuneToSlow: object;
+  ImmuneToTrauma: object;
+  ImmuneToWeaken: object;
+  ImmuneToWilt: object;
+  ImmuneToCrowdControl: object;
+  ImmuneToCurse: object;
 }
 
 // Generate the Mod union type from ModDefinitions
