@@ -545,6 +545,10 @@ export const allParsers = [
     "MinionCritRatingPct",
     (c) => ({ value: c.value, addn: c.additional !== undefined }),
   ),
+  t("{value:+int} minion critical strike rating").output(
+    "MinionFlatCritRating",
+    (c) => ({ value: c.value }),
+  ),
   t("{value:+dec%} [additional] minion critical strike damage").output(
     "MinionCritDmgPct",
     (c) => ({ value: c.value, addn: c.additional !== undefined }),
@@ -1054,6 +1058,9 @@ export const allParsers = [
     "GeneratesFortitude",
     () => ({}),
   ),
+  t(
+    "{value:+dec%} chance to gain a stack of fortitude when using a melee skill",
+  ).output("GeneratesFortitude", () => ({})),
   t("{value:+dec%} chance to gain blur when reaping").output(
     "GeneratesBlur",
     (c) => ({ value: c.value }),
@@ -1065,6 +1072,12 @@ export const allParsers = [
   t(
     "gains {value:int} stack\\(s\\) of focus blessing when activating spell burst",
   ).output("GeneratesFocusBlessing", () => ({})),
+  t(
+    "{value:+dec%} chance to gain {stacks:int} stack of focus blessing when casting a summon skill. interval: {interval:int} s",
+  ).output("GeneratesFocusBlessing", () => ({})),
+  t(
+    "{value:+dec%} chance to gain {stacks:int} stack of tenacity blessing when casting a skill. interval: {interval:int} s",
+  ).output("GeneratesTenacityBlessing", () => ({})),
   t(
     "{value:+dec%} additional {modType:DmgModType} damage for every stack of focus blessing",
   ).output("DmgPct", (c) => ({
@@ -1172,6 +1185,10 @@ export const allParsers = [
     "ReapCdrPct",
     (c) => ({ value: c.value, addn: c.additional !== undefined }),
   ),
+  t("{value:+dec%} reaping recovery speed").output("ReapCdrPct", (c) => ({
+    value: c.value,
+    addn: false,
+  })),
   t("{value:+dec} affliction inflicted per second").output(
     "AfflictionInflictedPerSec",
     (c) => ({ value: c.value }),

@@ -262,6 +262,7 @@ interface ModDefinitions {
   MinionAspdPct: { value: number; addn: boolean };
   MinionCspdPct: { value: number; addn: boolean };
   MinionCritRatingPct: { value: number; addn?: boolean };
+  MinionFlatCritRating: { value: number };
   MinionCritDmgPct: { value: number; addn?: boolean };
   MinionResPenPct: { value: number; penType: ResPenType };
   MinionArmorPenPct: { value: number };

@@ -2721,3 +2721,34 @@ test("parse additional evasion while moving", () => {
     { type: "EvasionPct", value: 10, addn: true, cond: "is_moving" },
   ]);
 });
+
+test("parse chance to gain focus blessing when casting summon skill", () => {
+  const result = parseMod(
+    "+100% chance to gain 1 stack of Focus Blessing when casting a Summon Skill. Interval: 1 s",
+  );
+  expect(result).toEqual([{ type: "GeneratesFocusBlessing" }]);
+});
+
+test("parse chance to gain tenacity blessing when casting skill", () => {
+  const result = parseMod(
+    "+100% chance to gain 1 stack of Tenacity Blessing when casting a skill. Interval: 1 s",
+  );
+  expect(result).toEqual([{ type: "GeneratesTenacityBlessing" }]);
+});
+
+test("parse chance to gain fortitude when using melee skill", () => {
+  const result = parseMod(
+    "+100% chance to gain a stack of Fortitude when using a Melee Skill",
+  );
+  expect(result).toEqual([{ type: "GeneratesFortitude" }]);
+});
+
+test("parse flat minion critical strike rating", () => {
+  const result = parseMod("+107 Minion Critical Strike Rating");
+  expect(result).toEqual([{ type: "MinionFlatCritRating", value: 107 }]);
+});
+
+test("parse reaping recovery speed", () => {
+  const result = parseMod("+107% Reaping Recovery Speed");
+  expect(result).toEqual([{ type: "ReapCdrPct", value: 107, addn: false }]);
+});
