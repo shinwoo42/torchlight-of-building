@@ -1308,6 +1308,16 @@ export const allParsers = [
     infiltrationType: c.infiltrationType as InfiltrationType,
   })),
   t(
+    "when minions deal damage, inflicts {infiltrationType:InfiltrationType} infiltration. interval for each enemy: {interval:int} s",
+  ).output("InflictsInfiltration", (c) => ({
+    infiltrationType: c.infiltrationType as InfiltrationType,
+  })),
+  t(
+    "when dealing damage, inflicts {infiltrationType:InfiltrationType} infiltration. interval for each enemy: {interval:int} s",
+  ).output("InflictsInfiltration", (c) => ({
+    infiltrationType: c.infiltrationType as InfiltrationType,
+  })),
+  t(
     "inflicts {infiltrationType:InfiltrationType} infiltration when dealing damage. interval for each enemy: {interval:int} s",
   ).output("InflictsInfiltration", (c) => ({
     infiltrationType: c.infiltrationType as InfiltrationType,

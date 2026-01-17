@@ -2147,6 +2147,33 @@ test("parse inflicts fire infiltration when dealing damage", () => {
   ]);
 });
 
+test("parse minion inflicts cold infiltration", () => {
+  const result = parseMod(
+    "When Minions deal damage, inflicts Cold Infiltration. Interval for each enemy: 1 s",
+  );
+  expect(result).toEqual([
+    { type: "InflictsInfiltration", infiltrationType: "cold" },
+  ]);
+});
+
+test("parse minion inflicts fire infiltration", () => {
+  const result = parseMod(
+    "When Minions deal damage, inflicts Fire Infiltration. Interval for each enemy: 1 s",
+  );
+  expect(result).toEqual([
+    { type: "InflictsInfiltration", infiltrationType: "fire" },
+  ]);
+});
+
+test("parse when dealing damage inflicts fire infiltration", () => {
+  const result = parseMod(
+    "When dealing damage, inflicts Fire Infiltration. Interval for each enemy: 1 s",
+  );
+  expect(result).toEqual([
+    { type: "InflictsInfiltration", infiltrationType: "fire" },
+  ]);
+});
+
 test("parse cold infiltration effect", () => {
   const result = parseMod("+11% Cold Infiltration Effect");
   expect(result).toEqual([
