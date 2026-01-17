@@ -564,6 +564,19 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
+  t(
+    "{value:+dec%} [additional] {minionDmgModType:MinionDmgModType} damage for minions",
+  ).output("MinionDmgPct", (c) => ({
+    value: c.value,
+    addn: c.additional !== undefined,
+    minionDmgModType: c.minionDmgModType,
+  })),
+  t("{value:+dec%} minion skill area").output("MinionSkillAreaPct", (c) => ({
+    value: c.value,
+  })),
+  t("{value:+dec%} minion max life").output("MinionMaxLifePct", (c) => ({
+    value: c.value,
+  })),
   t("{value:dec%} {penType:ResPenType} penetration for minions").output(
     "MinionResPenPct",
     (c) => ({ value: c.value, penType: c.penType }),
@@ -1637,6 +1650,10 @@ export const allParsers = [
   })),
   t("max terra charge stacks {value:+int}").output(
     "MaxTerraChargeStack",
+    (c) => ({ value: c.value }),
+  ),
+  t("{value:+dec%} terra charge recovery speed").output(
+    "TerraChargeRecoverySpeedPct",
     (c) => ({ value: c.value }),
   ),
   t("max terra quantity {value:+int}").output("MaxTerraQuant", (c) => ({

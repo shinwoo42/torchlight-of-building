@@ -2981,3 +2981,42 @@ test("parse flat physical damage to attacks per armor", () => {
     },
   ]);
 });
+
+test("parse minion elemental damage", () => {
+  const result = parseMod("+66% Minion Elemental Damage");
+  expect(result).toEqual([
+    {
+      type: "MinionDmgPct",
+      value: 66,
+      addn: false,
+      minionDmgModType: "elemental",
+    },
+  ]);
+});
+
+test("parse physical damage for minions", () => {
+  const result = parseMod("+66% Physical Damage for Minions");
+  expect(result).toEqual([
+    {
+      type: "MinionDmgPct",
+      value: 66,
+      addn: false,
+      minionDmgModType: "physical",
+    },
+  ]);
+});
+
+test("parse minion skill area", () => {
+  const result = parseMod("+62% Minion Skill Area");
+  expect(result).toEqual([{ type: "MinionSkillAreaPct", value: 62 }]);
+});
+
+test("parse minion max life", () => {
+  const result = parseMod("+64% Minion Max Life");
+  expect(result).toEqual([{ type: "MinionMaxLifePct", value: 64 }]);
+});
+
+test("parse terra charge recovery speed", () => {
+  const result = parseMod("+44% Terra Charge Recovery Speed");
+  expect(result).toEqual([{ type: "TerraChargeRecoverySpeedPct", value: 44 }]);
+});

@@ -46,6 +46,7 @@ export const MinionDmgModTypes = [
   "lightning",
   "fire",
   "erosion",
+  "elemental",
 ] as const;
 
 export type MinionDmgModType = (typeof MinionDmgModTypes)[number];
@@ -273,6 +274,8 @@ interface ModDefinitions {
   MinionCritDmgPct: { value: number; addn?: boolean };
   MinionResPenPct: { value: number; penType: ResPenType };
   MinionArmorPenPct: { value: number };
+  MinionMaxLifePct: { value: number };
+  MinionSkillAreaPct: { value: number };
   // end minions
   ProjectileSpeedPct: { value: number; addn?: boolean };
   ProjectileSizePct: { value: number };
@@ -394,6 +397,7 @@ interface ModDefinitions {
   GeneratesFortitude: object;
   MaxChannel: { value: number };
   MinChannel: { value: number };
+  TerraChargeRecoverySpeedPct: { value: number };
   MaxTerraChargeStack: { value: number };
   MaxTerraQuant: { value: number };
   MaxSentryQuant: { value: number };
