@@ -2776,6 +2776,49 @@ test("parse command per second", () => {
   expect(result).toEqual([{ type: "CommandPerSec", value: 10 }]);
 });
 
+test("parse command per second with space after plus", () => {
+  const result = parseMod("+ 12 Command per second");
+  expect(result).toEqual([{ type: "CommandPerSec", value: 12 }]);
+});
+
+test("parse minion double damage chance", () => {
+  const result = parseMod("+25% chance for Minions to deal Double Damage");
+  expect(result).toEqual([{ type: "MinionDoubleDmgChancePct", value: 25 }]);
+});
+
+test("parse additional damage against frozen enemies", () => {
+  const result = parseMod("+21% additional damage against Frozen enemies");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 21,
+      dmgModType: "global",
+      addn: true,
+      cond: "enemy_frozen",
+    },
+  ]);
+});
+
+test("parse attack speed and movement speed per block", () => {
+  const result = parseMod(
+    "+1% Attack Speed and Movement Speed for every 6% of Attack or Spell Block",
+  );
+  expect(result).toEqual([
+    {
+      type: "AspdPct",
+      value: 1,
+      addn: false,
+      per: { stackable: "total_block_pct", amt: 6 },
+    },
+    {
+      type: "MovementSpeedPct",
+      value: 1,
+      addn: false,
+      per: { stackable: "total_block_pct", amt: 6 },
+    },
+  ]);
+});
+
 test("parse max fortitude stacks", () => {
   const result = parseMod("+1 Max Fortitude Stacks");
   expect(result).toEqual([{ type: "MaxFortitudeStack", value: 1 }]);

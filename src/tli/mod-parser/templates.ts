@@ -152,6 +152,15 @@ export const allParsers = [
     addn: true,
     cond: C.enemy_has_ailment,
   })),
+  t("{value:+dec%} [additional] damage against frozen enemies").output(
+    "DmgPct",
+    (c) => ({
+      value: c.value,
+      dmgModType: GLOBAL,
+      addn: c.additional !== undefined,
+      cond: C.enemy_frozen,
+    }),
+  ),
   t(
     "{dmgValue:+dec%} additional damage dealt to cursed enemies. {takenValue:+int%} additional damage taken from cursed enemies",
   ).outputMany([
@@ -578,6 +587,10 @@ export const allParsers = [
     "AddnMaxMinionDmgPct",
     (c) => ({ value: c.value }),
   ),
+  t("{value:+dec%} chance for minions to deal double damage").output(
+    "MinionDoubleDmgChancePct",
+    (c) => ({ value: c.value }),
+  ),
   t(
     "{minValue:+dec%} additional min physical damage, and {maxValue:+dec%} additional max physical damage",
   ).outputMany([
@@ -653,6 +666,20 @@ export const allParsers = [
     spec("CspdPct", (c) => ({
       value: c.value,
       addn: c.additional !== undefined,
+    })),
+  ]),
+  t(
+    "{value:+dec%} attack speed and movement speed for every {amt:dec%} of attack or spell block",
+  ).outputMany([
+    spec("AspdPct", (c) => ({
+      value: c.value,
+      addn: false,
+      per: { stackable: S.total_block_pct, amt: c.amt },
+    })),
+    spec("MovementSpeedPct", (c) => ({
+      value: c.value,
+      addn: false,
+      per: { stackable: S.total_block_pct, amt: c.amt },
     })),
   ]),
   t(
@@ -1723,9 +1750,12 @@ export const allParsers = [
   t("max sentry quantity {value:+int}").output("MaxSentryQuant", (c) => ({
     value: c.value,
   })),
-  t("{value:+int} command per second").output("CommandPerSec", (c) => ({
-    value: c.value,
-  })),
+  t
+    .multi([
+      t("{value:+int} command per second"),
+      t("+ {value:int} command per second"),
+    ])
+    .output("CommandPerSec", (c) => ({ value: c.value })),
   t("{value:+int} max fortitude stacks").output("MaxFortitudeStack", (c) => ({
     value: c.value,
   })),
@@ -1893,12 +1923,12 @@ export const allParsers = [
     value: c.value,
     addn: true,
   })),
-  t("{value:+dec%} additional damage when channeling").output(
+  t("{value:+dec%} [additional] damage when channeling").output(
     "DmgPct",
     (c) => ({
       value: c.value,
       dmgModType: GLOBAL,
-      addn: true,
+      addn: c.additional !== undefined,
       cond: C.channeling,
     }),
   ),

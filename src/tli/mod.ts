@@ -225,6 +225,7 @@ const ConditionValues = [
   "enemy_has_lightning_infiltration",
   "enemy_has_fire_infiltration",
   "target_enemy_frozen_recently",
+  "enemy_frozen",
   "enemy_numbed",
   "has_used_mobility_skill_recently",
   "has_moved_recently",
@@ -297,6 +298,7 @@ interface ModDefinitions {
   MinionArmorPenPct: { value: number };
   MinionMaxLifePct: { value: number };
   MinionSkillAreaPct: { value: number };
+  MinionDoubleDmgChancePct: { value: number };
   // end minions
   ProjectileSpeedPct: { value: number; addn?: boolean };
   ProjectileSizePct: { value: number };

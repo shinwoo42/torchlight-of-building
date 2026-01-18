@@ -827,6 +827,7 @@ const filterModsByCond = (
         "target_enemy_frozen_recently",
         () => config.targetEnemyFrozenRecently,
       )
+      .with("enemy_frozen", () => config.targetEnemyIsFrozen)
       .with("has_squidnova", () => hasPactspirit("Squiddle", loadout))
       .with("holding_shield", () => {
         const offhand = loadout.gearPage.equippedGear.offHand?.equipmentType;
