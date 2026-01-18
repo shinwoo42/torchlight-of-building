@@ -1726,6 +1726,18 @@ test("parse sealed mana compensation for skill", () => {
   ]);
 });
 
+test("parse additional skill-specific sealed mana compensation", () => {
+  const result = parseMod("-20% additional Deep Pain Sealed Mana Compensation");
+  expect(result).toEqual([
+    {
+      type: "SealedManaCompPct",
+      value: -20,
+      addn: true,
+      skillName: "Deep Pain",
+    },
+  ]);
+});
+
 test("parse chance to gain blur when reaping", () => {
   const result = parseMod("+5% chance to gain Blur when Reaping");
   expect(result).toEqual([{ type: "GeneratesBlur", value: 5 }]);

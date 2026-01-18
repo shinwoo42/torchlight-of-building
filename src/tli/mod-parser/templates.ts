@@ -1359,6 +1359,13 @@ export const allParsers = [
     (c) => ({ value: c.value, addn: false, skillName: c.skillName }),
   ),
   t(
+    "{value:+dec%} [additional] {skillName:words} sealed mana compensation",
+  ).output("SealedManaCompPct", (c) => ({
+    value: c.value,
+    addn: c.additional !== undefined,
+    skillName: c.skillName,
+  })),
+  t(
     "additionally settles {value:dec%} of the remaining total damage when reaping, then removes all damage over time acting on the target",
   ).output("ReapPurificationPct", (c) => ({ value: c.value })),
   t(
