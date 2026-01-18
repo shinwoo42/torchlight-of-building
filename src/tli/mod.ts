@@ -91,64 +91,79 @@ export const HeroTraitLevelTypes = ["origin", "discipline", "progress"];
 
 export type HeroTraitLevelType = (typeof HeroTraitLevelTypes)[number];
 
-export type Stackable =
-  | "willpower"
-  | "main_stat"
-  | "stat"
-  | "highest_stat"
-  | "str"
-  | "dex"
-  | "int"
-  | "frostbite_rating"
-  | "projectile"
-  | "jump"
-  | "skill_use"
-  | "skill_charges_on_use"
-  | "cruelty_buff"
-  | "fervor"
-  | "movement_speed_bonus_pct"
-  | "max_mana"
-  | "mana_consumed_recently"
-  | "mercury_pt"
-  | "unsealed_mana_pct"
-  | "unsealed_life_pct"
-  | "sealed_mana_pct"
-  | "sealed_life_pct"
-  | "focus_blessing"
-  | "agility_blessing"
-  | "tenacity_blessing"
-  | "desecration"
-  | "torment"
-  | "num_enemies_affected_by_warcry"
-  | "num_enemies_nearby"
-  | "enemy_numbed_stacks"
-  | "level"
-  | "max_spell_burst"
-  | "spell_burst_charge_speed_bonus_pct"
-  | "has_hit_enemy_with_elemental_dmg_recently"
-  | "num_spell_skills_used_recently"
-  | "num_unique_weapon_types_equipped"
-  | "num_max_multistrikes_recently"
+// Helper to create an object where each key equals its value
+const createUnionMap = <T extends readonly string[]>(
+  values: T,
+): { readonly [K in T[number]]: K } => {
+  const result = {} as { [K in T[number]]: K };
+  for (const value of values) {
+    (result as Record<string, string>)[value] = value;
+  }
+  return result;
+};
+
+const StackableValues = [
+  "willpower",
+  "main_stat",
+  "stat",
+  "highest_stat",
+  "str",
+  "dex",
+  "int",
+  "frostbite_rating",
+  "projectile",
+  "jump",
+  "skill_use",
+  "skill_charges_on_use",
+  "cruelty_buff",
+  "fervor",
+  "movement_speed_bonus_pct",
+  "max_mana",
+  "mana_consumed_recently",
+  "mercury_pt",
+  "unsealed_mana_pct",
+  "unsealed_life_pct",
+  "sealed_mana_pct",
+  "sealed_life_pct",
+  "focus_blessing",
+  "agility_blessing",
+  "tenacity_blessing",
+  "desecration",
+  "torment",
+  "num_enemies_affected_by_warcry",
+  "num_enemies_nearby",
+  "enemy_numbed_stacks",
+  "level",
+  "max_spell_burst",
+  "spell_burst_charge_speed_bonus_pct",
+  "has_hit_enemy_with_elemental_dmg_recently",
+  "num_spell_skills_used_recently",
+  "num_unique_weapon_types_equipped",
+  "num_max_multistrikes_recently",
   // max channel stacks beyond initial skill channel stacks
-  | "additional_max_channel_stack"
-  | "channel_stack"
+  "additional_max_channel_stack",
+  "channel_stack",
   // skill-specific
-  | "mind_control_link"
-  | "unused_mind_control_link"
-  | "arcane_circle_stack"
-  | "berserking_blade_buff"
+  "mind_control_link",
+  "unused_mind_control_link",
+  "arcane_circle_stack",
+  "berserking_blade_buff",
   // hero-specific
-  | "stalker"
-  | "twisted_spacetime"
+  "stalker",
+  "twisted_spacetime",
   // pactspirit-specific
-  | "repentance"
-  | "pure_heart"
+  "repentance",
+  "pure_heart",
   // defenses
-  | "armor"
-  | "evasion"
-  | "energy_shield"
-  | "total_block_pct"
-  | "block_ratio";
+  "armor",
+  "evasion",
+  "energy_shield",
+  "total_block_pct",
+  "block_ratio",
+] as const;
+
+export const Stackables = createUnionMap(StackableValues);
+export type Stackable = (typeof StackableValues)[number];
 
 export type StatType = "str" | "dex" | "int";
 
@@ -171,53 +186,57 @@ export interface PerStackable {
   multiplicative?: boolean; // default false
 }
 
-export type Condition =
-  | "holding_shield"
-  | "is_dual_wielding"
-  | "has_one_handed_weapon"
-  | "enemy_frostbitten"
-  | "realm_of_mercury"
-  | "has_focus_blessing"
-  | "has_agility_blessing"
-  | "has_tenacity_blessing"
-  | "enemy_has_desecration"
-  | "has_full_mana"
-  | "enemy_paralyzed"
-  | "target_enemy_is_elite"
-  | "target_enemy_is_nearby"
-  | "target_enemy_is_in_proximity"
-  | "has_blocked_recently"
-  | "has_elites_nearby"
-  | "enemy_has_ailment"
-  | "has_hasten"
-  | "has_crit_recently"
-  | "has_blur"
-  | "blur_ended_recently"
-  | "channeling"
-  | "sages_insight_fire"
-  | "sages_insight_cold"
-  | "sages_insight_lightning"
-  | "sages_insight_erosion"
-  | "at_max_channeled_stacks"
-  | "enemy_at_max_affliction"
-  | "enemy_is_cursed"
-  | "have_both_sealed_mana_and_life"
-  | "equipped_in_left_ring_slot"
-  | "equipped_in_right_ring_slot"
-  | "enemy_has_desecration_and_cc"
-  | "enemy_has_cold_infiltration"
-  | "enemy_has_lightning_infiltration"
-  | "enemy_has_fire_infiltration"
-  | "target_enemy_frozen_recently"
-  | "enemy_numbed"
-  | "has_used_mobility_skill_recently"
-  | "has_moved_recently"
-  | "is_moving"
-  | "has_cast_curse_recently"
-  | "taking_damage_over_time"
+const ConditionValues = [
+  "holding_shield",
+  "is_dual_wielding",
+  "has_one_handed_weapon",
+  "enemy_frostbitten",
+  "realm_of_mercury",
+  "has_focus_blessing",
+  "has_agility_blessing",
+  "has_tenacity_blessing",
+  "enemy_has_desecration",
+  "has_full_mana",
+  "enemy_paralyzed",
+  "target_enemy_is_elite",
+  "target_enemy_is_nearby",
+  "target_enemy_is_in_proximity",
+  "has_blocked_recently",
+  "has_elites_nearby",
+  "enemy_has_ailment",
+  "has_hasten",
+  "has_crit_recently",
+  "has_blur",
+  "blur_ended_recently",
+  "channeling",
+  "sages_insight_fire",
+  "sages_insight_cold",
+  "sages_insight_lightning",
+  "sages_insight_erosion",
+  "at_max_channeled_stacks",
+  "enemy_at_max_affliction",
+  "enemy_is_cursed",
+  "have_both_sealed_mana_and_life",
+  "equipped_in_left_ring_slot",
+  "equipped_in_right_ring_slot",
+  "enemy_has_desecration_and_cc",
+  "enemy_has_cold_infiltration",
+  "enemy_has_lightning_infiltration",
+  "enemy_has_fire_infiltration",
+  "target_enemy_frozen_recently",
+  "enemy_numbed",
+  "has_used_mobility_skill_recently",
+  "has_moved_recently",
+  "is_moving",
+  "has_cast_curse_recently",
+  "taking_damage_over_time",
   // pactspirits
-  | "has_portrait_of_a_fallen_saintess_pactspirit"
-  | "has_squidnova";
+  "has_portrait_of_a_fallen_saintess_pactspirit",
+  "has_squidnova",
+] as const;
+
+export const Conditions = createUnionMap(ConditionValues);
+export type Condition = (typeof ConditionValues)[number];
 
 export type Comparator = "lt" | "lte" | "eq" | "gt" | "gte";
 
