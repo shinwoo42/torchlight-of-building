@@ -83,6 +83,10 @@ export const SkillLevelTypes = [
 
 export type SkillLevelType = (typeof SkillLevelTypes)[number];
 
+export const DmgTakenTypes = ["physical", "damage_over_time"] as const;
+
+export type DmgTakenType = (typeof DmgTakenTypes)[number];
+
 export const HeroTraitLevelTypes = ["origin", "discipline", "progress"];
 
 export type HeroTraitLevelType = (typeof HeroTraitLevelTypes)[number];
@@ -116,6 +120,8 @@ export type Stackable =
   | "desecration"
   | "torment"
   | "num_enemies_affected_by_warcry"
+  | "num_enemies_nearby"
+  | "enemy_numbed_stacks"
   | "level"
   | "max_spell_burst"
   | "spell_burst_charge_speed_bonus_pct"
@@ -213,17 +219,12 @@ export type Condition =
   | "has_portrait_of_a_fallen_saintess_pactspirit"
   | "has_squidnova";
 
-export type ConditionThresholdTarget =
-  | "enemy_numbed_stacks"
-  | "num_enemies_nearby"
-  | "num_enemies_affected_by_warcry";
-
 export type Comparator = "lt" | "lte" | "eq" | "gt" | "gte";
 
 // e.g. "greater than 1 nearby enemy" would be {target: "num_enemies_nearby", comparator: "gt", value: 1}
 //   and would be satisfied if configuration's `numEnemiesNearby` > 1
 export interface ConditionThreshold {
-  target: ConditionThresholdTarget;
+  target: Stackable;
   comparator: Comparator;
   value: number;
 }
@@ -327,7 +328,7 @@ interface ModDefinitions {
   EnergyShieldRegainPct: { value: number };
   EnergyShieldChargeSpeedPct: { value: number };
   RestoreLifePctPerSec: { value: number };
-  DmgTakenPct: { value: number; addn?: boolean };
+  DmgTakenPct: { value: number; addn?: boolean; dmgTakenType?: DmgTakenType };
   ConvertDmgTakenPct: { value: number; from: DmgChunkType; to: DmgChunkType };
   // end defenses
   Reap: { duration: number; cooldown: number };

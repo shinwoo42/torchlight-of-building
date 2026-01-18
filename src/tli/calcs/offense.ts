@@ -64,8 +64,8 @@ import {
   calculateAddn,
   collectMods,
   collectModsFromAffixes,
+  filterByStackableThreshold,
   filterMods,
-  filterModsByCondThreshold,
   filterOutPerMods,
   findMod,
   modExists,
@@ -856,12 +856,8 @@ const applyModFilters = (
   loadout: Loadout,
   config: Configuration,
   derivedCtx: DerivedCtx,
-  withCondThreshold: boolean = true,
 ): FilteredMods => {
-  const condFiltered = filterModsByCond(inputMods, loadout, config, derivedCtx);
-  const prenormMods = withCondThreshold
-    ? filterModsByCondThreshold(condFiltered, config)
-    : condFiltered;
+  const prenormMods = filterModsByCond(inputMods, loadout, config, derivedCtx);
   return { prenormMods, mods: filterOutPerMods(prenormMods) };
 };
 
@@ -1601,10 +1597,17 @@ const resolveModsForOffenseSkill = (
   };
 
   // Local helper - captures mods and prenormMods in closure
+  // Normalizes per-stackable mods and filters mods by condThreshold for this stackable
   const normalize = (stackable: Stackable, value: number | undefined): void => {
-    if (value !== undefined) {
-      pm(...normalizeStackables(prenormMods, stackable, value));
+    if (value === undefined) {
+      return;
     }
+    // Filter mods by condThreshold for this stackable (mutates in place)
+    const filtered = filterByStackableThreshold(mods, stackable, value);
+    mods.length = 0;
+    mods.push(...filtered);
+    // Normalize per-stackable mods (also filters by condThreshold internally)
+    pm(...normalizeStackables(prenormMods, stackable, value));
   };
 
   // actual mod resolvers below
@@ -2022,6 +2025,8 @@ const resolveModsForOffenseSkill = (
     "num_enemies_affected_by_warcry",
     config.numEnemiesAffectedByWarcry,
   );
+  normalize("num_enemies_nearby", config.numEnemiesNearby);
+  normalize("enemy_numbed_stacks", config.enemyNumbedStacks ?? 10);
   pushPactspirits();
   const { spellBurstChargeSpeedBonusPct } = pushSpellBurstChargeSpeed();
   pushErika1();
@@ -2052,7 +2057,6 @@ const calculateResourcePool = (
     loadout,
     config,
     derivedCtx,
-    false, // withCondThreshold
   );
 
   pushNormalizedStackable(mods, prenormMods, "level", config.level);

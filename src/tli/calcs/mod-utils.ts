@@ -1,6 +1,6 @@
 import * as R from "remeda";
 import { match } from "ts-pattern";
-import type { Affix, Configuration, DmgRange, Loadout } from "../core";
+import type { Affix, DmgRange, Loadout } from "../core";
 import type { ConditionThreshold, Mod, ModT, Stackable } from "../mod";
 import { getAllAffixes } from "./affix-collectors";
 import { type ModWithValue, multValue } from "./util";
@@ -87,27 +87,21 @@ export const condThresholdSatisfied = (
     .exhaustive();
 };
 
-export const filterModsByCondThreshold = (
+// Filters mods by condThreshold for a specific stackable
+// Returns mods that either:
+// - Don't have condThreshold
+// - Have condThreshold for a different stackable
+// - Have condThreshold for this stackable and it's satisfied
+export const filterByStackableThreshold = (
   mods: Mod[],
-  config: Configuration,
+  stackable: Stackable,
+  stackValue: number,
 ): Mod[] => {
   return mods.filter((m) => {
-    if (m.condThreshold === undefined) return true;
-    const condThreshold = m.condThreshold;
-    return match(condThreshold.target)
-      .with("num_enemies_nearby", () =>
-        condThresholdSatisfied(config.numEnemiesNearby, condThreshold),
-      )
-      .with("num_enemies_affected_by_warcry", () =>
-        condThresholdSatisfied(
-          config.numEnemiesAffectedByWarcry,
-          condThreshold,
-        ),
-      )
-      .with("enemy_numbed_stacks", () =>
-        condThresholdSatisfied(config.enemyNumbedStacks ?? 10, condThreshold),
-      )
-      .exhaustive();
+    if (m.condThreshold === undefined || m.condThreshold.target !== stackable) {
+      return true;
+    }
+    return condThresholdSatisfied(stackValue, m.condThreshold);
   });
 };
 
@@ -128,7 +122,11 @@ export const normalizeStackables = (
       (mod) =>
         "per" in mod &&
         mod.per !== undefined &&
-        mod.per.stackable === stackable,
+        mod.per.stackable === stackable &&
+        // Also filter by condThreshold if the mod has one for this stackable
+        (mod.condThreshold === undefined ||
+          mod.condThreshold.target !== stackable ||
+          condThresholdSatisfied(stacks, mod.condThreshold)),
     )
     .map((mod) => normalizeStackable(mod, stackable, stacks))
     .filter((mod) => mod !== undefined);
