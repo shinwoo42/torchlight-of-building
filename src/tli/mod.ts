@@ -443,6 +443,7 @@ interface ModDefinitions {
   MainSkillSupportedBy: { skillName: string; level: number };
   TriggersSkill: { skillName: string; level: number };
   EliminationPct: { value: number };
+  SealConversion: object;
   // infiltrations
   InflictsInfiltration: { infiltrationType: InfiltrationType };
   InfiltrationEffPct: {

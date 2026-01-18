@@ -90,4 +90,22 @@ describe("parseSupportAffixes", () => {
       [{ mod: { type: "MultistrikeIncDmgPct", value: 27 } }],
     ]);
   });
+
+  test("parse sealed mana compensation", () => {
+    const result = parseSupportAffixes([
+      "0.5% Sealed Mana Compensation for the supported skill",
+    ]);
+    expect(result).toEqual([
+      [{ mod: { type: "SealedManaCompPct", value: 0.5, addn: false } }],
+    ]);
+  });
+
+  test("parse additional sealed mana compensation", () => {
+    const result = parseSupportAffixes([
+      "10% additional Sealed Mana Compensation for the supported skill",
+    ]);
+    expect(result).toEqual([
+      [{ mod: { type: "SealedManaCompPct", value: 10, addn: true } }],
+    ]);
+  });
 });

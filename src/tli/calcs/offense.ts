@@ -2094,14 +2094,20 @@ const getSupportSkillManaCostMultiplierPct = (
 
 const calculateSealedResources = (
   loadout: Loadout,
-  mods: Mod[],
+  loadoutMods: Mod[],
+  config: Configuration,
+  derivedCtx: DerivedCtx,
 ): ResourcePool["sealedResources"] => {
-  const sealedManaCompMult = calcEffMult(mods, "SealedManaCompPct");
+  const globalSealedManaCompMult = calcEffMult(
+    loadoutMods,
+    "SealedManaCompPct",
+  );
   const sealPerSkill: Record<
     string,
     { sealedManaPct?: number; sealedLifePct?: number }
   > = {};
   let totalSealedManaPct = 0;
+
   const passiveSlots = loadout.skillPage.passiveSkills;
   for (const slotKey of [1, 2, 3, 4] as const) {
     const slot = passiveSlots[slotKey];
@@ -2115,6 +2121,7 @@ const calculateSealedResources = (
 
     const baseSealedManaPct = passiveSkill.sealedManaPct;
 
+    // Calculate combined mana cost multiplier from all support skills
     let combinedManaCostMult = 1;
     const supportSlots = slot.supportSkills;
     for (const supportSlotKey of [1, 2, 3, 4, 5] as const) {
@@ -2126,8 +2133,24 @@ const calculateSealedResources = (
       combinedManaCostMult *= manaCostMultPct / 100;
     }
 
+    // Get support skill mods for this passive skill to calculate per-skill sealed mana comp
+    const supportMods = resolveSelectedSkillSupportMods(
+      slot,
+      loadoutMods,
+      loadout,
+      config,
+      derivedCtx,
+    );
+    const supportSealedManaCompMult = calcEffMult(
+      supportMods,
+      "SealedManaCompPct",
+    );
+
+    // Apply mana cost multiplier and both global + support sealed mana compensation
+    const totalSealedManaCompMult =
+      globalSealedManaCompMult * supportSealedManaCompMult;
     const skillSealedManaPct =
-      (baseSealedManaPct * combinedManaCostMult) / sealedManaCompMult;
+      (baseSealedManaPct * combinedManaCostMult) / totalSealedManaCompMult;
 
     sealPerSkill[slot.skillName] = { sealedManaPct: skillSealedManaPct };
     totalSealedManaPct += skillSealedManaPct;
@@ -2191,7 +2214,12 @@ const calculateResourcePool = (
   const hasFervor = config.fervorEnabled || haveFervor;
   const fixedFervorPts = findMod(mods, "FixedFervorPts");
   const fervorPts = fixedFervorPts?.value ?? config.fervorPoints ?? 100;
-  const sealedResources = calculateSealedResources(loadout, mods);
+  const sealedResources = calculateSealedResources(
+    loadout,
+    mods,
+    config,
+    derivedCtx,
+  );
 
   return {
     stats,
