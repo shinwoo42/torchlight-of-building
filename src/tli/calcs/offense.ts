@@ -2100,10 +2100,11 @@ const calculateSealedResources = (
   config: Configuration,
   derivedCtx: DerivedCtx,
 ): ResourcePool["sealedResources"] => {
-  const globalSealedManaCompMult = calcEffMult(
-    loadoutMods,
-    "SealedManaCompPct",
+  const allSealedManaCompMods = filterMods(loadoutMods, "SealedManaCompPct");
+  const globalSealedManaCompMods = allSealedManaCompMods.filter(
+    (m) => m.skillName === undefined,
   );
+  const globalSealedManaCompMult = calcEffMult(globalSealedManaCompMods);
   const overrideSupportManaMultPct = findMod(
     loadoutMods,
     "OverrideSupportSkillManaMultPct",
@@ -2155,9 +2156,15 @@ const calculateSealedResources = (
       "SealedManaCompPct",
     );
 
-    // Apply mana cost multiplier and both global + support sealed mana compensation
+    const skillSpecificMods = allSealedManaCompMods.filter(
+      (m) => m.skillName === slot.skillName,
+    );
+    const skillSpecificSealedManaCompMult = calcEffMult(skillSpecificMods);
+
     const totalSealedManaCompMult =
-      globalSealedManaCompMult * supportSealedManaCompMult;
+      globalSealedManaCompMult *
+      skillSpecificSealedManaCompMult *
+      supportSealedManaCompMult;
     const skillSealedPct =
       (baseSealedManaPct * combinedManaCostMult) / totalSealedManaCompMult;
 
