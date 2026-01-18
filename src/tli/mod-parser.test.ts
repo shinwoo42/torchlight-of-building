@@ -2610,6 +2610,52 @@ test("parse main skill supported by Multistrike", () => {
   ]);
 });
 
+test("parse triggers curse skill", () => {
+  const result = parseMod(
+    "Triggers Lv. 20 Timid Curse upon inflicting damage. Cooldown: 0.2 s",
+  );
+  expect(result).toEqual([
+    { type: "TriggersSkill", skillName: "Timid", level: 20 },
+  ]);
+});
+
+test("parse triggers skill upon starting to move", () => {
+  const result = parseMod(
+    "Triggers Lv. 3 Blurry Steps upon starting to move. Interval: 1 s",
+  );
+  expect(result).toEqual([
+    { type: "TriggersSkill", skillName: "Blurry Steps", level: 3 },
+  ]);
+});
+
+test("parse triggers multiple curse skills when minion deals damage", () => {
+  const result = parseMod(
+    "Triggers Lv. 10 Entangled Pain Curse and Timid Curse when a Minion deals damage. Cooldown: 1 s",
+  );
+  expect(result).toEqual([
+    { type: "TriggersSkill", skillName: "Entangled Pain", level: 10 },
+    { type: "TriggersSkill", skillName: "Timid", level: 10 },
+  ]);
+});
+
+test("parse triggers skill while standing still", () => {
+  const result = parseMod(
+    "Triggers Lv. 16 Aim while standing still. Interval: 1 s",
+  );
+  expect(result).toEqual([
+    { type: "TriggersSkill", skillName: "Aim", level: 16 },
+  ]);
+});
+
+test("parse triggers skill when moving", () => {
+  const result = parseMod(
+    "Triggers Lv. 20 Dark Gate when moving. Interval: 4 s",
+  );
+  expect(result).toEqual([
+    { type: "TriggersSkill", skillName: "Dark Gate", level: 20 },
+  ]);
+});
+
 test("parse regenerates life per second (percentage)", () => {
   const result = parseMod("Regenerates 3% Life per second");
   expect(result).toEqual([{ type: "LifeRegenPerSecPct", value: 3 }]);

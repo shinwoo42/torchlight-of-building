@@ -885,10 +885,13 @@ const listPassiveSkillSlots = (loadout: Loadout): SkillSlot[] => {
 
 const findSkill = (
   name: ActiveSkillName | PassiveSkillName,
-): BaseActiveSkill | BasePassiveSkill => {
+): BaseActiveSkill | BasePassiveSkill | undefined => {
   const active = ActiveSkills.find((s) => s.name === name);
-  if (active) return active;
-  return PassiveSkills.find((s) => s.name === name) as BasePassiveSkill;
+  if (active !== undefined) return active;
+  const passive = PassiveSkills.find((s) => s.name === name);
+  if (passive !== undefined) return passive;
+  console.error(`findSkill: skill not found: ${name}`);
+  return undefined;
 };
 
 const calcBuffSkillType = (
@@ -916,7 +919,16 @@ const resolveBuffSkillMods = (
 ): Mod[] => {
   const activeSkillSlots = listActiveSkillSlots(loadout);
   const passiveSkillSlots = listPassiveSkillSlots(loadout);
-  const allSkillSlots = [...activeSkillSlots, ...passiveSkillSlots];
+  const allSkillSlots: SkillSlot[] = [
+    ...activeSkillSlots,
+    ...passiveSkillSlots,
+    ...filterMods(loadoutMods, "TriggersSkill").map((m) => ({
+      enabled: true,
+      skillName: m.skillName,
+      level: m.level,
+      supportSkills: {},
+    })),
+  ];
   const resolvedMods: Mod[] = [];
 
   for (const skillSlot of allSkillSlots) {
@@ -927,6 +939,9 @@ const resolveBuffSkillMods = (
     const skill = findSkill(
       skillSlot.skillName as ActiveSkillName | PassiveSkillName,
     );
+    if (skill === undefined) {
+      continue;
+    }
     const buffSkillType = calcBuffSkillType(skill);
 
     // Get support skill mods (includes SkillEffPct, AuraEffPct, etc.)

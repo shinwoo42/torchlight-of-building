@@ -2900,6 +2900,39 @@ describe("resolveBuffSkillMods", () => {
     ) as DmgPctMod | undefined;
     expect(bullsRageBuffMod?.value).toBeCloseTo(27);
   });
+
+  test("TriggersSkill mod includes triggered skill's buff in calculations", () => {
+    // Gear mod "Triggers Lv. 20 Timid Curse upon inflicting damage"
+    // Timid at level 20 provides: +39% additional Hit Damage (isEnemyDebuff)
+    // The triggered skill's buff should be included even though it's not in a skill slot
+    const loadout = initLoadout({
+      gearPage: { equippedGear: { mainHand: baseWeapon }, inventory: [] },
+      skillPage: simpleAttackSkillPage(),
+      customAffixLines: affixLines([
+        { type: "TriggersSkill", skillName: "Timid", level: 20 },
+      ]),
+    });
+
+    const results = calculateOffense({
+      loadout,
+      configuration: defaultConfiguration,
+    });
+    const actual = results.skills["[Test] Simple Attack"];
+
+    // Timid provides +39% additional hit damage as an enemy debuff
+    const timidBuffMod = actual?.resolvedMods.find(
+      (m) =>
+        m.type === "DmgPct" &&
+        m.dmgModType === "hit" &&
+        m.addn === true &&
+        m.isEnemyDebuff === true,
+    ) as DmgPctMod | undefined;
+    expect(timidBuffMod).toBeDefined();
+    expect(timidBuffMod?.value).toBeCloseTo(39);
+
+    // Verify avgHit: 100 base weapon * (1 + 0.39 addn hit dmg) = 139
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(139);
+  });
 });
 
 describe("Pactspirit Ring Mods", () => {

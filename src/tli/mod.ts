@@ -441,6 +441,7 @@ interface ModDefinitions {
   GeneratesSpellAggression: object;
   SpellAggressionEffPct: { value: number };
   MainSkillSupportedBy: { skillName: string; level: number };
+  TriggersSkill: { skillName: string; level: number };
   EliminationPct: { value: number };
   // infiltrations
   InflictsInfiltration: { infiltrationType: InfiltrationType };
