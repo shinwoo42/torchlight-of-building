@@ -1,6 +1,7 @@
 import * as R from "remeda";
 import { match } from "ts-pattern";
 import type { BaseActiveSkill, SkillTag } from "../../data/skill";
+import type { InferredSkillKind } from "../../data/skill/types";
 import type {
   CritDmgModType,
   CritRatingModType,
@@ -348,36 +349,54 @@ export function calculatePenetration(
 
 // === Damage Mod Type Utilities ===
 
-export const dmgModTypePerSkillTag: Partial<Record<SkillTag, DmgModType>> = {
-  Attack: "attack",
-  Spell: "spell",
-  Melee: "melee",
-  Area: "area",
-  Channeled: "channeled",
-  "Shadow Strike": "shadow_strike_skill",
-  Projectile: "projectile",
-  Ranged: "ranged",
+// tag/tags/kind: included if skill has this tag/all tags/kind
+// pool: not included for the purposes of these calculations, is implicitly
+//  included during damage pool calculations
+type DmgModTypeRule =
+  | { tag: SkillTag }
+  | { tags: SkillTag[] }
+  | { kind: InferredSkillKind }
+  | "always"
+  | "never"
+  | "pool";
+
+const DMG_MOD_TYPE_RULES: Record<DmgModType, DmgModTypeRule> = {
+  global: "always",
+  attack: { tag: "Attack" },
+  spell: { tag: "Spell" },
+  melee: { tag: "Melee" },
+  area: { tag: "Area" },
+  channeled: { tag: "Channeled" },
+  shadow_strike_skill: { tag: "Shadow Strike" },
+  projectile: { tag: "Projectile" },
+  ranged: { tag: "Ranged" },
+  hit: { kind: "hit_enemies" },
+  damage_over_time: { kind: "dot" },
+  erosion_area: { tags: ["Area", "Erosion"] },
+  physical: "pool",
+  cold: "pool",
+  lightning: "pool",
+  fire: "pool",
+  erosion: "pool",
+  elemental: "pool",
+  ailment: "never", // todo
 };
 
 export const dmgModTypesForSkill = (skill: BaseActiveSkill): DmgModType[] => {
-  const dmgModTypes: DmgModType[] = ["global"];
-  const tags = skill.tags;
-  tags.forEach((t) => {
-    const dmgModType = dmgModTypePerSkillTag[t];
-    if (dmgModType !== undefined) {
-      dmgModTypes.push(dmgModType);
-    }
-  });
-  if (skill.kinds.includes("hit_enemies")) {
-    dmgModTypes.push("hit");
+  const result: DmgModType[] = [];
+  for (const [type, rule] of Object.entries(DMG_MOD_TYPE_RULES)) {
+    const t = type as DmgModType;
+    if (rule === "always") result.push(t);
+    else if (rule === "pool" || rule === "never") continue;
+    else if ("tag" in rule && skill.tags.includes(rule.tag)) result.push(t);
+    else if (
+      "tags" in rule &&
+      rule.tags.every((tag) => skill.tags.includes(tag))
+    )
+      result.push(t);
+    else if ("kind" in rule && skill.kinds.includes(rule.kind)) result.push(t);
   }
-  if (skill.kinds.includes("dot")) {
-    dmgModTypes.push("damage_over_time");
-  }
-  if (skill.tags.includes("Area") && skill.tags.includes("Erosion")) {
-    dmgModTypes.push("erosion_area");
-  }
-  return dmgModTypes;
+  return result;
 };
 
 export const filterDmgPctMods = (
