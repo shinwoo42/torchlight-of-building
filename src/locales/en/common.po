@@ -19,11 +19,6 @@ msgid "Active Skills"
 msgstr "Active Skills"
 
 #. js-lingui-explicit-id
-#: src/routes/builder/equipment.tsx:437
-msgid "Select equipment type..."
-msgstr "Select equipment type..."
-
-#. js-lingui-explicit-id
 #: src/routes/builder/talents/$slot.tsx:333
 msgid "Slot 1 (God/Goddess)"
 msgstr "Slot 1 (God/Goddess)"
@@ -37,6 +32,12 @@ msgstr "Slot 1"
 #: src/routes/builder/talents/$slot.tsx:355
 msgid "Slot"
 msgstr "Slot"
+
+#. js-lingui-explicit-id
+#: src/components/equipment/AdvancedCraftingModal.tsx:109
+#: src/routes/builder/equipment.tsx:458
+msgid "Select equipment type..."
+msgstr "Select equipment type..."
 
 #. js-lingui-explicit-id
 #: src/data/translate/translate-tab.ts:4
@@ -315,16 +316,6 @@ msgid "Wand"
 msgstr "Wand"
 
 #. js-lingui-explicit-id
-#: src/components/talents/PrismCrafter.tsx:149
-msgid "Edit Prism"
-msgstr "Edit Prism"
-
-#. js-lingui-explicit-id
-#: src/components/talents/PrismCrafter.tsx:149
-msgid "Craft Prism"
-msgstr "Craft Prism"
-
-#. js-lingui-explicit-id
 #: src/components/talents/TalentNodeDisplay.tsx:81
 msgid "Micro Talent"
 msgstr "Micro Talent"
@@ -340,6 +331,16 @@ msgid "Legendary Talent"
 msgstr "Legendary Talent"
 
 #. js-lingui-explicit-id
+#: src/components/talents/PrismCrafter.tsx:149
+msgid "Edit Prism"
+msgstr "Edit Prism"
+
+#. js-lingui-explicit-id
+#: src/components/talents/PrismCrafter.tsx:149
+msgid "Craft Prism"
+msgstr "Craft Prism"
+
+#. js-lingui-explicit-id
 #: src/components/talents/CoreTalentSelector.tsx:56
 msgid "Core Talent 1"
 msgstr "Core Talent 1"
@@ -349,6 +350,22 @@ msgstr "Core Talent 1"
 msgid "Core Talent 2"
 msgstr "Core Talent 2"
 
+#. js-lingui-explicit-id
+#: src/components/equipment/AdvancedCraftingModal.tsx:94
+msgid "Advanced Crafting"
+msgstr "Advanced Crafting"
+
+#. js-lingui-explicit-id
+#: src/components/equipment/AdvancedCraftingModal.tsx:124
+msgid ""
+"+10% Fire Damage\n"
+"+20 to Maximum Life\n"
+"+5% Attack Speed"
+msgstr ""
+"+10% Fire Damage\n"
+"+20 to Maximum Life\n"
+"+5% Attack Speed"
+
 #: src/components/calculations/SkillSelector.tsx:45
 msgid "Active Skill"
 msgstr "Active Skill"
@@ -357,23 +374,32 @@ msgstr "Active Skill"
 msgid "Add Legendary"
 msgstr "Add Legendary"
 
+#: src/routes/builder/equipment.tsx:443
+msgid "Advanced Crafting"
+msgstr "Advanced Crafting"
+
+#: src/components/equipment/AdvancedCraftingModal.tsx:118
+msgid "Affix Lines (one per line)"
+msgstr "Affix Lines (one per line)"
+
 #. placeholder {0}: save.name
 #: src/routes/index.tsx:125
 msgid "Are you sure you want to delete \"{0}\"?"
 msgstr "Are you sure you want to delete \"{0}\"?"
 
-#: src/routes/builder/equipment.tsx:468
+#: src/routes/builder/equipment.tsx:489
 msgid "Base Affixes (2 max)"
 msgstr "Base Affixes (2 max)"
 
-#: src/routes/builder/equipment.tsx:447
+#: src/routes/builder/equipment.tsx:468
 msgid "Base Stats (1 max)"
 msgstr "Base Stats (1 max)"
 
-#: src/routes/builder/equipment.tsx:534
+#: src/routes/builder/equipment.tsx:555
 msgid "Blending (1 max)"
 msgstr "Blending (1 max)"
 
+#: src/components/equipment/AdvancedCraftingModal.tsx:142
 #: src/routes/index.tsx:98
 #: src/routes/index.tsx:141
 msgid "Cancel"
@@ -388,7 +414,7 @@ msgstr "Copy"
 msgid "Core Talents"
 msgstr "Core Talents"
 
-#: src/routes/builder/equipment.tsx:423
+#: src/routes/builder/equipment.tsx:436
 msgid "Craft New Item"
 msgstr "Craft New Item"
 
@@ -418,11 +444,16 @@ msgstr "Delete"
 msgid "Early Development"
 msgstr "Early Development"
 
-#: src/routes/builder/equipment.tsx:401
+#: src/components/equipment/AdvancedCraftingModal.tsx:131
+msgid "Enter raw affix text. Each line will be parsed as a separate affix."
+msgstr "Enter raw affix text. Each line will be parsed as a separate affix."
+
+#: src/routes/builder/equipment.tsx:413
 msgid "Equipment Slots"
 msgstr "Equipment Slots"
 
-#: src/routes/builder/equipment.tsx:431
+#: src/components/equipment/AdvancedCraftingModal.tsx:103
+#: src/routes/builder/equipment.tsx:452
 msgid "Equipment Type"
 msgstr "Equipment Type"
 
@@ -430,11 +461,11 @@ msgstr "Equipment Type"
 msgid "Import Build"
 msgstr "Import Build"
 
-#: src/routes/builder/equipment.tsx:632
+#: src/routes/builder/equipment.tsx:653
 msgid "Inventory"
 msgstr "Inventory"
 
-#: src/routes/builder/equipment.tsx:633
+#: src/routes/builder/equipment.tsx:654
 msgid "items"
 msgstr "items"
 
@@ -450,7 +481,7 @@ msgstr "No builds yet"
 #~ msgid "No implemented active skills enabled. Enable an active skill in the Skills section (currently supported: Berserking Blade, Frost Spike)."
 #~ msgstr "No implemented active skills enabled. Enable an active skill in the Skills section (currently supported: Berserking Blade, Frost Spike)."
 
-#: src/routes/builder/equipment.tsx:637
+#: src/routes/builder/equipment.tsx:658
 msgid "No items in inventory. Craft items above to add them here."
 msgstr "No items in inventory. Craft items above to add them here."
 
@@ -458,7 +489,7 @@ msgstr "No items in inventory. Craft items above to add them here."
 msgid "Please be patient and bear with me on any issues you encounter with this app, as it's still in early phases of development."
 msgstr "Please be patient and bear with me on any issues you encounter with this app, as it's still in early phases of development."
 
-#: src/routes/builder/equipment.tsx:575
+#: src/routes/builder/equipment.tsx:596
 msgid "Prefixes (3 max)"
 msgstr "Prefixes (3 max)"
 
@@ -474,11 +505,12 @@ msgstr "Rename"
 msgid "Save"
 msgstr "Save"
 
-#: src/routes/builder/equipment.tsx:620
+#: src/components/equipment/AdvancedCraftingModal.tsx:145
+#: src/routes/builder/equipment.tsx:641
 msgid "Save to Inventory"
 msgstr "Save to Inventory"
 
-#: src/routes/builder/equipment.tsx:625
+#: src/routes/builder/equipment.tsx:646
 msgid "Select an equipment type to begin crafting"
 msgstr "Select an equipment type to begin crafting"
 
@@ -495,15 +527,15 @@ msgstr "Select Legendary"
 msgid "Select Tree for {0}"
 msgstr "Select Tree for {0}"
 
-#: src/routes/builder/equipment.tsx:596
+#: src/routes/builder/equipment.tsx:617
 msgid "Suffixes (3 max)"
 msgstr "Suffixes (3 max)"
 
-#: src/routes/builder/equipment.tsx:492
+#: src/routes/builder/equipment.tsx:513
 msgid "Sweet Dream Affix (1 max)"
 msgstr "Sweet Dream Affix (1 max)"
 
-#: src/routes/builder/equipment.tsx:513
+#: src/routes/builder/equipment.tsx:534
 msgid "Tower Sequence (1 max)"
 msgstr "Tower Sequence (1 max)"
 

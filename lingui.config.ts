@@ -1,6 +1,7 @@
 const config = {
   sourceLocale: "en",
   locales: ["en", "zh"],
+  orderBy: "message",
   catalogs: [
     {
       path: "<rootDir>/src/locales/{locale}/legendaries",
