@@ -8,7 +8,7 @@ export const TWO_HANDED_AXE_CORROSION_BASE_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "",
     tier: "0",
     craftableAffix:
-      "击败敌人 30% 几率爆炸，对半径 6 米内的敌人造成被击败的敌人最大生命 (50-100)% 的真实伤害",
+      "Enemies have a 30% chance to explode when defeated, dealing True Damage equal to (50-100)% of their Max Life to enemies within a 6 m radius",
   },
   {
     equipmentSlot: "Two-Handed",

@@ -709,7 +709,7 @@ export const WAND_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     affixType: "Suffix",
     craftingPool: "Ultimate",
     tier: "0",
-    craftableAffix: "+(55-65)% Tangle Damage Enhancement",
+    craftableAffix: "+(75-85)% Tangle Damage Enhancement",
   },
   {
     equipmentSlot: "One-Handed",
@@ -717,7 +717,7 @@ export const WAND_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     affixType: "Suffix",
     craftingPool: "Ultimate",
     tier: "1",
-    craftableAffix: "+(40-50)% Tangle Damage Enhancement",
+    craftableAffix: "+(60-70)% Tangle Damage Enhancement",
   },
   {
     equipmentSlot: "One-Handed",
@@ -725,6 +725,6 @@ export const WAND_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     affixType: "Suffix",
     craftingPool: "Ultimate",
     tier: "2",
-    craftableAffix: "+(25-35)% Tangle Damage Enhancement",
+    craftableAffix: "+(40-55)% Tangle Damage Enhancement",
   },
 ];

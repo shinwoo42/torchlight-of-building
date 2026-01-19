@@ -248,7 +248,7 @@ export const TWO_HANDED_AXE_PREFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "0",
     craftableAffix:
-      "Reaps (0.37-0.48) s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps (0.37-0.48) s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Two-Handed",
@@ -257,7 +257,7 @@ export const TWO_HANDED_AXE_PREFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "1",
     craftableAffix:
-      "Reaps (0.25-0.36) s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps (0.25-0.36) s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Two-Handed",
@@ -266,7 +266,7 @@ export const TWO_HANDED_AXE_PREFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "2",
     craftableAffix:
-      "Reaps (0.18-0.24) s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps (0.18-0.24) s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Two-Handed",
@@ -275,7 +275,7 @@ export const TWO_HANDED_AXE_PREFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "3",
     craftableAffix:
-      "Reaps 0.16 s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.16 s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Two-Handed",
@@ -284,7 +284,7 @@ export const TWO_HANDED_AXE_PREFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "4",
     craftableAffix:
-      "Reaps 0.14 s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.14 s of Trauma Damage when dealing Damage Over Time. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Two-Handed",

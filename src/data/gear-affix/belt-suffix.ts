@@ -168,7 +168,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "0",
     craftableAffix:
-      "Reaps 0.16 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.16 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -177,7 +177,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "1",
     craftableAffix:
-      "Reaps 0.12 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.12 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -186,7 +186,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "2",
     craftableAffix:
-      "Reaps 0.09 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.09 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -195,7 +195,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "3",
     craftableAffix:
-      "Reaps 0.06 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.06 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -204,7 +204,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "4",
     craftableAffix:
-      "Reaps 0.04 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.04 s of Damage Over Time when inflicting Trauma. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -213,7 +213,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "0",
     craftableAffix:
-      "Reaps 0.16 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.16 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -222,7 +222,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "1",
     craftableAffix:
-      "Reaps 0.12 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.12 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -231,7 +231,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "2",
     craftableAffix:
-      "Reaps 0.09 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.09 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -240,7 +240,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "3",
     craftableAffix:
-      "Reaps 0.06 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.06 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -249,7 +249,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "4",
     craftableAffix:
-      "Reaps 0.04 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.04 s of Damage Over Time when inflicting Ignite. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -258,7 +258,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "0",
     craftableAffix:
-      "Reaps 0.16 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.16 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -267,7 +267,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "1",
     craftableAffix:
-      "Reaps 0.12 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.12 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -276,7 +276,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "2",
     craftableAffix:
-      "Reaps 0.09 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.09 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -285,7 +285,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "3",
     craftableAffix:
-      "Reaps 0.06 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.06 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",
@@ -294,7 +294,7 @@ export const BELT_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     craftingPool: "Basic",
     tier: "4",
     craftableAffix:
-      "Reaps 0.04 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Restoration Duration against the same target",
+      "Reaps 0.04 s of Damage Over Time when inflicting Wilt. The effect has a 1 s Recovery Time against the same target",
   },
   {
     equipmentSlot: "Trinket",

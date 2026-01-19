@@ -658,7 +658,7 @@ export const TIN_STAFF_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     affixType: "Suffix",
     craftingPool: "Ultimate",
     tier: "0",
-    craftableAffix: "+(110-130)% Tangle Damage Enhancement",
+    craftableAffix: "+(150-170)% Tangle Damage Enhancement",
   },
   {
     equipmentSlot: "Two-Handed",
@@ -666,7 +666,7 @@ export const TIN_STAFF_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     affixType: "Suffix",
     craftingPool: "Ultimate",
     tier: "1",
-    craftableAffix: "+(80-100)% Tangle Damage Enhancement",
+    craftableAffix: "+(120-140)% Tangle Damage Enhancement",
   },
   {
     equipmentSlot: "Two-Handed",
@@ -674,6 +674,6 @@ export const TIN_STAFF_SUFFIX_AFFIXES: readonly BaseGearAffix[] = [
     affixType: "Suffix",
     craftingPool: "Ultimate",
     tier: "2",
-    craftableAffix: "+(50-70)% Tangle Damage Enhancement",
+    craftableAffix: "+(80-110)% Tangle Damage Enhancement",
   },
 ];

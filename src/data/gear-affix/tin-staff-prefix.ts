@@ -543,7 +543,7 @@ export const TIN_STAFF_PREFIX_AFFIXES: readonly BaseGearAffix[] = [
     affixType: "Prefix",
     craftingPool: "Ultimate",
     tier: "0",
-    craftableAffix: "+7 Spell Skill Level",
+    craftableAffix: "+(7-8) Spell Skill Level",
   },
   {
     equipmentSlot: "Two-Handed",
