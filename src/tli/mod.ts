@@ -227,6 +227,7 @@ const ConditionValues = [
   "target_enemy_frozen_recently",
   "enemy_frozen",
   "enemy_numbed",
+  "has_fervor",
   "has_used_mobility_skill_recently",
   "has_moved_recently",
   "is_moving",
@@ -352,6 +353,9 @@ interface ModDefinitions {
   RestoreLifePctPerSec: { value: number };
   DmgTakenPct: { value: number; addn?: boolean; dmgTakenType?: DmgTakenType };
   ConvertDmgTakenPct: { value: number; from: DmgChunkType; to: DmgChunkType };
+  AvoidElementalAilmentsChancePct: { value: number };
+  AvoidSpellDmgChancePct: { value: number };
+  CriticalStrikeDmgMitigationPct: { value: number };
   // end defenses
   Reap: { duration: number; cooldown: number };
   ReapDurationPct: { value: number };

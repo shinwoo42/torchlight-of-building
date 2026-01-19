@@ -219,6 +219,15 @@ export const allParsers = [
       cond: C.has_focus_blessing,
     }),
   ),
+  t("{value:+dec%} [additional] damage while having fervor").output(
+    "DmgPct",
+    (c) => ({
+      value: c.value,
+      dmgModType: GLOBAL,
+      addn: c.additional !== undefined,
+      cond: C.has_fervor,
+    }),
+  ),
   t("{value:+dec%} damage if you have blocked recently").output(
     "DmgPct",
     (c) => ({
@@ -243,6 +252,16 @@ export const allParsers = [
     isEnemyDebuff: true,
     cond: C.target_enemy_frozen_recently,
   })),
+  t("{value:+dec%} additional damage taken by nearby enemies").output(
+    "DmgPct",
+    (c) => ({
+      value: c.value,
+      dmgModType: GLOBAL,
+      addn: true,
+      isEnemyDebuff: true,
+      cond: C.target_enemy_is_nearby,
+    }),
+  ),
   t(
     "deals {value:+dec%} additional damage to an enemy for every {amt:int} points of frostbite rating the enemy has",
   ).output("DmgPct", (c) => ({
@@ -967,6 +986,14 @@ export const allParsers = [
   t("{value:+dec%} {resType:ResType} resistance").output(
     "ResistancePct",
     (c) => ({ value: c.value, resType: c.resType }),
+  ),
+  t("{value:+dec%} chance to avoid elemental ailments").output(
+    "AvoidElementalAilmentsChancePct",
+    (c) => ({ value: c.value }),
+  ),
+  t("{value:+dec%} chance to avoid spell damage").output(
+    "AvoidSpellDmgChancePct",
+    (c) => ({ value: c.value }),
   ),
 
   t("{value:+dec%} energy shield regain").output(

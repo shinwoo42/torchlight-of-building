@@ -3399,3 +3399,42 @@ test("parse max frostbite rating", () => {
   const result = parseMod("+9 to Max Frostbite Rating");
   expect(result).toEqual([{ type: "MaxFrostbiteRating", value: 9 }]);
 });
+
+test("parse additional damage taken by nearby enemies", () => {
+  const result = parseMod("+28% additional damage taken by Nearby enemies");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 28,
+      dmgModType: "global",
+      addn: true,
+      isEnemyDebuff: true,
+      cond: "target_enemy_is_nearby",
+    },
+  ]);
+});
+
+test("parse additional damage while having fervor", () => {
+  const result = parseMod("+28% additional damage while having Fervor");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 28,
+      dmgModType: "global",
+      addn: true,
+      cond: "has_fervor",
+    },
+  ]);
+});
+
+test("parse chance to avoid elemental ailments", () => {
+  const result = parseMod("+28% chance to avoid Elemental Ailments");
+  expect(result).toEqual([
+    { type: "AvoidElementalAilmentsChancePct", value: 28 },
+  ]);
+});
+
+test("parse chance to avoid spell damage", () => {
+  const result = parseMod("+28% chance to avoid Spell Damage");
+  expect(result).toEqual([{ type: "AvoidSpellDmgChancePct", value: 28 }]);
+});

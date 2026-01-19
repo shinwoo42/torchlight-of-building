@@ -691,6 +691,8 @@ interface DerivedCtx {
   hero?: HeroName;
   luckyDmg: boolean;
   dualWielding: boolean;
+  hasFervor: boolean;
+  fervorPts: number;
 }
 
 const isOneHandedWeapon = (gear: Gear): boolean => {
@@ -709,7 +711,11 @@ const isOneHandedWeapon = (gear: Gear): boolean => {
   return validEquipmentTypes.includes(gear.equipmentType);
 };
 
-const resolveDerivedCtx = (loadout: Loadout, mods: Mod[]): DerivedCtx => {
+const resolveDerivedCtx = (
+  loadout: Loadout,
+  mods: Mod[],
+  config: Configuration,
+): DerivedCtx => {
   const hasHasten = findMod(mods, "HasHasten") !== undefined;
   const hasBlasphemer = findMod(mods, "Blasphemer") !== undefined;
   const luckyDmg = findMod(mods, "LuckyDmg") !== undefined;
@@ -720,7 +726,19 @@ const resolveDerivedCtx = (loadout: Loadout, mods: Mod[]): DerivedCtx => {
     equippedGear.offHand !== undefined &&
     isOneHandedWeapon(equippedGear.mainHand) &&
     isOneHandedWeapon(equippedGear.offHand);
-  return { hasHasten, hasBlasphemer, luckyDmg, hero, dualWielding };
+  const haveFervor = findMod(mods, "HaveFervor") !== undefined;
+  const hasFervor = config.fervorEnabled || haveFervor;
+  const fixedFervorPts = findMod(mods, "FixedFervorPts");
+  const fervorPts = fixedFervorPts?.value ?? config.fervorPoints ?? 100;
+  return {
+    hasHasten,
+    hasBlasphemer,
+    luckyDmg,
+    hero,
+    dualWielding,
+    hasFervor,
+    fervorPts,
+  };
 };
 
 const isHero = (name: HeroName, loadout: Loadout): boolean => {
@@ -838,6 +856,7 @@ const filterModsByCond = (
         );
       })
       .with("enemy_numbed", () => config.enemyNumbed)
+      .with("has_fervor", () => derivedCtx.hasFervor)
       .with(
         "has_used_mobility_skill_recently",
         () => config.hasUsedMobilitySkillRecently,
@@ -2255,10 +2274,7 @@ const calculateResourcePool = (
     sumByValue(filterMods(mods, "MaxChannel")),
   );
 
-  const haveFervor = findMod(mods, "HaveFervor") !== undefined;
-  const hasFervor = config.fervorEnabled || haveFervor;
-  const fixedFervorPts = findMod(mods, "FixedFervorPts");
-  const fervorPts = fixedFervorPts?.value ?? config.fervorPoints ?? 100;
+  const { hasFervor, fervorPts } = derivedCtx;
   const sealedResources = calculateSealedResources(
     loadout,
     mods,
@@ -2956,7 +2972,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
 
   loadoutMods.push(...calculatePactspiritMods(loadout, loadoutMods));
 
-  const derivedCtx = resolveDerivedCtx(loadout, loadoutMods);
+  const derivedCtx = resolveDerivedCtx(loadout, loadoutMods, config);
   const resourcePool = calculateResourcePool(
     loadoutMods,
     loadout,
