@@ -2018,4 +2018,24 @@ export const allParsers = [
   t("{value:+dec%} gear evasion").output("GearEvasionPct", (c) => ({
     value: c.value,
   })),
+  t("{value:+dec%} life regeneration speed").output(
+    "LifeRegenSpeedPct",
+    (c) => ({ value: c.value }),
+  ),
+  t("{value:+dec%} chance to blind the target on hit").output(
+    "InflictsBlind",
+    () => ({}),
+  ),
+  t("{value:+dec%} chance to mark the target on hit").output(
+    "InflictsMark",
+    () => ({}),
+  ),
+  t("{value:+dec%} chance to inflict paralysis on hit").output(
+    "InflictParalysisPct",
+    (c) => ({ value: c.value }),
+  ),
+  t("{value:+dec%} max life and max mana").outputMany([
+    spec("MaxLifePct", (c) => ({ value: c.value, addn: false })),
+    spec("MaxManaPct", (c) => ({ value: c.value, addn: false })),
+  ]),
 ];

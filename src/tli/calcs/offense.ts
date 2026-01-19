@@ -1394,6 +1394,7 @@ const calculateAddedSkillLevels = (
       .with("minion", () => skill.tags.includes("Summon"))
       .with("mobility", () => skill.tags.includes("Mobility"))
       .with("physical", () => skill.tags.includes("Physical"))
+      .with("projectile", () => skill.tags.includes("Projectile"))
       .with("all", () => true)
       .exhaustive();
     if (matches) {

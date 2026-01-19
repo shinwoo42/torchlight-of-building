@@ -3509,3 +3509,38 @@ test("parse gear evasion percentage", () => {
   const result = parseMod("+40% gear Evasion");
   expect(result).toEqual([{ type: "GearEvasionPct", value: 40 }]);
 });
+
+test("parse life regeneration speed", () => {
+  const result = parseMod("+21% Life Regeneration Speed");
+  expect(result).toEqual([{ type: "LifeRegenSpeedPct", value: 21 }]);
+});
+
+test("parse projectile skill level", () => {
+  const result = parseMod("+2 Projectile Skill Level");
+  expect(result).toEqual([
+    { type: "SkillLevel", value: 2, skillLevelType: "projectile" },
+  ]);
+});
+
+test("parse chance to blind the target on hit", () => {
+  const result = parseMod("+18% chance to Blind the target on hit");
+  expect(result).toEqual([{ type: "InflictsBlind" }]);
+});
+
+test("parse chance to mark the target on hit", () => {
+  const result = parseMod("+18% chance to Mark the target on hit");
+  expect(result).toEqual([{ type: "InflictsMark" }]);
+});
+
+test("parse chance to inflict paralysis on hit", () => {
+  const result = parseMod("+18% chance to inflict Paralysis on hit");
+  expect(result).toEqual([{ type: "InflictParalysisPct", value: 18 }]);
+});
+
+test("parse max life and max mana percentage", () => {
+  const result = parseMod("+15% Max Life and Max Mana");
+  expect(result).toEqual([
+    { type: "MaxLifePct", value: 15, addn: false },
+    { type: "MaxManaPct", value: 15, addn: false },
+  ]);
+});

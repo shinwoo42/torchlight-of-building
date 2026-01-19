@@ -78,6 +78,7 @@ export const SkillLevelTypes = [
   "minion",
   "mobility",
   "physical",
+  "projectile",
   "all",
 ] as const;
 
@@ -492,6 +493,7 @@ interface ModDefinitions {
   // non-ailment debuffs
   InflictsMark: object;
   MarkEffPct: { value: number };
+  InflictsBlind: object;
   // skill-specific
   MindControlMaxLink: { value: number };
   InitialMaxChannel: { value: number };
