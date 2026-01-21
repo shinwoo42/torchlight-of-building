@@ -813,6 +813,9 @@ export const calculateCritDmg = (
   if (skill.tags.includes("Erosion")) {
     modTypes.push("erosion_skill");
   }
+  if (skill.tags.includes("Sentry")) {
+    modTypes.push("sentry_skill");
+  }
   const mods = filterMods(allMods, "CritDmgPct").filter((m) =>
     modTypes.includes(m.modType),
   );
