@@ -1412,6 +1412,7 @@ const calculateAddedSkillLevels = (
       .with("physical", () => skill.tags.includes("Physical"))
       .with("projectile", () => skill.tags.includes("Projectile"))
       .with("all", () => true)
+      .with("spirit_magus", () => skill.tags.includes("Spirit Magus"))
       .exhaustive();
     if (matches) {
       addedSkillLevels += mod.value;

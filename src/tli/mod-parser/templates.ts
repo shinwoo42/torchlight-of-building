@@ -431,6 +431,10 @@ export const allParsers = [
       addn: c.additional !== undefined,
     }),
   ),
+  t("{value:+dec%} sentry skill critical strike rating").output(
+    "CritRatingPct",
+    (c) => ({ value: c.value, modType: "sentry_skill" as const }),
+  ),
   t(
     "{value:+dec%} [{modType:CritRatingModType}] critical strike rating",
   ).output("CritRatingPct", (c) => ({
@@ -513,6 +517,14 @@ export const allParsers = [
       value: c.value,
       addn: c.additional !== undefined,
       modType: "global" as const,
+    }),
+  ),
+  t("{value:+dec%} [additional] sentry skill critical strike damage").output(
+    "CritDmgPct",
+    (c) => ({
+      value: c.value,
+      addn: c.additional !== undefined,
+      modType: "sentry_skill" as const,
     }),
   ),
   t(
@@ -1028,7 +1040,7 @@ export const allParsers = [
   t("{value:+dec} {statModType:StatWord}")
     .enum("StatWord", StatWordMapping)
     .output("Stat", (c) => ({ value: c.value, statModType: c.statModType })),
-  t("{value:+dec} all stats").output("Stat", (c) => ({
+  t("{value:+dec} [to] all stats").output("Stat", (c) => ({
     value: c.value,
     statModType: "all" as const,
   })),
@@ -1303,6 +1315,10 @@ export const allParsers = [
     value: c.value,
     skillLevelType: "attack" as const,
   })),
+  t("{value:+int} spirit magus skill level").output("SkillLevel", (c) => ({
+    value: c.value,
+    skillLevelType: "spirit_magus" as const,
+  })),
   t("{value:+int} {skillLevelType:SkillLevelType} skill level").output(
     "SkillLevel",
     (c) => ({ value: c.value, skillLevelType: c.skillLevelType }),
@@ -1497,6 +1513,9 @@ export const allParsers = [
     value: c.value,
   })),
   t("{value:+dec%} wilt duration").output("WiltDurationPct", (c) => ({
+    value: c.value,
+  })),
+  t("{value:+dec%} wilt chance").output("WiltChancePct", (c) => ({
     value: c.value,
   })),
   t("{value:+dec%} trauma duration").output("TraumaDurationPct", (c) => ({

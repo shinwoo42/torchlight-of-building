@@ -80,6 +80,7 @@ export const SkillLevelTypes = [
   "physical",
   "projectile",
   "all",
+  "spirit_magus",
 ] as const;
 
 export type SkillLevelType = (typeof SkillLevelTypes)[number];

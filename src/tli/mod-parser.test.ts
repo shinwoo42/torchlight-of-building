@@ -3699,3 +3699,34 @@ test("parse barrier shield", () => {
     { type: "BarrierShieldPct", value: 52, addn: false },
   ]);
 });
+
+test("parse wilt chance", () => {
+  const result = parseMod("+3% Wilt chance");
+  expect(result).toEqual([{ type: "WiltChancePct", value: 3 }]);
+});
+
+test("parse to all stats", () => {
+  const result = parseMod("+10 to All Stats");
+  expect(result).toEqual([{ type: "Stat", statModType: "all", value: 10 }]);
+});
+
+test("parse sentry skill critical strike rating", () => {
+  const result = parseMod("+30% Sentry Skill Critical Strike Rating");
+  expect(result).toEqual([
+    { type: "CritRatingPct", value: 30, modType: "sentry_skill" },
+  ]);
+});
+
+test("parse sentry skill critical strike damage", () => {
+  const result = parseMod("+15% Sentry Skill Critical Strike Damage");
+  expect(result).toEqual([
+    { type: "CritDmgPct", value: 15, addn: false, modType: "sentry_skill" },
+  ]);
+});
+
+test("parse spirit magus skill level", () => {
+  const result = parseMod("+1 Spirit Magus Skill Level");
+  expect(result).toEqual([
+    { type: "SkillLevel", value: 1, skillLevelType: "spirit_magus" },
+  ]);
+});
