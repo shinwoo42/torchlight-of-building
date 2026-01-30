@@ -230,8 +230,18 @@ const parseBaseStats = (
       // Skip require level and empty divs
       if (text.startsWith("Require") || !text) return;
 
-      // Check if this is a stats div (contains text-mod spans or stat values)
-      if ($div.find(".text-mod").length > 0 || /^\+?\d/.test(text)) {
+      // Check if this is a stats wrapper div (contains child divs with .text-mod spans)
+      const childDivs = $div.children("div");
+      if (childDivs.length > 0 && $div.find(".text-mod").length > 0) {
+        // Extract text from each child div separately to preserve line breaks
+        childDivs.each((_, childDiv) => {
+          const statText = parseModifierText($(childDiv), $);
+          if (statText) {
+            statsLines.push(statText);
+          }
+        });
+      } else if ($div.find(".text-mod").length > 0 || /^\+?\d/.test(text)) {
+        // Single stat line without nested divs
         const statText = parseModifierText($div, $);
         if (statText) {
           statsLines.push(statText);
