@@ -3432,14 +3432,14 @@ describe("shadow damage", () => {
     validate(results, "Frost Spike", { avgHit: 402 });
   });
 
-  test("shadow strike skill with 3 shadow hits applies geometric falloff", () => {
-    // 3 shadow hits: 1 + 0.3 + 0.09 = 1.39 total shadow damage ratio
+  test("shadow strike skill with 3 shadow hits applies linear falloff", () => {
+    // 3 shadow hits: 1st = 100%, 2nd = 30%, 3rd = 30% → 1.6 total shadow ratio
     const input = createFrostSpikeInput(3);
     const results = calculateOffense(input);
     // Base: 201
-    // Shadow geometric sum: (1 - 0.3^3) / 0.7 ≈ 1.39
-    // Total: 201 * (1 + 1.39) ≈ 480.39
-    validate(results, "Frost Spike", { avgHit: 480.39 });
+    // Shadow sum: 100% + 30% + 30% = 160% = 1.6
+    // Total: 201 * (1 + 1.6) = 522.6
+    validate(results, "Frost Spike", { avgHit: 522.6 });
   });
 
   test("shadow damage bonus applies to shadow hits only", () => {
@@ -3451,9 +3451,9 @@ describe("shadow damage", () => {
     );
     const results = calculateOffense(input);
     // Base: 201
-    // Shadow contribution: 1.39 * 2 (100% bonus) = 2.78
-    // Total: 201 * (1 + 2.78) ≈ 759.78
-    validate(results, "Frost Spike", { avgHit: 759.78 });
+    // Shadow contribution: 1.6 * 2 (100% bonus) = 3.2
+    // Total: 201 * (1 + 3.2) = 844.2
+    validate(results, "Frost Spike", { avgHit: 844.2 });
   });
 
   test("zero shadow hits means no shadow damage bonus", () => {
@@ -3485,9 +3485,9 @@ describe("shadow damage", () => {
     );
     const results = calculateOffense(input);
     // Base with +50% dmg: 201 * 1.5 = 301.5
-    // Shadow contribution: 1.39 * 2 = 2.78
-    // Total: 301.5 * (1 + 2.78) ≈ 1139.67
-    validate(results, "Frost Spike", { avgHit: 1139.67 });
+    // Shadow contribution: 1.6 * 2 = 3.2
+    // Total: 301.5 * (1 + 3.2) = 1266.3
+    validate(results, "Frost Spike", { avgHit: 1266.3 });
   });
 
   test("ShadowQuant mods contribute to shadow hit count", () => {
@@ -3512,7 +3512,7 @@ describe("shadow damage", () => {
     };
     const results = calculateOffense(input);
     // Base: 201
-    // 2 shadow hits: geometric sum = (1 - 0.3^2) / 0.7 = 0.91 / 0.7 = 1.3
+    // 2 shadow hits: 100% + 30% = 130% = 1.3
     // Total: 201 * (1 + 1.3) = 462.3
     validate(results, "Frost Spike", { avgHit: 462.3 });
   });

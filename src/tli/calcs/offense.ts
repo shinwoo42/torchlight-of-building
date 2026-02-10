@@ -610,27 +610,12 @@ const calculateAddnDmgFromShadows = (
   numShadowHits: number,
 ): ModT<"DmgPct"> | undefined => {
   if (numShadowHits <= 0) return;
-  if (numShadowHits === 1) {
-    return {
-      type: "DmgPct",
-      addn: true,
-      value: 100, // 100% additional damage (doubles the hit)
-      dmgModType: "global",
-      src: `Shadow Strike: ${numShadowHits} hits`,
-    };
-  }
-  const falloffCoefficient = 0.7;
-
-  // Each hit deals (1 - falloff)^i of original, where i is 0-indexed
-  // Geometric series: dmgValue * (1 + r + r^2 + ... + r^(n-1)) = dmgValue * (1 - r^n) / (1 - r)
-  const retainedRatio = 1 - falloffCoefficient;
-  const geometricSum =
-    (1 - retainedRatio ** numShadowHits) / falloffCoefficient;
+  const shotgunCoefficientPct = 30;
 
   return {
     type: "DmgPct",
     addn: true,
-    value: geometricSum * 100, // Convert to whole percentage
+    value: 100 + (numShadowHits - 1) * shotgunCoefficientPct,
     dmgModType: "global",
     src: `Shadow Strike: ${numShadowHits} hits`,
   };
