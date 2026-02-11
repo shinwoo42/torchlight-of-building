@@ -7,6 +7,7 @@ interface ModalProps {
   title: string;
   children: React.ReactNode;
   maxWidth?: "sm" | "md" | "lg" | "xl";
+  dismissible?: boolean;
 }
 
 const maxWidthClasses = {
@@ -22,6 +23,7 @@ export const Modal = ({
   title,
   children,
   maxWidth = "lg",
+  dismissible = true,
 }: ModalProps) => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -31,25 +33,48 @@ export const Modal = ({
   );
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && dismissible) {
       document.addEventListener("keydown", handleKeyDown);
       return () => document.removeEventListener("keydown", handleKeyDown);
     }
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen, dismissible, handleKeyDown]);
 
   if (!isOpen || typeof document === "undefined") return null;
 
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      onClick={onClose}
+      onClick={dismissible ? onClose : undefined}
     >
       <div className="absolute inset-0 bg-black/60" />
       <div
         className={`relative bg-zinc-900 rounded-lg shadow-xl p-6 ${maxWidthClasses[maxWidth]} w-full mx-4 border border-zinc-700`}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-semibold mb-4 text-zinc-50">{title}</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-zinc-50">{title}</h2>
+          {!dismissible && (
+            <button
+              onClick={onClose}
+              className="text-zinc-400 hover:text-zinc-200 transition-colors p-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
+        </div>
         {children}
       </div>
     </div>,

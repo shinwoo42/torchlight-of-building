@@ -283,6 +283,7 @@ export const ActivationMediumEditModal = ({
       onClose={onClose}
       title="Edit Activation Medium"
       maxWidth="md"
+      dismissible={false}
     >
       <ModalDescription>{skill.name}</ModalDescription>
 

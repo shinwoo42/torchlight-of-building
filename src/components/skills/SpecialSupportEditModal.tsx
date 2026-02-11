@@ -161,7 +161,13 @@ export const SpecialSupportEditModal = ({
       : "Edit Noble Support";
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={modalTitle} maxWidth="md">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={modalTitle}
+      maxWidth="md"
+      dismissible={false}
+    >
       <ModalDescription>{skill.name}</ModalDescription>
 
       <div className="space-y-4">

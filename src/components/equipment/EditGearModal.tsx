@@ -658,7 +658,13 @@ export const EditGearModal = ({
       : i18n._("Edit {equipmentType}", { equipmentType });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={modalTitle} maxWidth="xl">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={modalTitle}
+      maxWidth="xl"
+      dismissible={false}
+    >
       <div className="max-h-[70vh] space-y-6 overflow-y-auto pr-2">
         {/* Equipment Type Selector (creation mode only) */}
         {mode === "create" && (
