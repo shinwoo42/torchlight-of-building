@@ -73,12 +73,18 @@ t("{value:dec%} attack and cast speed").outputMany([
 | `{name:+dec}` | **Signed** decimal (requires `+` or `-`) | `"+21.5"` → `21.5` |
 | `{name:+int%}` | **Signed** integer percent | `"+30%"` → `30`, `"-15%"` → `-15` |
 | `{name:+dec%}` | **Signed** decimal percent | `"+96%"` → `96` |
+| `{name:?int}` | **Optional-sign** integer (matches with or without `+`/`-`) | `"5"` → `5`, `"+5"` → `5`, `"-3"` → `-3` |
+| `{name:?dec}` | **Optional-sign** decimal | `"21.5"` → `21.5`, `"+21.5"` → `21.5` |
+| `{name:?int%}` | **Optional-sign** integer percent | `"30%"` → `30`, `"+30%"` → `30` |
+| `{name:?dec%}` | **Optional-sign** decimal percent | `"96%"` → `96`, `"+96%"` → `96` |
 | `{name:EnumType}` | Enum lookup | `{dmgType:DmgChunkType}` |
 
-**Signed vs Unsigned Types:**
-- Use **unsigned** (`dec%`, `int`) when input does NOT start with `+` or `-` (e.g., `"8% additional damage applied to Life"`)
-- Use **signed** (`+dec%`, `+int`) when input STARTS with `+` or `-` (e.g., `"+25% additional damage"`)
-- Signed types will NOT match unsigned inputs, and vice versa
+**Signed vs Unsigned vs Optional-sign Types:**
+- Use **unsigned** (`dec%`, `int`) when input NEVER has `+` or `-` (e.g., `"8% additional damage applied to Life"`)
+- Use **signed** (`+dec%`, `+int`) when input ALWAYS has `+` or `-` (e.g., `"+25% additional damage"`)
+- Use **optional-sign** (`?dec%`, `?int`) when input MAY OR MAY NOT have a sign — this avoids needing two separate templates for signed/unsigned variants
+- Signed types will NOT match unsigned inputs, and unsigned will NOT match signed inputs
+- Prefer `?dec%` over two separate `dec%`/`+dec%` templates when the same mod can appear with or without a sign
 
 **Optional syntax:**
 - `[additional]` - Optional literal, sets `c.additional?: true`
@@ -227,6 +233,19 @@ t("{value:+dec%} [additional] attack and cast speed").outputMany([
 t("{value:+dec} max mana").output("MaxMana", (c) => ({ value: c.value })),
 ```
 
+### Optional-Sign Parser
+
+**Input:** `"12.5% Sealed Mana Compensation for Spirit Magus Skills"` OR `"+12.5% Sealed Mana Compensation for Spirit Magus Skills"`
+
+Use `?dec%` when the same mod string can appear with or without a `+`/`-` sign, avoiding the need for two separate templates:
+
+```typescript
+t("{value:?dec%} sealed mana compensation for spirit magus skills").output(
+  "SealedManaCompPct",
+  (c) => ({ value: c.value, addn: false, skillType: "spirit_magus" as const }),
+),
+```
+
 ### No-Op Parser (Recognized but produces no mods)
 
 **Input:** `"Energy Shield starts to Charge when Blocking"`
@@ -241,8 +260,9 @@ t("energy shield starts to charge when blocking").outputNone(),
 
 | Mistake | Fix |
 |---------|-----|
-| Using `dec%` for input with `+` prefix | Use `+dec%` for inputs like `"+25% damage"` |
-| Using `+dec%` for input without sign | Use `dec%` for inputs like `"8% damage applied to life"` |
+| Using `dec%` for input with `+` prefix | Use `+dec%` for inputs like `"+25% damage"`, or `?dec%` if sign is optional |
+| Using `+dec%` for input without sign | Use `dec%` for inputs like `"8% damage applied to life"`, or `?dec%` if sign is optional |
+| Two templates for signed/unsigned variants of the same mod | Use `?dec%` to match both in a single template |
 | Template doesn't match input case | Templates are matched case-insensitively; input is normalized to lowercase |
 | Missing `as const` on string literals | Add `as const` for type narrowing: `statModType: "all" as const` |
 | Handler doesn't account for new variant | Update `offense.ts` to handle new values (e.g., `statModType === "all"`) |

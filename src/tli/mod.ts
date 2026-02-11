@@ -93,6 +93,10 @@ export const HeroTraitLevelTypes = ["origin", "discipline", "progress"];
 
 export type HeroTraitLevelType = (typeof HeroTraitLevelTypes)[number];
 
+export const SealedManaCompTypes = ["spirit_magus"] as const;
+
+export type SealedManaCompSkillType = (typeof SealedManaCompTypes)[number];
+
 // Helper to create an object where each key equals its value
 const createUnionMap = <T extends readonly string[]>(
   values: T,
@@ -407,7 +411,12 @@ interface ModDefinitions {
   CurseDurationPct: { value: number };
   AddnCurse: { value: number };
   WarcryEffPct: { value: number; addn?: boolean };
-  SealedManaCompPct: { value: number; addn?: boolean; skillName?: string };
+  SealedManaCompPct: {
+    value: number;
+    addn?: boolean;
+    skillName?: string;
+    skillType?: SealedManaCompSkillType;
+  };
   ResPenPct: { value: number; penType: ResPenType };
   ArmorPenPct: { value: number };
   ManaBeforeLifePct: { value: number };

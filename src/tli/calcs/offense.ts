@@ -2184,11 +2184,6 @@ const calculateSealedResources = (
   config: Configuration,
   derivedCtx: DerivedCtx,
 ): ResourcePool["sealedResources"] => {
-  const allSealedManaCompMods = filterMods(loadoutMods, "SealedManaCompPct");
-  const globalSealedManaCompMods = allSealedManaCompMods.filter(
-    (m) => m.skillName === undefined,
-  );
-  const globalSealedManaCompMult = calcEffMult(globalSealedManaCompMods);
   const overrideSupportManaMultPct = findMod(
     loadoutMods,
     "OverrideSupportSkillManaMultPct",
@@ -2206,7 +2201,9 @@ const calculateSealedResources = (
     if (slot === undefined || slot.skillName === undefined || !slot.enabled) {
       continue;
     }
-    const passiveSkill = PassiveSkills.find((s) => s.name === slot.skillName);
+    const passiveSkill = PassiveSkills.find((s) => s.name === slot.skillName) as
+      | BasePassiveSkill
+      | undefined;
     if (passiveSkill === undefined) {
       continue;
     }
@@ -2235,22 +2232,20 @@ const calculateSealedResources = (
       config,
       derivedCtx,
     );
-    const supportSealedManaCompMult = calcEffMult(
-      supportMods,
+
+    const sealedManaCompMods = filterMods(
+      R.concat(loadoutMods, supportMods),
       "SealedManaCompPct",
+    ).filter(
+      (m) =>
+        m.skillName === undefined ||
+        m.skillName === slot.skillName ||
+        (passiveSkill.tags.includes("Spirit Magus") &&
+          m.skillType === "spirit_magus"),
     );
-
-    const skillSpecificMods = allSealedManaCompMods.filter(
-      (m) => m.skillName === slot.skillName,
-    );
-    const skillSpecificSealedManaCompMult = calcEffMult(skillSpecificMods);
-
-    const totalSealedManaCompMult =
-      globalSealedManaCompMult *
-      skillSpecificSealedManaCompMult *
-      supportSealedManaCompMult;
+    const sealedManaCompMult = calcEffMult(sealedManaCompMods);
     const skillSealedPct =
-      (baseSealedManaPct * combinedManaCostMult) / totalSealedManaCompMult;
+      (baseSealedManaPct * combinedManaCostMult) / sealedManaCompMult;
 
     // SealConversion converts sealed mana to sealed life
     const hasSealConversion = modExists(supportMods, "SealConversion");

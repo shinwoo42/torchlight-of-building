@@ -1776,6 +1776,20 @@ test("parse additional skill-specific sealed mana compensation", () => {
   ]);
 });
 
+test("parse sealed mana compensation for spirit magus skills", () => {
+  const result = parseMod(
+    "12.5% Sealed Mana Compensation for Spirit Magus Skills",
+  );
+  expect(result).toEqual([
+    {
+      type: "SealedManaCompPct",
+      value: 12.5,
+      addn: false,
+      skillType: "spirit_magus",
+    },
+  ]);
+});
+
 test("parse chance to gain blur when reaping", () => {
   const result = parseMod("+5% chance to gain Blur when Reaping");
   expect(result).toEqual([{ type: "GeneratesBlur", value: 5 }]);
