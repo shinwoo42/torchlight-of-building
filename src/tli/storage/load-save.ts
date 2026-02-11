@@ -1,5 +1,4 @@
 import * as R from "remeda";
-import { CoreTalentMods } from "@/src/data/core-talent/core-talent-mods";
 import { CoreTalents } from "@/src/data/core-talent/core-talents";
 import {
   type CoreTalentName,
@@ -118,6 +117,11 @@ const coreTalentNameSet = new Set(
   CoreTalentNames.map((name) => name.toLowerCase()),
 );
 
+// Map for fast core talent lookup by name
+const coreTalentsByName = new Map<string, (typeof CoreTalents)[number]>(
+  CoreTalents.map((t) => [t.name, t]),
+);
+
 const getCoreTalentName = (text: string): CoreTalentName | undefined => {
   const normalized = text.trim().toLowerCase();
   if (coreTalentNameSet.has(normalized)) {
@@ -150,13 +154,14 @@ const convertAffix = (
   if (lines.length === 1) {
     const coreTalentName = getCoreTalentName(lines[0]);
     if (coreTalentName !== undefined) {
-      const coreTalentAffix = CoreTalentMods[coreTalentName];
-      if (coreTalentAffix !== undefined) {
+      const talent = coreTalentsByName.get(coreTalentName);
+      if (talent !== undefined) {
+        const talentLines = talent.affix.split("\n");
         return {
           specialName: coreTalentName,
-          affixLines: coreTalentAffix.affixLines.map((line) => ({
-            text: line.text,
-            mods: line.mods?.map((mod) => ({ ...mod, src })),
+          affixLines: talentLines.map((text) => ({
+            text,
+            mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
           })),
           src,
           maxDivinity,
@@ -196,17 +201,16 @@ const convertCoreTalent = (
   talentName: string,
   src: string,
 ): Affix | undefined => {
-  const coreTalentAffix = CoreTalentMods[talentName as CoreTalentName];
-  if (coreTalentAffix === undefined) {
+  const talent = coreTalentsByName.get(talentName);
+  if (talent === undefined) {
     console.error(`Unknown core talent: ${talentName}`);
     return undefined;
   }
-
-  const affixLines: AffixLine[] = coreTalentAffix.affixLines.map((line) => ({
-    text: line.text,
-    mods: line.mods?.map((mod) => ({ ...mod, src })),
+  const lines = talent.affix.split("\n");
+  const affixLines: AffixLine[] = lines.map((text) => ({
+    text,
+    mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
   }));
-
   return { specialName: talentName, affixLines, src };
 };
 

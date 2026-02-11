@@ -2,8 +2,7 @@ import { Trans } from "@lingui/react/macro";
 import React from "react";
 import { Tooltip, TooltipTitle } from "@/src/components/ui/Tooltip";
 import type { BaseCoreTalent } from "@/src/data/core-talent";
-import { CoreTalentMods } from "@/src/data/core-talent/core-talent-mods";
-import type { CoreTalentName } from "@/src/data/core-talent/types";
+import { CoreTalents } from "@/src/data/core-talent/core-talents";
 import { useTooltip } from "@/src/hooks/useTooltip";
 import {
   getAvailableGodGoddessCoreTalents,
@@ -14,6 +13,11 @@ import {
 } from "@/src/lib/core-talent-utils";
 import { i18n } from "@/src/lib/i18n";
 import type { Affix } from "@/src/tli/core";
+import { parseMod } from "@/src/tli/mod-parser";
+
+const coreTalentsByName = new Map<string, (typeof CoreTalents)[number]>(
+  CoreTalents.map((t) => [t.name, t]),
+);
 
 interface CoreTalentSelectorProps {
   treeName: string;
@@ -180,23 +184,29 @@ const CoreTalentSlot: React.FC<CoreTalentSlotProps> = ({
           <>
             <TooltipTitle>{hoveredTalent.name}</TooltipTitle>
             <div>
-              {CoreTalentMods[
-                hoveredTalent.name as CoreTalentName
-              ].affixLines.map((line, idx) => (
-                <div
-                  key={idx}
-                  className={
-                    idx > 0 ? "mt-1 pt-1 border-t border-zinc-800" : ""
-                  }
-                >
-                  <div className="text-xs text-zinc-300">{line.text}</div>
-                  {line.mods === undefined && (
-                    <div className="text-xs text-red-500">
-                      (Mod not supported in TOB yet)
+              {(() => {
+                const talent = coreTalentsByName.get(hoveredTalent.name);
+                if (talent === undefined) return undefined;
+                const lines = talent.affix.split("\n");
+                return lines.map((text, idx) => {
+                  const mods = parseMod(text);
+                  return (
+                    <div
+                      key={idx}
+                      className={
+                        idx > 0 ? "mt-1 pt-1 border-t border-zinc-800" : ""
+                      }
+                    >
+                      <div className="text-xs text-zinc-300">{text}</div>
+                      {mods === undefined && (
+                        <div className="text-xs text-red-500">
+                          (Mod not supported in TOB yet)
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
+                  );
+                });
+              })()}
             </div>
           </>
         )}
