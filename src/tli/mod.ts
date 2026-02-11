@@ -59,7 +59,7 @@ export const AspdModTypes = ["melee"] as const;
 
 export type AspdModType = (typeof AspdModTypes)[number];
 
-export const DoubleDmgModTypes = ["attack"] as const;
+export const DoubleDmgModTypes = ["attack", "spell"] as const;
 
 export type DoubleDmgModType = (typeof DoubleDmgModTypes)[number];
 
@@ -462,8 +462,10 @@ interface ModDefinitions {
   SkillCost: { value: number };
   SkillCostPct: { value: number; addn?: boolean };
   GeneratesAttackAggression: object;
+  HasAttackAggression: object;
   AttackAggressionEffPct: { value: number };
   GeneratesSpellAggression: object;
+  HasSpellAggression: object;
   SpellAggressionEffPct: { value: number };
   MainSkillSupportedBy: { skillName: string; level: number };
   TriggersSkill: { skillName: string; level: number };

@@ -847,6 +847,10 @@ export const allParsers = [
     "DoubleDmgChancePct",
     (c) => ({ value: c.value, doubleDmgModType: ATTACK }),
   ),
+  t("{value:+dec%} chance for spells to deal double damage").output(
+    "DoubleDmgChancePct",
+    (c) => ({ value: c.value, doubleDmgModType: "spell" as const }),
+  ),
   t("{value:+dec%} chance to deal double damage").output(
     "DoubleDmgChancePct",
     (c) => ({ value: c.value }),
@@ -1241,6 +1245,9 @@ export const allParsers = [
     "{value:+dec%} chance to gain {stacks:int} stack of focus blessing when casting a summon skill. interval: {interval:int} s",
   ).output("GeneratesFocusBlessing", () => ({})),
   t(
+    "{value:+dec%} chance to gain a stack of focus blessing upon inflicting damage to a frostbitten enemy. interval: {interval:dec}s",
+  ).output("GeneratesFocusBlessing", () => ({})),
+  t(
     "{value:+dec%} chance to gain {stacks:int} stack of tenacity blessing when casting a skill. interval: {interval:int} s",
   ).output("GeneratesTenacityBlessing", () => ({})),
   t(
@@ -1284,6 +1291,8 @@ export const allParsers = [
     "GeneratesSpellAggression",
     () => ({}),
   ),
+  t("has spell aggression").output("HasSpellAggression", () => ({})),
+  t("has attack aggression").output("HasAttackAggression", () => ({})),
   t("{value:+dec%} spell aggression effect").output(
     "SpellAggressionEffPct",
     (c) => ({ value: c.value }),
@@ -2101,6 +2110,7 @@ export const allParsers = [
     "GeneratesTorment",
     () => ({}),
   ),
+  t("cooldown: {value:dec}s").outputNone(),
   t("energy shield starts to charge when blocking").outputNone(),
   t("you can cast {value:int} additional curse(s)").output(
     "AddnCurse",

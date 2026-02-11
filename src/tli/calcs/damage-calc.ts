@@ -833,6 +833,9 @@ export const calculateDoubleDmgMult = (
   if (skill.tags.includes("Attack")) {
     modTypes.push("attack");
   }
+  if (skill.tags.includes("Spell")) {
+    modTypes.push("spell");
+  }
   const doubleDmgMods = filterMods(mods, "DoubleDmgChancePct").filter(
     (m) =>
       m.doubleDmgModType === undefined || modTypes.includes(m.doubleDmgModType),

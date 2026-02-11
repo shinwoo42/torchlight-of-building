@@ -1804,7 +1804,7 @@ const resolveModsForOffenseSkill = (
   };
   const pushSpellAggression = (): void => {
     step("spellAggression");
-    if (!config.hasSpellAggression) {
+    if (!config.hasSpellAggression && !modExists(mods, "HasSpellAggression")) {
       return;
     }
     const cspdBase = 7;
@@ -1888,7 +1888,10 @@ const resolveModsForOffenseSkill = (
   };
   const pushAttackAggression = (): void => {
     step("attackAggression");
-    if (!config.hasAttackAggression) {
+    if (
+      !config.hasAttackAggression &&
+      !modExists(mods, "HasAttackAggression")
+    ) {
       return;
     }
     const aspdBase = 5;

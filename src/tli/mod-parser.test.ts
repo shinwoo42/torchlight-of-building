@@ -3758,3 +3758,32 @@ test("parse spirit magus skill level", () => {
     { type: "SkillLevel", value: 1, skillLevelType: "spirit_magus" },
   ]);
 });
+
+test("parse chance to gain focus blessing on frostbitten enemy", () => {
+  const result = parseMod(
+    "+100% chance to gain a stack of Focus Blessing upon inflicting damage to a Frostbitten enemy. Interval: 0.1s",
+  );
+  expect(result).toEqual([{ type: "GeneratesFocusBlessing" }]);
+});
+
+test("parse spell double damage chance", () => {
+  const result = parseMod("+2% chance for Spells to deal Double Damage");
+  expect(result).toEqual([
+    { type: "DoubleDmgChancePct", value: 2, doubleDmgModType: "spell" },
+  ]);
+});
+
+test("parse cooldown as no-op", () => {
+  const result = parseMod("Cooldown: 10s");
+  expect(result).toEqual([]);
+});
+
+test("parse has spell aggression", () => {
+  const result = parseMod("Has Spell Aggression");
+  expect(result).toEqual([{ type: "HasSpellAggression" }]);
+});
+
+test("parse has attack aggression", () => {
+  const result = parseMod("Has Attack Aggression");
+  expect(result).toEqual([{ type: "HasAttackAggression" }]);
+});
