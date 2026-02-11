@@ -417,7 +417,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
   },
   "Burning Touch": {
     affixLines: [
-      { text: "Has Spell Aggression" },
+      { text: "Has Spell Aggression", mods: [{ type: "HasSpellAggression" }] },
       {
         text: "+10% Spell Aggression Effect for every Main Spell Skill cast recently. Stacks up to 10 times",
       },
@@ -1163,7 +1163,7 @@ export const CoreTalentMods: Record<CoreTalentName, Affix> = {
             type: "SealedManaCompPct",
             value: 50,
             addn: false,
-            skillName: "Spirit Magus Skills",
+            skillType: "spirit_magus",
           },
         ],
       },
