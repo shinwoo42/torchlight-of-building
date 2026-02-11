@@ -2598,7 +2598,7 @@ const calcAvgAttackDps = (
 
   // Get offense percentages based on skill type
   const offenseValues = match(skill.name as ActiveSkillName)
-    .with("Frost Spike", "Thunder Spike", () => {
+    .with("Frost Spike", "Thunder Spike", "Berserking Blade", () => {
       const weaponAtkDmgPct = offense?.weaponAtkDmgPct?.value;
       const addedDmgEffPct = offense?.addedDmgEffPct?.value;
       if (weaponAtkDmgPct === undefined || addedDmgEffPct === undefined) {
@@ -2834,6 +2834,7 @@ const calcSpellHit = (
   const implementedSpells: ActiveSkillName[] = [
     "[Test] Simple Spell",
     "Chain Lightning",
+    "Ice Lances",
   ];
   if (!implementedSpells.includes(skill.name as ActiveSkillName)) {
     return undefined;
