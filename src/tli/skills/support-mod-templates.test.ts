@@ -118,6 +118,51 @@ describe("parseSupportAffixes", () => {
     ]);
   });
 
+  test("parse projectile speed", () => {
+    const result = parseSupportAffixes([
+      "+20% Projectile Speed for the supported skill",
+    ]);
+    expect(result).toEqual([
+      [{ mod: { type: "ProjectileSpeedPct", value: 20 } }],
+    ]);
+  });
+
+  test("parse Overload damage per focus blessing stack with time(s)", () => {
+    const result = parseSupportAffixes([
+      "4% additional damage for the supported skill for each stack of Focus Blessing, stacking up to 8 time(s)",
+    ]);
+    expect(result).toEqual([
+      [
+        {
+          mod: {
+            type: "DmgPct",
+            value: 4,
+            dmgModType: "global",
+            addn: true,
+            per: { stackable: "focus_blessing", limit: 8 },
+          },
+        },
+      ],
+    ]);
+  });
+
+  test("parse skill effect per cast with stacking limit", () => {
+    const result = parseSupportAffixes([
+      "The supported skill 10% Effect every time it is cast, stacking up to 3 time(s)",
+    ]);
+    expect(result).toEqual([
+      [
+        {
+          mod: {
+            type: "SkillEffPct",
+            value: 10,
+            per: { stackable: "skill_use", limit: 3 },
+          },
+        },
+      ],
+    ]);
+  });
+
   test("parse seal conversion", () => {
     const result = parseSupportAffixes([
       "Replaces Sealed Mana of the supported skill with Sealed Life",

@@ -159,10 +159,10 @@ const allSupportParsers = [
     (c) => ({ value: c.value }),
   ),
   t(
-    "the supported skill {value:dec%} effect every time it is cast, up to {_:int} time(s)",
+    "the supported skill {value:dec%} effect every time it is cast, [stacking] up to {limit:int} time(s)",
   ).output("SkillEffPct", (c) => ({
     value: c.value,
-    per: { stackable: "skill_use" as const },
+    per: { stackable: "skill_use" as const, limit: c.limit },
   })),
   t(
     "{value:dec%} effect for the status provided by the skill per charge when you use the supported skill",
@@ -209,6 +209,10 @@ const allSupportParsers = [
     "every {_:int} time(s) the supported skill is used, gains a barrier if there's no barrier. interval: {_:int} s",
   ).output("GeneratesBarrier"),
   t("gains a barrier if there's no barrier").output("GeneratesBarrier"),
+  t("{value:+dec%} projectile speed for the supported skill").output(
+    "ProjectileSpeedPct",
+    (c) => ({ value: c.value }),
+  ),
   t("{value:int%} projectile size for the supported skill").output(
     "ProjectileSizePct",
     (c) => ({ value: c.value }),
@@ -238,6 +242,14 @@ const allSupportParsers = [
   })),
   t(
     "{value:dec%} additional damage for the supported skill for every stack of focus blessing, stacking up to {limit:int} times",
+  ).output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: true,
+    per: { stackable: "focus_blessing" as const, limit: c.limit },
+  })),
+  t(
+    "{value:dec%} additional damage for the supported skill for each stack of focus blessing, stacking up to {limit:int} time(s)",
   ).output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: GLOBAL,

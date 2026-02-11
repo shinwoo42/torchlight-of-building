@@ -2507,7 +2507,7 @@ describe("resolveBuffSkillMods", () => {
         "cond" in m &&
         m.cond === "enemy_frostbitten",
     ) as DmgPctMod | undefined;
-    expect(iceBondBuffMod?.value).toBeCloseTo(33);
+    expect(iceBondBuffMod?.value).toBeCloseTo(42.9);
   });
 
   test("Ice Bond and Bull's Rage with Mass Effect and Well-Fought Battle - supports only affect their attached skill", () => {
@@ -2519,7 +2519,7 @@ describe("resolveBuffSkillMods", () => {
     // Ice Bond at level 20: 33% base cold damage (modType: "cold")
     // Bull's Rage at level 20: 27% base melee damage (modType: "melee")
     // Mass Effect at level 20: 20% per charge * 2 charges = 40% skill effect
-    // Well-Fought Battle at level 20: 5.25% per use * 3 uses = 15.75% skill effect
+    // Well-Fought Battle at level 20: 10% per use * 3 uses = 30% skill effect
     //
     // Ice Bond buff = 33% * 1.7 = 56.1% additional cold damage
     // Bull's Rage buff = 27% * 1.7 = 45.9% additional melee damage
@@ -2556,16 +2556,16 @@ describe("resolveBuffSkillMods", () => {
         "cond" in m &&
         m.cond === "enemy_frostbitten",
     ) as DmgPctMod | undefined;
-    expect(iceBondBuffMod?.value).toBeCloseTo(46.2);
+    expect(iceBondBuffMod?.value).toBeCloseTo(56.1);
 
     // Check Bull's Rage buff
     const bullsRageBuffMod = actual?.resolvedMods.find(
       (m) => m.type === "DmgPct" && m.dmgModType === "melee" && m.addn === true,
     ) as DmgPctMod | undefined;
-    expect(bullsRageBuffMod?.value).toBeCloseTo(37.8);
+    expect(bullsRageBuffMod?.value).toBeCloseTo(45.9);
 
     // Verify final avgHit includes both Ice Bond's cold buff and Bull's Rage's melee buff
-    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(404.94);
+    expect(actual?.attackDpsSummary?.mainhand.avgHit).toBeCloseTo(457.78);
   });
 
   test("supports on main skill do not affect buff skills", () => {
@@ -2657,7 +2657,7 @@ describe("resolveBuffSkillMods", () => {
         "cond" in m &&
         m.cond === "enemy_frostbitten",
     ) as DmgPctMod | undefined;
-    expect(iceBondBuffMod?.value).toBeCloseTo(46.2);
+    expect(iceBondBuffMod?.value).toBeCloseTo(56.1);
   });
 
   test("support skill level affects skill effect bonus", () => {
