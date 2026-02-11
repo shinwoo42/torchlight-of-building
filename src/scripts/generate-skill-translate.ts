@@ -6,6 +6,7 @@ import { ActiveSkills } from "@/src/data/skill/active";
 import { PassiveSkills } from "@/src/data/skill/passive";
 import { SupportSkills } from "@/src/data/skill/support";
 import { MagnificentSupportSkills } from "@/src/data/skill/support-magnificent";
+import { NobleSupportSkills } from "../data/skill";
 import { fetchPage, processInBatches, toSnakeCase } from "./tlidb-tools";
 
 export type Translate = "en" | "cn";
@@ -29,6 +30,9 @@ const getSkillSet = (): Set<string> => {
     SkillSet.add(skill.name);
   }
   for (const skill of MagnificentSupportSkills) {
+    SkillSet.add(skill.name);
+  }
+  for (const skill of NobleSupportSkills) {
     SkillSet.add(skill.name);
   }
   return SkillSet;
@@ -116,37 +120,6 @@ const generateTranslateNames = async (
   return results;
 };
 
-const generateSkillPO = async (): Promise<void> => {
-  const Translations = await generateTranslateNames("cn");
-  // Generate .po format
-  let po = 'msgid ""\n';
-  po += 'msgstr ""\n';
-  po += '"Project-Id-Version: \\n"\n';
-  po += '"Report-Msgid-Bugs-To: \\n"\n';
-  po += '"POT-Creation-Date: \\n"\n';
-  po += '"PO-Revision-Date: \\n"\n';
-  po += '"Last-Translator: \\n"\n';
-  po += '"Language: \\n"\n';
-  po += '"Language-Team: \\n"\n';
-  po += '"Content-Type: \\n"\n';
-  po += '"Content-Transfer-Encoding: \\n"\n';
-  po += '"Plural-Forms: \\n"\n\n';
-
-  let n = 4;
-  for (const r of Translations) {
-    po += `#. js-lingui-explicit-id\n`;
-    po += `#: src/data/translate/skills.ts:${n}\n`;
-    po += `msgid "${r.en}"\n`;
-    po += `msgstr "${r.trans}"\n\n`;
-    n += 1;
-  }
-
-  const outDir = join(process.cwd(), "src", "locales");
-  await mkdir(outDir, { recursive: true });
-  await writeFile(join(outDir, "zh", "skills.po"), po);
-  console.log("Done! Generated src/locales/zh/skills.po");
-};
-
 const generateSkillTS = async () => {
   const skillSet = getSkillSet();
   const text = `import { i18n } from "@lingui/core";
@@ -172,7 +145,6 @@ const main = async (options: Options) => {
     await fetchSkillPages("cn");
     console.log("");
   }
-  await generateSkillPO();
   await generateSkillTS();
 };
 
