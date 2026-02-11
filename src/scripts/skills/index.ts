@@ -24,6 +24,7 @@ import {
   energyFortressParser,
   erosionAmplificationParser,
   frigidDomainParser,
+  iceFocusParser,
   nimblenessParser,
   preciseCrueltyParser,
   preciseDeepPainParser,
@@ -32,7 +33,10 @@ import {
   preciseErosionAmplificationParser,
   preciseFearlessParser,
   preciseFrigidDomainParser,
+  preciseIceFocusParser,
   preciseNimblenessParser,
+  precisePreciseProjectilesParser,
+  preciseProjectilesParser,
   preciseSpellAmplificationParser,
   preciseSteadFastParser,
   preciseSwiftnessParser,
@@ -209,6 +213,22 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     skillName: "Precise: Nimbleness",
     categories: ["passive"],
     parser: preciseNimblenessParser,
+  },
+  {
+    skillName: "Precise Projectiles",
+    categories: ["passive"],
+    parser: preciseProjectilesParser,
+  },
+  {
+    skillName: "Precise: Precise Projectiles",
+    categories: ["passive"],
+    parser: precisePreciseProjectilesParser,
+  },
+  { skillName: "Ice Focus", categories: ["passive"], parser: iceFocusParser },
+  {
+    skillName: "Precise: Ice Focus",
+    categories: ["passive"],
+    parser: preciseIceFocusParser,
   },
 ];
 

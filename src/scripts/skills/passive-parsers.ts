@@ -496,3 +496,68 @@ export const nimblenessParser: SupportLevelParser = (input) => {
 export const preciseNimblenessParser: SupportLevelParser = (input) => {
   return nimblenessParser(input);
 };
+
+export const preciseProjectilesParser: SupportLevelParser = (input) => {
+  const { skillName, progressionTable } = input;
+
+  const descriptCol = findColumn(progressionTable, "descript", skillName);
+  const projectileDmgPct: Record<number, number> = {};
+  const ailmentDmgPct: Record<number, number> = {};
+
+  for (const [levelStr, text] of Object.entries(descriptCol.rows)) {
+    const level = Number(levelStr);
+
+    const projMatch = findMatch(
+      text,
+      ts("{value:?dec%} additional Projectile Damage"),
+      skillName,
+    );
+    projectileDmgPct[level] = projMatch.value;
+
+    const ailmentMatch = findMatch(
+      text,
+      ts("{value:?dec%} additional Ailment Damage"),
+      skillName,
+    );
+    ailmentDmgPct[level] = ailmentMatch.value;
+  }
+
+  validateAllLevels(projectileDmgPct, skillName);
+  validateAllLevels(ailmentDmgPct, skillName);
+
+  return {
+    projectileDmgPct,
+    ailmentDmgPct,
+    projectileSpeedPct: createConstantLevels(10),
+  };
+};
+
+export const precisePreciseProjectilesParser: SupportLevelParser = (input) => {
+  return preciseProjectilesParser(input);
+};
+
+export const iceFocusParser: SupportLevelParser = (input) => {
+  const { skillName, progressionTable } = input;
+
+  const descriptCol = findColumn(progressionTable, "descript", skillName);
+  const coldDmgPct: Record<number, number> = {};
+
+  for (const [levelStr, text] of Object.entries(descriptCol.rows)) {
+    const level = Number(levelStr);
+
+    const dmgMatch = findMatch(
+      text,
+      ts("{value:?dec%} additional Cold Damage"),
+      skillName,
+    );
+    coldDmgPct[level] = dmgMatch.value;
+  }
+
+  validateAllLevels(coldDmgPct, skillName);
+
+  return { coldDmgPct, inflictFrostbitePct: createConstantLevels(100) };
+};
+
+export const preciseIceFocusParser: SupportLevelParser = (input) => {
+  return iceFocusParser(input);
+};

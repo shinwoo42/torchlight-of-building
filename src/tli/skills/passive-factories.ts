@@ -242,4 +242,60 @@ export const passiveSkillModFactories: Partial<
       { type: "ArmorPct", value: v(vals.armorPct, l), addn: true },
     ],
   }),
+  "Precise Projectiles": (l, vals) => ({
+    buffMods: [
+      {
+        type: "DmgPct",
+        value: v(vals.projectileDmgPct, l),
+        addn: true,
+        dmgModType: "projectile",
+      },
+      {
+        type: "DmgPct",
+        value: v(vals.ailmentDmgPct, l),
+        addn: true,
+        dmgModType: "ailment",
+      },
+      { type: "ProjectileSpeedPct", value: v(vals.projectileSpeedPct, l) },
+    ],
+  }),
+  "Precise: Precise Projectiles": (l, vals) => ({
+    buffMods: [
+      {
+        type: "DmgPct",
+        value: v(vals.projectileDmgPct, l),
+        addn: true,
+        dmgModType: "projectile",
+      },
+      {
+        type: "DmgPct",
+        value: v(vals.ailmentDmgPct, l),
+        addn: true,
+        dmgModType: "ailment",
+      },
+      { type: "ProjectileSpeedPct", value: v(vals.projectileSpeedPct, l) },
+    ],
+  }),
+  "Ice Focus": (l, vals) => ({
+    buffMods: [
+      {
+        type: "DmgPct",
+        value: v(vals.coldDmgPct, l),
+        addn: true,
+        dmgModType: "cold",
+      },
+      { type: "InflictFrostbitePct", value: v(vals.inflictFrostbitePct, l) },
+    ],
+  }),
+  "Precise: Ice Focus": (l, vals) => ({
+    buffMods: [
+      {
+        type: "DmgPct",
+        value: v(vals.coldDmgPct, l),
+        addn: true,
+        dmgModType: "cold",
+      },
+      { type: "InflictFrostbitePct", value: v(vals.inflictFrostbitePct, l) },
+    ],
+  }),
 };
