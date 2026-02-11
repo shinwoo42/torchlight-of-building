@@ -27,6 +27,7 @@ import {
   DebugPanel,
   type DebugView,
 } from "../DebugPanel";
+import { AboutModal } from "../modals/AboutModal";
 import { ExportModal } from "../modals/ExportModal";
 import { PageTabs } from "../PageTabs";
 import { StatsPanel } from "./StatsPanel";
@@ -51,6 +52,7 @@ export const BuilderLayout = ({ children }: BuilderLayoutProps) => {
   );
   const [debugPanelView, setDebugPanelView] = useState<DebugView>("saveData");
   const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [aboutModalOpen, setAboutModalOpen] = useState(false);
   const [buildCode, setBuildCode] = useState("");
   const [isRenamingBuild, setIsRenamingBuild] = useState(false);
   const [renameValue, setRenameValue] = useState("");
@@ -207,6 +209,13 @@ export const BuilderLayout = ({ children }: BuilderLayoutProps) => {
           <div className="flex items-center gap-3">
             <button
               type="button"
+              onClick={() => setAboutModalOpen(true)}
+              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-zinc-200"
+            >
+              About
+            </button>
+            <button
+              type="button"
               onClick={handleDebugToggle}
               className={`rounded-lg px-3 py-1 text-sm font-medium transition-colors ${
                 debugMode
@@ -244,6 +253,11 @@ export const BuilderLayout = ({ children }: BuilderLayoutProps) => {
           isOpen={exportModalOpen}
           onClose={() => setExportModalOpen(false)}
           buildCode={buildCode}
+        />
+
+        <AboutModal
+          isOpen={aboutModalOpen}
+          onClose={() => setAboutModalOpen(false)}
         />
 
         {debugMode && (

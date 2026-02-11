@@ -3,6 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import { AboutModal } from "../components/modals/AboutModal";
 import { ImportModal } from "../components/modals/ImportModal";
 import { decodeBuildCode } from "../lib/build-code";
 import {
@@ -193,6 +194,7 @@ function SavesPage(): React.ReactNode {
   });
   const [mounted, setMounted] = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [aboutModalOpen, setAboutModalOpen] = useState(false);
   const [showImportError, setShowImportError] = useState(false);
 
   useEffect(() => {
@@ -334,6 +336,12 @@ function SavesPage(): React.ReactNode {
                 </option>
               ))}
             </select>
+            <button
+              onClick={() => setAboutModalOpen(true)}
+              className="px-3 py-1.5 bg-zinc-800 text-zinc-400 rounded-lg border border-zinc-700 text-sm hover:bg-zinc-700 hover:text-zinc-200 transition-colors"
+            >
+              About
+            </button>
           </div>
         </div>
 
@@ -451,22 +459,18 @@ function SavesPage(): React.ReactNode {
           )}
         </div>
 
-        <footer className="py-4 border-t border-zinc-800 text-center">
-          <a
-            href="https://github.com/aclinia/torchlight-of-building"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-500 hover:text-zinc-300 transition-colors text-sm"
-          >
-            GitHub
-          </a>
-        </footer>
+        <div className="shrink-0 h-8" />
       </div>
 
       <ImportModal
         isOpen={importModalOpen}
         onClose={() => setImportModalOpen(false)}
         onImport={handleImportBuild}
+      />
+
+      <AboutModal
+        isOpen={aboutModalOpen}
+        onClose={() => setAboutModalOpen(false)}
       />
     </div>
   );
