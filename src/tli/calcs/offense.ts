@@ -2042,6 +2042,16 @@ const resolveModsForOffenseSkill = (
       src: "Trinity: Elemental Penetration",
     });
   };
+  const pushTangle = (): void => {
+    if (!modExists(mods, "IsTangle") || config.numTangles <= 1) return;
+    mods.push({
+      type: "DmgPct",
+      dmgModType: "global",
+      addn: true,
+      value: (config.numTangles - 1) * 100,
+      src: "Tangle",
+    });
+  };
   const pushBerserkingBlade = (): void => {
     const maxBBStacks = sumByValue(
       filterMods(mods, "MaxBerserkingBladeStacks"),
@@ -2140,6 +2150,7 @@ const resolveModsForOffenseSkill = (
   normalize("num_enemies_nearby", config.numEnemiesNearby);
   normalize("enemy_numbed_stacks", config.enemyNumbedStacks ?? 10);
   pushPactspirits();
+  pushTangle();
   const { spellBurstChargeSpeedBonusPct } = pushSpellBurstChargeSpeed();
   pushErika1();
   const { multistrikeChancePct, multistrikeIncDmgPct } = pushMultistrike();

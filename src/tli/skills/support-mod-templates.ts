@@ -297,6 +297,7 @@ const allSupportParsers = [
   t("replaces sealed mana of the supported skill with sealed life").output(
     "SealConversion",
   ),
+  t("the supported skill is cast as a spell tangle").output("IsTangle"),
 ];
 
 const parseSupportAffix = (text: string): SupportMod[] | undefined => {

@@ -169,4 +169,11 @@ describe("parseSupportAffixes", () => {
     ]);
     expect(result).toEqual([[{ mod: { type: "SealConversion" } }]]);
   });
+
+  test("parse Spell Tangle is tangle", () => {
+    const result = parseSupportAffixes([
+      "The supported skill is cast as a Spell Tangle",
+    ]);
+    expect(result).toEqual([[{ mod: { type: "IsTangle" } }]]);
+  });
 });

@@ -482,6 +482,8 @@ interface ModDefinitions {
   SealConversion: object;
   OverrideSupportSkillManaMultPct: { value: number };
   XPEarnedPct: { value: number };
+  // skill specific
+  IsTangle: object;
   // infiltrations
   InflictsInfiltration: { infiltrationType: InfiltrationType };
   InfiltrationEffPct: {

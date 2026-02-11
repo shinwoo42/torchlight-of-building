@@ -112,6 +112,7 @@ export const ConfigurationPageSchema = z
       .number()
       .optional()
       .catch(d.twistedSpacetimeStacks),
+    numTangles: z.number().catch(d.numTangles),
     customAffixLines: z.array(z.string()).optional().catch(d.customAffixLines),
   })
   .catch(DEFAULT_CONFIGURATION) satisfies z.ZodType<Configuration>;

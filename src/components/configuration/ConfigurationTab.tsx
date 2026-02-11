@@ -953,6 +953,16 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             min={0}
           />
           <label className="text-right text-zinc-50">
+            Tangles
+            <InfoTooltip text="Number of tangles. Defaults to 1." />
+          </label>
+          <NumberInput
+            value={config.numTangles}
+            onChange={(v) => onUpdate({ numTangles: v ?? 1 })}
+            min={1}
+          />
+
+          <label className="text-right text-zinc-50">
             Twisted Spacetime Stacks
             <InfoTooltip text="Defaults to max stacks 5" />
           </label>
