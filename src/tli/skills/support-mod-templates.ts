@@ -298,6 +298,11 @@ const allSupportParsers = [
     "SealConversion",
   ),
   t("the supported skill is cast as a spell tangle").output("IsTangle"),
+  t("{_:+int} max charges for the supported skill").outputMany([]),
+  t("gains a {_:int} s buff after casting the supported skill").outputMany([]),
+  t(
+    "gains a stack of buff when using the supported skill every {_:int} s. the buff lasts {_:int}s",
+  ).outputMany([]),
 ];
 
 const parseSupportAffix = (text: string): SupportMod[] | undefined => {

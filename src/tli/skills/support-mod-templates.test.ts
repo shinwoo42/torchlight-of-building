@@ -174,4 +174,25 @@ describe("parseSupportAffixes", () => {
     ]);
     expect(result).toEqual([[{ mod: { type: "IsTangle" } }]]);
   });
+
+  test("parse max charges returns no mods", () => {
+    const result = parseSupportAffixes([
+      "+1 Max Charges for the supported skill",
+    ]);
+    expect(result).toEqual([[]]);
+  });
+
+  test("parse gains buff after casting returns no mods", () => {
+    const result = parseSupportAffixes([
+      "Gains a 2 s buff after casting the supported skill",
+    ]);
+    expect(result).toEqual([[]]);
+  });
+
+  test("parse gains stack of buff on skill use returns no mods", () => {
+    const result = parseSupportAffixes([
+      "Gains a stack of buff when using the supported skill every 6 s. The buff lasts 2s",
+    ]);
+    expect(result).toEqual([[]]);
+  });
 });
