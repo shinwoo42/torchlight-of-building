@@ -87,24 +87,6 @@ export const condThresholdSatisfied = (
     .exhaustive();
 };
 
-// Filters mods by condThreshold for a specific stackable
-// Returns mods that either:
-// - Don't have condThreshold
-// - Have condThreshold for a different stackable
-// - Have condThreshold for this stackable and it's satisfied
-export const filterByStackableThreshold = (
-  mods: Mod[],
-  stackable: Stackable,
-  stackValue: number,
-): Mod[] => {
-  return mods.filter((m) => {
-    if (m.condThreshold === undefined || m.condThreshold.target !== stackable) {
-      return true;
-    }
-    return condThresholdSatisfied(stackValue, m.condThreshold);
-  });
-};
-
 export const hasValue = (mod: Mod): mod is ModWithValue => "value" in mod;
 
 // TODO: latent bug - mods with BOTH `cond` AND `per` would be handled incorrectly:

@@ -225,7 +225,6 @@ const ConditionValues = [
   "at_max_channeled_stacks",
   "enemy_at_max_affliction",
   "enemy_is_cursed",
-  "have_both_sealed_mana_and_life",
   "equipped_in_left_ring_slot",
   "equipped_in_right_ring_slot",
   "enemy_has_desecration_and_cc",
@@ -250,6 +249,13 @@ const ConditionValues = [
 export const Conditions = createUnionMap(ConditionValues);
 export type Condition = (typeof ConditionValues)[number];
 
+// Conditions that depend on intermediate calculations in resolveModsForOffenseSkill,
+// rather than static configuration values
+const ResolvedConditionValues = ["have_both_sealed_mana_and_life"] as const;
+
+export const ResolvedConditions = createUnionMap(ResolvedConditionValues);
+export type ResolvedCondition = (typeof ResolvedConditionValues)[number];
+
 export type Comparator = "lt" | "lte" | "eq" | "gt" | "gte";
 
 // e.g. "greater than 1 nearby enemy" would be {target: "num_enemies_nearby", comparator: "gt", value: 1}
@@ -264,6 +270,7 @@ export interface ConditionThreshold {
 interface ModBase {
   per?: PerStackable;
   cond?: Condition;
+  resolvedCond?: ResolvedCondition;
   condThreshold?: ConditionThreshold;
   src?: string;
 }

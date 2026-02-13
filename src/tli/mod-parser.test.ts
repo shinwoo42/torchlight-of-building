@@ -139,7 +139,7 @@ test("parse additional damage when having both sealed mana and life", () => {
       value: 10,
       dmgModType: "global",
       addn: true,
-      cond: "have_both_sealed_mana_and_life",
+      resolvedCond: "have_both_sealed_mana_and_life",
     },
   ]);
 });

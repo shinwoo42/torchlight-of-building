@@ -2,6 +2,7 @@ import {
   Conditions as C,
   type InfiltrationType,
   type PerStackable,
+  ResolvedConditions as RC,
   Stackables as S,
 } from "../mod";
 import { StatWordMapping } from "./enums";
@@ -207,7 +208,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: c.additional !== undefined,
-    cond: C.have_both_sealed_mana_and_life,
+    resolvedCond: RC.have_both_sealed_mana_and_life,
   })),
   t("{value:+dec%} damage {(when|while)} focus blessing is active").output(
     "DmgPct",

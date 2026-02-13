@@ -28,14 +28,17 @@ Mod resolvers are `push*` functions defined inside `resolveModsForOffenseSkill` 
 
 ## Architecture
 
-`resolveModsForOffenseSkill` is a large function that:
-1. Starts with base mods from gear, talents, skills, etc.
-2. Runs a sequence of `push*` resolver functions that read and mutate the shared `mods` array
-3. Returns a `DerivedOffenseCtx` with the final resolved `mods` array
+`applyModFilters` preprocesses all mods into four groups:
+- `mods` — non-per mods without `condThreshold` or `resolvedCond` (ready to use immediately)
+- `prenormMods` — all mods without `resolvedCond` (source for per-stackable normalization)
+- `condThresholdMods` — non-per mods with `condThreshold` (pushed back by `normalize()` when threshold is met)
+- `resolvedCondMods` — mods with `resolvedCond` (pushed back by individual `push*` resolvers when condition is met)
 
-Each `push*` function is a closure inside `resolveModsForOffenseSkill` that captures:
+`resolveModsForOffenseSkill` then runs a sequence of `push*` resolver functions that push new derived mods into `mods` via `pm()`. Each `push*` function is a closure that captures:
 - `mods: Mod[]` — the shared mutable array of resolved mods
 - `prenormMods` — mods needing per-stackable normalization
+- `condThresholdMods` — mods held back until their stackable threshold is evaluated by `normalize()`
+- `resolvedCondMods` — mods held back until their resolved condition is evaluated by a `push*` resolver
 - `config: Configuration` — user-configured combat parameters
 - `resourcePool` — stats, mana, blessings, etc.
 - `defenses` — armor, evasion, resistances, etc.
@@ -46,8 +49,10 @@ Each `push*` function is a closure inside `resolveModsForOffenseSkill` that capt
 
 From closure (defined in `resolveModsForOffenseSkill`):
 - `pm(...ms: Mod[])` — shorthand for `mods.push(...ms)`
-- `normalize(stackable, value)` — normalizes per-stackable mods and filters by condThreshold
+- `normalize(stackable, value)` — normalizes per-stackable mods from `prenormMods` and pushes satisfied `condThresholdMods` for that stackable
 - `step(stepName)` — registers a step for dependency tracking (only needed if other steps depend on this one)
+- `resolvedCondMods: Mod[]` — mods with `resolvedCond`, separated out by `applyModFilters`; push matching ones into `mods` via `pm()` when the condition is met
+- `condThresholdMods: Mod[]` — non-per mods with `condThreshold`, separated out by `applyModFilters`; pushed back automatically by `normalize()` when their stackable threshold is met
 
 From `src/tli/calcs/mod-utils.ts`:
 - `modExists(mods, "ModType")` — returns `boolean`, checks if any mod of that type exists
@@ -141,6 +146,29 @@ const pushPactspirits = () => {
 };
 ```
 
+**Resolved condition resolver (conditions that depend on calculated values):**
+
+Some mod conditions can't be evaluated statically from configuration — they depend on values calculated earlier in `resolveModsForOffenseSkill` (e.g., sealed mana/life percentages come from `resourcePool.sealedResources`, not config). These use `resolvedCond` on the mod (see `ResolvedCondition` in `mod.ts`) instead of `cond` (which is for static `Configuration`-based conditions evaluated in `filterModsByCond`).
+
+Mods with `resolvedCond` are separated out by `applyModFilters` into `resolvedCondMods`. The push* resolver filters for its condition and pushes matching mods into `mods` via `pm()` when the condition is met.
+
+```typescript
+const pushHasSealedLifeAndManaCond = (): void => {
+  const { sealedManaPct, sealedLifePct } = resourcePool.sealedResources;
+  if (sealedManaPct <= 0 || sealedLifePct <= 0) return;
+  pm(
+    ...resolvedCondMods.filter(
+      (m) => m.resolvedCond === "have_both_sealed_mana_and_life",
+    ),
+  );
+};
+```
+
+To add a new resolved condition:
+1. Add the condition string to `ResolvedConditionValues` in `src/tli/mod.ts`
+2. In the mod parser template (`src/tli/mod-parser/templates.ts`), use `resolvedCond: RC.condition_name` (imported as `ResolvedConditions as RC`) instead of `cond: C.condition_name`
+3. Write a `push*` resolver that filters `resolvedCondMods` and pushes matching mods via `pm()`, and call it at the appropriate point in the execution sequence
+
 **Resolver with step dependencies (rare, only when other resolvers depend on this one):**
 ```typescript
 const pushSpellAggression = (): void => {
@@ -166,17 +194,7 @@ const stepDeps = createSelfReferential({
 
 ### 4. Call the Function
 
-Add the call in the execution sequence inside `resolveModsForOffenseSkill`. Place it near related mechanics. The current call order is roughly:
-
-```
-pushStatNorms → pushDefenseNorms → pushBerserkingBlade → pushTradeoff →
-pushWhimsy → pushAttackAggression → pushSpellAggression → pushMark →
-pushMspd → pushInfiltrations → pushTrinity → pushNumbed → pushFrostbite →
-pushChainLightning → pushFrail → pushYouga2 → pushMaxSpellBurst →
-pushMindControlLinks → (torment, affliction, normalizations) →
-pushPactspirits → pushTangle → pushSpellBurstChargeSpeed →
-pushErika1 → pushMultistrike → return
-```
+Add the call in the execution sequence inside `resolveModsForOffenseSkill`. Place it near related mechanics. 
 
 ### 5. Verify
 
@@ -195,6 +213,7 @@ pnpm check
 | Effect multiplier | Buff/debuff has mods that scale its effectiveness | `calcEffMult(mods, "SomeEffPct")` |
 | Config stacks with default | User can override stack count, defaults to max | `config.someStacks ?? maxStacks` |
 | Normalize stackable | Mechanic involves per-stackable scaling | `normalize("stackable_name", value)` |
+| Filter by resolved condition | Condition depends on calculated values, not static config | `pm(...resolvedCondMods.filter(...))` |
 | `addn: true` on DmgPct | More multiplier (multiplicative with other `addn: true` mods) | — |
 | `addn: false` on DmgPct | Increased multiplier (additive with other `addn: false` mods) | — |
 | `isEnemyDebuff: true` | Damage increase from enemy debuff (for display grouping) | — |

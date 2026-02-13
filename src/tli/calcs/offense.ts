@@ -68,7 +68,7 @@ import {
   calculateAddn,
   collectMods,
   collectModsFromAffixes,
-  filterByStackableThreshold,
+  condThresholdSatisfied,
   filterMods,
   filterOutPerMods,
   findMod,
@@ -812,11 +812,6 @@ const filterModsByCond = (
         );
       })
       .with(
-        "have_both_sealed_mana_and_life",
-        () =>
-          (config.sealedManaPct ?? 0) > 0 && (config.sealedLifePct ?? 0) > 0,
-      )
-      .with(
         // todo: there's gotta be a better way to handle this, right?
         "equipped_in_left_ring_slot",
         () => m.src?.startsWith("Gear#leftRing") ?? false,
@@ -888,6 +883,8 @@ const filterModsByCond = (
 interface FilteredMods {
   prenormMods: Mod[];
   mods: Mod[];
+  resolvedCondMods: Mod[];
+  condThresholdMods: Mod[];
 }
 
 const applyModFilters = (
@@ -896,8 +893,19 @@ const applyModFilters = (
   config: Configuration,
   derivedCtx: DerivedCtx,
 ): FilteredMods => {
-  const prenormMods = filterModsByCond(inputMods, loadout, config, derivedCtx);
-  return { prenormMods, mods: filterOutPerMods(prenormMods) };
+  const condFiltered = filterModsByCond(inputMods, loadout, config, derivedCtx);
+  const resolvedCondMods = condFiltered.filter(
+    (m) => m.resolvedCond !== undefined,
+  );
+  const prenormMods = condFiltered.filter((m) => m.resolvedCond === undefined);
+  const nonPerMods = filterOutPerMods(prenormMods);
+  // Separate non-per condThreshold mods — pushed back by normalize() when threshold is met.
+  // Per mods with condThreshold stay in prenormMods (handled by normalizeStackables internally).
+  const condThresholdMods = nonPerMods.filter(
+    (m) => m.condThreshold !== undefined,
+  );
+  const mods = nonPerMods.filter((m) => m.condThreshold === undefined);
+  return { prenormMods, mods, resolvedCondMods, condThresholdMods };
 };
 
 const listActiveSkillSlots = (loadout: Loadout): SkillSlot[] => {
@@ -1647,12 +1655,12 @@ const resolveModsForOffenseSkill = (
     additionalMaxChanneledStacks,
     desecration,
   } = resourcePool;
-  const { prenormMods, mods: baseMods } = applyModFilters(
-    prenormModsFromParam,
-    loadout,
-    config,
-    derivedCtx,
-  );
+  const {
+    prenormMods,
+    mods: baseMods,
+    resolvedCondMods,
+    condThresholdMods,
+  } = applyModFilters(prenormModsFromParam, loadout, config, derivedCtx);
   const mods = [...baseMods, ...calculateSkillLevelDmgMods(skillLevel)];
   const steps: ModStep[] = [];
   // collect and verify in unit tests, rather than throw error
@@ -1676,16 +1684,21 @@ const resolveModsForOffenseSkill = (
     mods.push(...ms);
   };
 
-  // Local helper - captures mods and prenormMods in closure
-  // Normalizes per-stackable mods and filters mods by condThreshold for this stackable
+  // Local helper - captures mods, prenormMods, and condThresholdMods in closure
+  // Normalizes per-stackable mods and pushes condThreshold mods when threshold is met
   const normalize = (stackable: Stackable, value: number | undefined): void => {
     if (value === undefined) {
       return;
     }
-    // Filter mods by condThreshold for this stackable (mutates in place)
-    const filtered = filterByStackableThreshold(mods, stackable, value);
-    mods.length = 0;
-    mods.push(...filtered);
+    // Push non-per condThreshold mods that target this stackable and satisfy the threshold
+    pm(
+      ...condThresholdMods.filter(
+        (m) =>
+          m.condThreshold !== undefined &&
+          m.condThreshold.target === stackable &&
+          condThresholdSatisfied(value, m.condThreshold),
+      ),
+    );
     // Normalize per-stackable mods (also filters by condThreshold internally)
     pm(...normalizeStackables(prenormMods, stackable, value));
   };
@@ -2047,6 +2060,15 @@ const resolveModsForOffenseSkill = (
       src: "Trinity: Elemental Penetration",
     });
   };
+  const pushHasSealedLifeAndManaCond = (): void => {
+    const { sealedManaPct, sealedLifePct } = resourcePool.sealedResources;
+    if (sealedManaPct <= 0 || sealedLifePct <= 0) return;
+    pm(
+      ...resolvedCondMods.filter(
+        (m) => m.resolvedCond === "have_both_sealed_mana_and_life",
+      ),
+    );
+  };
   const pushTangle = (): void => {
     if (!modExists(mods, "IsTangle") || config.numActiveTangles <= 1) return;
     mods.push({
@@ -2148,6 +2170,7 @@ const resolveModsForOffenseSkill = (
   normalize("mana_consumed_recently", config.manaConsumedRecently ?? 0);
   normalize("unsealed_mana_pct", unsealedManaPct);
   normalize("unsealed_life_pct", unsealedLifePct);
+  pushHasSealedLifeAndManaCond();
   normalize(
     "num_enemies_affected_by_warcry",
     config.numEnemiesAffectedByWarcry,
