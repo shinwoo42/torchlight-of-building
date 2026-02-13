@@ -1132,6 +1132,21 @@ test("parse play safe cast speed to spell burst", () => {
   expect(result).toEqual([{ type: "PlaySafe", value: 100 }]);
 });
 
+test("parse projectile speed bonus applied to projectile damage", () => {
+  const result = parseMod(
+    "60% of the Projectile Speed bonus is also applied to the additional bonus for Projectile Damage",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 1,
+      dmgModType: "projectile",
+      addn: true,
+      per: { stackable: "proj_speed_pct", amt: 100 / 60 },
+    },
+  ]);
+});
+
 test("parse max spell burst when having squidnova", () => {
   const result = parseMod("+1 to Max Spell Burst when having Squidnova");
   expect(result).toEqual([

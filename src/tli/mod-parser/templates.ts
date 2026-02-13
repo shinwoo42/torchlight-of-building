@@ -1221,6 +1221,14 @@ export const allParsers = [
     "{value:dec%} of the bonuses and additional bonuses to cast speed is also applied to spell burst charge speed",
   ).output("PlaySafe", (c) => ({ value: c.value })),
   t(
+    "{value:dec%} of the projectile speed bonus is also applied to the additional bonus for projectile damage",
+  ).output("DmgPct", (c) => ({
+    value: 1,
+    dmgModType: "projectile" as const,
+    addn: true,
+    per: { stackable: S.proj_speed_pct, amt: 100 / c.value },
+  })),
+  t(
     "{value:+int} max channeled stacks when equipped in the left ring slot",
   ).output("MaxChannel", (c) => ({
     value: c.value,

@@ -1813,6 +1813,9 @@ const resolveModsForOffenseSkill = (
       ),
     );
     normalize("projectile", projectiles);
+
+    const projSpeedPct = sumByValue(filterMods(mods, "ProjSpdPct"));
+    normalize("proj_speed_pct", projSpeedPct);
   };
   const pushFervor = () => {
     if (resourcePool.hasFervor) {

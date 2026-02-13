@@ -146,6 +146,7 @@ const StackableValues = [
   "num_spell_skills_used_recently",
   "num_unique_weapon_types_equipped",
   "num_max_multistrikes_recently",
+  "proj_speed_pct",
   // max channel stacks beyond initial skill channel stacks
   "additional_max_channel_stack",
   "channel_stack",
