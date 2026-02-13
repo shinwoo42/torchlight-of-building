@@ -406,6 +406,24 @@ export const StatsPanel = (): React.ReactNode => {
               </>
             )}
 
+            {offenseSummary.tangleSummary !== undefined && (
+              <>
+                <div className="h-2" />
+                <StatLine
+                  label="Max Tangles"
+                  value={formatStatValue.integer(
+                    offenseSummary.tangleSummary.maxTangles,
+                  )}
+                />
+                <StatLine
+                  label="Max Tangles/Enemy"
+                  value={formatStatValue.integer(
+                    offenseSummary.tangleSummary.maxTanglesPerEnemy,
+                  )}
+                />
+              </>
+            )}
+
             <div className="h-2" />
             <StatLine
               label="Movement Speed"

@@ -494,6 +494,8 @@ interface ModDefinitions {
   XPEarnedPct: { value: number };
   // skill specific
   IsTangle: object;
+  MaxTangleQuant: { value: number };
+  MaxTangleQuantPerEnemy: { value: number };
   // infiltrations
   InflictsInfiltration: { infiltrationType: InfiltrationType };
   InfiltrationEffPct: {

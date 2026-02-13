@@ -3884,3 +3884,13 @@ test("strips square bracket prefix with damage mod", () => {
     { type: "DmgPct", value: 18, dmgModType: "fire", addn: false },
   ]);
 });
+
+test("parse max tangle quantity per enemy", () => {
+  const result = parseMod("You can apply 1 additional Tangle(s) to enemies");
+  expect(result).toEqual([{ type: "MaxTangleQuantPerEnemy", value: 1 }]);
+});
+
+test("parse max tangle quantity", () => {
+  const result = parseMod("+1 Max Tangle Quantity");
+  expect(result).toEqual([{ type: "MaxTangleQuant", value: 1 }]);
+});

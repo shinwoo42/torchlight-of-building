@@ -1890,6 +1890,13 @@ export const allParsers = [
   t("max sentry quantity {value:+int}").output("MaxSentryQuant", (c) => ({
     value: c.value,
   })),
+  t("you can apply {value:int} additional tangle(s) to enemies").output(
+    "MaxTangleQuantPerEnemy",
+    (c) => ({ value: c.value }),
+  ),
+  t("{value:+int} max tangle quantity").output("MaxTangleQuant", (c) => ({
+    value: c.value,
+  })),
   t
     .multi([
       t("{value:+int} command per second"),

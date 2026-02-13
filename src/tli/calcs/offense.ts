@@ -81,7 +81,7 @@ import type { OffenseSkillName } from "./skill-confs";
 import { type ModWithValue, multModValue, multValue } from "./util";
 
 // Re-export types that consumers expect from offense.ts
-export type { CritChance, DmgChunk, DmgPools, DmgRanges };
+export type { CritChance, DmgChunk, DmgPools, DmgRanges, TangleSummary };
 export { collectMods, convertDmg };
 
 export interface WeaponAttackSummary {
@@ -116,6 +116,11 @@ export interface OffenseSlashStrikeDpsSummary {
   multistrikeIncDmgPct: number;
 }
 
+interface TangleSummary {
+  maxTangles: number;
+  maxTanglesPerEnemy: number;
+}
+
 interface OffenseSummary {
   attackDpsSummary?: OffenseAttackDpsSummary;
   slashStrikeDpsSummary?: OffenseSlashStrikeDpsSummary;
@@ -125,6 +130,7 @@ interface OffenseSummary {
   totalReapDpsSummary?: TotalReapDpsSummary;
   totalDps: number;
   movementSpeedBonusPct: number;
+  tangleSummary?: TangleSummary;
   resolvedMods: Mod[];
 }
 
@@ -1601,6 +1607,7 @@ interface DerivedOffenseCtx {
   movementSpeedBonusPct: number;
   multistrikeChancePct: number;
   multistrikeIncDmgPct: number;
+  tangleSummary?: TangleSummary;
   mods: Mod[];
   errors: string[];
 }
@@ -2079,15 +2086,22 @@ const resolveModsForOffenseSkill = (
       ),
     );
   };
-  const pushTangle = (): void => {
-    if (!modExists(mods, "IsTangle") || config.numActiveTangles <= 1) return;
-    mods.push({
-      type: "DmgPct",
-      dmgModType: "global",
-      addn: true,
-      value: (config.numActiveTangles - 1) * 100,
-      src: "Tangle",
-    });
+  const pushTangle = (): TangleSummary | undefined => {
+    if (!modExists(mods, "IsTangle")) return undefined;
+    const maxTangles = sumByValue(filterMods(mods, "MaxTangleQuant"));
+    const maxTanglesPerEnemy = sumByValue(
+      filterMods(mods, "MaxTangleQuantPerEnemy"),
+    );
+    if (config.numActiveTangles > 1) {
+      mods.push({
+        type: "DmgPct",
+        dmgModType: "global",
+        addn: true,
+        value: (config.numActiveTangles - 1) * 100,
+        src: "Tangle",
+      });
+    }
+    return { maxTangles, maxTanglesPerEnemy };
   };
   const pushBerserkingBlade = (): void => {
     const maxBBStacks = sumByValue(
@@ -2188,7 +2202,7 @@ const resolveModsForOffenseSkill = (
   normalize("num_enemies_nearby", config.numEnemiesNearby);
   normalize("enemy_numbed_stacks", config.enemyNumbedStacks ?? 10);
   pushPactspirits();
-  pushTangle();
+  const tangleSummary = pushTangle();
   const { spellBurstChargeSpeedBonusPct } = pushSpellBurstChargeSpeed();
   pushErika1();
   normalize("dance_of_frost", config.danceOfFrostStacks ?? 0);
@@ -2201,6 +2215,7 @@ const resolveModsForOffenseSkill = (
     movementSpeedBonusPct,
     multistrikeChancePct,
     multistrikeIncDmgPct,
+    tangleSummary,
     spellBurstChargeSpeedBonusPct,
   };
 };
@@ -3124,7 +3139,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       config,
       derivedCtx,
     );
-    const { mods, movementSpeedBonusPct } = derivedOffenseCtx;
+    const { mods, movementSpeedBonusPct, tangleSummary } = derivedOffenseCtx;
     errors.push(...derivedOffenseCtx.errors);
 
     const attackHitSummary = calcAvgAttackDps(
@@ -3197,6 +3212,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       totalReapDpsSummary,
       totalDps,
       movementSpeedBonusPct,
+      tangleSummary,
       resolvedMods: mods,
     };
   }

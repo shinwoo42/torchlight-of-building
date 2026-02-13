@@ -539,6 +539,28 @@ function CalculationsPage(): React.ReactNode {
               summary={offenseSummary.totalReapDpsSummary}
             />
           )}
+
+          {offenseSummary.tangleSummary !== undefined && (
+            <div className="rounded-lg border border-green-500/30 bg-zinc-900 p-3">
+              <div className="mb-2 text-sm font-semibold text-green-400">
+                Tangle
+              </div>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-0.5 md:grid-cols-3">
+                <StatLine
+                  label="Max Tangles"
+                  value={formatStatValue.integer(
+                    offenseSummary.tangleSummary.maxTangles,
+                  )}
+                />
+                <StatLine
+                  label="Max Tangles/Enemy"
+                  value={formatStatValue.integer(
+                    offenseSummary.tangleSummary.maxTanglesPerEnemy,
+                  )}
+                />
+              </div>
+            </div>
+          )}
         </>
       )}
 
