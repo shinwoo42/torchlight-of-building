@@ -3172,7 +3172,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     );
 
     const spellBurstDpsSummary =
-      spellDpsSummary !== undefined
+      spellDpsSummary !== undefined && derivedOffenseCtx.maxSpellBurst > 0
         ? calcAvgSpellBurstDps(
             mods,
             spellDpsSummary.avgHitWithCrit,

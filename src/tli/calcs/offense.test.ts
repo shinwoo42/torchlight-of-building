@@ -4747,17 +4747,15 @@ describe("spell burst", () => {
     );
   });
 
-  test("spell burst DPS is zero when max burst is zero", () => {
+  test("spell burst summary is undefined when max burst is zero", () => {
     // No MaxSpellBurst mod means maxSpellBurst = 0
-    // DPS should be 0 regardless of charge speed
+    // Summary should not be produced at all
     const input = createSpellBurstInput(
       affixLines([{ type: "SpellBurstChargeSpeedPct", value: 100 }]),
     );
     const results = calculateOffense(input);
     const skill = results.skills[skillName];
-    expect(skill?.spellBurstDpsSummary).toBeDefined();
-    expect(skill?.spellBurstDpsSummary?.maxSpellBurst).toBe(0);
-    expect(skill?.spellBurstDpsSummary?.avgDps).toBe(0);
+    expect(skill?.spellBurstDpsSummary).toBeUndefined();
   });
 
   test("PlaySafe applies cast speed bonus to spell burst charge speed", () => {
