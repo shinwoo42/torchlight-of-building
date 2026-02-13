@@ -95,6 +95,9 @@ export const ConfigurationPageSchema = z
     hasCastCurseRecently: z.boolean().catch(d.hasCastCurseRecently),
     hasAttackAggression: z.boolean().catch(d.hasAttackAggression),
     hasSpellAggression: z.boolean().catch(d.hasSpellAggression),
+    numMainSpellSkillsCastRecently: z
+      .number()
+      .catch(d.numMainSpellSkillsCastRecently),
     numMaxMultistrikesRecently: z.number().catch(d.numMaxMultistrikesRecently),
     numBerserkingBladeBuffStacks: z
       .number()

@@ -1322,6 +1322,12 @@ export const allParsers = [
   ),
   t("has spell aggression").output("HasSpellAggression", () => ({})),
   t("has attack aggression").output("HasAttackAggression", () => ({})),
+  t(
+    "{value:+dec%} spell aggression effect for every main spell skill cast recently. stacks up to {limit:int} times",
+  ).output("SpellAggressionEffPct", (c) => ({
+    value: c.value,
+    per: { stackable: S.num_main_spell_skills_cast_recently, limit: c.limit },
+  })),
   t("{value:+dec%} spell aggression effect").output(
     "SpellAggressionEffPct",
     (c) => ({ value: c.value }),

@@ -169,6 +169,7 @@ const StackableValues = [
   "total_block_pct",
   "block_ratio",
   "attack_block_pct",
+  "num_main_spell_skills_cast_recently",
 ] as const;
 
 export const Stackables = createUnionMap(StackableValues);

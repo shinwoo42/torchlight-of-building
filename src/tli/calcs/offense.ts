@@ -2143,6 +2143,10 @@ const resolveModsForOffenseSkill = (
     R.unique([mainHand?.equipmentType ?? "", offHand?.equipmentType ?? ""])
       .length,
   );
+  normalize(
+    "num_main_spell_skills_cast_recently",
+    config.numMainSpellSkillsCastRecently,
+  );
   pushBerserkingBlade();
   pushTradeoff();
   pushWhimsy();

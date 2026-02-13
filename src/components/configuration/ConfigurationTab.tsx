@@ -957,6 +957,18 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
           />
 
           <label className="text-right text-zinc-50">
+            Main Spell Skills Cast Recently
+            <InfoTooltip text="Number of Main Spell Skills cast recently. Defaults to 0." />
+          </label>
+          <NumberInput
+            value={config.numMainSpellSkillsCastRecently}
+            onChange={(v) =>
+              onUpdate({ numMainSpellSkillsCastRecently: v ?? 0 })
+            }
+            min={0}
+          />
+
+          <label className="text-right text-zinc-50">
             Max Multistrikes Recently
             <InfoTooltip text="Maximum number of multistrikes triggered recently. Defaults to 0." />
           </label>

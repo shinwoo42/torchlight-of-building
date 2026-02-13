@@ -1937,6 +1937,19 @@ test("parse spell aggression effect", () => {
   expect(result).toEqual([{ type: "SpellAggressionEffPct", value: 22 }]);
 });
 
+test("parse spell aggression effect per main spell skill cast recently", () => {
+  const result = parseMod(
+    "+10% Spell Aggression Effect for every Main Spell Skill cast recently. Stacks up to 10 times",
+  );
+  expect(result).toEqual([
+    {
+      type: "SpellAggressionEffPct",
+      value: 10,
+      per: { stackable: "num_main_spell_skills_cast_recently", limit: 10 },
+    },
+  ]);
+});
+
 test("parse skill cost", () => {
   const result = parseMod("-4 Skill Cost");
   expect(result).toEqual([{ type: "SkillCost", value: -4 }]);

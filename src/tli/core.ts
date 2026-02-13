@@ -182,6 +182,8 @@ export interface Configuration {
   // default to false
   hasSpellAggression: boolean;
   // default to 0
+  numMainSpellSkillsCastRecently: number;
+  // default to 0
   numMaxMultistrikesRecently: number;
   // default to max
   numBerserkingBladeBuffStacks?: number;
@@ -288,6 +290,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   hasCastCurseRecently: false,
   hasAttackAggression: false,
   hasSpellAggression: false,
+  numMainSpellSkillsCastRecently: 0,
   numMaxMultistrikesRecently: 0,
   numBerserkingBladeBuffStacks: undefined,
   realmOfMercuryEnabled: false,
