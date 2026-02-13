@@ -2463,9 +2463,7 @@ test("parse inflicts numbed stacks", () => {
 
 test("parse unsigned projectile speed", () => {
   const result = parseMod("4.5% Projectile Speed");
-  expect(result).toEqual([
-    { type: "ProjectileSpeedPct", value: 4.5, addn: false },
-  ]);
+  expect(result).toEqual([{ type: "ProjSpdPct", value: 4.5, addn: false }]);
 });
 
 test("parse tradeoff dex >= str attack speed", () => {

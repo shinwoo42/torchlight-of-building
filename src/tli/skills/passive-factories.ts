@@ -256,7 +256,7 @@ export const passiveSkillModFactories: Partial<
         addn: true,
         dmgModType: "ailment",
       },
-      { type: "ProjectileSpeedPct", value: v(vals.projectileSpeedPct, l) },
+      { type: "ProjSpdPct", value: v(vals.projectileSpeedPct, l) },
     ],
   }),
   "Precise: Precise Projectiles": (l, vals) => ({
@@ -273,7 +273,7 @@ export const passiveSkillModFactories: Partial<
         addn: true,
         dmgModType: "ailment",
       },
-      { type: "ProjectileSpeedPct", value: v(vals.projectileSpeedPct, l) },
+      { type: "ProjSpdPct", value: v(vals.projectileSpeedPct, l) },
     ],
   }),
   "Ice Focus": (l, vals) => ({

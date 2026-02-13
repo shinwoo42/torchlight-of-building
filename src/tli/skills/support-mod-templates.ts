@@ -210,11 +210,11 @@ const allSupportParsers = [
   ).output("GeneratesBarrier"),
   t("gains a barrier if there's no barrier").output("GeneratesBarrier"),
   t("{value:+dec%} projectile speed for the supported skill").output(
-    "ProjectileSpeedPct",
+    "ProjSpdPct",
     (c) => ({ value: c.value }),
   ),
   t("{value:int%} projectile size for the supported skill").output(
-    "ProjectileSizePct",
+    "ProjSizePct",
     (c) => ({ value: c.value }),
   ),
   t("{value:int%} additional ignite duration for the supported skill").output(

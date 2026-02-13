@@ -122,9 +122,7 @@ describe("parseSupportAffixes", () => {
     const result = parseSupportAffixes([
       "+20% Projectile Speed for the supported skill",
     ]);
-    expect(result).toEqual([
-      [{ mod: { type: "ProjectileSpeedPct", value: 20 } }],
-    ]);
+    expect(result).toEqual([[{ mod: { type: "ProjSpdPct", value: 20 } }]]);
   });
 
   test("parse Overload damage per focus blessing stack with time(s)", () => {

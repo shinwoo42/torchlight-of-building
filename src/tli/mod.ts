@@ -317,8 +317,8 @@ interface ModDefinitions {
   MinionSkillAreaPct: { value: number };
   MinionDoubleDmgChancePct: { value: number };
   // end minions
-  ProjectileSpeedPct: { value: number; addn?: boolean };
-  ProjectileSizePct: { value: number };
+  ProjSpdPct: { value: number; addn?: boolean };
+  ProjSizePct: { value: number };
   DoubleDmgChancePct: { value: number; doubleDmgModType?: DoubleDmgModType };
   Stat: { value: number; statModType: StatModType };
   StatPct: { value: number; statModType: StatModType };

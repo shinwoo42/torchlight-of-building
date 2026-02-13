@@ -1330,10 +1330,10 @@ export const allParsers = [
     addn: false,
   })),
   t("{value:+dec%} [additional] projectile speed").output(
-    "ProjectileSpeedPct",
+    "ProjSpdPct",
     (c) => ({ value: c.value, addn: c.additional !== undefined }),
   ),
-  t("{value:dec%} projectile speed").output("ProjectileSpeedPct", (c) => ({
+  t("{value:dec%} projectile speed").output("ProjSpdPct", (c) => ({
     value: c.value,
     addn: false,
   })),
