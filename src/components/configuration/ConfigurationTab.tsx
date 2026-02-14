@@ -998,6 +998,16 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             min={0}
           />
           <label className="text-right text-zinc-50">
+            Ice Puppet Stacks
+            <InfoTooltip text="Ice Prison debuff stacks on frostbitten enemies. Defaults to 0." />
+          </label>
+          <NumberInput
+            value={config.numIcePuppetStacks}
+            onChange={(v) => onUpdate({ numIcePuppetStacks: v })}
+            min={0}
+          />
+
+          <label className="text-right text-zinc-50">
             Active Tangles
             <InfoTooltip text="Number of active tangles. Defaults to 1." />
           </label>

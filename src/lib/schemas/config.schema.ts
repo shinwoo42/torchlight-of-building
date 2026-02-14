@@ -118,6 +118,7 @@ export const ConfigurationPageSchema = z
       .number()
       .optional()
       .catch(d.twistedSpacetimeStacks),
+    numIcePuppetStacks: z.number().optional().catch(d.numIcePuppetStacks),
     numActiveTangles: z.number().catch(d.numActiveTangles),
     customAffixLines: z.array(z.string()).optional().catch(d.customAffixLines),
   })

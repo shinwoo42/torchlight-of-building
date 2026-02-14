@@ -219,6 +219,9 @@ export interface Configuration {
   // defaults to max of 5
   twistedSpacetimeStacks?: number;
 
+  // default to 0
+  numIcePuppetStacks?: number;
+
   // default to 1
   numActiveTangles: number;
 
@@ -307,6 +310,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   enemyArmor: undefined,
   pureHeartStacks: undefined,
   twistedSpacetimeStacks: undefined,
+  numIcePuppetStacks: undefined,
   numActiveTangles: 1,
   customAffixLines: undefined,
 };

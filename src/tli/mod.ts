@@ -163,6 +163,7 @@ const StackableValues = [
   "repentance",
   "pure_heart",
   "seconds_with_elite_nearby",
+  "num_ice_puppet_stacks",
   // defenses
   "armor",
   "evasion",

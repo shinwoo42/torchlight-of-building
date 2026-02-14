@@ -2259,4 +2259,12 @@ export const allParsers = [
   t(
     "gains {stacks:int} stack of focus blessing every {interval:dec} s. loses focus blessing instead if you have not dealt any critical strikes recently",
   ).output("GeneratesFocusBlessing", () => ({})),
+  t(
+    "focus energy to create an ice prison near yourself and the pact holder, which debuffs frostbitten enemies inside every second and makes them take {value:+dec%} additional cold damage, up to {limit:int} stacks, for {dur:int}s.",
+  ).output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "cold" as const,
+    addn: true,
+    per: { stackable: S.num_ice_puppet_stacks, limit: c.limit },
+  })),
 ];

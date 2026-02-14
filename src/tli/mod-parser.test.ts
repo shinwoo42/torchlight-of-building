@@ -4023,3 +4023,18 @@ test("parse generates focus blessing every interval", () => {
   );
   expect(result).toEqual([{ type: "GeneratesFocusBlessing" }]);
 });
+
+test("parse ice prison cold damage debuff", () => {
+  const result = parseMod(
+    "Focus energy to create an ice prison Near yourself and the Pact Holder, which debuffs Frostbitten enemies inside every second and makes them take +10% additional Cold Damage, up to 4 stacks, for 6s.",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 10,
+      dmgModType: "cold",
+      addn: true,
+      per: { stackable: "num_ice_puppet_stacks", limit: 4 },
+    },
+  ]);
+});
