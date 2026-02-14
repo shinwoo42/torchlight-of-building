@@ -228,6 +228,15 @@ export const allParsers = [
       cond: C.has_focus_blessing,
     }),
   ),
+  t("{value:+dec%} additional spell damage at max focus blessings").output(
+    "DmgPct",
+    (c) => ({
+      value: c.value,
+      dmgModType: "spell" as const,
+      addn: true,
+      resolvedCond: RC.at_max_focus_blessing,
+    }),
+  ),
   t("{value:+dec%} [additional] damage while having fervor").output(
     "DmgPct",
     (c) => ({

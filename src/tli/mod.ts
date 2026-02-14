@@ -254,7 +254,10 @@ export type Condition = (typeof ConditionValues)[number];
 
 // Conditions that depend on intermediate calculations in resolveModsForOffenseSkill,
 // rather than static configuration values
-const ResolvedConditionValues = ["have_both_sealed_mana_and_life"] as const;
+const ResolvedConditionValues = [
+  "have_both_sealed_mana_and_life",
+  "at_max_focus_blessing",
+] as const;
 
 export const ResolvedConditions = createUnionMap(ResolvedConditionValues);
 export type ResolvedCondition = (typeof ResolvedConditionValues)[number];

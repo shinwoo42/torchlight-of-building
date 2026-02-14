@@ -1643,6 +1643,7 @@ const resolveModsForOffenseSkill = (
     maxMana,
     mercuryPts,
     focusBlessings,
+    maxFocusBlessings,
     agilityBlessings,
     tenacityBlessings,
     additionalMaxChanneledStacks,
@@ -2101,6 +2102,18 @@ const resolveModsForOffenseSkill = (
       ),
     );
   };
+  const pushBlessings = (): void => {
+    normalize("focus_blessing", focusBlessings);
+    if (focusBlessings === maxFocusBlessings) {
+      pm(
+        ...resolvedCondMods.filter(
+          (m) => m.resolvedCond === "at_max_focus_blessing",
+        ),
+      );
+    }
+    normalize("agility_blessing", agilityBlessings);
+    normalize("tenacity_blessing", tenacityBlessings);
+  };
   const pushTangle = (): TangleSummary | undefined => {
     if (!modExists(mods, "IsTangle")) return undefined;
     const maxTangles = 1 + sumByValue(filterMods(mods, "MaxTangleQuant"));
@@ -2148,9 +2161,7 @@ const resolveModsForOffenseSkill = (
   };
 
   normalizeFromConfig();
-  normalize("focus_blessing", focusBlessings);
-  normalize("agility_blessing", agilityBlessings);
-  normalize("tenacity_blessing", tenacityBlessings);
+  pushBlessings();
   pushStatNorms();
   pushDefenseNorms();
   const { mainHand, offHand } = loadout.gearPage.equippedGear;

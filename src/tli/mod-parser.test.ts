@@ -157,6 +157,21 @@ test("parse damage when focus blessing is active", () => {
   ]);
 });
 
+test("parse additional spell damage at max focus blessings", () => {
+  const result = parseMod(
+    "+10% additional Spell Damage at Max Focus Blessings",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 10,
+      dmgModType: "spell",
+      addn: true,
+      resolvedCond: "at_max_focus_blessing",
+    },
+  ]);
+});
+
 test("parse damage if you have blocked recently", () => {
   const result = parseMod("+40% damage if you have Blocked recently");
   expect(result).toEqual([
