@@ -114,25 +114,25 @@ export const ActivationMediumSkills = [
       0: [
         {
           affix:
-            'When channeling the Supported Skill, sends 1 InstructionInstructions can be received by [Activation Medium: Instruction] to enhance skills triggered by it.">Instruction for every 1 stack(s) channeled',
+            "When channeling the Supported Skill, sends 1 Instruction for every 1 stack(s) channeled",
         },
       ],
       1: [
         {
           affix:
-            'When channeling the Supported Skill, sends 1 InstructionInstructions can be received by [Activation Medium: Instruction] to enhance skills triggered by it.">Instruction for every 2 stack(s) channeled',
+            "When channeling the Supported Skill, sends 1 Instruction for every 2 stack(s) channeled",
         },
       ],
       2: [
         {
           affix:
-            'When channeling the Supported Skill, sends 1 InstructionInstructions can be received by [Activation Medium: Instruction] to enhance skills triggered by it.">Instruction for every 3 stack(s) channeled',
+            "When channeling the Supported Skill, sends 1 Instruction for every 3 stack(s) channeled",
         },
       ],
       3: [
         {
           affix:
-            'When channeling the Supported Skill, sends 1 InstructionInstructions can be received by [Activation Medium: Instruction] to enhance skills triggered by it.">Instruction for every 4 stack(s) channeled',
+            "When channeling the Supported Skill, sends 1 Instruction for every 4 stack(s) channeled",
         },
       ],
     },
@@ -152,25 +152,25 @@ export const ActivationMediumSkills = [
       0: [
         {
           affix:
-            'When the supported skill lands a Critical Strike, sends 4 InstructionInstructions can be received by [Activation Medium: Instruction] to enhance skills triggered by it.">Instruction(s). Interval: 0.03 s.',
+            "When the supported skill lands a Critical Strike, sends 4 Instruction(s). Interval: 0.03 s.",
         },
       ],
       1: [
         {
           affix:
-            'When the supported skill lands a Critical Strike, sends (2-3) InstructionInstructions can be received by [Activation Medium: Instruction] to enhance skills triggered by it.">Instruction(s). Interval: 0.03 s.',
+            "When the supported skill lands a Critical Strike, sends (2-3) Instruction(s). Interval: 0.03 s.",
         },
       ],
       2: [
         {
           affix:
-            'When the supported skill lands a Critical Strike, sends (2-3) InstructionInstructions can be received by [Activation Medium: Instruction] to enhance skills triggered by it.">Instruction(s). Interval: 0.06 s.',
+            "When the supported skill lands a Critical Strike, sends (2-3) Instruction(s). Interval: 0.06 s.",
         },
       ],
       3: [
         {
           affix:
-            'When the supported skill lands a Critical Strike, sends (1-3) InstructionInstructions can be received by [Activation Medium: Instruction] to enhance skills triggered by it.">Instruction(s). Interval: 0.09 s.',
+            "When the supported skill lands a Critical Strike, sends (1-3) Instruction(s). Interval: 0.09 s.",
         },
       ],
     },
@@ -206,7 +206,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Triggers the supported skill upon gaining Demolisher ChargeImpact Skills gain 1 Demolisher Charge at regular intervals.Using a Demolisher Skill will consume its charges and convert the skill into a stronger form">Demolisher Charge. Interval: 0.1s',
+            "Triggers the supported skill upon gaining Demolisher Charge. Interval: 0.1s",
         },
       ],
       1: [
@@ -221,7 +221,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Triggers the supported skill upon gaining Demolisher ChargeImpact Skills gain 1 Demolisher Charge at regular intervals.Using a Demolisher Skill will consume its charges and convert the skill into a stronger form">Demolisher Charge. Interval: 0.1s',
+            "Triggers the supported skill upon gaining Demolisher Charge. Interval: 0.1s",
         },
       ],
       2: [
@@ -236,7 +236,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Triggers the supported skill upon gaining Demolisher ChargeImpact Skills gain 1 Demolisher Charge at regular intervals.Using a Demolisher Skill will consume its charges and convert the skill into a stronger form">Demolisher Charge. Interval: 0.1s',
+            "Triggers the supported skill upon gaining Demolisher Charge. Interval: 0.1s",
         },
       ],
       3: [
@@ -251,7 +251,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Triggers the supported skill upon gaining Demolisher ChargeImpact Skills gain 1 Demolisher Charge at regular intervals.Using a Demolisher Skill will consume its charges and convert the skill into a stronger form">Demolisher Charge. Interval: 0.1s',
+            "Triggers the supported skill upon gaining Demolisher Charge. Interval: 0.1s",
         },
       ],
     },
@@ -287,7 +287,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Always attempts to trigger the supported skill when there is an EliteElite monsters include rare monsters and bosses">Elite within (6-20) m. Interval: 0.2 s',
+            "Always attempts to trigger the supported skill when there is an Elite within (6-20) m. Interval: 0.2 s",
         },
       ],
       1: [
@@ -302,7 +302,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Always attempts to trigger the supported skill when there is an EliteElite monsters include rare monsters and bosses">Elite within (6-20) m. Interval: 0.2 s',
+            "Always attempts to trigger the supported skill when there is an Elite within (6-20) m. Interval: 0.2 s",
         },
       ],
       2: [
@@ -317,7 +317,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Always attempts to trigger the supported skill when there is an EliteElite monsters include rare monsters and bosses">Elite within (6-20) m. Interval: 0.2 s',
+            "Always attempts to trigger the supported skill when there is an Elite within (6-20) m. Interval: 0.2 s",
         },
       ],
       3: [
@@ -332,7 +332,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Always attempts to trigger the supported skill when there is an EliteElite monsters include rare monsters and bosses">Elite within (6-20) m. Interval: 0.2 s',
+            "Always attempts to trigger the supported skill when there is an Elite within (6-20) m. Interval: 0.2 s",
         },
       ],
     },
@@ -437,7 +437,7 @@ export const ActivationMediumSkills = [
       0: [
         {
           affix:
-            'During the trigger interval, each InstructionInstructions are sent by [Activation Medium: Critical Strike] or [Activation Medium: Channel].">Instruction adds +(8-10)% damage to the next skill triggered by the Supported Skill, up to +(72-90)% additional damage',
+            "During the trigger interval, each Instruction adds +(8-10)% damage to the next skill triggered by the Supported Skill, up to +(72-90)% additional damage",
         },
         { affix: "-80% additional damage for manually used Supported Skill" },
       ],
@@ -448,7 +448,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'During the trigger interval, each InstructionInstructions are sent by [Activation Medium: Critical Strike] or [Activation Medium: Channel].">Instruction adds +(6-7)% damage to the next skill triggered by the Supported Skill, up to +(54-63)% additional damage',
+            "During the trigger interval, each Instruction adds +(6-7)% damage to the next skill triggered by the Supported Skill, up to +(54-63)% additional damage",
         },
         { affix: "-80% additional damage for manually used Supported Skill" },
       ],
@@ -459,7 +459,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'During the trigger interval, each InstructionInstructions are sent by [Activation Medium: Critical Strike] or [Activation Medium: Channel].">Instruction adds +(4-5)% damage to the next skill triggered by the Supported Skill, up to +(36-45)% additional damage',
+            "During the trigger interval, each Instruction adds +(4-5)% damage to the next skill triggered by the Supported Skill, up to +(36-45)% additional damage",
         },
         { affix: "-80% additional damage for manually used Supported Skill" },
       ],
@@ -470,7 +470,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'During the trigger interval, each InstructionInstructions are sent by [Activation Medium: Critical Strike] or [Activation Medium: Channel].">Instruction adds +(4-5)% damage to the next skill triggered by the Supported Skill, up to +(36-45)% additional damage',
+            "During the trigger interval, each Instruction adds +(4-5)% damage to the next skill triggered by the Supported Skill, up to +(36-45)% additional damage",
         },
         { affix: "-80% additional damage for manually used Supported Skill" },
       ],
@@ -696,7 +696,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            "Triggers the supported skill upon reaching the max Multistrike CountRecords the current attack's number of attacks during Multistrike when a Multistrike is triggered. The next attack's count during Multistrike +1 for each attack made\">Multistrike Count. Interval: 0.1s",
+            "Triggers the supported skill upon reaching the max Multistrike Count. Interval: 0.1s",
         },
       ],
       1: [
@@ -711,7 +711,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            "Triggers the supported skill upon reaching the max Multistrike CountRecords the current attack's number of attacks during Multistrike when a Multistrike is triggered. The next attack's count during Multistrike +1 for each attack made\">Multistrike Count. Interval: 0.1s",
+            "Triggers the supported skill upon reaching the max Multistrike Count. Interval: 0.1s",
         },
       ],
       2: [
@@ -726,7 +726,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            "Triggers the supported skill upon reaching the max Multistrike CountRecords the current attack's number of attacks during Multistrike when a Multistrike is triggered. The next attack's count during Multistrike +1 for each attack made\">Multistrike Count. Interval: 0.1s",
+            "Triggers the supported skill upon reaching the max Multistrike Count. Interval: 0.1s",
         },
       ],
       3: [
@@ -741,7 +741,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            "Triggers the supported skill upon reaching the max Multistrike CountRecords the current attack's number of attacks during Multistrike when a Multistrike is triggered. The next attack's count during Multistrike +1 for each attack made\">Multistrike Count. Interval: 0.1s",
+            "Triggers the supported skill upon reaching the max Multistrike Count. Interval: 0.1s",
         },
       ],
     },
@@ -852,10 +852,7 @@ export const ActivationMediumSkills = [
         },
       ],
       1: [
-        {
-          affix:
-            'PreparationIf the skill is ready, triggers the skill once. If the skill is on cooldown, triggers the skill once immediately after the cooldown ends.">Prepares the supported skill every (4-5) s',
-        },
+        { affix: "Prepares the supported skill every (4-5) s" },
         {
           affix:
             "The supported skill +(12-19)% additional Cooldown Recovery Speed",
@@ -867,10 +864,7 @@ export const ActivationMediumSkills = [
         },
       ],
       2: [
-        {
-          affix:
-            'PreparationIf the skill is ready, triggers the skill once. If the skill is on cooldown, triggers the skill once immediately after the cooldown ends.">Prepares the supported skill every (6-7) s',
-        },
+        { affix: "Prepares the supported skill every (6-7) s" },
         {
           affix:
             "The supported skill +(7-11)% additional Cooldown Recovery Speed",
@@ -882,10 +876,7 @@ export const ActivationMediumSkills = [
         },
       ],
       3: [
-        {
-          affix:
-            'PreparationIf the skill is ready, triggers the skill once. If the skill is on cooldown, triggers the skill once immediately after the cooldown ends.">Prepares the supported skill every 8 s',
-        },
+        { affix: "Prepares the supported skill every 8 s" },
         {
           affix:
             "The supported skill (-25--15)% additional Cooldown Recovery Speed",
@@ -927,10 +918,7 @@ export const ActivationMediumSkills = [
           affix: "+(20-25)% additional Duration for the supported skill",
           exclusiveGroup: "cooldown_duration",
         },
-        {
-          affix:
-            'Triggers the supported skill when ResonanceResonance can be activated by [Activation Medium: Resonance Activation].">Resonance is activated',
-        },
+        { affix: "Triggers the supported skill when Resonance is activated" },
       ],
       1: [
         {
@@ -942,10 +930,7 @@ export const ActivationMediumSkills = [
           affix: "+(12-19)% additional Duration for the supported skill",
           exclusiveGroup: "cooldown_duration",
         },
-        {
-          affix:
-            'Triggers the supported skill when ResonanceResonance can be activated by [Activation Medium: Resonance Activation].">Resonance is activated',
-        },
+        { affix: "Triggers the supported skill when Resonance is activated" },
       ],
       2: [
         {
@@ -957,10 +942,7 @@ export const ActivationMediumSkills = [
           affix: "+(7-11)% additional Duration for the supported skill",
           exclusiveGroup: "cooldown_duration",
         },
-        {
-          affix:
-            'Triggers the supported skill when ResonanceResonance can be activated by [Activation Medium: Resonance Activation].">Resonance is activated',
-        },
+        { affix: "Triggers the supported skill when Resonance is activated" },
       ],
       3: [
         {
@@ -972,10 +954,7 @@ export const ActivationMediumSkills = [
           affix: "(-25--15)% additional Duration for the supported skill",
           exclusiveGroup: "cooldown_duration",
         },
-        {
-          affix:
-            'Triggers the supported skill when ResonanceResonance can be activated by [Activation Medium: Resonance Activation].">Resonance is activated',
-        },
+        { affix: "Triggers the supported skill when Resonance is activated" },
       ],
     },
   },
@@ -1008,10 +987,7 @@ export const ActivationMediumSkills = [
           affix: "+(20-25)% additional Duration for the supported skill",
           exclusiveGroup: "cooldown_duration",
         },
-        {
-          affix:
-            'Resonance ActivationWhen activating Resonance, triggers all skills supported by [Activation Medium: Resonance].">Activates Resonance when you use the supported skill',
-        },
+        { affix: "Activates Resonance when you use the supported skill" },
       ],
       1: [
         {
@@ -1023,10 +999,7 @@ export const ActivationMediumSkills = [
           affix: "+(12-19)% additional Duration for the supported skill",
           exclusiveGroup: "cooldown_duration",
         },
-        {
-          affix:
-            'Resonance ActivationWhen activating Resonance, triggers all skills supported by [Activation Medium: Resonance].">Activates Resonance when you use the supported skill',
-        },
+        { affix: "Activates Resonance when you use the supported skill" },
       ],
       2: [
         {
@@ -1038,10 +1011,7 @@ export const ActivationMediumSkills = [
           affix: "+(7-11)% additional Duration for the supported skill",
           exclusiveGroup: "cooldown_duration",
         },
-        {
-          affix:
-            'Resonance ActivationWhen activating Resonance, triggers all skills supported by [Activation Medium: Resonance].">Activates Resonance when you use the supported skill',
-        },
+        { affix: "Activates Resonance when you use the supported skill" },
       ],
       3: [
         {
@@ -1053,10 +1023,7 @@ export const ActivationMediumSkills = [
           affix: "(-25--15)% additional Duration for the supported skill",
           exclusiveGroup: "cooldown_duration",
         },
-        {
-          affix:
-            'Resonance ActivationWhen activating Resonance, triggers all skills supported by [Activation Medium: Resonance].">Activates Resonance when you use the supported skill',
-        },
+        { affix: "Activates Resonance when you use the supported skill" },
       ],
     },
   },
@@ -1340,8 +1307,7 @@ export const ActivationMediumSkills = [
           exclusiveGroup: "cooldown_duration",
         },
         {
-          affix:
-            'Triggers the supported skill when suffering a Severe InjuryTakes damage that exceeds 50% of the sum of Max Life and Max Energy Shield within 0.5s">Severe Injury',
+          affix: "Triggers the supported skill when suffering a Severe Injury",
         },
       ],
       1: [
@@ -1355,8 +1321,7 @@ export const ActivationMediumSkills = [
           exclusiveGroup: "cooldown_duration",
         },
         {
-          affix:
-            'Triggers the supported skill when suffering a Severe InjuryTakes damage that exceeds 50% of the sum of Max Life and Max Energy Shield within 0.5s">Severe Injury',
+          affix: "Triggers the supported skill when suffering a Severe Injury",
         },
       ],
       2: [
@@ -1370,8 +1335,7 @@ export const ActivationMediumSkills = [
           exclusiveGroup: "cooldown_duration",
         },
         {
-          affix:
-            'Triggers the supported skill when suffering a Severe InjuryTakes damage that exceeds 50% of the sum of Max Life and Max Energy Shield within 0.5s">Severe Injury',
+          affix: "Triggers the supported skill when suffering a Severe Injury",
         },
       ],
       3: [
@@ -1385,8 +1349,7 @@ export const ActivationMediumSkills = [
           exclusiveGroup: "cooldown_duration",
         },
         {
-          affix:
-            'Triggers the supported skill when suffering a Severe InjuryTakes damage that exceeds 50% of the sum of Max Life and Max Energy Shield within 0.5s">Severe Injury',
+          affix: "Triggers the supported skill when suffering a Severe Injury",
         },
       ],
     },
@@ -1421,7 +1384,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Triggers the supported skill when activating Spell BurstAutomatically uses a Spell Skill a certain number of times.When Spell Burst is fully charged, the next Spell Skill used will activate Spell Burst, which will consume all stacks charged and automatically use the Spell Skill the same number of times.Skills that have a cooldown, Triggered Skills, Sentry Skills, Channeled Skills, and Combo Skills cannot activate Spell Burst.">Spell Burst. Interval: 0.1s',
+            "Triggers the supported skill when activating Spell Burst. Interval: 0.1s",
         },
       ],
       1: [
@@ -1436,7 +1399,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Triggers the supported skill when activating Spell BurstAutomatically uses a Spell Skill a certain number of times.When Spell Burst is fully charged, the next Spell Skill used will activate Spell Burst, which will consume all stacks charged and automatically use the Spell Skill the same number of times.Skills that have a cooldown, Triggered Skills, Sentry Skills, Channeled Skills, and Combo Skills cannot activate Spell Burst.">Spell Burst. Interval: 0.1s',
+            "Triggers the supported skill when activating Spell Burst. Interval: 0.1s",
         },
       ],
       2: [
@@ -1451,7 +1414,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Triggers the supported skill when activating Spell BurstAutomatically uses a Spell Skill a certain number of times.When Spell Burst is fully charged, the next Spell Skill used will activate Spell Burst, which will consume all stacks charged and automatically use the Spell Skill the same number of times.Skills that have a cooldown, Triggered Skills, Sentry Skills, Channeled Skills, and Combo Skills cannot activate Spell Burst.">Spell Burst. Interval: 0.1s',
+            "Triggers the supported skill when activating Spell Burst. Interval: 0.1s",
         },
       ],
       3: [
@@ -1466,7 +1429,7 @@ export const ActivationMediumSkills = [
         },
         {
           affix:
-            'Triggers the supported skill when activating Spell BurstAutomatically uses a Spell Skill a certain number of times.When Spell Burst is fully charged, the next Spell Skill used will activate Spell Burst, which will consume all stacks charged and automatically use the Spell Skill the same number of times.Skills that have a cooldown, Triggered Skills, Sentry Skills, Channeled Skills, and Combo Skills cannot activate Spell Burst.">Spell Burst. Interval: 0.1s',
+            "Triggers the supported skill when activating Spell Burst. Interval: 0.1s",
         },
       ],
     },
@@ -1628,33 +1591,27 @@ export const ActivationMediumSkills = [
       0: [
         {
           affix:
-            'Triggers the supported skill once on up to 3 Lock[Activation Medium: Lock On] can lock on enemies.">Locked-On enemy(ies) within (10-20) m every (0.5-0.6) s',
+            "Triggers the supported skill once on up to 3 Locked-On enemy(ies) within (10-20) m every (0.5-0.6) s",
         },
       ],
       1: [
         {
           affix:
-            'Triggers the supported skill once on up to 3 Lock[Activation Medium: Lock On] can lock on enemies.">Locked-On enemy(ies) within (10-20) m every (0.7-0.8) s',
+            "Triggers the supported skill once on up to 3 Locked-On enemy(ies) within (10-20) m every (0.7-0.8) s",
         },
-        {
-          affix:
-            'Always Lock[Activation Medium: Track] can trigger skills supported by it, with the locked-on enemy as the target.">Locks On enemies within 20m.',
-        },
+        { affix: "Always Locks On enemies within 20m." },
       ],
       2: [
         {
           affix:
-            'Triggers the supported skill once on up to 2 Lock[Activation Medium: Lock On] can lock on enemies.">Locked-On enemy(ies) within (10-20) m every (0.9-1.0) s',
+            "Triggers the supported skill once on up to 2 Locked-On enemy(ies) within (10-20) m every (0.9-1.0) s",
         },
-        {
-          affix:
-            'Removes Lock[Activation Medium: Lock On] can lock on enemies.">Lock On when the supported skill deals damage',
-        },
+        { affix: "Removes Lock On when the supported skill deals damage" },
       ],
       3: [
         {
           affix:
-            'Triggers the supported skill once on up to 2 Lock[Activation Medium: Lock On] can lock on enemies.">Locked-On enemy(ies) within (10-20) m every (0.9-1.0) s',
+            "Triggers the supported skill once on up to 2 Locked-On enemy(ies) within (10-20) m every (0.9-1.0) s",
         },
       ],
     },

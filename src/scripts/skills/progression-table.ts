@@ -288,8 +288,17 @@ export const extractActivationMediumProgressionTable = (
     $(cells[1])
       .find("li")
       .each((_, li) => {
+        // Clone the <li> and strip hyperlink elements using DOM methods
+        // (regex fails because cheerio decodes HTML entities in data-bs-title
+        // attributes, producing raw > characters that break [^>]* patterns)
+        const liClone = $(li).clone();
+        liClone.find("e.Hyperlink").each((_, el) => {
+          const text = $(el).text();
+          $(el).replaceWith(text);
+        });
+
         // Get HTML and process it
-        let html = $(li).html() ?? "";
+        let html = liClone.html() ?? "";
 
         // Replace <span class="text-mod">(min–max)</span> with (min-max) format
         // Handle en-dash (–) by replacing with regular hyphen (-)
@@ -299,12 +308,6 @@ export const extractActivationMediumProgressionTable = (
             // Replace en-dash with hyphen for consistency with craft() function
             return content.replace(/–/g, "-");
           },
-        );
-
-        // Strip hyperlinks <e class="Hyperlink" ...>text</e>
-        html = html.replace(
-          /<e[^>]*class="Hyperlink"[^>]*>([^<]*)<\/e>/g,
-          "$1",
         );
 
         // Remove any remaining HTML tags
