@@ -131,11 +131,11 @@ export const BuilderLayout = ({ children }: BuilderLayoutProps) => {
 
   return (
     <div
-      className="min-h-screen bg-zinc-950 p-6"
+      className="flex h-screen flex-col bg-zinc-950 p-6"
       style={{ paddingBottom: debugPanelTotalHeight + 24 }}
     >
-      <div className="mx-auto max-w-[1440px]">
-        <div className="mb-8 flex items-center justify-between">
+      <div className="mx-auto flex max-w-[1440px] w-full flex-col min-h-0 flex-1">
+        <div className="mb-8 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-4">
             <button
               type="button"
@@ -237,12 +237,12 @@ export const BuilderLayout = ({ children }: BuilderLayoutProps) => {
           </div>
         </div>
 
-        <div className="flex gap-6">
-          <aside className="w-64 shrink-0">
+        <div className="flex min-h-0 flex-1 gap-6">
+          <aside className="w-64 shrink-0 overflow-y-auto">
             <StatsPanel />
           </aside>
 
-          <main className="min-w-0 flex-1">
+          <main className="min-w-0 flex-1 overflow-y-auto">
             <PageTabs />
 
             {children}
