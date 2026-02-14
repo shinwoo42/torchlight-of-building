@@ -115,6 +115,8 @@ export interface Configuration {
   hasBlockedRecently: boolean;
   // default to false
   hasElitesNearby: boolean;
+  // default to 0
+  numSecondsWithEliteNearby: number;
   // default to false
   enemyHasAilment: boolean;
   // default to false
@@ -257,6 +259,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   numEnemiesAffectedByWarcry: 0,
   hasBlockedRecently: false,
   hasElitesNearby: false,
+  numSecondsWithEliteNearby: 0,
   enemyHasAilment: false,
   hasCritRecently: false,
   channeling: false,

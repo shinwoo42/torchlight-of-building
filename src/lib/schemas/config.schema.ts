@@ -42,6 +42,7 @@ export const ConfigurationPageSchema = z
     numEnemiesAffectedByWarcry: z.number().catch(d.numEnemiesAffectedByWarcry),
     hasBlockedRecently: z.boolean().catch(d.hasBlockedRecently),
     hasElitesNearby: z.boolean().catch(d.hasElitesNearby),
+    numSecondsWithEliteNearby: z.number().catch(d.numSecondsWithEliteNearby),
     enemyHasAilment: z.boolean().catch(d.enemyHasAilment),
     hasCritRecently: z.boolean().catch(d.hasCritRecently),
     channeling: z.boolean().catch(d.channeling),

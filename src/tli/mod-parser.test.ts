@@ -584,6 +584,36 @@ test("parse additional cast speed if you have dealt a critical strike recently",
   ]);
 });
 
+test("parse cast speed per second with elite nearby", () => {
+  const result = parseMod(
+    "+6% additional Cast Speed per second when an Elite is Nearby, up to +18%",
+  );
+  expect(result).toEqual([
+    {
+      type: "CspdPct",
+      value: 6,
+      addn: true,
+      per: { stackable: "seconds_with_elite_nearby", valueLimit: 18 },
+      cond: "has_elites_nearby",
+    },
+  ]);
+});
+
+test("parse movement speed with elite nearby", () => {
+  const result = parseMod(
+    "+3% Movement Speed when an Elite is Nearby, up to +9%",
+  );
+  expect(result).toEqual([
+    {
+      type: "MovementSpeedPct",
+      value: 3,
+      addn: false,
+      per: { stackable: "seconds_with_elite_nearby", valueLimit: 9 },
+      cond: "has_elites_nearby",
+    },
+  ]);
+});
+
 test("parse basic minion attack and cast speed", () => {
   const result = parseMod("+6% minion attack and cast speed");
   expect(result).toEqual([

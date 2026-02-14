@@ -796,6 +796,14 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
+  t(
+    "{value:+dec%} additional cast speed per second when an elite is nearby, up to {limit:+dec%}",
+  ).output("CspdPct", (c) => ({
+    value: c.value,
+    addn: true,
+    per: { stackable: S.seconds_with_elite_nearby, valueLimit: c.limit },
+    cond: C.has_elites_nearby,
+  })),
   t("{value:+dec%} [additional] cast speed").output("CspdPct", (c) => ({
     value: c.value,
     addn: c.additional !== undefined,
@@ -1363,6 +1371,14 @@ export const allParsers = [
     value: c.value,
     addn: false,
     cond: C.has_used_mobility_skill_recently,
+  })),
+  t(
+    "{value:+dec%} movement speed when an elite is nearby, up to {limit:+dec%}",
+  ).output("MovementSpeedPct", (c) => ({
+    value: c.value,
+    addn: false,
+    per: { stackable: S.seconds_with_elite_nearby, valueLimit: c.limit },
+    cond: C.has_elites_nearby,
   })),
   t("{value:+dec%} [additional] movement speed").output(
     "MovementSpeedPct",

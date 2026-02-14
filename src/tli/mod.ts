@@ -162,6 +162,7 @@ const StackableValues = [
   // pactspirit-specific
   "repentance",
   "pure_heart",
+  "seconds_with_elite_nearby",
   // defenses
   "armor",
   "evasion",

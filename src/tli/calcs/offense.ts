@@ -1724,6 +1724,7 @@ const resolveModsForOffenseSkill = (
       config.numEnemiesAffectedByWarcry,
     );
     normalize("num_enemies_nearby", config.numEnemiesNearby);
+    normalize("seconds_with_elite_nearby", config.numSecondsWithEliteNearby);
     normalize("enemy_numbed_stacks", config.enemyNumbedStacks ?? 10);
     normalize("dance_of_frost", config.danceOfFrostStacks ?? 0);
     normalize("frostbite_rating", config.enemyFrostbittenPoints ?? 0);
