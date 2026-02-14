@@ -2440,8 +2440,6 @@ export const calculateDefenses = (
   const attackBlockPct = sumByValue(filterMods(mods, "AttackBlockChancePct"));
   const spellBlockPct = sumByValue(filterMods(mods, "SpellBlockChancePct"));
   const blockRatioPctOverride = findMod(mods, "BlockRatioPctOverride");
-  console.log("blockRatioPctOverride");
-  console.log(blockRatioPctOverride);
   const blockRatioPct =
     blockRatioPctOverride !== undefined
       ? blockRatioPctOverride.value
