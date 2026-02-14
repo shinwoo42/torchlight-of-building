@@ -669,6 +669,11 @@ test("parse attack and spell block chance", () => {
   ]);
 });
 
+test("parse block ratio override", () => {
+  const result = parseMod("Block Ratio is set to 0%");
+  expect(result).toEqual([{ type: "BlockRatioPctOverride", value: 0 }]);
+});
+
 test("parse block ratio", () => {
   const result = parseMod("+25% Block Ratio");
   expect(result).toEqual([{ type: "BlockRatioPct", value: 25 }]);
@@ -3821,6 +3826,13 @@ test("parse wilt chance", () => {
 test("parse to all stats", () => {
   const result = parseMod("+10 to All Stats");
   expect(result).toEqual([{ type: "Stat", statModType: "all", value: 10 }]);
+});
+
+test("parse ranged attack critical strike rating", () => {
+  const result = parseMod("+100% Ranged Attack Critical Strike Rating");
+  expect(result).toEqual([
+    { type: "CritRatingPct", value: 100, modType: "ranged_attack" },
+  ]);
 });
 
 test("parse sentry skill critical strike rating", () => {

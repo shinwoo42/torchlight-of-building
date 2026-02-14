@@ -478,6 +478,10 @@ export const allParsers = [
     "CritRatingPct",
     (c) => ({ value: c.value, modType: "sentry_skill" as const }),
   ),
+  t("{value:+dec%} ranged attack critical strike rating").output(
+    "CritRatingPct",
+    (c) => ({ value: c.value, modType: "ranged_attack" as const }),
+  ),
   t(
     "{value:+dec%} [{modType:CritRatingModType}] critical strike rating",
   ).output("CritRatingPct", (c) => ({
@@ -944,6 +948,10 @@ export const allParsers = [
     spec("AttackBlockChancePct", (c) => ({ value: c.value })),
     spec("SpellBlockChancePct", (c) => ({ value: c.value })),
   ]),
+  t("block ratio is set to {value:dec%}").output(
+    "BlockRatioPctOverride",
+    (c) => ({ value: c.value }),
+  ),
   t("{value:+dec%} block ratio").output("BlockRatioPct", (c) => ({
     value: c.value,
   })),

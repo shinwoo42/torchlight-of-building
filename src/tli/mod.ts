@@ -355,6 +355,7 @@ interface ModDefinitions {
   AttackBlockChancePct: { value: number };
   SpellBlockChancePct: { value: number };
   BlockRatioPct: { value: number };
+  BlockRatioPctOverride: { value: number };
   GearEnergyShield: { value: number };
   GearEnergyShieldPct: { value: number };
   MaxEnergyShieldPct: { value: number; addn: boolean };

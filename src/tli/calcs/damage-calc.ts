@@ -770,6 +770,9 @@ export const calculateCritChance = (
   if (skill.tags.includes("Melee")) {
     modTypes.push("melee");
   }
+  if (skill.tags.includes("Attack") && skill.tags.includes("Ranged")) {
+    modTypes.push("ranged_attack");
+  }
 
   const addedFlatCritRating = sumByValue(
     filterMods(allMods, "FlatCritRating").filter((m) =>

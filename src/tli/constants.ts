@@ -28,6 +28,7 @@ export const CRIT_RATING_MOD_TYPES = [
   "spell",
   "projectile",
   "melee",
+  "ranged_attack",
   "sentry_skill",
 ] as const;
 
