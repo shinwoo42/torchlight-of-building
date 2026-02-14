@@ -45,11 +45,14 @@ Mod resolvers are `push*` functions defined inside `resolveModsForOffenseSkill` 
 - `loadout: Loadout` — full parsed loadout
 - Helper functions: `pm()` (push mods), `normalize()` (normalize stackables), `step()` (dependency tracking)
 
+The execution sequence begins with `normalizeFromConfig()`, which normalizes all stackables whose values come purely from `config` fields (e.g., `level`, `num_enemies_nearby`, `enemy_numbed_stacks`). This runs before `pushStatNorms()` and all other resolvers. Normalize calls whose values depend on mods, stats, defenses, or resourcePool remain in their respective `push*` functions or inline in the execution sequence.
+
 ## Available Helpers
 
 From closure (defined in `resolveModsForOffenseSkill`):
 - `pm(...ms: Mod[])` — shorthand for `mods.push(...ms)`
 - `normalize(stackable, value)` — normalizes per-stackable mods from `prenormMods` and pushes satisfied `condThresholdMods` for that stackable
+- `normalizeFromConfig()` — calls `normalize()` for all stackables whose values come purely from `config` fields; called once at the start of the execution sequence before `pushStatNorms()`
 - `step(stepName)` — registers a step for dependency tracking (only needed if other steps depend on this one)
 - `resolvedCondMods: Mod[]` — mods with `resolvedCond`, separated out by `applyModFilters`; push matching ones into `mods` via `pm()` when the condition is met
 - `condThresholdMods: Mod[]` — non-per mods with `condThreshold`, separated out by `applyModFilters`; pushed back automatically by `normalize()` when their stackable threshold is met
@@ -146,6 +149,19 @@ const pushPactspirits = () => {
 };
 ```
 
+**Config-only normalization (add to `normalizeFromConfig`):**
+
+If the stackable value comes purely from `config` fields (no dependency on mods, stats, defenses, or resourcePool), add the `normalize()` call inside `normalizeFromConfig()` instead of creating a separate push* function or placing it inline in the execution sequence:
+
+```typescript
+const normalizeFromConfig = (): void => {
+  // ... existing config-based normalizes ...
+  normalize("new_stackable", config.newStackableValue ?? defaultValue);
+};
+```
+
+Only use a separate `push*` function or inline `normalize()` when the value depends on computed data (mods, stats, etc.), or when the value has a config override with a mod-computed fallback (e.g., `config.stacks ?? maxStacksFromMods`).
+
 **Resolved condition resolver (conditions that depend on calculated values):**
 
 Some mod conditions can't be evaluated statically from configuration — they depend on values calculated earlier in `resolveModsForOffenseSkill` (e.g., sealed mana/life percentages come from `resourcePool.sealedResources`, not config). These use `resolvedCond` on the mod (see `ResolvedCondition` in `mod.ts`) instead of `cond` (which is for static `Configuration`-based conditions evaluated in `filterModsByCond`).
@@ -212,7 +228,8 @@ pnpm check
 | Check config boolean | Mechanic depends on user toggle | `if (!config.someToggle) return` |
 | Effect multiplier | Buff/debuff has mods that scale its effectiveness | `calcEffMult(mods, "SomeEffPct")` |
 | Config stacks with default | User can override stack count, defaults to max | `config.someStacks ?? maxStacks` |
-| Normalize stackable | Mechanic involves per-stackable scaling | `normalize("stackable_name", value)` |
+| Normalize stackable | Mechanic involves per-stackable scaling with computed value | `normalize("stackable_name", value)` |
+| Config-only normalize | Stackable value comes purely from config | Add to `normalizeFromConfig()` |
 | Filter by resolved condition | Condition depends on calculated values, not static config | `pm(...resolvedCondMods.filter(...))` |
 | `addn: true` on DmgPct | More multiplier (multiplicative with other `addn: true` mods) | — |
 | `addn: false` on DmgPct | Increased multiplier (additive with other `addn: false` mods) | — |
@@ -238,3 +255,4 @@ Most resolvers use `addn: true` because their effects are multiplicative with ot
 | Forgetting to add config field | Use `/add-configuration` skill first |
 | Adding `step()` unnecessarily | Only use `step()` if other resolvers depend on this one running first |
 | Not handling undefined config with `??` | Optional config values need fallback: `config.stacks ?? defaultMax` |
+| Placing config-only normalize inline in execution sequence | Add to `normalizeFromConfig()` instead; only use inline/push* for computed values |
