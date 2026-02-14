@@ -2118,7 +2118,7 @@ const resolveModsForOffenseSkill = (
   };
   const pushTangle = (): TangleSummary | undefined => {
     if (!modExists(mods, "IsTangle")) return undefined;
-    const maxTangles = 1 + sumByValue(filterMods(mods, "MaxTangleQuant"));
+    const maxTangles = 2 + sumByValue(filterMods(mods, "MaxTangleQuant"));
     const maxTanglesPerEnemy =
       1 + sumByValue(filterMods(mods, "MaxTangleQuantPerEnemy"));
     if (config.numActiveTangles > 1) {
@@ -2129,6 +2129,18 @@ const resolveModsForOffenseSkill = (
         value: (config.numActiveTangles - 1) * 100,
         src: "Tangle",
       });
+    }
+    if (modExists(mods, "HasDormantEntanglement")) {
+      const inactiveTangles = maxTangles - maxTanglesPerEnemy;
+      if (inactiveTangles > 0) {
+        mods.push({
+          type: "DmgPct",
+          dmgModType: "global",
+          addn: true,
+          value: inactiveTangles * 40,
+          src: "Dormant Entanglement",
+        });
+      }
     }
     return { maxTangles, maxTanglesPerEnemy };
   };

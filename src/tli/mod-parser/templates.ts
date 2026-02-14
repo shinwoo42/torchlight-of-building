@@ -1956,6 +1956,7 @@ export const allParsers = [
   t("{value:+int} max tangle quantity").output("MaxTangleQuant", (c) => ({
     value: c.value,
   })),
+  t("has dormant entanglement").output("HasDormantEntanglement", () => ({})),
   t
     .multi([
       t("{value:+int} command per second"),

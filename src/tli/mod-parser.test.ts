@@ -3965,6 +3965,11 @@ test("parse max tangle quantity", () => {
   expect(result).toEqual([{ type: "MaxTangleQuant", value: 1 }]);
 });
 
+test("parse has dormant entanglement", () => {
+  const result = parseMod("Has Dormant Entanglement");
+  expect(result).toEqual([{ type: "HasDormantEntanglement" }]);
+});
+
 test("parse mana regen while focus blessing is active", () => {
   const result = parseMod(
     "Regenerates 0.4% Mana per second while Focus Blessing is active",

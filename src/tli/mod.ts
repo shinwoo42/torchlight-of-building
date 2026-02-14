@@ -501,6 +501,7 @@ interface ModDefinitions {
   XPEarnedPct: { value: number };
   // skill specific
   IsTangle: object;
+  HasDormantEntanglement: object;
   MaxTangleQuant: { value: number };
   MaxTangleQuantPerEnemy: { value: number };
   // infiltrations
