@@ -369,6 +369,7 @@ const DMG_MOD_TYPE_RULES: Record<DmgModType, DmgModTypeRule> = {
   area: { tag: "Area" },
   channeled: { tag: "Channeled" },
   shadow_strike_skill: { tag: "Shadow Strike" },
+  slash_strike_skill: { tag: "Slash-Strike" },
   projectile: { tag: "Projectile" },
   ranged: { tag: "Ranged" },
   hit: { kind: "hit_enemies" },
@@ -380,6 +381,7 @@ const DMG_MOD_TYPE_RULES: Record<DmgModType, DmgModTypeRule> = {
   fire: "pool",
   erosion: "pool",
   elemental: "pool",
+  slash_strike_skill_ailment: "never", // todo
   ailment: "never", // todo
 };
 

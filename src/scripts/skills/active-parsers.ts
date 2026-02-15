@@ -675,6 +675,40 @@ export const iceLancesParser: SupportLevelParser = (input) => {
   };
 };
 
+export const fearlessWarcryParser: SupportLevelParser = (input) => {
+  const { skillName, progressionTable } = input;
+
+  const descriptCol = findColumn(progressionTable, "descript", skillName);
+  const slashStrikeSkillDmgPerEnemy: Record<number, number> = {};
+  const slashStrikeSkillAilmentDmgPerEnemy: Record<number, number> = {};
+
+  for (const [levelStr, text] of Object.entries(descriptCol.rows)) {
+    const level = Number(levelStr);
+    const dmgMatch = findMatch(
+      text,
+      ts(
+        "{value:?dec%} additional damage dealt by slash-strike skills for each enemy",
+      ),
+      skillName,
+    );
+    slashStrikeSkillDmgPerEnemy[level] = dmgMatch.value;
+
+    const ailmentMatch = findMatch(
+      text,
+      ts(
+        "{value:?dec%} additional ailment damage dealt by slash-strike skills per enemy",
+      ),
+      skillName,
+    );
+    slashStrikeSkillAilmentDmgPerEnemy[level] = ailmentMatch.value;
+  }
+
+  validateAllLevels(slashStrikeSkillDmgPerEnemy, skillName);
+  validateAllLevels(slashStrikeSkillAilmentDmgPerEnemy, skillName);
+
+  return { slashStrikeSkillDmgPerEnemy, slashStrikeSkillAilmentDmgPerEnemy };
+};
+
 export const berserkingBladeParser: SupportLevelParser = (input) => {
   const { skillName, progressionTable } = input;
 

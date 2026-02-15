@@ -8,6 +8,7 @@ import {
   corruptionParser,
   electrocuteParser,
   entangledPainParser,
+  fearlessWarcryParser,
   frostSpikeParser,
   iceBondParser,
   iceLancesParser,
@@ -62,6 +63,11 @@ export const SKILL_PARSERS: SkillParserEntry[] = [
     skillName: "Charging Warcry",
     categories: ["active"],
     parser: chargingWarcryParser,
+  },
+  {
+    skillName: "Fearless Warcry",
+    categories: ["active"],
+    parser: fearlessWarcryParser,
   },
   {
     skillName: "Mind Control",

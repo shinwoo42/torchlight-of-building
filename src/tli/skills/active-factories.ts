@@ -157,6 +157,25 @@ export const activeSkillModFactories: Partial<
       },
     ],
   }),
+  "Fearless Warcry": (l, vals) => ({
+    buffMods: [
+      {
+        type: "DmgPct",
+        dmgModType: "slash_strike_skill",
+        addn: true,
+        value: v(vals.slashStrikeSkillDmgPerEnemy, l),
+        per: { stackable: "num_enemies_affected_by_warcry", limit: 8 },
+      },
+      {
+        type: "DmgPct",
+        dmgModType: "slash_strike_skill_ailment",
+        addn: true,
+        value: v(vals.slashStrikeSkillAilmentDmgPerEnemy, l),
+        per: { stackable: "num_enemies_affected_by_warcry", limit: 8 },
+      },
+      { type: "Taunts" },
+    ],
+  }),
   "Entangled Pain": (l, vals) => ({
     buffMods: [
       {

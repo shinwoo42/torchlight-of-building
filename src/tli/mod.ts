@@ -536,6 +536,7 @@ interface ModDefinitions {
   IgniteDurationPct: { value: number; addn?: boolean };
   IgniteDmgPct: { value: number; addn?: boolean };
   BaseIgniteFlatDmg: { value: number };
+  Taunts: object;
   // non-ailment debuffs
   InflictsMark: object;
   MarkEffPct: { value: number };

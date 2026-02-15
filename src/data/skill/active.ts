@@ -696,6 +696,20 @@ export const ActiveSkills = [
       "Casts the skill and lets out a Warcry:\nTaunts Nearby enemies.\n5.9% additional damage dealt by Slash-Strike skills for each enemy affected, stacking up to 8 times\n5.9% additional Ailment Damage dealt by Slash-Strike skills per enemy affected, stacking up to 8 times\nLasts 3s.",
     ],
     kinds: [],
+    levelValues: {
+      slashStrikeSkillDmgPerEnemy: [
+        4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5, 5.1, 5.2, 5.3, 5.4,
+        5.5, 5.6, 5.7, 5.8, 5.9, 6, 6.053, 6.105, 6.158, 6.21, 6.263, 6.315,
+        6.368, 6.42, 6.473, 6.525, 6.578, 6.63, 6.683, 6.735, 6.788, 6.84,
+        6.893, 6.945, 6.998,
+      ],
+      slashStrikeSkillAilmentDmgPerEnemy: [
+        4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5, 5.1, 5.2, 5.3, 5.4,
+        5.5, 5.6, 5.7, 5.8, 5.9, 6, 6.053, 6.105, 6.158, 6.21, 6.263, 6.315,
+        6.368, 6.42, 6.473, 6.525, 6.578, 6.63, 6.683, 6.735, 6.788, 6.84,
+        6.893, 6.945, 6.998,
+      ],
+    },
   },
   {
     type: "Active",

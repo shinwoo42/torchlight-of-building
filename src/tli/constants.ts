@@ -12,6 +12,8 @@ export const DMG_MOD_TYPES = [
   "elemental",
   "ailment",
   "shadow_strike_skill",
+  "slash_strike_skill",
+  "slash_strike_skill_ailment",
   "hit",
   "damage_over_time",
   "channeled",
