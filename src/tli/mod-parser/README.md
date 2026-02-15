@@ -97,19 +97,27 @@ t("{value:dec%} {(cold|fire|lightning)} penetration").capture(
 );
 ```
 
-### `.output(modType, mapper)`
+### `.output(mapper)`
 
-Create a single-mod parser:
+Create a single-mod parser. The mapper returns a full `Mod` object including the `type` field — the discriminated union provides contextual typing so no `as const` is needed:
 
 ```typescript
 t("{value:dec%} [additional] [{modType:DmgModType}] damage").output(
-  "DmgPct",
   (c) => ({
+    type: "DmgPct",
     value: c.value,
-    modType: c.modType ?? "global",
+    dmgModType: c.modType ?? "global",
     addn: c.additional !== undefined,
   }),
 );
+```
+
+### `.output(modType)`
+
+For mods with no additional fields, pass just the type string:
+
+```typescript
+t("has hasten").output("HasHasten");
 ```
 
 ### `.outputMany(specs)`
@@ -122,8 +130,8 @@ import { spec, t } from "./template";
 t(
   "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks and spells",
 ).outputMany([
-  spec("FlatDmgToAtks", (c) => ({ value: { min: c.min, max: c.max }, dmgType: c.dmgType })),
-  spec("FlatDmgToSpells", (c) => ({ value: { min: c.min, max: c.max }, dmgType: c.dmgType })),
+  spec((c) => ({ type: "FlatDmgToAtks", value: { min: c.min, max: c.max }, dmgType: c.dmgType })),
+  spec((c) => ({ type: "FlatDmgToSpells", value: { min: c.min, max: c.max }, dmgType: c.dmgType })),
 ]);
 ```
 
@@ -137,7 +145,7 @@ Combine builders that share the same output:
 t.multi([
   t("{value:dec%} elemental resistance penetration"),
   t("{value:dec%} erosion resistance penetration"),
-]).output("ResPenPct", (c) => ({ value: c.value, penType: "all" }));
+]).output((c) => ({ type: "ResPenPct", value: c.value, penType: "all" }));
 ```
 
 ## Custom Parsers
@@ -155,7 +163,7 @@ export const allParsers = [
     },
   },
   // Template parsers...
-  t("{value:dec%} damage").output("DmgPct", (c) => ({ ... })),
+  t("{value:dec%} damage").output((c) => ({ type: "DmgPct", ... })),
 ];
 ```
 
@@ -174,8 +182,7 @@ The `parseMod()` function returns:
    export const allParsers = [
      // ... existing parsers
      t("{value:dec%} my mod pattern").output(
-       "MyModType",
-       (c) => ({ value: c.value }),
+       (c) => ({ type: "MyModType", value: c.value }),
      ),
    ];
    ```

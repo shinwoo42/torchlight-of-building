@@ -43,21 +43,23 @@ interface ModDefinitions {
 Templates use a DSL for pattern matching. **Do not add comments to templates.ts** - the template string itself is self-documenting.
 
 ```typescript
-t("{value:dec%} all stats").output("StatPct", (c) => ({
+t("{value:dec%} all stats").output((c) => ({
+  type: "StatPct",
   value: c.value,
-  statModType: "all" as const,
+  statModType: "all",
 })),
 t("{value:dec%} {statModType:StatWord}")
   .enum("StatWord", StatWordMapping)
-  .output("StatPct", (c) => ({ value: c.value, statModType: c.statModType })),
-t("{value:dec%} [additional] [{modType:DmgModType}] damage").output("DmgPct", (c) => ({
+  .output((c) => ({ type: "StatPct", value: c.value, statModType: c.statModType })),
+t("{value:dec%} [additional] [{modType:DmgModType}] damage").output((c) => ({
+  type: "DmgPct",
   value: c.value,
   dmgModType: c.modType ?? "global",
   addn: c.additional !== undefined,
 })),
 t("{value:dec%} attack and cast speed").outputMany([
-  spec("AspdPct", (c) => ({ value: c.value, addn: false })),
-  spec("CspdPct", (c) => ({ value: c.value, addn: false })),
+  spec((c) => ({ type: "AspdPct", value: c.value, addn: false })),
+  spec((c) => ({ type: "CspdPct", value: c.value, addn: false })),
 ]),
 ```
 
@@ -167,9 +169,10 @@ t("{value:dec%} {statModType:StatWord}").output(...), // Generic
 **Input:** `"+10% all stats"` (starts with `+`)
 
 ```typescript
-t("{value:+dec%} all stats").output("StatPct", (c) => ({
+t("{value:+dec%} all stats").output((c) => ({
+  type: "StatPct",
   value: c.value,
-  statModType: "all" as const,
+  statModType: "all",
 })),
 ```
 
@@ -178,9 +181,10 @@ t("{value:+dec%} all stats").output("StatPct", (c) => ({
 **Input:** `"8% additional damage applied to Life"` (no sign)
 
 ```typescript
-t("{value:dec%} additional damage applied to life").output("DmgPct", (c) => ({
+t("{value:dec%} additional damage applied to life").output((c) => ({
+  type: "DmgPct",
   value: c.value,
-  dmgModType: "global" as const,
+  dmgModType: "global",
   addn: true,
 })),
 ```
@@ -190,11 +194,12 @@ t("{value:dec%} additional damage applied to life").output("DmgPct", (c) => ({
 **Input:** `"+40% damage if you have Blocked recently"`
 
 ```typescript
-t("{value:+dec%} damage if you have blocked recently").output("DmgPct", (c) => ({
+t("{value:+dec%} damage if you have blocked recently").output((c) => ({
+  type: "DmgPct",
   value: c.value,
-  dmgModType: "global" as const,
+  dmgModType: "global",
   addn: false,
-  cond: "has_blocked_recently" as const,
+  cond: "has_blocked_recently",
 })),
 ```
 
@@ -206,11 +211,12 @@ Note: The `+` appears AFTER "deals", so use `{value:+dec%}`:
 
 ```typescript
 t("deals {value:+dec%} additional damage to an enemy for every {amt:int} points of frostbite rating the enemy has")
-  .output("DmgPct", (c) => ({
+  .output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "global" as const,
+    dmgModType: "global",
     addn: true,
-    per: { stackable: "frostbite_rating" as const, amt: c.amt },
+    per: { stackable: "frostbite_rating", amt: c.amt },
   })),
 ```
 
@@ -220,8 +226,8 @@ t("deals {value:+dec%} additional damage to an enemy for every {amt:int} points 
 
 ```typescript
 t("{value:+dec%} [additional] attack and cast speed").outputMany([
-  spec("AspdPct", (c) => ({ value: c.value, addn: c.additional !== undefined })),
-  spec("CspdPct", (c) => ({ value: c.value, addn: c.additional !== undefined })),
+  spec((c) => ({ type: "AspdPct", value: c.value, addn: c.additional !== undefined })),
+  spec((c) => ({ type: "CspdPct", value: c.value, addn: c.additional !== undefined })),
 ]),
 ```
 
@@ -230,7 +236,7 @@ t("{value:+dec%} [additional] attack and cast speed").outputMany([
 **Input:** `"+166 Max Mana"`
 
 ```typescript
-t("{value:+dec} max mana").output("MaxMana", (c) => ({ value: c.value })),
+t("{value:+dec} max mana").output((c) => ({ type: "MaxMana", value: c.value })),
 ```
 
 ### Optional-Sign Parser
@@ -241,8 +247,7 @@ Use `?dec%` when the same mod string can appear with or without a `+`/`-` sign, 
 
 ```typescript
 t("{value:?dec%} sealed mana compensation for spirit magus skills").output(
-  "SealedManaCompPct",
-  (c) => ({ value: c.value, addn: false, skillType: "spirit_magus" as const }),
+  (c) => ({ type: "SealedManaCompPct", value: c.value, addn: false, skillType: "spirit_magus" }),
 ),
 ```
 
@@ -264,7 +269,7 @@ t("energy shield starts to charge when blocking").outputNone(),
 | Using `+dec%` for input without sign | Use `dec%` for inputs like `"8% damage applied to life"`, or `?dec%` if sign is optional |
 | Two templates for signed/unsigned variants of the same mod | Use `?dec%` to match both in a single template |
 | Template doesn't match input case | Templates are matched case-insensitively; input is normalized to lowercase |
-| Missing `as const` on string literals | Add `as const` for type narrowing: `statModType: "all" as const` |
+| Missing `type` field in output mapper | Include `type: "ModType"` in the returned object — contextual typing from the `Mod` discriminated union handles narrowing |
 | Handler doesn't account for new variant | Update `offense.ts` to handle new values (e.g., `statModType === "all"`) |
 | Generic template before specific | Move specific templates earlier in `allParsers` array |
 

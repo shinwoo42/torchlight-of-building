@@ -37,10 +37,10 @@ Templates use the same DSL as the main mod parser:
 ```typescript
 // In allSupportParsers array
 t("{value:dec%} additional damage for the supported skill").output(
-  "DmgPct",
   (c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "global" as const,
+    dmgModType: "global",
     addn: true,
   }),
 ),
@@ -90,8 +90,8 @@ For affixes that produce multiple mods:
 ```typescript
 t("{value:dec%} additional attack and cast speed for the supported skill")
   .outputMany([
-    spec("AspdPct", (c) => ({ value: c.value, addn: true })),
-    spec("CspdPct", (c) => ({ value: c.value, addn: true })),
+    spec((c) => ({ type: "AspdPct", value: c.value, addn: true })),
+    spec((c) => ({ type: "CspdPct", value: c.value, addn: true })),
   ]),
 ```
 
@@ -139,21 +139,11 @@ Some support skills use `+{value}%` templates (e.g., Increased Area) while other
 ```typescript
 // Signed version (e.g., "+19.8% additional damage...")
 t("{value:+dec%} additional damage for the supported skill").output(
-  "DmgPct",
-  (c) => ({
-    value: c.value,
-    dmgModType: "global" as const,
-    addn: true,
-  }),
+  (c) => ({ type: "DmgPct", value: c.value, dmgModType: "global", addn: true }),
 ),
 // Unsigned version (e.g., "0.8% additional damage...")
 t("{value:dec%} additional damage for the supported skill").output(
-  "DmgPct",
-  (c) => ({
-    value: c.value,
-    dmgModType: "global" as const,
-    addn: true,
-  }),
+  (c) => ({ type: "DmgPct", value: c.value, dmgModType: "global", addn: true }),
 ),
 ```
 
@@ -161,12 +151,7 @@ t("{value:dec%} additional damage for the supported skill").output(
 **Input:** `"+20% additional melee damage for the supported skill"`
 ```typescript
 t("{value:+dec%} additional melee damage for the supported skill").output(
-  "DmgPct",
-  (c) => ({
-    value: c.value,
-    dmgModType: "melee" as const,
-    addn: true,
-  }),
+  (c) => ({ type: "DmgPct", value: c.value, dmgModType: "melee", addn: true }),
 ),
 ```
 
@@ -174,11 +159,7 @@ t("{value:+dec%} additional melee damage for the supported skill").output(
 **Input:** `"-15% Attack Speed for the supported skill"` (Steamroll)
 ```typescript
 t("{value:+dec%} attack speed for the supported skill").output(
-  "AspdPct",
-  (c) => ({
-    value: c.value,
-    addn: false,
-  }),
+  (c) => ({ type: "AspdPct", value: c.value, addn: false }),
 ),
 ```
 
@@ -188,11 +169,12 @@ Note: `+dec%` matches both `+` and `-` signs.
 **Input:** `"The supported skill deals +30% additional damage to cursed enemies"`
 ```typescript
 t("the supported skill deals {value:dec%} additional damage to cursed enemies")
-  .output("DmgPct", (c) => ({
+  .output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "global" as const,
+    dmgModType: "global",
     addn: true,
-    cond: "enemy_is_cursed" as const,
+    cond: "enemy_is_cursed",
   })),
 ```
 
@@ -200,24 +182,26 @@ t("the supported skill deals {value:dec%} additional damage to cursed enemies")
 **Input:** `"+5% additional damage for the supported skill for every stack of buffs while standing still"`
 ```typescript
 t("{value:dec%} additional damage for the supported skill for every stack of buffs while standing still")
-  .output("DmgPct", (c) => ({
+  .output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "global" as const,
+    dmgModType: "global",
     addn: false,
-    per: { stackable: "willpower" as const },
+    per: { stackable: "willpower" },
   })),
 ```
 
 ### Mod with No Value
 **Input:** `"The supported skill cannot inflict wilt"`
 ```typescript
-t("the supported skill cannot inflict wilt").output("CannotInflictWilt"),
+t("the supported skill cannot inflict wilt").output(() => ({ type: "CannotInflictWilt" })),
 ```
 
 ### Escaped Parentheses
 **Input:** `"Stacks up to 5 time(s)"`
 ```typescript
-t("stacks up to {value:int} time(s)").output("MaxWillpowerStacks", (c) => ({
+t("stacks up to {value:int} time(s)").output((c) => ({
+  type: "MaxWillpowerStacks",
   value: c.value,
 })),
 ```
@@ -228,9 +212,7 @@ Note: Literal `(` and `)` don't need escaping when they don't contain alternatio
 **Input:** `"When the supported skill deals damage over time, it inflicts 10 affliction on the enemy. Effect cooldown: 3 s"`
 ```typescript
 t("when the supported skill deals damage over time, it inflicts {value:int} affliction on the enemy. effect cooldown: {_:int} s")
-  .output("AfflictionInflictedPerSec", (c) => ({
-    value: c.value,
-  })),
+  .output((c) => ({ type: "AfflictionInflictedPerSec", value: c.value })),
 ```
 
 Use `{_:type}` to capture but ignore values.
@@ -239,10 +221,7 @@ Use `{_:type}` to capture but ignore values.
 **Input:** `"+2 Shadow Quantity for the supported skill"`
 ```typescript
 t("{value:+int} shadow quantity for the supported skill").output(
-  "ShadowQuant",
-  (c) => ({
-    value: c.value,
-  }),
+  (c) => ({ type: "ShadowQuant", value: c.value }),
 ),
 ```
 
@@ -268,7 +247,7 @@ t("{value:dec%} additional melee damage for the supported skill").output(...),  
 | Using `+dec%` for input without sign | Use `dec%` for inputs like `"0.8% damage"` |
 | Only one template when inputs vary | Add BOTH signed and unsigned templates (see examples) |
 | Generic template before specific | Move specific templates earlier in array |
-| Missing `as const` on string literals | Add `as const` for type narrowing |
+| Missing `type` field in output mapper | Include `type: "ModType"` in the returned object |
 | Handler doesn't account for new mod type | Update `offense.ts` to handle new mod types |
 | Forgot the wrapper structure | `parseSupportAffix` already wraps in `{ mod }` |
 

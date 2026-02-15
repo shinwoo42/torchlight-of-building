@@ -39,7 +39,7 @@ const parseWillpowerBlob = (input: string): Mod[] | undefined => {
       value: parseFloat(dmgMatch[1]),
       dmgModType: GLOBAL,
       addn: true,
-      per: { stackable: "willpower" as const },
+      per: { stackable: "willpower" },
     });
   }
 
@@ -49,219 +49,251 @@ const parseWillpowerBlob = (input: string): Mod[] | undefined => {
 const allSupportParsers = [
   // Signed version (e.g., "Auto-used supported skills +10% additional damage")
   t("auto-used supported skills {value:+int%} additional damage").output(
-    "DmgPct",
-    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
+    (c) => ({ type: "DmgPct", value: c.value, dmgModType: GLOBAL, addn: true }),
   ),
   // Unsigned version (e.g., "Auto-used supported skills 10% additional damage")
   t("auto-used supported skills {value:int%} additional damage").output(
-    "DmgPct",
-    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
+    (c) => ({ type: "DmgPct", value: c.value, dmgModType: GLOBAL, addn: true }),
   ),
   t("manually used supported skills {value:int%} additional damage").output(
-    "DmgPct",
-    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
+    (c) => ({ type: "DmgPct", value: c.value, dmgModType: GLOBAL, addn: true }),
   ),
   t(
     "{value:int%} additional damage for minions summoned by the supported skill",
-  ).output("MinionDmgPct", (c) => ({ value: c.value, addn: true })),
+  ).output((c) => ({ type: "MinionDmgPct", value: c.value, addn: true })),
   // Signed version (e.g., "+19.8% additional damage for the supported skill")
-  t("{value:+dec%} additional damage for the supported skill").output(
-    "DmgPct",
-    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
-  ),
+  t("{value:+dec%} additional damage for the supported skill").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: true,
+  })),
   // Unsigned version (e.g., "0.8% additional damage for the supported skill")
-  t("{value:dec%} additional damage for the supported skill").output(
-    "DmgPct",
-    (c) => ({ value: c.value, dmgModType: GLOBAL, addn: true }),
-  ),
+  t("{value:dec%} additional damage for the supported skill").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: true,
+  })),
   t("{value:+dec%} additional melee damage for the supported skill").output(
-    "DmgPct",
-    (c) => ({ value: c.value, dmgModType: "melee" as const, addn: true }),
+    (c) => ({
+      type: "DmgPct",
+      value: c.value,
+      dmgModType: "melee",
+      addn: true,
+    }),
   ),
   t(
     "{value:dec%} additional {dmgType:DmgModType} damage for the supported skill",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: c.dmgType,
     addn: true,
   })),
   t("{value:+dec%} additional ailment damage for the supported skill").output(
-    "DmgPct",
-    (c) => ({ value: c.value, dmgModType: "ailment" as const, addn: true }),
+    (c) => ({
+      type: "DmgPct",
+      value: c.value,
+      dmgModType: "ailment",
+      addn: true,
+    }),
   ),
   t(
     "{value:dec%} [additional] damage over time for the supported skill",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "damage_over_time" as const,
+    dmgModType: "damage_over_time",
     addn: c.additional !== undefined,
   })),
   t(
     "the supported skill deals more damage to enemies with more life, up to {value:+int%} additional erosion damage",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "erosion" as const,
+    dmgModType: "erosion",
     addn: true,
   })),
   t(
     "the supported skill deals {value:dec%} additional damage to cursed enemies",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    cond: "enemy_is_cursed" as const,
+    cond: "enemy_is_cursed",
   })),
   t(
     "{value:+dec%} additional damage for the supported skill when it lands a critical strike",
-  ).output("CritDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "CritDmgPct",
     value: c.value,
     addn: true,
     modType: GLOBAL,
   })),
-  t("{value:+dec%} attack speed for the supported skill").output(
-    "AspdPct",
-    (c) => ({ value: c.value, addn: false }),
-  ),
-  t("{value:+dec%} cast speed for the supported skill").output(
-    "CspdPct",
-    (c) => ({ value: c.value, addn: false }),
-  ),
+  t("{value:+dec%} attack speed for the supported skill").output((c) => ({
+    type: "AspdPct",
+    value: c.value,
+    addn: false,
+  })),
+  t("{value:+dec%} cast speed for the supported skill").output((c) => ({
+    type: "CspdPct",
+    value: c.value,
+    addn: false,
+  })),
   t(
     "{value:+dec%} additional hit damage for skills cast by spell burst when spell burst is activated by the supported skill",
-  ).output("SpellBurstAdditionalDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "SpellBurstAdditionalDmgPct",
     value: c.value,
-    addn: true as const,
+    addn: true,
   })),
   t(
     "{value:+dec%} additional attack and cast speed for the supported skill",
   ).outputMany([
-    spec("AspdPct", (c) => ({ value: c.value, addn: true })),
-    spec("CspdPct", (c) => ({ value: c.value, addn: true })),
+    spec((c) => ({ type: "AspdPct", value: c.value, addn: true })),
+    spec((c) => ({ type: "CspdPct", value: c.value, addn: true })),
   ]),
   t("{value:+dec%} critical strike rating for the supported skill").output(
-    "CritRatingPct",
-    (c) => ({ value: c.value, modType: GLOBAL }),
+    (c) => ({ type: "CritRatingPct", value: c.value, modType: GLOBAL }),
   ),
-  t("{value:+dec%} skill area for the supported skill").output(
-    "SkillAreaPct",
-    (c) => ({ value: c.value, skillAreaModType: GLOBAL }),
-  ),
-  t("{value:dec%} aura effect for the supported skill").output(
-    "AuraEffPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:dec%} buff effect for the supported skill").output(
-    "FocusBuffEffPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} duration for the supported skill").output(
-    "SkillEffDurationPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:+dec%} skill area for the supported skill").output((c) => ({
+    type: "SkillAreaPct",
+    value: c.value,
+    skillAreaModType: GLOBAL,
+  })),
+  t("{value:dec%} aura effect for the supported skill").output((c) => ({
+    type: "AuraEffPct",
+    value: c.value,
+  })),
+  t("{value:dec%} buff effect for the supported skill").output((c) => ({
+    type: "FocusBuffEffPct",
+    value: c.value,
+  })),
+  t("{value:+dec%} duration for the supported skill").output((c) => ({
+    type: "SkillEffDurationPct",
+    value: c.value,
+  })),
   t(
     "the supported skill {value:dec%} effect every time it is cast, [stacking] up to {limit:int} time(s)",
-  ).output("SkillEffPct", (c) => ({
+  ).output((c) => ({
+    type: "SkillEffPct",
     value: c.value,
-    per: { stackable: "skill_use" as const, limit: c.limit },
+    per: { stackable: "skill_use", limit: c.limit },
   })),
   t(
     "{value:dec%} effect for the status provided by the skill per charge when you use the supported skill",
-  ).output("SkillEffPct", (c) => ({
+  ).output((c) => ({
+    type: "SkillEffPct",
     value: c.value,
-    per: { stackable: "skill_charges_on_use" as const },
+    per: { stackable: "skill_charges_on_use" },
   })),
-  t("{value:+int} shadow quantity for the supported skill").output(
-    "ShadowQuant",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+int} jumps for the supported skill").output("Jump", (c) => ({
+  t("{value:+int} shadow quantity for the supported skill").output((c) => ({
+    type: "ShadowQuant",
     value: c.value,
   })),
-  t("stacks up to {value:int} time(s)").output("MaxWillpowerStacks", (c) => ({
+  t("{value:+int} jumps for the supported skill").output((c) => ({
+    type: "Jump",
+    value: c.value,
+  })),
+  t("stacks up to {value:int} time(s)").output((c) => ({
+    type: "MaxWillpowerStacks",
     value: c.value,
   })),
   t(
     "when the supported skill deals damage over time, it inflicts {value:int} affliction on the enemy. effect cooldown: {_:int} s",
-  ).output("AfflictionInflictedPerSec", (c) => ({ value: c.value })),
-  t("it inflicts {value:int} affliction on the enemy").output(
-    "AfflictionInflictedPerSec",
-    (c) => ({ value: c.value }),
-  ),
+  ).output((c) => ({ type: "AfflictionInflictedPerSec", value: c.value })),
+  t("it inflicts {value:int} affliction on the enemy").output((c) => ({
+    type: "AfflictionInflictedPerSec",
+    value: c.value,
+  })),
   t(
     "affliction grants an additional {value:dec%} effect to the supported skill",
-  ).output("AfflictionEffectPct", (c) => ({
+  ).output((c) => ({
+    type: "AfflictionEffectPct",
     value: c.value,
     addn: true,
-    cond: "enemy_at_max_affliction" as const,
+    cond: "enemy_at_max_affliction",
   })),
-  t("{value:int%} chance to paralyze it").output(
-    "InflictParalysisPct",
-    (c) => ({ value: c.value, cond: "enemy_is_cursed" as const }),
-  ),
+  t("{value:int%} chance to paralyze it").output((c) => ({
+    type: "InflictParalysisPct",
+    value: c.value,
+    cond: "enemy_is_cursed",
+  })),
   t(
     "when the supported skill deals damage to a cursed target, there is a {value:+dec%} chance to paralyze it",
-  ).output("InflictParalysisPct", (c) => ({
+  ).output((c) => ({
+    type: "InflictParalysisPct",
     value: c.value,
-    cond: "enemy_is_cursed" as const,
+    cond: "enemy_is_cursed",
   })),
-  t("the supported skill cannot inflict wilt").output("CannotInflictWilt"),
+  t("the supported skill cannot inflict wilt").output(() => ({
+    type: "CannotInflictWilt",
+  })),
   t(
     "every {_:int} time(s) the supported skill is used, gains a barrier if there's no barrier. interval: {_:int} s",
-  ).output("GeneratesBarrier"),
-  t("gains a barrier if there's no barrier").output("GeneratesBarrier"),
-  t("{value:+dec%} projectile speed for the supported skill").output(
-    "ProjSpdPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:int%} projectile size for the supported skill").output(
-    "ProjSizePct",
-    (c) => ({ value: c.value }),
-  ),
+  ).output(() => ({ type: "GeneratesBarrier" })),
+  t("gains a barrier if there's no barrier").output(() => ({
+    type: "GeneratesBarrier",
+  })),
+  t("{value:+dec%} projectile speed for the supported skill").output((c) => ({
+    type: "ProjSpdPct",
+    value: c.value,
+  })),
+  t("{value:int%} projectile size for the supported skill").output((c) => ({
+    type: "ProjSizePct",
+    value: c.value,
+  })),
   t("{value:int%} additional ignite duration for the supported skill").output(
-    "IgniteDurationPct",
-    (c) => ({ value: c.value }),
+    (c) => ({ type: "IgniteDurationPct", value: c.value }),
   ),
-  t("{value:int%} additional duration for the supported skill").output(
-    "SkillEffDurationPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:int%} additional duration for the supported skill").output((c) => ({
+    type: "SkillEffDurationPct",
+    value: c.value,
+  })),
   t(
     "+{value:dec%} additional damage for this skill for every link less than maximum links",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    per: { stackable: "unused_mind_control_link" as const },
+    per: { stackable: "unused_mind_control_link" },
   })),
   t(
     "converts {value:int%} of the supported skill's {from:DmgChunkType} damage to {to:DmgChunkType} damage",
-  ).output("ConvertDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "ConvertDmgPct",
     value: c.value,
     from: c.from,
     to: c.to,
   })),
   t(
     "{value:dec%} additional damage for the supported skill for every stack of focus blessing, stacking up to {limit:int} times",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    per: { stackable: "focus_blessing" as const, limit: c.limit },
+    per: { stackable: "focus_blessing", limit: c.limit },
   })),
   t(
     "{value:dec%} additional damage for the supported skill for each stack of focus blessing, stacking up to {limit:int} time(s)",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    per: { stackable: "focus_blessing" as const, limit: c.limit },
+    per: { stackable: "focus_blessing", limit: c.limit },
   })),
   t(
     "for every 1 jump, the supported skill releases 1 additional chain lightning (does not target the same enemy). each chain lightning can only jump 1 time(s)",
-  ).output("ChainLightningWebOfLightning"),
+  ).output(() => ({ type: "ChainLightningWebOfLightning" })),
   t(
     "multiple chain lightnings released by the supported skill can target the same enemy, but will prioritize different enemies. the shotgun effect falloff coefficient of the supported skill is {value:int}%",
-  ).output("ChainLightningMerge", (c) => ({
+  ).output((c) => ({
+    type: "ChainLightningMerge",
     shotgunFalloffCoefficient: c.value,
   })),
   // Recognized but produces no mods (informational text)
@@ -276,28 +308,32 @@ const allSupportParsers = [
   ).outputMany([]),
   t(
     "{value:+int%} chance for the supported skill to trigger multistrike",
-  ).output("MultistrikeChancePct", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "MultistrikeChancePct", value: c.value })),
   t(
     "multistrikes of the supported skill deal {value:int%} increasing damage",
-  ).output("MultistrikeIncDmgPct", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "MultistrikeIncDmgPct", value: c.value })),
   // Signed version (e.g., "-70% additional Sealed Mana Compensation...")
   t(
     "{value:+dec%} [additional] sealed mana compensation for the supported skill",
-  ).output("SealedManaCompPct", (c) => ({
+  ).output((c) => ({
+    type: "SealedManaCompPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
   // Unsigned version (e.g., "0.5% Sealed Mana Compensation...")
   t(
     "{value:dec%} [additional] sealed mana compensation for the supported skill",
-  ).output("SealedManaCompPct", (c) => ({
+  ).output((c) => ({
+    type: "SealedManaCompPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
   t("replaces sealed mana of the supported skill with sealed life").output(
     "SealConversion",
   ),
-  t("the supported skill is cast as a spell tangle").output("IsTangle"),
+  t("the supported skill is cast as a spell tangle").output(() => ({
+    type: "IsTangle",
+  })),
   t("{_:+int} max charges for the supported skill").outputMany([]),
   t("gains a {_:int} s buff after casting the supported skill").outputMany([]),
   t(

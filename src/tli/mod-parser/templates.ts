@@ -12,47 +12,65 @@ export const allParsers = [
   t(
     "{dmgValue:+dec%} additional damage; {minionValue:+dec%} additional minion damage",
   ).outputMany([
-    spec("DmgPct", (c) => ({
+    spec((c) => ({
+      type: "DmgPct",
       value: c.dmgValue,
       dmgModType: GLOBAL,
       addn: true,
     })),
-    spec("MinionDmgPct", (c) => ({ value: c.minionValue, addn: true })),
+    spec((c) => ({ type: "MinionDmgPct", value: c.minionValue, addn: true })),
   ]),
   t(
     "{aspd:+dec%} gear attack speed. {dmg:+dec%} additional attack damage",
   ).outputMany([
-    spec("GearAspdPct", (c) => ({ value: c.aspd })),
-    spec("DmgPct", (c) => ({ value: c.dmg, addn: true, dmgModType: ATTACK })),
+    spec((c) => ({ type: "GearAspdPct", value: c.aspd })),
+    spec((c) => ({
+      type: "DmgPct",
+      value: c.dmg,
+      addn: true,
+      dmgModType: ATTACK,
+    })),
   ]),
   t(
     "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks and spells for every {amt:int} mana consumed recently. stacks up to {limit:int} time(s)",
   ).outputMany([
-    spec("FlatDmgToAtks", (c) => {
+    spec((c) => {
       const per: PerStackable = {
         stackable: "mana_consumed_recently",
         amt: c.amt,
         limit: c.limit,
       };
-      return { value: { min: c.min, max: c.max }, dmgType: c.dmgType, per };
+      return {
+        type: "FlatDmgToAtks",
+        value: { min: c.min, max: c.max },
+        dmgType: c.dmgType,
+        per,
+      };
     }),
-    spec("FlatDmgToSpells", (c) => {
+    spec((c) => {
       const per: PerStackable = {
         stackable: "mana_consumed_recently",
         amt: c.amt,
         limit: c.limit,
       };
-      return { value: { min: c.min, max: c.max }, dmgType: c.dmgType, per };
+      return {
+        type: "FlatDmgToSpells",
+        value: { min: c.min, max: c.max },
+        dmgType: c.dmgType,
+        per,
+      };
     }),
   ]),
   t(
     "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks and spells",
   ).outputMany([
-    spec("FlatDmgToAtks", (c) => ({
+    spec((c) => ({
+      type: "FlatDmgToAtks",
       value: { min: c.min, max: c.max },
       dmgType: c.dmgType,
     })),
-    spec("FlatDmgToSpells", (c) => ({
+    spec((c) => ({
+      type: "FlatDmgToSpells",
       value: { min: c.min, max: c.max },
       dmgType: c.dmgType,
     })),
@@ -60,26 +78,33 @@ export const allParsers = [
   t(
     "{value:+dec%} critical strike rating and critical strike damage for every {amt:int} mana consumed recently",
   ).outputMany([
-    spec("CritRatingPct", (c) => {
+    spec((c) => {
       const per: PerStackable = {
         stackable: "mana_consumed_recently",
         amt: c.amt,
       };
-      return { value: c.value, modType: GLOBAL, per };
+      return { type: "CritRatingPct", value: c.value, modType: GLOBAL, per };
     }),
-    spec("CritDmgPct", (c) => {
+    spec((c) => {
       const per: PerStackable = {
         stackable: "mana_consumed_recently",
         amt: c.amt,
       };
-      return { value: c.value, modType: GLOBAL, addn: false, per };
+      return {
+        type: "CritDmgPct",
+        value: c.value,
+        modType: GLOBAL,
+        addn: false,
+        per,
+      };
     }),
   ]),
   t(
     "{value:+dec%} critical strike rating and critical strike damage",
   ).outputMany([
-    spec("CritRatingPct", (c) => ({ value: c.value, modType: GLOBAL })),
-    spec("CritDmgPct", (c) => ({
+    spec((c) => ({ type: "CritRatingPct", value: c.value, modType: GLOBAL })),
+    spec((c) => ({
+      type: "CritDmgPct",
       value: c.value,
       modType: GLOBAL,
       addn: false,
@@ -87,17 +112,24 @@ export const allParsers = [
   ]),
   t(
     "{value:+dec%} {modType:DmgModType} damage for every {amt:int} mana consumed recently, up to {limit:dec%}",
-  ).output("DmgPct", (c) => {
+  ).output((c) => {
     const per: PerStackable = {
       stackable: "mana_consumed_recently",
       amt: c.amt,
       valueLimit: c.limit,
     };
-    return { value: c.value, dmgModType: c.modType, addn: false, per };
+    return {
+      type: "DmgPct",
+      value: c.value,
+      dmgModType: c.modType,
+      addn: false,
+      per,
+    };
   }),
   t(
     "for every {amt:+dec%} attack or spell block chance, {value:+dec%} additional damage, up to {limit:+dec%}",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
@@ -105,34 +137,43 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} additional damage per {amt:+dec%} movement speed, up to {limit:+dec%}",
-  ).output("DmgPct", (c) => {
+  ).output((c) => {
     const per: PerStackable = {
       stackable: "movement_speed_bonus_pct",
       amt: c.amt,
       valueLimit: c.limit,
     };
-    return { value: c.value, dmgModType: GLOBAL, addn: true, per };
+    return {
+      type: "DmgPct",
+      value: c.value,
+      dmgModType: GLOBAL,
+      addn: true,
+      per,
+    };
   }),
   t(
     "for every stack of max spell burst, {value:+dec%} additional spell damage, up to {limit:+dec%} additional spell damage",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "spell" as const,
+    dmgModType: "spell",
     addn: true,
     per: { stackable: "max_spell_burst", valueLimit: c.limit },
   })),
   t(
     "{value:+dec%} movement speed per stack of max spell burst, up to {limit:+dec%}",
-  ).output("MovementSpeedPct", (c) => ({
+  ).output((c) => ({
+    type: "MovementSpeedPct",
     value: c.value,
     addn: false,
     per: { stackable: "max_spell_burst", valueLimit: c.limit },
   })),
   t(
     "for every {amt:+dec%} spell burst charge speed, {value:+dec%} additional hit damage for skills cast by spell burst, up to {limit:+dec%}",
-  ).output("SpellBurstAdditionalDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "SpellBurstAdditionalDmgPct",
     value: c.value,
-    addn: true as const,
+    addn: true,
     per: {
       stackable: "spell_burst_charge_speed_bonus_pct",
       amt: c.amt,
@@ -141,7 +182,8 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} additional damage for the next skill when mana reaches the max",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
@@ -149,107 +191,102 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} additional damage against enemies with elemental ailments",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
     cond: "enemy_has_ailment",
   })),
-  t("{value:+dec%} [additional] damage against frozen enemies").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: c.additional !== undefined,
-      cond: "enemy_frozen",
-    }),
-  ),
+  t("{value:+dec%} [additional] damage against frozen enemies").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: c.additional !== undefined,
+    cond: "enemy_frozen",
+  })),
   t(
     "{dmgValue:+dec%} additional damage dealt to cursed enemies. {takenValue:+int%} additional damage taken from cursed enemies",
   ).outputMany([
-    spec("DmgPct", (c) => ({
+    spec((c) => ({
+      type: "DmgPct",
       value: c.dmgValue,
       dmgModType: GLOBAL,
       addn: true,
       cond: "enemy_is_cursed",
     })),
-    spec("DmgTakenPct", (c) => ({
+    spec((c) => ({
+      type: "DmgTakenPct",
       value: c.takenValue,
       cond: "enemy_is_cursed",
     })),
   ]),
-  t("{value:+dec%} [additional] damage against cursed enemies").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: c.additional !== undefined,
-      cond: "enemy_is_cursed",
-    }),
-  ),
+  t("{value:+dec%} [additional] damage against cursed enemies").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: c.additional !== undefined,
+    cond: "enemy_is_cursed",
+  })),
   t("{value:+dec%} additional erosion area damage against elites").output(
-    "DmgPct",
     (c) => ({
+      type: "DmgPct",
       value: c.value,
-      dmgModType: "erosion_area" as const,
+      dmgModType: "erosion_area",
       addn: true,
       cond: "target_enemy_is_elite",
     }),
   ),
   t(
     "{value:+dec%} [additional] damage when having both sealed mana and life",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: c.additional !== undefined,
     resolvedCond: "have_both_sealed_mana_and_life",
   })),
   t("{value:+dec%} damage {(when|while)} focus blessing is active").output(
-    "DmgPct",
     (c) => ({
+      type: "DmgPct",
       value: c.value,
       dmgModType: GLOBAL,
       addn: false,
       cond: "has_focus_blessing",
     }),
   ),
-  t("{value:+dec%} spell damage when having focus blessing").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: "spell" as const,
-      addn: false,
-      cond: "has_focus_blessing",
-    }),
-  ),
+  t("{value:+dec%} spell damage when having focus blessing").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: "spell",
+    addn: false,
+    cond: "has_focus_blessing",
+  })),
   t("{value:+dec%} additional spell damage at max focus blessings").output(
-    "DmgPct",
     (c) => ({
+      type: "DmgPct",
       value: c.value,
-      dmgModType: "spell" as const,
+      dmgModType: "spell",
       addn: true,
       resolvedCond: "at_max_focus_blessing",
     }),
   ),
-  t("{value:+dec%} [additional] damage while having fervor").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: c.additional !== undefined,
-      cond: "has_fervor",
-    }),
-  ),
-  t("{value:+dec%} damage if you have blocked recently").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: false,
-      cond: "has_blocked_recently",
-    }),
-  ),
-  t("{value:+dec%} attack damage when dual wielding").output("DmgPct", (c) => ({
+  t("{value:+dec%} [additional] damage while having fervor").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: c.additional !== undefined,
+    cond: "has_fervor",
+  })),
+  t("{value:+dec%} damage if you have blocked recently").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: false,
+    cond: "has_blocked_recently",
+  })),
+  t("{value:+dec%} attack damage when dual wielding").output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: ATTACK,
     addn: false,
@@ -257,50 +294,49 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} additional damage taken by enemies frozen by you recently",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
     isEnemyDebuff: true,
     cond: "target_enemy_frozen_recently",
   })),
-  t("{value:+dec%} additional damage taken by nearby enemies").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: true,
-      isEnemyDebuff: true,
-      cond: "target_enemy_is_nearby",
-    }),
-  ),
+  t("{value:+dec%} additional damage taken by nearby enemies").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: true,
+    isEnemyDebuff: true,
+    cond: "target_enemy_is_nearby",
+  })),
   t(
     "deals {value:+dec%} additional damage to an enemy for every {amt:int} points of frostbite rating the enemy has",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
     per: { stackable: "frostbite_rating", amt: c.amt },
   })),
   t("{value:+dec%} additional damage per {amt:int} fervor rating").output(
-    "DmgPct",
     (c) => ({
+      type: "DmgPct",
       value: c.value,
       dmgModType: GLOBAL,
       addn: true,
       per: { stackable: "fervor", amt: c.amt },
     }),
   ),
-  t("{value:+dec%} damage per {amt:int} of the highest stat").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: false,
-      per: { stackable: "highest_stat", amt: c.amt },
-    }),
-  ),
-  t("{value:+dec%} damage per {amt:int} stats").output("DmgPct", (c) => ({
+  t("{value:+dec%} damage per {amt:int} of the highest stat").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: false,
+    per: { stackable: "highest_stat", amt: c.amt },
+  })),
+  t("{value:+dec%} damage per {amt:int} stats").output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: false,
@@ -308,7 +344,8 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} [additional] damage for every {amt:+int} additional max channeled stack(s)",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: c.additional !== undefined,
@@ -316,7 +353,8 @@ export const allParsers = [
   })),
   t(
     "deals up to {value:+dec%} additional attack damage to enemies in proximity, and this {(effect|damage)} reduces as the distance from the enemy grows",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: ATTACK,
     addn: true,
@@ -325,13 +363,15 @@ export const allParsers = [
   t(
     "{value:+dec%} additional attack damage and ailment damage dealt by attacks when there are elites within 10m nearby",
   ).outputMany([
-    spec("DmgPct", (c) => ({
+    spec((c) => ({
+      type: "DmgPct",
       value: c.value,
       dmgModType: ATTACK,
       addn: true,
       cond: "has_elites_nearby",
     })),
-    spec("DmgPct", (c) => ({
+    spec((c) => ({
+      type: "DmgPct",
       value: c.value,
       dmgModType: AILMENT,
       addn: true,
@@ -339,8 +379,8 @@ export const allParsers = [
     })),
   ]),
   t("{value:+dec%} additional attack damage dealt to nearby enemies").output(
-    "DmgPct",
     (c) => ({
+      type: "DmgPct",
       value: c.value,
       dmgModType: ATTACK,
       addn: true,
@@ -349,7 +389,8 @@ export const allParsers = [
   ),
   t(
     "{value:+dec%} additional attack damage when holding a one-handed weapon",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: ATTACK,
     addn: true,
@@ -357,7 +398,8 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} additional attack damage for each unique type of weapon equipped while dual wielding",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: ATTACK,
     addn: true,
@@ -366,49 +408,52 @@ export const allParsers = [
   })),
   t(
     "blur gains an additional effect: {value:+dec%} additional damage over time",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "damage_over_time" as const,
+    dmgModType: "damage_over_time",
     addn: true,
     cond: "has_blur",
   })),
-  t("{value:+dec%} [additional] damage over time").output("DmgPct", (c) => ({
+  t("{value:+dec%} [additional] damage over time").output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "damage_over_time" as const,
+    dmgModType: "damage_over_time",
     addn: c.additional !== undefined,
   })),
   t(
     "{value:+dec%} additional {modType:DmgModType} damage against numbed enemies",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: c.modType,
     addn: true,
     cond: "enemy_numbed",
   })),
-  t("{value:dec%} additional damage applied to life").output("DmgPct", (c) => ({
+  t("{value:dec%} additional damage applied to life").output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
   })),
   t(
     "at max channeled stacks, {value:+dec%} additional damage for channeled skills for {dur:int} s",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "channeled" as const,
+    dmgModType: "channeled",
     addn: true,
     cond: "at_max_channeled_stacks",
   })),
-  t("{value:+dec%} [additional] damage for channeled skills").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: "channeled" as const,
-      addn: c.additional !== undefined,
-    }),
-  ),
+  t("{value:+dec%} [additional] damage for channeled skills").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: "channeled",
+    addn: c.additional !== undefined,
+  })),
   t("{value:+dec%} additional damage for {dur:int} s after blur ends").output(
-    "DmgPct",
     (c) => ({
+      type: "DmgPct",
       value: c.value,
       dmgModType: GLOBAL,
       addn: true,
@@ -417,7 +462,8 @@ export const allParsers = [
   ),
   t(
     "{value:+dec%} additional damage for {dur:int} s after using mobility skills",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
@@ -425,7 +471,8 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} additional damage for {dur:int}s after using mobility skills",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
@@ -433,72 +480,87 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} additional damage if you have recently moved more than {dist:int} m",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
     cond: "has_moved_recently",
   })),
   t("{value:+dec%} [additional] elemental damage dealt by spell skills").output(
-    "ElementalSpellDmgPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+dec%} [additional] [{modType:DmgModType}] damage").output(
-    "DmgPct",
     (c) => ({
+      type: "ElementalSpellDmgPct",
       value: c.value,
-      dmgModType: c.modType ?? "global",
       addn: c.additional !== undefined,
     }),
   ),
+  t("{value:+dec%} [additional] [{modType:DmgModType}] damage").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: c.modType ?? "global",
+    addn: c.additional !== undefined,
+  })),
   t("{value:+dec%} critical strike rating against frostbitten enemies").output(
-    "CritRatingPct",
-    (c) => ({ value: c.value, modType: GLOBAL, cond: "enemy_frostbitten" }),
+    (c) => ({
+      type: "CritRatingPct",
+      value: c.value,
+      modType: GLOBAL,
+      cond: "enemy_frostbitten",
+    }),
   ),
   t("{value:+int} critical strike rating against frostbitten enemies").output(
-    "FlatCritRating",
-    (c) => ({ value: c.value, modType: GLOBAL, cond: "enemy_frostbitten" }),
+    (c) => ({
+      type: "FlatCritRating",
+      value: c.value,
+      modType: GLOBAL,
+      cond: "enemy_frostbitten",
+    }),
   ),
   t("{value:+dec%} critical strike damage against frostbitten enemies").output(
-    "CritDmgPct",
     (c) => ({
+      type: "CritDmgPct",
       value: c.value,
       addn: false,
       modType: GLOBAL,
       cond: "enemy_frostbitten",
     }),
   ),
-  t("{value:+dec%} sentry skill critical strike rating").output(
-    "CritRatingPct",
-    (c) => ({ value: c.value, modType: "sentry_skill" as const }),
-  ),
-  t("{value:+dec%} ranged attack critical strike rating").output(
-    "CritRatingPct",
-    (c) => ({ value: c.value, modType: "ranged_attack" as const }),
-  ),
+  t("{value:+dec%} sentry skill critical strike rating").output((c) => ({
+    type: "CritRatingPct",
+    value: c.value,
+    modType: "sentry_skill",
+  })),
+  t("{value:+dec%} ranged attack critical strike rating").output((c) => ({
+    type: "CritRatingPct",
+    value: c.value,
+    modType: "ranged_attack",
+  })),
   t(
     "{value:+dec%} [{modType:CritRatingModType}] critical strike rating",
-  ).output("CritRatingPct", (c) => ({
+  ).output((c) => ({
+    type: "CritRatingPct",
     value: c.value,
     modType: c.modType ?? "global",
   })),
   t("{value:+int} attack and spell critical strike rating").outputMany([
-    spec("FlatCritRating", (c) => ({
+    spec((c) => ({
+      type: "FlatCritRating",
       value: c.value,
-      modType: "attack" as const,
+      modType: "attack",
     })),
-    spec("FlatCritRating", (c) => ({
-      value: c.value,
-      modType: "spell" as const,
-    })),
+    spec((c) => ({ type: "FlatCritRating", value: c.value, modType: "spell" })),
   ]),
   t("{value:+int} [{modType:CritRatingModType}] critical strike rating").output(
-    "FlatCritRating",
-    (c) => ({ value: c.value, modType: c.modType ?? "global" }),
+    (c) => ({
+      type: "FlatCritRating",
+      value: c.value,
+      modType: c.modType ?? "global",
+    }),
   ),
   t(
     "for each spell skill used recently, {value:+dec%} critical strike damage, stacking up to {limit:int} time(s)",
-  ).output("CritDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "CritDmgPct",
     value: c.value,
     addn: false,
     modType: GLOBAL,
@@ -506,206 +568,222 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} [{modType:CritDmgModType}] critical strike damage per stack of focus blessing owned",
-  ).output("CritDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "CritDmgPct",
     value: c.value,
     addn: false,
     modType: c.modType ?? "global",
     per: { stackable: "focus_blessing" },
   })),
   t("{value:+dec%} [additional] physical skill critical strike damage").output(
-    "CritDmgPct",
     (c) => ({
+      type: "CritDmgPct",
       value: c.value,
       addn: c.additional !== undefined,
-      modType: "physical_skill" as const,
+      modType: "physical_skill",
     }),
   ),
   t("{value:+dec%} [additional] cold skill critical strike damage").output(
-    "CritDmgPct",
     (c) => ({
+      type: "CritDmgPct",
       value: c.value,
       addn: c.additional !== undefined,
-      modType: "cold_skill" as const,
+      modType: "cold_skill",
     }),
   ),
   t("{value:+dec%} [additional] lightning skill critical strike damage").output(
-    "CritDmgPct",
     (c) => ({
+      type: "CritDmgPct",
       value: c.value,
       addn: c.additional !== undefined,
-      modType: "lightning_skill" as const,
+      modType: "lightning_skill",
     }),
   ),
   t("{value:+dec%} [additional] fire skill critical strike damage").output(
-    "CritDmgPct",
     (c) => ({
+      type: "CritDmgPct",
       value: c.value,
       addn: c.additional !== undefined,
-      modType: "fire_skill" as const,
+      modType: "fire_skill",
     }),
   ),
   t("{value:+dec%} [additional] erosion skill critical strike damage").output(
-    "CritDmgPct",
     (c) => ({
+      type: "CritDmgPct",
       value: c.value,
       addn: c.additional !== undefined,
-      modType: "erosion_skill" as const,
+      modType: "erosion_skill",
     }),
   ),
-  t("{value:+dec%} [additional] damage on critical strike").output(
-    "CritDmgPct",
-    (c) => ({
-      value: c.value,
-      addn: c.additional !== undefined,
-      modType: "global" as const,
-    }),
-  ),
+  t("{value:+dec%} [additional] damage on critical strike").output((c) => ({
+    type: "CritDmgPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+    modType: "global",
+  })),
   t("{value:+dec%} [additional] sentry skill critical strike damage").output(
-    "CritDmgPct",
     (c) => ({
+      type: "CritDmgPct",
       value: c.value,
       addn: c.additional !== undefined,
-      modType: "sentry_skill" as const,
+      modType: "sentry_skill",
     }),
   ),
   t(
     "{value:+dec%} [additional] [{modType:CritDmgModType}] critical strike damage",
-  ).output("CritDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "CritDmgPct",
     value: c.value,
     addn: c.additional !== undefined,
     modType: c.modType ?? "global",
   })),
   t("{value:+dec%} [additional] minion attack and cast speed").outputMany([
-    spec("MinionAspdPct", (c) => ({
+    spec((c) => ({
+      type: "MinionAspdPct",
       value: c.value,
       addn: c.additional !== undefined,
     })),
-    spec("MinionCspdPct", (c) => ({
+    spec((c) => ({
+      type: "MinionCspdPct",
       value: c.value,
       addn: c.additional !== undefined,
     })),
   ]),
-  t("{value:+dec%} [additional] minion attack speed").output(
-    "MinionAspdPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+dec%} [additional] minion cast speed").output(
-    "MinionCspdPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+dec%} [additional] minion critical strike rating").output(
-    "MinionCritRatingPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+int} minion critical strike rating").output(
-    "MinionFlatCritRating",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} [additional] minion critical strike damage").output(
-    "MinionCritDmgPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
+  t("{value:+dec%} [additional] minion attack speed").output((c) => ({
+    type: "MinionAspdPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] minion cast speed").output((c) => ({
+    type: "MinionCspdPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] minion critical strike rating").output((c) => ({
+    type: "MinionCritRatingPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+int} minion critical strike rating").output((c) => ({
+    type: "MinionFlatCritRating",
+    value: c.value,
+  })),
+  t("{value:+dec%} [additional] minion critical strike damage").output((c) => ({
+    type: "MinionCritDmgPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
   t(
     "{value:+dec%} [additional] minion {minionDmgModType:MinionDmgModType} damage",
-  ).output("MinionDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "MinionDmgPct",
     value: c.value,
     addn: c.additional !== undefined,
     minionDmgModType: c.minionDmgModType,
   })),
-  t("{value:+dec%} [additional] minion damage").output("MinionDmgPct", (c) => ({
+  t("{value:+dec%} [additional] minion damage").output((c) => ({
+    type: "MinionDmgPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
   t(
     "{value:+dec%} [additional] {minionDmgModType:MinionDmgModType} damage for minions",
-  ).output("MinionDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "MinionDmgPct",
     value: c.value,
     addn: c.additional !== undefined,
     minionDmgModType: c.minionDmgModType,
   })),
-  t("{value:+dec%} minion skill area").output("MinionSkillAreaPct", (c) => ({
+  t("{value:+dec%} minion skill area").output((c) => ({
+    type: "MinionSkillAreaPct",
     value: c.value,
   })),
-  t("{value:+dec%} minion max life").output("MinionMaxLifePct", (c) => ({
+  t("{value:+dec%} minion max life").output((c) => ({
+    type: "MinionMaxLifePct",
     value: c.value,
   })),
   t("{value:+dec%} {penType:ResPenType} penetration for minions").output(
-    "MinionResPenPct",
-    (c) => ({ value: c.value, penType: c.penType }),
+    (c) => ({ type: "MinionResPenPct", value: c.value, penType: c.penType }),
   ),
   t("{value:dec%} {penType:ResPenType} penetration for minions").output(
-    "MinionResPenPct",
-    (c) => ({ value: c.value, penType: c.penType }),
+    (c) => ({ type: "MinionResPenPct", value: c.value, penType: c.penType }),
   ),
   t(
     "{value:+dec%} elemental and erosion resistance penetration for minions",
-  ).output("MinionResPenPct", (c) => ({
+  ).output((c) => ({
+    type: "MinionResPenPct",
     value: c.value,
-    penType: "all" as const,
+    penType: "all",
   })),
   t("{value:+dec%} armor dmg mitigation penetration for minions").output(
-    "MinionArmorPenPct",
-    (c) => ({ value: c.value }),
+    (c) => ({ type: "MinionArmorPenPct", value: c.value }),
   ),
-  t("minions deal {value:dec%} additional damage to life").output(
-    "MinionDmgPct",
-    (c) => ({ value: c.value, addn: true }),
-  ),
-  t("{value:+dec%} chance for minions to inflict trauma").output(
-    "InflictTrauma",
-    () => ({}),
-  ),
-  t("{value:+dec%} additional max damage for minions").output(
-    "AddnMaxMinionDmgPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} chance for minions to deal double damage").output(
-    "MinionDoubleDmgChancePct",
-    (c) => ({ value: c.value }),
-  ),
+  t("minions deal {value:dec%} additional damage to life").output((c) => ({
+    type: "MinionDmgPct",
+    value: c.value,
+    addn: true,
+  })),
+  t("{value:+dec%} chance for minions to inflict trauma").output(() => ({
+    type: "InflictTrauma",
+  })),
+  t("{value:+dec%} additional max damage for minions").output((c) => ({
+    type: "AddnMaxMinionDmgPct",
+    value: c.value,
+  })),
+  t("{value:+dec%} chance for minions to deal double damage").output((c) => ({
+    type: "MinionDoubleDmgChancePct",
+    value: c.value,
+  })),
   t(
     "{minValue:+dec%} additional min physical damage, and {maxValue:+dec%} additional max physical damage",
   ).outputMany([
-    spec("AddnMinDmgPct", (c) => ({
+    spec((c) => ({
+      type: "AddnMinDmgPct",
       value: c.minValue,
-      addn: true as const,
-      dmgType: "physical" as const,
+      addn: true,
+      dmgType: "physical",
     })),
-    spec("AddnMaxDmgPct", (c) => ({
+    spec((c) => ({
+      type: "AddnMaxDmgPct",
       value: c.maxValue,
-      addn: true as const,
-      dmgType: "physical" as const,
+      addn: true,
+      dmgType: "physical",
     })),
   ]),
   t(
     "{value:+dec%} additional max {dmgType:DmgChunkType} damage to an enemy when they have at least {threshold:int} stack(s) of numbed",
-  ).output("AddnMaxDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "AddnMaxDmgPct",
     value: c.value,
-    dmgType: "lightning" as const,
-    addn: true as const,
+    dmgType: "lightning",
+    addn: true,
     condThreshold: {
       target: "enemy_numbed_stacks",
-      comparator: "gte" as const,
+      comparator: "gte",
       value: c.threshold,
     },
   })),
-  t("{value:+dec%} additional max damage").output("AddnMaxDmgPct", (c) => ({
+  t("{value:+dec%} additional max damage").output((c) => ({
+    type: "AddnMaxDmgPct",
     value: c.value,
-    addn: true as const,
+    addn: true,
   })),
-  t("{value:+dec%} additional min damage").output("AddnMinDmgPct", (c) => ({
+  t("{value:+dec%} additional min damage").output((c) => ({
+    type: "AddnMinDmgPct",
     value: c.value,
-    addn: true as const,
+    addn: true,
   })),
   t(
     "{value:+dec%} [additional] attack and cast speed when at full mana",
   ).outputMany([
-    spec("AspdPct", (c) => ({
+    spec((c) => ({
+      type: "AspdPct",
       value: c.value,
       addn: c.additional !== undefined,
       cond: "has_full_mana",
     })),
-    spec("CspdPct", (c) => ({
+    spec((c) => ({
+      type: "CspdPct",
       value: c.value,
       addn: c.additional !== undefined,
       cond: "has_full_mana",
@@ -714,28 +792,33 @@ export const allParsers = [
   t(
     "{value:+dec%} attack speed, cast speed, and movement speed when having hasten",
   ).outputMany([
-    spec("AspdPct", (c) => ({
+    spec((c) => ({
+      type: "AspdPct",
       value: c.value,
       addn: false,
       cond: "has_hasten",
     })),
-    spec("CspdPct", (c) => ({
+    spec((c) => ({
+      type: "CspdPct",
       value: c.value,
       addn: false,
       cond: "has_hasten",
     })),
-    spec("MovementSpeedPct", (c) => ({
+    spec((c) => ({
+      type: "MovementSpeedPct",
       value: c.value,
       addn: false,
       cond: "has_hasten",
     })),
   ]),
   t("{value:+dec%} [additional] attack and cast speed").outputMany([
-    spec("AspdPct", (c) => ({
+    spec((c) => ({
+      type: "AspdPct",
       value: c.value,
       addn: c.additional !== undefined,
     })),
-    spec("CspdPct", (c) => ({
+    spec((c) => ({
+      type: "CspdPct",
       value: c.value,
       addn: c.additional !== undefined,
     })),
@@ -743,12 +826,14 @@ export const allParsers = [
   t(
     "{value:+dec%} attack speed and movement speed for every {amt:dec%} of attack or spell block",
   ).outputMany([
-    spec("AspdPct", (c) => ({
+    spec((c) => ({
+      type: "AspdPct",
       value: c.value,
       addn: false,
       per: { stackable: "total_block_pct", amt: c.amt },
     })),
-    spec("MovementSpeedPct", (c) => ({
+    spec((c) => ({
+      type: "MovementSpeedPct",
       value: c.value,
       addn: false,
       per: { stackable: "total_block_pct", amt: c.amt },
@@ -756,103 +841,131 @@ export const allParsers = [
   ]),
   t(
     "{value:+dec%} additional attack speed when only {count:int} enemies are nearby",
-  ).output("AspdPct", (c) => ({
+  ).output((c) => ({
+    type: "AspdPct",
     value: c.value,
     addn: true,
     condThreshold: {
       target: "num_enemies_nearby",
-      comparator: "eq" as const,
+      comparator: "eq",
       value: c.count,
     },
   })),
   t(
     "{value:+dec%} additional attack speed if you have dealt a critical strike recently",
-  ).output("AspdPct", (c) => ({
+  ).output((c) => ({
+    type: "AspdPct",
     value: c.value,
     addn: true,
     cond: "has_crit_recently",
   })),
   t("{value:+dec%} additional attack speed while dual wielding").output(
-    "AspdPct",
-    (c) => ({ value: c.value, addn: true, cond: "is_dual_wielding" }),
+    (c) => ({
+      type: "AspdPct",
+      value: c.value,
+      addn: true,
+      cond: "is_dual_wielding",
+    }),
   ),
   t(
     "{value:+dec%} additional cast speed if you have dealt a critical strike recently",
-  ).output("CspdPct", (c) => ({
+  ).output((c) => ({
+    type: "CspdPct",
     value: c.value,
     addn: true,
     cond: "has_crit_recently",
   })),
-  t("{value:+dec%} cast speed when focus blessing is active").output(
-    "CspdPct",
-    (c) => ({ value: c.value, addn: false, cond: "has_focus_blessing" }),
-  ),
+  t("{value:+dec%} cast speed when focus blessing is active").output((c) => ({
+    type: "CspdPct",
+    value: c.value,
+    addn: false,
+    cond: "has_focus_blessing",
+  })),
   t(
     "{value:+dec%} additional attack speed when performing multistrikes",
-  ).output("AspdWhenMultistrikingPct", (c) => ({ value: c.value, addn: true })),
-  t("{value:+dec%} [additional] attack speed").output("AspdPct", (c) => ({
+  ).output((c) => ({
+    type: "AspdWhenMultistrikingPct",
+    value: c.value,
+    addn: true,
+  })),
+  t("{value:+dec%} [additional] attack speed").output((c) => ({
+    type: "AspdPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
   t(
     "{value:+dec%} additional cast speed per second when an elite is nearby, up to {limit:+dec%}",
-  ).output("CspdPct", (c) => ({
+  ).output((c) => ({
+    type: "CspdPct",
     value: c.value,
     addn: true,
     per: { stackable: "seconds_with_elite_nearby", valueLimit: c.limit },
     cond: "has_elites_nearby",
   })),
-  t("{value:+dec%} [additional] cast speed").output("CspdPct", (c) => ({
+  t("{value:+dec%} [additional] cast speed").output((c) => ({
+    type: "CspdPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} gear attack speed").output("GearAspdPct", (c) => ({
+  t("{value:+dec%} gear attack speed").output((c) => ({
+    type: "GearAspdPct",
     value: c.value,
   })),
-  t("{value:+dec%} fervor effect").output("FervorEffPct", (c) => ({
+  t("{value:+dec%} fervor effect").output((c) => ({
+    type: "FervorEffPct",
     value: c.value,
   })),
-  t("{value:+dec%} steep strike chance.").output(
-    "SteepStrikeChancePct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} steep strike chance").output(
-    "SteepStrikeChancePct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} [additional] steep strike damage").output(
-    "SteepStrikeDmgPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+dec%} [additional] sweep slash damage").output(
-    "SweepSlashDmgPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
+  t("{value:+dec%} steep strike chance.").output((c) => ({
+    type: "SteepStrikeChancePct",
+    value: c.value,
+  })),
+  t("{value:+dec%} steep strike chance").output((c) => ({
+    type: "SteepStrikeChancePct",
+    value: c.value,
+  })),
+  t("{value:+dec%} [additional] steep strike damage").output((c) => ({
+    type: "SteepStrikeDmgPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] sweep slash damage").output((c) => ({
+    type: "SweepSlashDmgPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
   t
     .multi([
       t("{value:+int} shadow quantity"),
       t("shadow quantity {value:+int}"),
     ])
-    .output("ShadowQuant", (c) => ({ value: c.value })),
-  t("{value:+dec%} [additional] shadow damage").output("ShadowDmgPct", (c) => ({
+    .output((c) => ({ type: "ShadowQuant", value: c.value })),
+  t("{value:+dec%} [additional] shadow damage").output((c) => ({
+    type: "ShadowDmgPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
   t(
     "adds {value:dec%} of {from:DmgChunkType} damage {(to|as)} {to:DmgChunkType} damage",
-  ).output("AddsDmgAsPct", (c) => ({ from: c.from, to: c.to, value: c.value })),
+  ).output((c) => ({
+    type: "AddsDmgAsPct",
+    from: c.from,
+    to: c.to,
+    value: c.value,
+  })),
   t(
     "converts {value:dec%} of {from:DmgChunkType} damage to {to:DmgChunkType} damage",
-  ).output("ConvertDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "ConvertDmgPct",
     from: c.from,
     to: c.to,
     value: c.value,
   })),
   t(
     "{value:+dec%} elemental resistance penetration when hitting an enemy with elemental damage, stacking up to {limit:int} times",
-  ).output("ResPenPct", (c) => ({
+  ).output((c) => ({
+    type: "ResPenPct",
     value: c.value,
-    penType: "elemental" as const,
+    penType: "elemental",
     per: {
       stackable: "has_hit_enemy_with_elemental_dmg_recently",
       amt: 1,
@@ -861,9 +974,10 @@ export const allParsers = [
   })),
   t(
     "{value:dec%} elemental resistance penetration every time you hit an enemy with elemental damage recently. stacks up to {limit:int} times",
-  ).output("ResPenPct", (c) => ({
+  ).output((c) => ({
+    type: "ResPenPct",
     value: c.value,
-    penType: "elemental" as const,
+    penType: "elemental",
     per: {
       stackable: "has_hit_enemy_with_elemental_dmg_recently",
       amt: 1,
@@ -871,262 +985,315 @@ export const allParsers = [
     },
   })),
   t("{value:+dec%} elemental and erosion resistance penetration").output(
-    "ResPenPct",
-    (c) => ({ value: c.value, penType: ALL }),
+    (c) => ({ type: "ResPenPct", value: c.value, penType: ALL }),
   ),
   t
     .multi([
       t("{value:+dec%} {penType:ResPenType} resistance penetration"),
       t("{value:+dec%} {penType:ResPenType} penetration"),
     ])
-    .output("ResPenPct", (c) => ({ value: c.value, penType: c.penType })),
-  t("{value:dec%} {penType:ResPenType} penetration").output(
-    "ResPenPct",
-    (c) => ({ value: c.value, penType: c.penType }),
-  ),
+    .output((c) => ({ type: "ResPenPct", value: c.value, penType: c.penType })),
+  t("{value:dec%} {penType:ResPenType} penetration").output((c) => ({
+    type: "ResPenPct",
+    value: c.value,
+    penType: c.penType,
+  })),
   t("damage penetrates {value:dec%} {penType:ResPenType} resistance").output(
-    "ResPenPct",
-    (c) => ({ value: c.value, penType: c.penType }),
+    (c) => ({ type: "ResPenPct", value: c.value, penType: c.penType }),
   ),
-  t("{value:+dec%} armor dmg mitigation penetration").output(
-    "ArmorPenPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:+dec%} armor dmg mitigation penetration").output((c) => ({
+    type: "ArmorPenPct",
+    value: c.value,
+  })),
   t("attack skills: a {value:+dec%} chance to deal double damage").output(
-    "DoubleDmgChancePct",
-    (c) => ({ value: c.value, doubleDmgModType: ATTACK }),
+    (c) => ({
+      type: "DoubleDmgChancePct",
+      value: c.value,
+      doubleDmgModType: ATTACK,
+    }),
   ),
-  t("{value:+dec%} chance for spells to deal double damage").output(
-    "DoubleDmgChancePct",
-    (c) => ({ value: c.value, doubleDmgModType: "spell" as const }),
-  ),
-  t("{value:+dec%} chance to deal double damage").output(
-    "DoubleDmgChancePct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:+dec%} chance for spells to deal double damage").output((c) => ({
+    type: "DoubleDmgChancePct",
+    value: c.value,
+    doubleDmgModType: "spell",
+  })),
+  t("{value:+dec%} chance to deal double damage").output((c) => ({
+    type: "DoubleDmgChancePct",
+    value: c.value,
+  })),
   t(
     "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks",
-  ).output("FlatDmgToAtks", (c) => ({
+  ).output((c) => ({
+    type: "FlatDmgToAtks",
     value: { min: c.min, max: c.max },
     dmgType: c.dmgType,
   })),
   t(
     "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to spells",
-  ).output("FlatDmgToSpells", (c) => ({
+  ).output((c) => ({
+    type: "FlatDmgToSpells",
     value: { min: c.min, max: c.max },
     dmgType: c.dmgType,
   })),
   t(
     "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to minions",
-  ).output("FlatDmgToMinions", (c) => ({
+  ).output((c) => ({
+    type: "FlatDmgToMinions",
     value: { min: c.min, max: c.max },
     dmgType: c.dmgType,
   })),
-  t("{value:+dec} max mana").output("MaxMana", (c) => ({ value: c.value })),
-  t("{value:+dec} mana per {amt:int} intelligence").output("MaxMana", (c) => ({
+  t("{value:+dec} max mana").output((c) => ({
+    type: "MaxMana",
+    value: c.value,
+  })),
+  t("{value:+dec} mana per {amt:int} intelligence").output((c) => ({
+    type: "MaxMana",
     value: c.value,
     per: { stackable: "int", amt: c.amt },
   })),
-  t("{value:+dec%} [additional] max mana").output("MaxManaPct", (c) => ({
+  t("{value:+dec%} [additional] max mana").output((c) => ({
+    type: "MaxManaPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} attack block chance").output(
-    "AttackBlockChancePct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} spell block chance").output("SpellBlockChancePct", (c) => ({
+  t("{value:+dec%} attack block chance").output((c) => ({
+    type: "AttackBlockChancePct",
+    value: c.value,
+  })),
+  t("{value:+dec%} spell block chance").output((c) => ({
+    type: "SpellBlockChancePct",
     value: c.value,
   })),
   t("{value:+dec%} attack and spell block chance").outputMany([
-    spec("AttackBlockChancePct", (c) => ({ value: c.value })),
-    spec("SpellBlockChancePct", (c) => ({ value: c.value })),
+    spec((c) => ({ type: "AttackBlockChancePct", value: c.value })),
+    spec((c) => ({ type: "SpellBlockChancePct", value: c.value })),
   ]),
-  t("block ratio is set to {value:dec%}").output(
-    "BlockRatioPctOverride",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} block ratio").output("BlockRatioPct", (c) => ({
+  t("block ratio is set to {value:dec%}").output((c) => ({
+    type: "BlockRatioPctOverride",
     value: c.value,
   })),
-  t("{value:+dec%} block ratio when holding a shield").output(
-    "BlockRatioPct",
-    (c) => ({ value: c.value, cond: "holding_shield" }),
-  ),
-  t("{value:+dec} max life").output("MaxLife", (c) => ({ value: c.value })),
-  t("{value:+dec%} [additional] max life").output("MaxLifePct", (c) => ({
-    value: c.value,
-    addn: c.additional !== undefined,
-  })),
-  t("{value:+dec} max energy shield").output("MaxEnergyShield", (c) => ({
+  t("{value:+dec%} block ratio").output((c) => ({
+    type: "BlockRatioPct",
     value: c.value,
   })),
-  t("{value:+dec%} [additional] max energy shield").output(
-    "MaxEnergyShieldPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:dec} max energy shield").output("MaxEnergyShield", (c) => ({
+  t("{value:+dec%} block ratio when holding a shield").output((c) => ({
+    type: "BlockRatioPct",
+    value: c.value,
+    cond: "holding_shield",
+  })),
+  t("{value:+dec} max life").output((c) => ({
+    type: "MaxLife",
     value: c.value,
   })),
-  t("{value:+dec%} [additional] armor while moving").output(
-    "ArmorPct",
-    (c) => ({
-      value: c.value,
-      addn: c.additional !== undefined,
-      cond: "is_moving",
-    }),
-  ),
-  t("{value:+dec%} [additional] evasion while moving").output(
-    "EvasionPct",
-    (c) => ({
-      value: c.value,
-      addn: c.additional !== undefined,
-      cond: "is_moving",
-    }),
-  ),
-  t("{value:+dec%} [additional] armor").output("ArmorPct", (c) => ({
+  t("{value:+dec%} [additional] max life").output((c) => ({
+    type: "MaxLifePct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} [additional] evasion").output("EvasionPct", (c) => ({
+  t("{value:+dec} max energy shield").output((c) => ({
+    type: "MaxEnergyShield",
+    value: c.value,
+  })),
+  t("{value:+dec%} [additional] max energy shield").output((c) => ({
+    type: "MaxEnergyShieldPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} defense").output("DefensePct", (c) => ({ value: c.value })),
-  t("{value:+int} gear energy shield").output("GearEnergyShield", (c) => ({
+  t("{value:dec} max energy shield").output((c) => ({
+    type: "MaxEnergyShield",
     value: c.value,
   })),
-  t("{value:+dec%} gear energy shield").output("GearEnergyShieldPct", (c) => ({
+  t("{value:+dec%} [additional] armor while moving").output((c) => ({
+    type: "ArmorPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+    cond: "is_moving",
+  })),
+  t("{value:+dec%} [additional] evasion while moving").output((c) => ({
+    type: "EvasionPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+    cond: "is_moving",
+  })),
+  t("{value:+dec%} [additional] armor").output((c) => ({
+    type: "ArmorPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] evasion").output((c) => ({
+    type: "EvasionPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} defense").output((c) => ({
+    type: "DefensePct",
     value: c.value,
   })),
-  t("{value:+int} gear armor").output("GearArmor", (c) => ({ value: c.value })),
-  t("{value:+dec%} energy shield charge speed").output(
-    "EnergyShieldChargeSpeedPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+int} gear evasion").output("GearEvasion", (c) => ({
+  t("{value:+int} gear energy shield").output((c) => ({
+    type: "GearEnergyShield",
+    value: c.value,
+  })),
+  t("{value:+dec%} gear energy shield").output((c) => ({
+    type: "GearEnergyShieldPct",
+    value: c.value,
+  })),
+  t("{value:+int} gear armor").output((c) => ({
+    type: "GearArmor",
+    value: c.value,
+  })),
+  t("{value:+dec%} energy shield charge speed").output((c) => ({
+    type: "EnergyShieldChargeSpeedPct",
+    value: c.value,
+  })),
+  t("{value:+int} gear evasion").output((c) => ({
+    type: "GearEvasion",
     value: c.value,
   })),
   t("{value:+int} armor and evasion").outputMany([
-    spec("Armor", (c) => ({ value: c.value })),
-    spec("Evasion", (c) => ({ value: c.value })),
+    spec((c) => ({ type: "Armor", value: c.value })),
+    spec((c) => ({ type: "Evasion", value: c.value })),
   ]),
-  t("{value:+int} armor").output("Armor", (c) => ({ value: c.value })),
-  t("{value:+int} evasion").output("Evasion", (c) => ({ value: c.value })),
+  t("{value:+int} armor").output((c) => ({ type: "Armor", value: c.value })),
+  t("{value:+int} evasion").output((c) => ({
+    type: "Evasion",
+    value: c.value,
+  })),
   t("{value:+dec%} max elemental and erosion resistance").outputMany([
-    spec("MaxResistancePct", (c) => ({
+    spec((c) => ({
+      type: "MaxResistancePct",
       value: c.value,
-      resType: "elemental" as const,
+      resType: "elemental",
     })),
-    spec("MaxResistancePct", (c) => ({
+    spec((c) => ({
+      type: "MaxResistancePct",
       value: c.value,
-      resType: "erosion" as const,
+      resType: "erosion",
     })),
   ]),
   t("{value:+dec%} elemental and erosion resistance").outputMany([
-    spec("ResistancePct", (c) => ({
+    spec((c) => ({
+      type: "ResistancePct",
       value: c.value,
-      resType: "elemental" as const,
+      resType: "elemental",
     })),
-    spec("ResistancePct", (c) => ({
+    spec((c) => ({
+      type: "ResistancePct",
       value: c.value,
-      resType: "erosion" as const,
+      resType: "erosion",
     })),
   ]),
-  t("{value:+dec%} max {resType:ResType} resistance").output(
-    "MaxResistancePct",
-    (c) => ({ value: c.value, resType: c.resType }),
-  ),
+  t("{value:+dec%} max {resType:ResType} resistance").output((c) => ({
+    type: "MaxResistancePct",
+    value: c.value,
+    resType: c.resType,
+  })),
   t(
     "{value:+dec%} {resType:ResType} resistance per stack of repentance",
-  ).output("ResistancePct", (c) => ({
+  ).output((c) => ({
+    type: "ResistancePct",
     value: c.value,
     resType: c.resType,
     per: { stackable: "repentance" },
   })),
   t("{value:+dec%} {resType:ResType} resistance per {amt:int} stats").output(
-    "ResistancePct",
     (c) => ({
+      type: "ResistancePct",
       value: c.value,
       resType: c.resType,
       per: { stackable: "stat", amt: c.amt },
     }),
   ),
-  t("{value:+dec%} {resType:ResType} resistance").output(
-    "ResistancePct",
-    (c) => ({ value: c.value, resType: c.resType }),
-  ),
-  t("{value:+dec%} chance to avoid elemental ailments").output(
-    "AvoidElementalAilmentsChancePct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} chance to avoid elemental ailment").output(
-    "AvoidElementalAilmentsChancePct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} chance to avoid spell damage").output(
-    "AvoidSpellDmgChancePct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} critical strike damage mitigation").output(
-    "CriticalStrikeDmgMitigationPct",
-    (c) => ({ value: c.value }),
-  ),
-
-  t("{value:+dec%} energy shield regain").output(
-    "EnergyShieldRegainPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:dec%} energy shield regain").output(
-    "EnergyShieldRegainPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} life regain").output("LifeRegainPct", (c) => ({
+  t("{value:+dec%} {resType:ResType} resistance").output((c) => ({
+    type: "ResistancePct",
+    value: c.value,
+    resType: c.resType,
+  })),
+  t("{value:+dec%} chance to avoid elemental ailments").output((c) => ({
+    type: "AvoidElementalAilmentsChancePct",
     value: c.value,
   })),
-  t("{value:dec%} life regain").output("LifeRegainPct", (c) => ({
+  t("{value:+dec%} chance to avoid elemental ailment").output((c) => ({
+    type: "AvoidElementalAilmentsChancePct",
+    value: c.value,
+  })),
+  t("{value:+dec%} chance to avoid spell damage").output((c) => ({
+    type: "AvoidSpellDmgChancePct",
+    value: c.value,
+  })),
+  t("{value:+dec%} critical strike damage mitigation").output((c) => ({
+    type: "CriticalStrikeDmgMitigationPct",
+    value: c.value,
+  })),
+
+  t("{value:+dec%} energy shield regain").output((c) => ({
+    type: "EnergyShieldRegainPct",
+    value: c.value,
+  })),
+  t("{value:dec%} energy shield regain").output((c) => ({
+    type: "EnergyShieldRegainPct",
+    value: c.value,
+  })),
+  t("{value:+dec%} life regain").output((c) => ({
+    type: "LifeRegainPct",
+    value: c.value,
+  })),
+  t("{value:dec%} life regain").output((c) => ({
+    type: "LifeRegainPct",
     value: c.value,
   })),
   t("{value:+dec} {statModType:StatWord} per {amt:int} level(s)")
     .enum("StatWord", StatWordMapping)
-    .output("Stat", (c) => ({
+    .output((c) => ({
+      type: "Stat",
       value: c.value,
       statModType: c.statModType,
       per: { stackable: "level", amt: c.amt },
     })),
   t("{value:+dec} {statModType:StatWord}")
     .enum("StatWord", StatWordMapping)
-    .output("Stat", (c) => ({ value: c.value, statModType: c.statModType })),
-  t("{value:+dec} [to] all stats").output("Stat", (c) => ({
+    .output((c) => ({
+      type: "Stat",
+      value: c.value,
+      statModType: c.statModType,
+    })),
+  t("{value:+dec} [to] all stats").output((c) => ({
+    type: "Stat",
     value: c.value,
-    statModType: "all" as const,
+    statModType: "all",
   })),
   t("{value:+dec%} {statModType:StatWord}")
     .enum("StatWord", StatWordMapping)
-    .output("StatPct", (c) => ({ value: c.value, statModType: c.statModType })),
-  t("{value:+dec%} all stats").output("StatPct", (c) => ({
+    .output((c) => ({
+      type: "StatPct",
+      value: c.value,
+      statModType: c.statModType,
+    })),
+  t("{value:+dec%} all stats").output((c) => ({
+    type: "StatPct",
     value: c.value,
-    statModType: "all" as const,
+    statModType: "all",
   })),
   t(
     "{dmgValue:+dec%} additional cold damage and {penValue:+dec%} cold penetration when you have at least {threshold:int} stack(s) of focus blessing",
   ).outputMany([
-    spec("DmgPct", (c) => ({
+    spec((c) => ({
+      type: "DmgPct",
       value: c.dmgValue,
-      dmgModType: "cold" as const,
+      dmgModType: "cold",
       addn: true,
       condThreshold: {
         target: "focus_blessing",
-        comparator: "gte" as const,
+        comparator: "gte",
         value: c.threshold,
       },
     })),
-    spec("ResPenPct", (c) => ({
+    spec((c) => ({
+      type: "ResPenPct",
       value: c.penValue,
-      penType: "cold" as const,
+      penType: "cold",
       condThreshold: {
         target: "focus_blessing",
-        comparator: "gte" as const,
+        comparator: "gte",
         value: c.threshold,
       },
     })),
@@ -1134,22 +1301,24 @@ export const allParsers = [
   t(
     "{dmgValue:+dec%} additional fire damage and {penValue:+dec%} fire penetration when you have at least {threshold:int} stack(s) of tenacity blessing",
   ).outputMany([
-    spec("DmgPct", (c) => ({
+    spec((c) => ({
+      type: "DmgPct",
       value: c.dmgValue,
-      dmgModType: "fire" as const,
+      dmgModType: "fire",
       addn: true,
       condThreshold: {
         target: "tenacity_blessing",
-        comparator: "gte" as const,
+        comparator: "gte",
         value: c.threshold,
       },
     })),
-    spec("ResPenPct", (c) => ({
+    spec((c) => ({
+      type: "ResPenPct",
       value: c.penValue,
-      penType: "fire" as const,
+      penType: "fire",
       condThreshold: {
         target: "tenacity_blessing",
-        comparator: "gte" as const,
+        comparator: "gte",
         value: c.threshold,
       },
     })),
@@ -1157,163 +1326,174 @@ export const allParsers = [
   t(
     "{dmgValue:+dec%} additional lightning damage and {penValue:+dec%} lightning penetration when you have at least {threshold:int} stack(s) of agility blessing",
   ).outputMany([
-    spec("DmgPct", (c) => ({
+    spec((c) => ({
+      type: "DmgPct",
       value: c.dmgValue,
-      dmgModType: "lightning" as const,
+      dmgModType: "lightning",
       addn: true,
       condThreshold: {
         target: "agility_blessing",
-        comparator: "gte" as const,
+        comparator: "gte",
         value: c.threshold,
       },
     })),
-    spec("ResPenPct", (c) => ({
+    spec((c) => ({
+      type: "ResPenPct",
       value: c.penValue,
-      penType: "lightning" as const,
+      penType: "lightning",
       condThreshold: {
         target: "agility_blessing",
-        comparator: "gte" as const,
+        comparator: "gte",
         value: c.threshold,
       },
     })),
   ]),
-  t("max focus blessing stacks {value:+int}").output(
-    "MaxFocusBlessing",
-    (c) => ({ value: c.value }),
-  ),
-  t("max agility blessing stacks {value:+int}").output(
-    "MaxAgilityBlessing",
-    (c) => ({ value: c.value }),
-  ),
-  t("max tenacity blessing stacks {value:+int}").output(
-    "MaxTenacityBlessing",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+int} to max focus blessing stacks").output(
-    "MaxFocusBlessing",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+int} to max agility blessing stacks").output(
-    "MaxAgilityBlessing",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+int} to max tenacity blessing stacks").output(
-    "MaxTenacityBlessing",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+int} max repentance stacks").output("MaxRepentance", (c) => ({
+  t("max focus blessing stacks {value:+int}").output((c) => ({
+    type: "MaxFocusBlessing",
+    value: c.value,
+  })),
+  t("max agility blessing stacks {value:+int}").output((c) => ({
+    type: "MaxAgilityBlessing",
+    value: c.value,
+  })),
+  t("max tenacity blessing stacks {value:+int}").output((c) => ({
+    type: "MaxTenacityBlessing",
+    value: c.value,
+  })),
+  t("{value:+int} to max focus blessing stacks").output((c) => ({
+    type: "MaxFocusBlessing",
+    value: c.value,
+  })),
+  t("{value:+int} to max agility blessing stacks").output((c) => ({
+    type: "MaxAgilityBlessing",
+    value: c.value,
+  })),
+  t("{value:+int} to max tenacity blessing stacks").output((c) => ({
+    type: "MaxTenacityBlessing",
+    value: c.value,
+  })),
+  t("{value:+int} max repentance stacks").output((c) => ({
+    type: "MaxRepentance",
     value: c.value,
   })),
   // TODO: Properly implement condition threshold for movement speed (add to ConditionThresholdTarget type
   // and handle in offense.ts). For now, we parse the value but ignore the threshold condition.
   t(
     "{value:+int} max spell burst when movement speed is not higher than {threshold:int%} of base",
-  ).output("MaxSpellBurst", (c) => ({ value: c.value })),
-  t("{value:+int} max spell burst").output("MaxSpellBurst", (c) => ({
+  ).output((c) => ({ type: "MaxSpellBurst", value: c.value })),
+  t("{value:+int} max spell burst").output((c) => ({
+    type: "MaxSpellBurst",
     value: c.value,
   })),
-  t("{value:+int} to max spell burst when having squidnova").output(
-    "MaxSpellBurst",
-    (c) => ({ value: c.value, cond: "has_squidnova" }),
-  ),
+  t("{value:+int} to max spell burst when having squidnova").output((c) => ({
+    type: "MaxSpellBurst",
+    value: c.value,
+    cond: "has_squidnova",
+  })),
   t(
     "activating spell burst with at least {stacks:int} stack(s) of max spell burst grants {grant:int} stack of squidnova",
-  ).output("GeneratesSquidnova", () => ({})),
-  t("{value:+dec%} squidnova effect").output("SquidnovaEffPct", (c) => ({
+  ).output(() => ({ type: "GeneratesSquidnova" })),
+  t("{value:+dec%} squidnova effect").output((c) => ({
+    type: "SquidnovaEffPct",
     value: c.value,
   })),
   t("{value:+dec%} additional spell damage when having squidnova").output(
-    "DmgPct",
     (c) => ({
+      type: "DmgPct",
       value: c.value,
-      dmgModType: "spell" as const,
+      dmgModType: "spell",
       addn: true,
       cond: "has_squidnova",
     }),
   ),
-  t("{value:+dec%} [additional] spell burst charge speed").output(
-    "SpellBurstChargeSpeedPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
+  t("{value:+dec%} [additional] spell burst charge speed").output((c) => ({
+    type: "SpellBurstChargeSpeedPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
   t(
     "{value:+dec%} additional hit damage for skills cast by spell burst",
-  ).output("SpellBurstAdditionalDmgPct", (c) => ({
+  ).output((c) => ({
+    type: "SpellBurstAdditionalDmgPct",
     value: c.value,
-    addn: true as const,
+    addn: true,
   })),
-  t("{value:+dec%} chance to multistrike").output(
-    "MultistrikeChancePct",
-    (c) => ({ value: c.value }),
-  ),
-  t("Multistrikes deal {value:dec%} increasing damage").output(
-    "MultistrikeIncDmgPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:+dec%} chance to multistrike").output((c) => ({
+    type: "MultistrikeChancePct",
+    value: c.value,
+  })),
+  t("Multistrikes deal {value:dec%} increasing damage").output((c) => ({
+    type: "MultistrikeIncDmgPct",
+    value: c.value,
+  })),
   t(
     "{value:dec%} of the bonuses and additional bonuses to cast speed is also applied to spell burst charge speed",
-  ).output("PlaySafe", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "PlaySafe", value: c.value })),
   t(
     "{value:dec%} of the projectile speed bonus is also applied to the additional bonus for projectile damage",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: 1,
-    dmgModType: "projectile" as const,
+    dmgModType: "projectile",
     addn: true,
     per: { stackable: "proj_speed_pct", amt: 100 / c.value },
   })),
   t(
     "{value:+int} max channeled stacks when equipped in the left ring slot",
-  ).output("MaxChannel", (c) => ({
+  ).output((c) => ({
+    type: "MaxChannel",
     value: c.value,
     cond: "equipped_in_left_ring_slot",
   })),
-  t("max channeled stacks {value:+int}").output("MaxChannel", (c) => ({
+  t("max channeled stacks {value:+int}").output((c) => ({
+    type: "MaxChannel",
     value: c.value,
   })),
-  t("{value:+int} to max channeled stacks").output("MaxChannel", (c) => ({
+  t("{value:+int} to max channeled stacks").output((c) => ({
+    type: "MaxChannel",
     value: c.value,
   })),
-  t("has hasten").output("HasHasten", () => ({})),
+  t("has hasten").output(() => ({ type: "HasHasten" })),
   t(
     "damage becomes lucky and at least {stacks:int} stack(s) of spell burst charge is consumed when spell burst is activated",
-  ).output("LuckyDmg", () => ({})),
-  t("have fervor").output("HaveFervor", () => ({})),
-  t("has {value:int} point(s) of fixed fervor rating").output(
-    "FixedFervorPts",
-    (c) => ({ value: c.value }),
-  ),
+  ).output(() => ({ type: "LuckyDmg" })),
+  t("have fervor").output(() => ({ type: "HaveFervor" })),
+  t("has {value:int} point(s) of fixed fervor rating").output((c) => ({
+    type: "FixedFervorPts",
+    value: c.value,
+  })),
   t(
     "gains a stack of torment when dealing damage to enemies with max affliction",
-  ).output("GeneratesTorment", () => ({})),
-  t("gains a stack of fortitude when using a melee skill").output(
-    "GeneratesFortitude",
-    () => ({}),
-  ),
+  ).output(() => ({ type: "GeneratesTorment" })),
+  t("gains a stack of fortitude when using a melee skill").output(() => ({
+    type: "GeneratesFortitude",
+  })),
   t(
     "{value:+dec%} chance to gain a stack of fortitude when using a melee skill",
-  ).output("GeneratesFortitude", () => ({})),
-  t("{value:+dec%} chance to gain blur when reaping").output(
-    "GeneratesBlur",
-    (c) => ({ value: c.value }),
-  ),
-  t("gains {value:int} stack(s) of focus blessing when reaping").output(
-    "GeneratesFocusBlessing",
-    () => ({}),
-  ),
+  ).output(() => ({ type: "GeneratesFortitude" })),
+  t("{value:+dec%} chance to gain blur when reaping").output((c) => ({
+    type: "GeneratesBlur",
+    value: c.value,
+  })),
+  t("gains {value:int} stack(s) of focus blessing when reaping").output(() => ({
+    type: "GeneratesFocusBlessing",
+  })),
   t(
     "gains {value:int} stack(s) of focus blessing when activating spell burst",
-  ).output("GeneratesFocusBlessing", () => ({})),
+  ).output(() => ({ type: "GeneratesFocusBlessing" })),
   t(
     "{value:+dec%} chance to gain {stacks:int} stack of focus blessing when casting a summon skill. interval: {interval:int} s",
-  ).output("GeneratesFocusBlessing", () => ({})),
+  ).output(() => ({ type: "GeneratesFocusBlessing" })),
   t(
     "{value:+dec%} chance to gain a stack of focus blessing upon inflicting damage to a frostbitten enemy. interval: {interval:dec}s",
-  ).output("GeneratesFocusBlessing", () => ({})),
+  ).output(() => ({ type: "GeneratesFocusBlessing" })),
   t(
     "{value:+dec%} chance to gain {stacks:int} stack of tenacity blessing when casting a skill. interval: {interval:int} s",
-  ).output("GeneratesTenacityBlessing", () => ({})),
+  ).output(() => ({ type: "GeneratesTenacityBlessing" })),
   t(
     "{value:+dec%} additional {modType:DmgModType} damage for every stack of focus blessing",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: c.modType,
     addn: true,
@@ -1321,490 +1501,564 @@ export const allParsers = [
   })),
   t(
     "{value:+dec%} additional {modType:DmgModType} damage per stack of focus blessing owned",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
     dmgModType: c.modType,
     addn: true,
     per: { stackable: "focus_blessing" },
   })),
   t("{value:+dec%} blessing duration").outputMany([
-    spec("FocusBlessingDurationPct", (c) => ({ value: c.value })),
-    spec("AgilityBlessingDurationPct", (c) => ({ value: c.value })),
-    spec("TenacityBlessingDurationPct", (c) => ({ value: c.value })),
+    spec((c) => ({ type: "FocusBlessingDurationPct", value: c.value })),
+    spec((c) => ({ type: "AgilityBlessingDurationPct", value: c.value })),
+    spec((c) => ({ type: "TenacityBlessingDurationPct", value: c.value })),
   ]),
-  t("{value:+dec%} focus blessing duration").output(
-    "FocusBlessingDurationPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:+dec%} focus blessing duration").output((c) => ({
+    type: "FocusBlessingDurationPct",
+    value: c.value,
+  })),
   t("gains {value:int} stack of repentance when gaining any blessing").output(
-    "GeneratesRepentance",
-    (c) => ({ value: c.value }),
+    (c) => ({ type: "GeneratesRepentance", value: c.value }),
   ),
-  t("{value:dec%} chance to gain spell aggression on defeat").output(
-    "GeneratesSpellAggression",
-    () => ({}),
-  ),
-  t("{value:dec%} chance to gain attack aggression on defeat").output(
-    "GeneratesAttackAggression",
-    () => ({}),
-  ),
-  t("gains spell aggression when casting a spell skill").output(
-    "GeneratesSpellAggression",
-    () => ({}),
-  ),
-  t("has spell aggression").output("HasSpellAggression", () => ({})),
-  t("has attack aggression").output("HasAttackAggression", () => ({})),
+  t("{value:dec%} chance to gain spell aggression on defeat").output(() => ({
+    type: "GeneratesSpellAggression",
+  })),
+  t("{value:dec%} chance to gain attack aggression on defeat").output(() => ({
+    type: "GeneratesAttackAggression",
+  })),
+  t("gains spell aggression when casting a spell skill").output(() => ({
+    type: "GeneratesSpellAggression",
+  })),
+  t("has spell aggression").output(() => ({ type: "HasSpellAggression" })),
+  t("has attack aggression").output(() => ({ type: "HasAttackAggression" })),
   t(
     "{value:+dec%} spell aggression effect for every main spell skill cast recently. stacks up to {limit:int} times",
-  ).output("SpellAggressionEffPct", (c) => ({
+  ).output((c) => ({
+    type: "SpellAggressionEffPct",
     value: c.value,
     per: { stackable: "num_main_spell_skills_cast_recently", limit: c.limit },
   })),
-  t("{value:+dec%} spell aggression effect").output(
-    "SpellAggressionEffPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:+dec%} spell aggression effect").output((c) => ({
+    type: "SpellAggressionEffPct",
+    value: c.value,
+  })),
   t(
     "{value:dec%} chance to gain a barrier for every {dist:int} m you move",
-  ).output("GeneratesBarrier", () => ({})),
+  ).output(() => ({ type: "GeneratesBarrier" })),
   t(
     "{value:+dec%} movement speed if you have used a mobility skill recently",
-  ).output("MovementSpeedPct", (c) => ({
+  ).output((c) => ({
+    type: "MovementSpeedPct",
     value: c.value,
     addn: false,
     cond: "has_used_mobility_skill_recently",
   })),
   t(
     "{value:+dec%} movement speed when an elite is nearby, up to {limit:+dec%}",
-  ).output("MovementSpeedPct", (c) => ({
+  ).output((c) => ({
+    type: "MovementSpeedPct",
     value: c.value,
     addn: false,
     per: { stackable: "seconds_with_elite_nearby", valueLimit: c.limit },
     cond: "has_elites_nearby",
   })),
-  t("{value:+dec%} [additional] movement speed").output(
-    "MovementSpeedPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:dec%} movement speed").output("MovementSpeedPct", (c) => ({
+  t("{value:+dec%} [additional] movement speed").output((c) => ({
+    type: "MovementSpeedPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:dec%} movement speed").output((c) => ({
+    type: "MovementSpeedPct",
     value: c.value,
     addn: false,
   })),
-  t("{value:+dec%} [additional] projectile speed").output(
-    "ProjSpdPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:dec%} projectile speed").output("ProjSpdPct", (c) => ({
+  t("{value:+dec%} [additional] projectile speed").output((c) => ({
+    type: "ProjSpdPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:dec%} projectile speed").output((c) => ({
+    type: "ProjSpdPct",
     value: c.value,
     addn: false,
   })),
-  t("{value:+int} [to] all skills' level[s]").output("SkillLevel", (c) => ({
+  t("{value:+int} [to] all skills' level[s]").output((c) => ({
+    type: "SkillLevel",
     value: c.value,
-    skillLevelType: "all" as const,
+    skillLevelType: "all",
   })),
-  t("{value:+int} to attack skill level").output("SkillLevel", (c) => ({
+  t("{value:+int} to attack skill level").output((c) => ({
+    type: "SkillLevel",
     value: c.value,
-    skillLevelType: "attack" as const,
+    skillLevelType: "attack",
   })),
-  t("{value:+int} spirit magus skill level").output("SkillLevel", (c) => ({
+  t("{value:+int} spirit magus skill level").output((c) => ({
+    type: "SkillLevel",
     value: c.value,
-    skillLevelType: "spirit_magus" as const,
+    skillLevelType: "spirit_magus",
   })),
-  t("{value:+int} {skillLevelType:SkillLevelType} skill level").output(
-    "SkillLevel",
-    (c) => ({ value: c.value, skillLevelType: c.skillLevelType }),
-  ),
+  t("{value:+int} {skillLevelType:SkillLevelType} skill level").output((c) => ({
+    type: "SkillLevel",
+    value: c.value,
+    skillLevelType: c.skillLevelType,
+  })),
   t(
     "for every {amt:dec%} life sealed when at full mana, main skill's level \\+1",
-  ).output("SkillLevel", (c) => ({
+  ).output((c) => ({
+    type: "SkillLevel",
     value: 1,
-    skillLevelType: "main" as const,
+    skillLevelType: "main",
     per: { stackable: "sealed_life_pct", amt: c.amt },
     cond: "has_full_mana",
   })),
-  t("{value:+int} skill cost").output("SkillCost", (c) => ({ value: c.value })),
-  t("{value:+int} to hero trait level").output("HeroTraitLevel", (c) => ({
+  t("{value:+int} skill cost").output((c) => ({
+    type: "SkillCost",
     value: c.value,
   })),
-  t("{min:int} - {max:int} physical damage").output("GearBasePhysDmg", (c) => ({
+  t("{value:+int} to hero trait level").output((c) => ({
+    type: "HeroTraitLevel",
+    value: c.value,
+  })),
+  t("{min:int} - {max:int} physical damage").output((c) => ({
+    type: "GearBasePhysDmg",
     value: (c.min + c.max) / 2,
   })),
-  t("{value:int} critical strike rating").output("GearBaseCritRating", (c) => ({
+  t("{value:int} critical strike rating").output((c) => ({
+    type: "GearBaseCritRating",
     value: c.value,
   })),
-  t("{value:dec} attack speed").output("GearBaseAttackSpeed", (c) => ({
+  t("{value:dec} attack speed").output((c) => ({
+    type: "GearBaseAttackSpeed",
     value: c.value,
   })),
   t(
     "reaps {duration:dec} s of damage over time when dealing damage over time. the effect has a {cooldown:dec} s cooldown against the same target",
-  ).output("Reap", (c) => ({ duration: c.duration, cooldown: c.cooldown })),
+  ).output((c) => ({
+    type: "Reap",
+    duration: c.duration,
+    cooldown: c.cooldown,
+  })),
   t(
     "reaps {duration:dec} s of damage over time when {(dealing damage over time|inflicting ignite|inflicting trauma|inflicting wilt)}. the effect has a {cooldown:dec} s recovery time against the same target",
-  ).output("Reap", (c) => ({ duration: c.duration, cooldown: c.cooldown })),
-  t("{value:+dec%} reaping duration").output("ReapDurationPct", (c) => ({
+  ).output((c) => ({
+    type: "Reap",
+    duration: c.duration,
+    cooldown: c.cooldown,
+  })),
+  t("{value:+dec%} reaping duration").output((c) => ({
+    type: "ReapDurationPct",
     value: c.value,
   })),
   t("{value:+dec%} [additional] reaping cooldown recovery speed").output(
-    "ReapCdrPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+dec%} reaping recovery speed").output("ReapCdrPct", (c) => ({
-    value: c.value,
-    addn: false,
-  })),
-  t("{value:+dec%} cooldown recovery speed").output("CdrPct", (c) => ({
-    value: c.value,
-  })),
-  t("{value:+dec} affliction inflicted per second").output(
-    "AfflictionInflictedPerSec",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} [additional] affliction effect").output(
-    "AfflictionEffectPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+dec%} [additional] curse effect").output("CurseEffPct", (c) => ({
-    value: c.value,
-    addn: c.additional !== undefined,
-  })),
-  t("{value:+dec%} [additional] origin of spirit magus effect").output(
-    "SpiritMagusOriginEffPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+dec%} curse duration").output("CurseDurationPct", (c) => ({
-    value: c.value,
-  })),
-  t("{value:+dec%} [additional] curse skill area").output(
-    "SkillAreaPct",
     (c) => ({
+      type: "ReapCdrPct",
       value: c.value,
-      skillAreaModType: "curse" as const,
       addn: c.additional !== undefined,
     }),
   ),
-  t("{value:+dec%} [additional] skill area").output("SkillAreaPct", (c) => ({
+  t("{value:+dec%} reaping recovery speed").output((c) => ({
+    type: "ReapCdrPct",
+    value: c.value,
+    addn: false,
+  })),
+  t("{value:+dec%} cooldown recovery speed").output((c) => ({
+    type: "CdrPct",
+    value: c.value,
+  })),
+  t("{value:+dec} affliction inflicted per second").output((c) => ({
+    type: "AfflictionInflictedPerSec",
+    value: c.value,
+  })),
+  t("{value:+dec%} [additional] affliction effect").output((c) => ({
+    type: "AfflictionEffectPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] curse effect").output((c) => ({
+    type: "CurseEffPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] origin of spirit magus effect").output((c) => ({
+    type: "SpiritMagusOriginEffPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} curse duration").output((c) => ({
+    type: "CurseDurationPct",
+    value: c.value,
+  })),
+  t("{value:+dec%} [additional] curse skill area").output((c) => ({
+    type: "SkillAreaPct",
+    value: c.value,
+    skillAreaModType: "curse",
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] skill area").output((c) => ({
+    type: "SkillAreaPct",
     value: c.value,
     skillAreaModType: GLOBAL,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} skill effect duration").output(
-    "SkillEffDurationPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} [additional] sealed mana compensation").output(
-    "SealedManaCompPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:dec%} sealed mana compensation").output(
-    "SealedManaCompPct",
-    (c) => ({ value: c.value, addn: false }),
-  ),
+  t("{value:+dec%} skill effect duration").output((c) => ({
+    type: "SkillEffDurationPct",
+    value: c.value,
+  })),
+  t("{value:+dec%} [additional] sealed mana compensation").output((c) => ({
+    type: "SealedManaCompPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:dec%} sealed mana compensation").output((c) => ({
+    type: "SealedManaCompPct",
+    value: c.value,
+    addn: false,
+  })),
   t("{value:?dec%} sealed mana compensation for spirit magus skills").output(
-    "SealedManaCompPct",
     (c) => ({
+      type: "SealedManaCompPct",
       value: c.value,
       addn: false,
-      skillType: "spirit_magus" as const,
+      skillType: "spirit_magus",
     }),
   ),
   t("{value:+dec%} sealed mana compensation for {skillName:words}").output(
-    "SealedManaCompPct",
-    (c) => ({ value: c.value, addn: false, skillName: c.skillName }),
+    (c) => ({
+      type: "SealedManaCompPct",
+      value: c.value,
+      addn: false,
+      skillName: c.skillName,
+    }),
   ),
   t(
     "{value:+dec%} [additional] {skillName:words} sealed mana compensation",
-  ).output("SealedManaCompPct", (c) => ({
+  ).output((c) => ({
+    type: "SealedManaCompPct",
     value: c.value,
     addn: c.additional !== undefined,
     skillName: c.skillName,
   })),
   t(
     "additionally settles {value:dec%} of the remaining total damage when reaping, then removes all damage over time acting on the target",
-  ).output("ReapPurificationPct", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "ReapPurificationPct", value: c.value })),
   t(
     "when a spell hit inflicts fire damage, {value:+dec%} cold, lightning, and erosion resistance for the target for {dur:dec} s",
   ).outputMany([
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "cold" as const,
+      resType: "cold",
       cond: "sages_insight_fire",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "lightning" as const,
+      resType: "lightning",
       cond: "sages_insight_fire",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "erosion" as const,
+      resType: "erosion",
       cond: "sages_insight_fire",
     })),
   ]),
   t(
     "when a spell hit inflicts cold damage, {value:+dec%} fire, lightning, and erosion resistance for the target for {dur:dec} s",
   ).outputMany([
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "fire" as const,
+      resType: "fire",
       cond: "sages_insight_cold",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "lightning" as const,
+      resType: "lightning",
       cond: "sages_insight_cold",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "erosion" as const,
+      resType: "erosion",
       cond: "sages_insight_cold",
     })),
   ]),
   t(
     "when a spell hit inflicts lightning damage, {value:+dec%} fire, cold, and erosion resistance for the target for {dur:dec} s",
   ).outputMany([
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "fire" as const,
+      resType: "fire",
       cond: "sages_insight_lightning",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "cold" as const,
+      resType: "cold",
       cond: "sages_insight_lightning",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "erosion" as const,
+      resType: "erosion",
       cond: "sages_insight_lightning",
     })),
   ]),
   t(
     "when a spell hit inflicts erosion damage, {value:+dec%} fire, cold, and lightning resistance for the target for {dur:dec} s",
   ).outputMany([
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "fire" as const,
+      resType: "fire",
       cond: "sages_insight_erosion",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "cold" as const,
+      resType: "cold",
       cond: "sages_insight_erosion",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "lightning" as const,
+      resType: "lightning",
       cond: "sages_insight_erosion",
     })),
   ]),
-  t("{value:+int} to max frostbite rating").output(
-    "MaxFrostbiteRating",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} chance to inflict frostbite").output(
-    "InflictFrostbitePct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} freeze duration").output("FreezeDurationPct", (c) => ({
+  t("{value:+int} to max frostbite rating").output((c) => ({
+    type: "MaxFrostbiteRating",
     value: c.value,
   })),
-  t("{value:+dec%} ailment duration").output("AilmentDurationPct", (c) => ({
+  t("{value:+dec%} chance to inflict frostbite").output((c) => ({
+    type: "InflictFrostbitePct",
     value: c.value,
   })),
-  t("{value:+dec%} wilt duration").output("WiltDurationPct", (c) => ({
+  t("{value:+dec%} freeze duration").output((c) => ({
+    type: "FreezeDurationPct",
     value: c.value,
   })),
-  t("{value:+dec%} wilt chance").output("WiltChancePct", (c) => ({
+  t("{value:+dec%} ailment duration").output((c) => ({
+    type: "AilmentDurationPct",
     value: c.value,
   })),
-  t("{value:+dec%} trauma duration").output("TraumaDurationPct", (c) => ({
+  t("{value:+dec%} wilt duration").output((c) => ({
+    type: "WiltDurationPct",
     value: c.value,
   })),
-  t("{value:+dec%} [additional] ignite duration").output(
-    "IgniteDurationPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("inflicts frail on spell hit").output("InflictFrail", () => ({})),
-  t("{value:+dec%} chance to inflict trauma").output(
-    "InflictTrauma",
-    () => ({}),
-  ),
-  t("{value:+dec%} [additional] wilt damage").output("WiltDmgPct", (c) => ({
+  t("{value:+dec%} wilt chance").output((c) => ({
+    type: "WiltChancePct",
+    value: c.value,
+  })),
+  t("{value:+dec%} trauma duration").output((c) => ({
+    type: "TraumaDurationPct",
+    value: c.value,
+  })),
+  t("{value:+dec%} [additional] ignite duration").output((c) => ({
+    type: "IgniteDurationPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} [additional] trauma damage").output("TraumaDmgPct", (c) => ({
+  t("inflicts frail on spell hit").output(() => ({ type: "InflictFrail" })),
+  t("{value:+dec%} chance to inflict trauma").output(() => ({
+    type: "InflictTrauma",
+  })),
+  t("{value:+dec%} [additional] wilt damage").output((c) => ({
+    type: "WiltDmgPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} [additional] ignite damage").output("IgniteDmgPct", (c) => ({
+  t("{value:+dec%} [additional] trauma damage").output((c) => ({
+    type: "TraumaDmgPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} [additional] ignite damage").output((c) => ({
+    type: "IgniteDmgPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
   t("inflicts cold infiltration when dealing damage to frozen enemies").output(
-    "InflictsInfiltration",
-    () => ({ infiltrationType: "cold" as const }),
+    () => ({ type: "InflictsInfiltration", infiltrationType: "cold" }),
   ),
   t(
     "inflicts {infiltrationType:InfiltrationType} infiltration on critical strike",
-  ).output("InflictsInfiltration", (c) => ({
+  ).output((c) => ({
+    type: "InflictsInfiltration",
     infiltrationType: c.infiltrationType as InfiltrationType,
   })),
   t(
     "when minions deal damage, inflicts {infiltrationType:InfiltrationType} infiltration. interval for each enemy: {interval:int} s",
-  ).output("InflictsInfiltration", (c) => ({
+  ).output((c) => ({
+    type: "InflictsInfiltration",
     infiltrationType: c.infiltrationType as InfiltrationType,
   })),
   t(
     "when dealing damage, inflicts {infiltrationType:InfiltrationType} infiltration. interval for each enemy: {interval:int} s",
-  ).output("InflictsInfiltration", (c) => ({
+  ).output((c) => ({
+    type: "InflictsInfiltration",
     infiltrationType: c.infiltrationType as InfiltrationType,
   })),
   t(
     "inflicts {infiltrationType:InfiltrationType} infiltration when dealing damage. interval for each enemy: {interval:int} s",
-  ).output("InflictsInfiltration", (c) => ({
+  ).output((c) => ({
+    type: "InflictsInfiltration",
     infiltrationType: c.infiltrationType as InfiltrationType,
   })),
   t(
     "{value:+dec%} {infiltrationType:InfiltrationType} infiltration effect",
-  ).output("InfiltrationEffPct", (c) => ({
+  ).output((c) => ({
+    type: "InfiltrationEffPct",
     value: c.value,
     infiltrationType: c.infiltrationType as InfiltrationType,
   })),
   t(
     "spell skills on hit have a {chancePct:dec%} chance to spawn a pulse, dealing true damage equal to {pctOfHitDmg:dec%} of hit damage. interval: {interval:dec}s",
-  ).output("SpellRipple", (c) => ({
+  ).output((c) => ({
+    type: "SpellRipple",
     chancePct: c.chancePct,
     pctOfHitDmg: c.pctOfHitDmg,
   })),
   t(
     "{value:+int%} all resistance when the enemy has max affliction",
   ).outputMany([
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "fire" as const,
+      resType: "fire",
       cond: "enemy_at_max_affliction",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "cold" as const,
+      resType: "cold",
       cond: "enemy_at_max_affliction",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "lightning" as const,
+      resType: "lightning",
       cond: "enemy_at_max_affliction",
     })),
-    spec("EnemyRes", (c) => ({
+    spec((c) => ({
+      type: "EnemyRes",
       value: c.value,
-      resType: "erosion" as const,
+      resType: "erosion",
       cond: "enemy_at_max_affliction",
     })),
   ]),
-  t("{value:+int} jumps").output("Jump", (c) => ({ value: c.value })),
+  t("{value:+int} jumps").output((c) => ({ type: "Jump", value: c.value })),
   t(
     "upon dealing damage to a cursed target, there is a {value:+dec%} chance to paralyze it",
-  ).output("InflictParalysisPct", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "InflictParalysisPct", value: c.value })),
   t("{value:dec%} chance to gain agility blessing on critical strike").output(
-    "GeneratesAgilityBlessing",
-    () => ({}),
+    () => ({ type: "GeneratesAgilityBlessing" }),
   ),
-  t("gains a stack agility blessing when using mobility skills").output(
-    "GeneratesAgilityBlessing",
-    () => ({}),
-  ),
+  t("gains a stack agility blessing when using mobility skills").output(() => ({
+    type: "GeneratesAgilityBlessing",
+  })),
   t(
     "{value:+dec%} chance to gain {stacks:int} stack of agility blessing on defeat",
-  ).output("GeneratesAgilityBlessing", () => ({})),
+  ).output(() => ({ type: "GeneratesAgilityBlessing" })),
   t(
     "{value:+dec%} chance to gain {stacks:int} stack of focus blessing on defeat",
-  ).output("GeneratesFocusBlessing", () => ({})),
+  ).output(() => ({ type: "GeneratesFocusBlessing" })),
   t(
     "{value:+dec%} chance to gain {stacks:int} stack of tenacity blessing on defeat",
-  ).output("GeneratesTenacityBlessing", () => ({})),
+  ).output(() => ({ type: "GeneratesTenacityBlessing" })),
   t(
     "{value:+dec%} chance to gain blur when inflicting crowd control effects",
-  ).output("GeneratesBlur", (c) => ({ value: c.value })),
-  t("{value:+dec%} numbed effect").output("NumbedEffPct", (c) => ({
+  ).output((c) => ({ type: "GeneratesBlur", value: c.value })),
+  t("{value:+dec%} numbed effect").output((c) => ({
+    type: "NumbedEffPct",
     value: c.value,
   })),
   t(
     "{value:+dec%} additional numbed effect on critical strike with {dmgType:DmgChunkType} damage for {dur:int} s",
-  ).output("NumbedEffPct", (c) => ({
+  ).output((c) => ({
+    type: "NumbedEffPct",
     value: c.value,
     cond: "has_crit_recently",
   })),
-  t("inflicts {value:int} additional stack(s) of numbed").output(
-    "InflictNumbed",
-    () => ({}),
-  ),
+  t("inflicts {value:int} additional stack(s) of numbed").output(() => ({
+    type: "InflictNumbed",
+  })),
   t(
     "inflicts {stacks:int} additional stack(s) of numbed per {value:+dec%} numbed chance",
-  ).output("InflictNumbed", () => ({})),
-  t("{value:+dec%} numbed chance").output("NumbedChancePct", (c) => ({
+  ).output(() => ({ type: "InflictNumbed" })),
+  t("{value:+dec%} numbed chance").output((c) => ({
+    type: "NumbedChancePct",
     value: c.value,
   })),
   t("{chance:+dec%} numbed chance, and {effect:dec%} numbed effect").outputMany(
     [
-      spec("NumbedChancePct", (c) => ({ value: c.chance })),
-      spec("NumbedEffPct", (c) => ({ value: c.effect })),
+      spec((c) => ({ type: "NumbedChancePct", value: c.chance })),
+      spec((c) => ({ type: "NumbedEffPct", value: c.effect })),
     ],
   ),
-  t("{value:+dec%} mark effect").output("MarkEffPct", (c) => ({
+  t("{value:+dec%} mark effect").output((c) => ({
+    type: "MarkEffPct",
     value: c.value,
   })),
-  t("{value:+dec%} chance to mark the enemy on critical strike").output(
-    "InflictsMark",
-    () => ({}),
-  ),
+  t("{value:+dec%} chance to mark the enemy on critical strike").output(() => ({
+    type: "InflictsMark",
+  })),
   t(
     "regenerates {value:dec%} mana per second {(when|while)} focus blessing is active",
-  ).output("ManaRegenPerSecPct", (c) => ({
+  ).output((c) => ({
+    type: "ManaRegenPerSecPct",
     value: c.value,
     cond: "has_focus_blessing",
   })),
-  t("{value:+dec%} mana regeneration speed").output(
-    "ManaRegenSpeedPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:+dec%} mana regeneration speed").output((c) => ({
+    type: "ManaRegenSpeedPct",
+    value: c.value,
+  })),
   t("{value:+int%} additional damage taken from cursed enemies").output(
-    "DmgTakenPct",
-    (c) => ({ value: c.value, cond: "enemy_is_cursed" }),
+    (c) => ({ type: "DmgTakenPct", value: c.value, cond: "enemy_is_cursed" }),
   ),
-  t("{value:+dec%} additional skill cost").output("SkillCostPct", (c) => ({
+  t("{value:+dec%} additional skill cost").output((c) => ({
+    type: "SkillCostPct",
     value: c.value,
     addn: true,
   })),
-  t("you and minions deal lucky damage against numbed enemies").output(
-    "LuckyDmg",
-    () => ({ cond: "enemy_numbed" }),
-  ),
-  t("lucky critical strike").output("LuckyCrit", () => ({})),
+  t("you and minions deal lucky damage against numbed enemies").output(() => ({
+    type: "LuckyDmg",
+    cond: "enemy_numbed",
+  })),
+  t("lucky critical strike").output(() => ({ type: "LuckyCrit" })),
   // Joined Force (core talent)
   t(
     "off-hand weapons do not participate in attacks while dual wielding",
-  ).output("JoinedForceDisableOffhand", () => ({})),
+  ).output(() => ({ type: "JoinedForceDisableOffhand" })),
   t(
     "adds {value:dec%} of the damage of the off-hand weapon to the final damage of the main-hand weapon",
-  ).output("JoinedForceAddOffhandToMainhandPct", (c) => ({ value: c.value })),
+  ).output((c) => ({
+    type: "JoinedForceAddOffhandToMainhandPct",
+    value: c.value,
+  })),
   // Conductive - changes Numbed to provide additional Lightning Damage taken
   t(
     "changes the base effect of numbed to: {value:+dec%} additional lightning damage taken",
-  ).output("Conductive", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "Conductive", value: c.value })),
   // Tradeoff mods (Impermanence core talent)
   t(
     "{value:+dec%} additional attack speed when dexterity is no less than strength",
-  ).output("TradeoffDexGteStrAspdPct", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "TradeoffDexGteStrAspdPct", value: c.value })),
   t(
     "{value:+dec%} additional attack damage when strength is no less than dexterity",
-  ).output("TradeoffStrGteDexDmgPct", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "TradeoffStrGteDexDmgPct", value: c.value })),
   // Gear-specific mods
   t(
     "{value:+dec%} [{modType:CritRatingModType}] critical strike rating for this gear",
-  ).output("GearCritRatingPct", (c) => ({ value: c.value })),
+  ).output((c) => ({ type: "GearCritRatingPct", value: c.value })),
   t(
     "adds {min:int} - {max:int} {modType:GearDmgModType} damage to the gear",
-  ).output("FlatGearDmg", (c) => ({
+  ).output((c) => ({
+    type: "FlatGearDmg",
     value: { min: c.min, max: c.max },
     modType: c.modType as
       | "physical"
@@ -1814,418 +2068,449 @@ export const allParsers = [
       | "erosion"
       | "elemental",
   })),
-  t("{value:+dec%} gear physical damage").output("GearPhysDmgPct", (c) => ({
+  t("{value:+dec%} gear physical damage").output((c) => ({
+    type: "GearPhysDmgPct",
     value: c.value,
   })),
   // Legendary gear mods
   t("the main stat base no longer additionally increases damage").output(
-    "DisableMainStatDmg",
-    () => ({}),
+    () => ({ type: "DisableMainStatDmg" }),
   ),
   t(
     "randomly selects a type of elemental damage on hit, and only elemental damage of this type can be dealt. other elements cannot deal damage. the lower the flat damage percentage of an elemental damage, the higher the chance of it being chosen",
-  ).output("TrinitySingleElement", () => ({})),
+  ).output(() => ({ type: "TrinitySingleElement" })),
   t(
     "gains elemental resistance penetration equal to your minimum effective elemental resistance",
-  ).output("TrinityElePen", () => ({})),
-  t("damage types cannot be converted").output(
-    "TrinityNoConversion",
-    () => ({}),
-  ),
+  ).output(() => ({ type: "TrinityElePen" })),
+  t("damage types cannot be converted").output(() => ({
+    type: "TrinityNoConversion",
+  })),
   t(
     "any hit dealing elemental damage is guaranteed to deal {value:int}x elemental damage",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: (c.value - 1) * 100,
-    dmgModType: "elemental" as const,
+    dmgModType: "elemental",
     addn: true,
   })),
   t(
     "{value:+dec%} additional {dmgType:DmgChunkType} damage per {amt:int} {stat:StatWord}",
   )
     .enum("StatWord", StatWordMapping)
-    .output("DmgPct", (c) => ({
+    .output((c) => ({
+      type: "DmgPct",
       value: c.value,
       dmgModType: c.dmgType,
       addn: true,
       per: { stackable: c.stat, amt: c.amt },
     })),
-  t("{value:+int} Max Pure Heart Stacks").output("MaxPureHeartStacks", (c) => ({
+  t("{value:+int} Max Pure Heart Stacks").output((c) => ({
+    type: "MaxPureHeartStacks",
     value: c.value,
   })),
   t("{value:+dec%} additional damage taken when Pure Heart is active").output(
-    "DmgTakenPct",
-    (c) => ({ value: c.value }),
+    (c) => ({ type: "DmgTakenPct", value: c.value }),
   ),
   t(
     "converts {value:dec%} of {from:DmgChunkType} damage taken to {to:DmgChunkType} damage",
-  ).output("ConvertDmgTakenPct", (c) => ({
+  ).output((c) => ({
+    type: "ConvertDmgTakenPct",
     value: c.value,
     from: c.from,
     to: c.to,
   })),
-  t("{value:+dec%} [additional] aura effect").output("AuraEffPct", (c) => ({
+  t("{value:+dec%} [additional] aura effect").output((c) => ({
+    type: "AuraEffPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} {skillName:words} aura [effect]").output(
-    "AuraEffPct",
-    (c) => ({ value: c.value, skillName: c.skillName }),
-  ),
-  t("{mana:+dec%} max mana. {cost:+int} skill cost").outputMany([
-    spec("MaxManaPct", (c) => ({ value: c.mana, addn: false })),
-    spec("SkillCost", (c) => ({ value: c.cost })),
-  ]),
-  t("{value:+dec%} [additional] projectile damage").output("DmgPct", (c) => ({
+  t("{value:+dec%} {skillName:words} aura [effect]").output((c) => ({
+    type: "AuraEffPct",
     value: c.value,
-    dmgModType: "projectile" as const,
+    skillName: c.skillName,
+  })),
+  t("{mana:+dec%} max mana. {cost:+int} skill cost").outputMany([
+    spec((c) => ({ type: "MaxManaPct", value: c.mana, addn: false })),
+    spec((c) => ({ type: "SkillCost", value: c.cost })),
+  ]),
+  t("{value:+dec%} [additional] projectile damage").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: "projectile",
     addn: c.additional !== undefined,
   })),
   t(
     "projectile damage increases with the distance traveled, dealing up to {value:+dec%} damage to distant enemies",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "projectile" as const,
+    dmgModType: "projectile",
     addn: true,
     cond: "target_enemy_is_distant",
   })),
-  t("projectile quantity {value:+int}").output("Projectile", (c) => ({
+  t("projectile quantity {value:+int}").output((c) => ({
+    type: "Projectile",
     value: c.value,
   })),
-  t("nearby enemies within {distance:int} m have frail").output(
-    "InflictFrail",
-    () => ({}),
-  ),
-  t("inflicts frail when dealing spell damage").output(
-    "InflictFrail",
-    () => ({}),
-  ),
+  t("nearby enemies within {distance:int} m have frail").output(() => ({
+    type: "InflictFrail",
+  })),
+  t("inflicts frail when dealing spell damage").output(() => ({
+    type: "InflictFrail",
+  })),
   t(
     "{(the main skill is|main skill is)} supported by [a] lv. {level:int} {skillName:words}",
-  ).output("MainSkillSupportedBy", (c) => ({
+  ).output((c) => ({
+    type: "MainSkillSupportedBy",
     skillName: c.skillName,
     level: c.level,
   })),
-  t("regenerates {value:dec%} mana per second while moving").output(
-    "ManaRegenPerSecPct",
-    (c) => ({ value: c.value, cond: "is_moving" }),
-  ),
+  t("regenerates {value:dec%} mana per second while moving").output((c) => ({
+    type: "ManaRegenPerSecPct",
+    value: c.value,
+    cond: "is_moving",
+  })),
   t("regenerates {value:dec%} [of] life per second while moving").output(
-    "LifeRegenPerSecPct",
-    (c) => ({ value: c.value, cond: "is_moving" }),
+    (c) => ({ type: "LifeRegenPerSecPct", value: c.value, cond: "is_moving" }),
   ),
   t(
     "regenerates {value:dec%} life per second when taking damage over time",
-  ).output("LifeRegenPerSecPct", (c) => ({
+  ).output((c) => ({
+    type: "LifeRegenPerSecPct",
     value: c.value,
     cond: "taking_damage_over_time",
   })),
   t("restores {value:dec%} energy shield per second while moving").output(
-    "EnergyShieldRegenPerSecPct",
-    (c) => ({ value: c.value, cond: "is_moving" }),
+    (c) => ({
+      type: "EnergyShieldRegenPerSecPct",
+      value: c.value,
+      cond: "is_moving",
+    }),
   ),
-  t("regenerates {value:dec%} life per second").output(
-    "LifeRegenPerSecPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("regenerates {value:int} life per second").output(
-    "FlatLifeRegenPerSec",
-    (c) => ({ value: c.value }),
-  ),
+  t("regenerates {value:dec%} life per second").output((c) => ({
+    type: "LifeRegenPerSecPct",
+    value: c.value,
+  })),
+  t("regenerates {value:int} life per second").output((c) => ({
+    type: "FlatLifeRegenPerSec",
+    value: c.value,
+  })),
   t(
     "minion damage penetrates {value:dec%} {penType:ResPenType} resistance",
-  ).output("MinionResPenPct", (c) => ({ value: c.value, penType: c.penType })),
-  t("min channeled stacks {value:+int}").output("MinChannel", (c) => ({
+  ).output((c) => ({
+    type: "MinionResPenPct",
+    value: c.value,
+    penType: c.penType,
+  })),
+  t("min channeled stacks {value:+int}").output((c) => ({
+    type: "MinChannel",
     value: c.value,
   })),
-  t("max terra charge stacks {value:+int}").output(
-    "MaxTerraChargeStack",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} terra charge recovery speed").output(
-    "TerraChargeRecoverySpeedPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("max terra quantity {value:+int}").output("MaxTerraQuant", (c) => ({
+  t("max terra charge stacks {value:+int}").output((c) => ({
+    type: "MaxTerraChargeStack",
     value: c.value,
   })),
-  t("max sentry quantity {value:+int}").output("MaxSentryQuant", (c) => ({
+  t("{value:+dec%} terra charge recovery speed").output((c) => ({
+    type: "TerraChargeRecoverySpeedPct",
+    value: c.value,
+  })),
+  t("max terra quantity {value:+int}").output((c) => ({
+    type: "MaxTerraQuant",
+    value: c.value,
+  })),
+  t("max sentry quantity {value:+int}").output((c) => ({
+    type: "MaxSentryQuant",
     value: c.value,
   })),
   t("you can apply {value:int} additional tangle(s) to enemies").output(
-    "MaxTangleQuantPerEnemy",
-    (c) => ({ value: c.value }),
+    (c) => ({ type: "MaxTangleQuantPerEnemy", value: c.value }),
   ),
-  t("{value:+int} max tangle quantity").output("MaxTangleQuant", (c) => ({
+  t("{value:+int} max tangle quantity").output((c) => ({
+    type: "MaxTangleQuant",
     value: c.value,
   })),
-  t("has dormant entanglement").output("HasDormantEntanglement", () => ({})),
+  t("has dormant entanglement").output(() => ({
+    type: "HasDormantEntanglement",
+  })),
   t
     .multi([
       t("{value:+int} command per second"),
       t("+ {value:int} command per second"),
     ])
-    .output("CommandPerSec", (c) => ({ value: c.value })),
-  t("{value:+int} max fortitude stacks").output("MaxFortitudeStack", (c) => ({
+    .output((c) => ({ type: "CommandPerSec", value: c.value })),
+  t("{value:+int} max fortitude stacks").output((c) => ({
+    type: "MaxFortitudeStack",
     value: c.value,
   })),
   t("gains attack aggression when minions land a critical strike").output(
-    "GeneratesAttackAggression",
-    () => ({}),
+    () => ({ type: "GeneratesAttackAggression" }),
   ),
-  t("gains attack aggression when casting an attack skill").output(
-    "GeneratesAttackAggression",
-    () => ({}),
-  ),
-  t("adds {min:int} - {max:int} base wilt damage").output(
-    "BaseWiltFlatDmg",
-    (c) => ({ value: (c.min + c.max) / 2 }),
-  ),
-  t("adds {min:int} - {max:int} base trauma damage").output(
-    "BaseTraumaFlatDmg",
-    (c) => ({ value: (c.min + c.max) / 2 }),
-  ),
-  t("adds {min:int} - {max:int} base ignite damage").output(
-    "BaseIgniteFlatDmg",
-    (c) => ({ value: (c.min + c.max) / 2 }),
-  ),
+  t("gains attack aggression when casting an attack skill").output(() => ({
+    type: "GeneratesAttackAggression",
+  })),
+  t("adds {min:int} - {max:int} base wilt damage").output((c) => ({
+    type: "BaseWiltFlatDmg",
+    value: (c.min + c.max) / 2,
+  })),
+  t("adds {min:int} - {max:int} base trauma damage").output((c) => ({
+    type: "BaseTraumaFlatDmg",
+    value: (c.min + c.max) / 2,
+  })),
+  t("adds {min:int} - {max:int} base ignite damage").output((c) => ({
+    type: "BaseIgniteFlatDmg",
+    value: (c.min + c.max) / 2,
+  })),
   t("{value:dec%} chance to gain blur per {dist:int} m you move").output(
-    "GeneratesBlur",
-    (c) => ({ value: c.value }),
+    (c) => ({ type: "GeneratesBlur", value: c.value }),
   ),
-  t("{value:dec%} of damage is taken from mana before life").output(
-    "ManaBeforeLifePct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:dec%} of damage is taken from mana before life").output((c) => ({
+    type: "ManaBeforeLifePct",
+    value: c.value,
+  })),
   // Immunities
-  t("immune to blinding").output("ImmuneToBlinding", () => ({})),
-  t("immune to elemental ailments").output(
-    "ImmuneToElementalAilments",
-    () => ({}),
-  ),
-  t("immune to frostbite").output("ImmuneToFrostbite", () => ({})),
-  t("immune to ignite").output("ImmuneToIgnite", () => ({})),
-  t("immune to numbed").output("ImmuneToNumbed", () => ({})),
-  t("immune to paralysis").output("ImmuneToParalysis", () => ({})),
-  t("immune to slow").output("ImmuneToSlow", () => ({})),
-  t("immune to trauma").output("ImmuneToTrauma", () => ({})),
-  t("immune to weaken").output("ImmuneToWeaken", () => ({})),
-  t("immune to wilt").output("ImmuneToWilt", () => ({})),
-  t("immune to crowd control effects").output(
-    "ImmuneToCrowdControl",
-    () => ({}),
-  ),
-  t("immune to curse").output("ImmuneToCurse", () => ({})),
-  t("eliminate enemies under {value:dec%} life on hit").output(
-    "EliminationPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("immune to blinding").output(() => ({ type: "ImmuneToBlinding" })),
+  t("immune to elemental ailments").output(() => ({
+    type: "ImmuneToElementalAilments",
+  })),
+  t("immune to frostbite").output(() => ({ type: "ImmuneToFrostbite" })),
+  t("immune to ignite").output(() => ({ type: "ImmuneToIgnite" })),
+  t("immune to numbed").output(() => ({ type: "ImmuneToNumbed" })),
+  t("immune to paralysis").output(() => ({ type: "ImmuneToParalysis" })),
+  t("immune to slow").output(() => ({ type: "ImmuneToSlow" })),
+  t("immune to trauma").output(() => ({ type: "ImmuneToTrauma" })),
+  t("immune to weaken").output(() => ({ type: "ImmuneToWeaken" })),
+  t("immune to wilt").output(() => ({ type: "ImmuneToWilt" })),
+  t("immune to crowd control effects").output(() => ({
+    type: "ImmuneToCrowdControl",
+  })),
+  t("immune to curse").output(() => ({ type: "ImmuneToCurse" })),
+  t("eliminate enemies under {value:dec%} life on hit").output((c) => ({
+    type: "EliminationPct",
+    value: c.value,
+  })),
   t("eliminates enemies under {value:dec%} life upon inflicting damage").output(
-    "EliminationPct",
-    (c) => ({ value: c.value }),
+    (c) => ({ type: "EliminationPct", value: c.value }),
   ),
   t(
     "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks per {amt:int} {statModType:StatWord}",
   )
     .enum("StatWord", StatWordMapping)
-    .output("FlatDmgToAtks", (c) => ({
+    .output((c) => ({
+      type: "FlatDmgToAtks",
       value: { min: c.min, max: c.max },
       dmgType: c.dmgType,
       per: { stackable: c.statModType, amt: c.amt },
     })),
   t(
     "adds {min:int} - {max:int} {dmgType:DmgChunkType} damage to attacks per {amt:int} armor",
-  ).output("FlatDmgToAtks", (c) => ({
+  ).output((c) => ({
+    type: "FlatDmgToAtks",
     value: { min: c.min, max: c.max },
     dmgType: c.dmgType,
     per: { stackable: "armor", amt: c.amt },
   })),
   t(
     "{value:+dec%} additional damage over time taken when having at least {threshold:int} armor",
-  ).output("DmgTakenPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgTakenPct",
     value: c.value,
     addn: true,
-    dmgTakenType: "damage_over_time" as const,
-    condThreshold: {
-      target: "armor",
-      comparator: "gte" as const,
-      value: c.threshold,
-    },
+    dmgTakenType: "damage_over_time",
+    condThreshold: { target: "armor", comparator: "gte", value: c.threshold },
   })),
   t(
     "{value:+dec%} additional damage over time taken when having at least {threshold:int} evasion",
-  ).output("DmgTakenPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgTakenPct",
     value: c.value,
     addn: true,
-    dmgTakenType: "damage_over_time" as const,
-    condThreshold: {
-      target: "evasion",
-      comparator: "gte" as const,
-      value: c.threshold,
-    },
+    dmgTakenType: "damage_over_time",
+    condThreshold: { target: "evasion", comparator: "gte", value: c.threshold },
   })),
   t(
     "{value:+dec%} additional damage over time taken when you have at least {threshold:int} max energy shield",
-  ).output("DmgTakenPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgTakenPct",
     value: c.value,
     addn: true,
-    dmgTakenType: "damage_over_time" as const,
+    dmgTakenType: "damage_over_time",
     condThreshold: {
       target: "energy_shield",
-      comparator: "gte" as const,
+      comparator: "gte",
       value: c.threshold,
     },
   })),
-  t("{value:+dec%} additional physical damage taken").output(
-    "DmgTakenPct",
-    (c) => ({ value: c.value, addn: true, dmgTakenType: "physical" as const }),
-  ),
-  t("{value:+dec%} additional damage dealt by nearby enemies").output(
-    "DmgTakenPct",
-    (c) => ({ value: c.value, addn: true, cond: "target_enemy_is_nearby" }),
-  ),
+  t("{value:+dec%} additional physical damage taken").output((c) => ({
+    type: "DmgTakenPct",
+    value: c.value,
+    addn: true,
+    dmgTakenType: "physical",
+  })),
+  t("{value:+dec%} additional damage dealt by nearby enemies").output((c) => ({
+    type: "DmgTakenPct",
+    value: c.value,
+    addn: true,
+    cond: "target_enemy_is_nearby",
+  })),
   // MUST come before non-curse triggers, or else the Curse keyword will be
   // captured by {skillName:words}
   t(
     "triggers lv. {level:int} {skillName1:words} curse and {skillName2:words} curse when a minion deals damage. cooldown: {cooldown:dec} s",
   ).outputMany([
-    spec("TriggersSkill", (c) => ({ skillName: c.skillName1, level: c.level })),
-    spec("TriggersSkill", (c) => ({ skillName: c.skillName2, level: c.level })),
+    spec((c) => ({
+      type: "TriggersSkill",
+      skillName: c.skillName1,
+      level: c.level,
+    })),
+    spec((c) => ({
+      type: "TriggersSkill",
+      skillName: c.skillName2,
+      level: c.level,
+    })),
   ]),
   t(
     "triggers lv. {level:int} {skillName:words} curse when minions deal damage. cooldown: {cooldown:dec} s",
-  ).output("TriggersSkill", (c) => ({
+  ).output((c) => ({
+    type: "TriggersSkill",
     skillName: c.skillName,
     level: c.level,
   })),
   t(
     "triggers lv. {level:int} {skillName:words} curse upon inflicting damage. cooldown: {cooldown:dec} s",
-  ).output("TriggersSkill", (c) => ({
+  ).output((c) => ({
+    type: "TriggersSkill",
     skillName: c.skillName,
     level: c.level,
   })),
   t(
     "triggers lv. {level:int} {skillName:words} upon starting to move. interval: {interval:dec} s",
-  ).output("TriggersSkill", (c) => ({
+  ).output((c) => ({
+    type: "TriggersSkill",
     skillName: c.skillName,
     level: c.level,
   })),
   t(
     "triggers lv. {level:int} {skillName:words} while standing still. interval: {interval:dec} s",
-  ).output("TriggersSkill", (c) => ({
+  ).output((c) => ({
+    type: "TriggersSkill",
     skillName: c.skillName,
     level: c.level,
   })),
   t(
     "triggers lv. {level:int} {skillName:words} when moving. interval: {interval:dec} s",
-  ).output("TriggersSkill", (c) => ({
+  ).output((c) => ({
+    type: "TriggersSkill",
     skillName: c.skillName,
     level: c.level,
   })),
-  t("support skill's mana multiplier is set to {value:dec%}.").output(
-    "OverrideSupportSkillManaMultPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("support skill's mana multiplier is set to {value:dec%}.").output((c) => ({
+    type: "OverrideSupportSkillManaMultPct",
+    value: c.value,
+  })),
   t(
     "gains {stacks:int} stack(s) of all blessings when casting a restoration skill",
   ).outputMany([
-    spec("GeneratesFocusBlessing", () => ({})),
-    spec("GeneratesAgilityBlessing", () => ({})),
-    spec("GeneratesTenacityBlessing", () => ({})),
+    spec(() => ({ type: "GeneratesFocusBlessing" })),
+    spec(() => ({ type: "GeneratesAgilityBlessing" })),
+    spec(() => ({ type: "GeneratesTenacityBlessing" })),
   ]),
-  t("{value:+dec%} additional damage taken").output("DmgTakenPct", (c) => ({
+  t("{value:+dec%} additional damage taken").output((c) => ({
+    type: "DmgTakenPct",
     value: c.value,
     addn: true,
   })),
-  t("{value:+dec%} [additional] damage when channeling").output(
-    "DmgPct",
-    (c) => ({
-      value: c.value,
-      dmgModType: GLOBAL,
-      addn: c.additional !== undefined,
-      cond: "channeling",
-    }),
-  ),
-  t("{value:+dec%} additional damage taken at low mana").output(
-    "DmgTakenPct",
-    (c) => ({ value: c.value, addn: true, cond: "has_low_mana" }),
-  ),
+  t("{value:+dec%} [additional] damage when channeling").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: GLOBAL,
+    addn: c.additional !== undefined,
+    cond: "channeling",
+  })),
+  t("{value:+dec%} additional damage taken at low mana").output((c) => ({
+    type: "DmgTakenPct",
+    value: c.value,
+    addn: true,
+    cond: "has_low_mana",
+  })),
   t("{value:+dec%} [additional] max energy shield while moving").output(
-    "MaxEnergyShieldPct",
     (c) => ({
+      type: "MaxEnergyShieldPct",
       value: c.value,
       addn: c.additional !== undefined,
       cond: "is_moving",
     }),
   ),
-  t("{value:+dec%} [additional] knockback distance").output(
-    "KnockbackDistancePct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
-  t("{value:+dec%} xp earned").output("XPEarnedPct", (c) => ({
+  t("{value:+dec%} [additional] knockback distance").output((c) => ({
+    type: "KnockbackDistancePct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
+  t("{value:+dec%} xp earned").output((c) => ({
+    type: "XPEarnedPct",
     value: c.value,
   })),
   t(
     "{value:+dec%} critical strike rating and critical strike damage for every {amt:dec%} of attack block",
   ).outputMany([
-    spec("CritRatingPct", (c) => ({
+    spec((c) => ({
+      type: "CritRatingPct",
       value: c.value,
       modType: GLOBAL,
       per: { stackable: "attack_block_pct", amt: c.amt },
     })),
-    spec("CritDmgPct", (c) => ({
+    spec((c) => ({
+      type: "CritDmgPct",
       value: c.value,
       modType: GLOBAL,
       addn: false,
       per: { stackable: "attack_block_pct", amt: c.amt },
     })),
   ]),
-  t("{value:+dec%} gear armor").output("GearArmorPct", (c) => ({
+  t("{value:+dec%} gear armor").output((c) => ({
+    type: "GearArmorPct",
     value: c.value,
   })),
-  t("{value:+dec%} gear evasion").output("GearEvasionPct", (c) => ({
+  t("{value:+dec%} gear evasion").output((c) => ({
+    type: "GearEvasionPct",
     value: c.value,
   })),
-  t("{value:+dec%} life regeneration speed").output(
-    "LifeRegenSpeedPct",
-    (c) => ({ value: c.value }),
-  ),
-  t("{value:+dec%} chance to blind the target on hit").output(
-    "InflictsBlind",
-    () => ({}),
-  ),
-  t("{value:+dec%} chance to mark the target on hit").output(
-    "InflictsMark",
-    () => ({}),
-  ),
-  t("{value:+dec%} chance to inflict paralysis on hit").output(
-    "InflictParalysisPct",
-    (c) => ({ value: c.value }),
-  ),
+  t("{value:+dec%} life regeneration speed").output((c) => ({
+    type: "LifeRegenSpeedPct",
+    value: c.value,
+  })),
+  t("{value:+dec%} chance to blind the target on hit").output(() => ({
+    type: "InflictsBlind",
+  })),
+  t("{value:+dec%} chance to mark the target on hit").output(() => ({
+    type: "InflictsMark",
+  })),
+  t("{value:+dec%} chance to inflict paralysis on hit").output((c) => ({
+    type: "InflictParalysisPct",
+    value: c.value,
+  })),
   t("{value:+dec%} max life and max mana").outputMany([
-    spec("MaxLifePct", (c) => ({ value: c.value, addn: false })),
-    spec("MaxManaPct", (c) => ({ value: c.value, addn: false })),
+    spec((c) => ({ type: "MaxLifePct", value: c.value, addn: false })),
+    spec((c) => ({ type: "MaxManaPct", value: c.value, addn: false })),
   ]),
-  t("minions can cast {value:int} additional curse(s)").output(
-    "AddnCurse",
-    (c) => ({ value: c.value }),
-  ),
+  t("minions can cast {value:int} additional curse(s)").output((c) => ({
+    type: "AddnCurse",
+    value: c.value,
+  })),
   t("gains spell aggression when minion spells land a critical strike").output(
-    "GeneratesSpellAggression",
-    () => ({}),
+    () => ({ type: "GeneratesSpellAggression" }),
   ),
   t(
     "for every {dist:int} m moved, gains {value:int} stack(s) of deflection",
-  ).output("GeneratesDeflection", () => ({})),
-  t("gains a stack of torment when reaping").output(
-    "GeneratesTorment",
-    () => ({}),
-  ),
+  ).output(() => ({ type: "GeneratesDeflection" })),
+  t("gains a stack of torment when reaping").output(() => ({
+    type: "GeneratesTorment",
+  })),
   t("cooldown: {value:dec}s").outputNone(),
   t("energy shield starts to charge when blocking").outputNone(),
-  t("you can cast {value:int} additional curse(s)").output(
-    "AddnCurse",
-    (c) => ({ value: c.value }),
-  ),
+  t("you can cast {value:int} additional curse(s)").output((c) => ({
+    type: "AddnCurse",
+    value: c.value,
+  })),
   t(
     "restores {value:dec%} energy shield on block. interval: {interval:dec}s",
   ).outputNone(),
@@ -2233,48 +2518,50 @@ export const allParsers = [
     "restores {value:dec%} life on block. interval: {interval:dec}s",
   ).outputNone(),
   t("takes {value:int} true damage every {interval:dec}s").outputNone(),
-  t("{value:+dec%} [additional] warcry effect").output("WarcryEffPct", (c) => ({
+  t("{value:+dec%} [additional] warcry effect").output((c) => ({
+    type: "WarcryEffPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
   t("warcry is cast immediately").outputNone(),
-  t("gains hasten when minions land a critical strike").output(
-    "GeneratesHasten",
-    () => ({}),
-  ),
-  t("{value:dec%} chance to gain a barrier on defeat").output(
-    "GeneratesBarrier",
-    () => ({}),
-  ),
-  t("{value:dec%} chance to gain hardened when you are hit").output(
-    "GeneratesHardened",
-    () => ({}),
-  ),
+  t("gains hasten when minions land a critical strike").output(() => ({
+    type: "GeneratesHasten",
+  })),
+  t("{value:dec%} chance to gain a barrier on defeat").output(() => ({
+    type: "GeneratesBarrier",
+  })),
+  t("{value:dec%} chance to gain hardened when you are hit").output(() => ({
+    type: "GeneratesHardened",
+  })),
   t(
     "{value:dec%} chance to inflict {stacks:int} additional stack(s) of wilt",
-  ).output("InflictWiltPct", (c) => ({ value: c.value })),
-  t("{value:+dec%} blur effect").output("BlurEffPct", (c) => ({
+  ).output((c) => ({ type: "InflictWiltPct", value: c.value })),
+  t("{value:+dec%} blur effect").output((c) => ({
+    type: "BlurEffPct",
     value: c.value,
   })),
-  t("{value:+dec%} [additional] focus speed").output("FocusSpeedPct", (c) => ({
+  t("{value:+dec%} [additional] focus speed").output((c) => ({
+    type: "FocusSpeedPct",
     value: c.value,
     addn: c.additional !== undefined,
   })),
-  t("{value:+dec%} [additional] barrier shield").output(
-    "BarrierShieldPct",
-    (c) => ({ value: c.value, addn: c.additional !== undefined }),
-  ),
+  t("{value:+dec%} [additional] barrier shield").output((c) => ({
+    type: "BarrierShieldPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+  })),
   t(
     "when using a mobility skill, you can use {stacks:int} stack(s) of agility blessing to reset the mobility skill's cooldown. interval: {interval:dec} s",
   ).outputNone(),
   t(
     "gains {stacks:int} stack of focus blessing every {interval:dec} s. loses focus blessing instead if you have not dealt any critical strikes recently",
-  ).output("GeneratesFocusBlessing", () => ({})),
+  ).output(() => ({ type: "GeneratesFocusBlessing" })),
   t(
     "focus energy to create an ice prison near yourself and the pact holder, which debuffs frostbitten enemies inside every second and makes them take {value:+dec%} additional cold damage, up to {limit:int} stacks, for {dur:int}s.",
-  ).output("DmgPct", (c) => ({
+  ).output((c) => ({
+    type: "DmgPct",
     value: c.value,
-    dmgModType: "cold" as const,
+    dmgModType: "cold",
     addn: true,
     per: { stackable: "num_ice_puppet_stacks", limit: c.limit },
   })),
