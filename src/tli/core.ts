@@ -98,6 +98,8 @@ export interface Configuration {
   // default to false
   targetEnemyIsNearby: boolean;
   // default to false
+  targetEnemyIsDistant: boolean;
+  // default to false
   targetEnemyIsInProximity: boolean;
   // default to false
   targetEnemyHasFrail: boolean;
@@ -253,6 +255,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   enemyNumbedStacks: undefined,
   targetEnemyIsElite: false,
   targetEnemyIsNearby: false,
+  targetEnemyIsDistant: false,
   targetEnemyIsInProximity: false,
   targetEnemyHasFrail: false,
   targetEnemyHasWhimsySignal: false,

@@ -784,6 +784,7 @@ const filterModsByCond = (
       .with("has_full_mana", () => config.hasFullMana)
       .with("target_enemy_is_elite", () => config.targetEnemyIsElite)
       .with("target_enemy_is_nearby", () => config.targetEnemyIsNearby)
+      .with("target_enemy_is_distant", () => config.targetEnemyIsDistant)
       .with(
         "target_enemy_is_in_proximity",
         () => config.targetEnemyIsInProximity,

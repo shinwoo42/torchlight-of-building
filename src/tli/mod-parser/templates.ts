@@ -1886,6 +1886,14 @@ export const allParsers = [
     dmgModType: "projectile" as const,
     addn: c.additional !== undefined,
   })),
+  t(
+    "projectile damage increases with the distance traveled, dealing up to {value:+dec%} damage to distant enemies",
+  ).output("DmgPct", (c) => ({
+    value: c.value,
+    dmgModType: "projectile" as const,
+    addn: true,
+    cond: C.target_enemy_is_distant,
+  })),
   t("projectile quantity {value:+int}").output("Projectile", (c) => ({
     value: c.value,
   })),
