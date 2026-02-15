@@ -1,10 +1,4 @@
-import {
-  Conditions as C,
-  type InfiltrationType,
-  type PerStackable,
-  ResolvedConditions as RC,
-  Stackables as S,
-} from "../mod";
+import type { InfiltrationType, PerStackable } from "../mod";
 import { StatWordMapping } from "./enums";
 import { spec, t } from "./template";
 
@@ -36,7 +30,7 @@ export const allParsers = [
   ).outputMany([
     spec("FlatDmgToAtks", (c) => {
       const per: PerStackable = {
-        stackable: S.mana_consumed_recently,
+        stackable: "mana_consumed_recently",
         amt: c.amt,
         limit: c.limit,
       };
@@ -44,7 +38,7 @@ export const allParsers = [
     }),
     spec("FlatDmgToSpells", (c) => {
       const per: PerStackable = {
-        stackable: S.mana_consumed_recently,
+        stackable: "mana_consumed_recently",
         amt: c.amt,
         limit: c.limit,
       };
@@ -68,14 +62,14 @@ export const allParsers = [
   ).outputMany([
     spec("CritRatingPct", (c) => {
       const per: PerStackable = {
-        stackable: S.mana_consumed_recently,
+        stackable: "mana_consumed_recently",
         amt: c.amt,
       };
       return { value: c.value, modType: GLOBAL, per };
     }),
     spec("CritDmgPct", (c) => {
       const per: PerStackable = {
-        stackable: S.mana_consumed_recently,
+        stackable: "mana_consumed_recently",
         amt: c.amt,
       };
       return { value: c.value, modType: GLOBAL, addn: false, per };
@@ -95,7 +89,7 @@ export const allParsers = [
     "{value:+dec%} {modType:DmgModType} damage for every {amt:int} mana consumed recently, up to {limit:dec%}",
   ).output("DmgPct", (c) => {
     const per: PerStackable = {
-      stackable: S.mana_consumed_recently,
+      stackable: "mana_consumed_recently",
       amt: c.amt,
       valueLimit: c.limit,
     };
@@ -107,13 +101,13 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    per: { stackable: S.total_block_pct, amt: c.amt, valueLimit: c.limit },
+    per: { stackable: "total_block_pct", amt: c.amt, valueLimit: c.limit },
   })),
   t(
     "{value:+dec%} additional damage per {amt:+dec%} movement speed, up to {limit:+dec%}",
   ).output("DmgPct", (c) => {
     const per: PerStackable = {
-      stackable: S.movement_speed_bonus_pct,
+      stackable: "movement_speed_bonus_pct",
       amt: c.amt,
       valueLimit: c.limit,
     };
@@ -125,14 +119,14 @@ export const allParsers = [
     value: c.value,
     dmgModType: "spell" as const,
     addn: true,
-    per: { stackable: S.max_spell_burst, valueLimit: c.limit },
+    per: { stackable: "max_spell_burst", valueLimit: c.limit },
   })),
   t(
     "{value:+dec%} movement speed per stack of max spell burst, up to {limit:+dec%}",
   ).output("MovementSpeedPct", (c) => ({
     value: c.value,
     addn: false,
-    per: { stackable: S.max_spell_burst, valueLimit: c.limit },
+    per: { stackable: "max_spell_burst", valueLimit: c.limit },
   })),
   t(
     "for every {amt:+dec%} spell burst charge speed, {value:+dec%} additional hit damage for skills cast by spell burst, up to {limit:+dec%}",
@@ -140,7 +134,7 @@ export const allParsers = [
     value: c.value,
     addn: true as const,
     per: {
-      stackable: S.spell_burst_charge_speed_bonus_pct,
+      stackable: "spell_burst_charge_speed_bonus_pct",
       amt: c.amt,
       valueLimit: c.limit,
     },
@@ -151,7 +145,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    cond: C.has_full_mana,
+    cond: "has_full_mana",
   })),
   t(
     "{value:+dec%} additional damage against enemies with elemental ailments",
@@ -159,7 +153,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    cond: C.enemy_has_ailment,
+    cond: "enemy_has_ailment",
   })),
   t("{value:+dec%} [additional] damage against frozen enemies").output(
     "DmgPct",
@@ -167,7 +161,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: c.additional !== undefined,
-      cond: C.enemy_frozen,
+      cond: "enemy_frozen",
     }),
   ),
   t(
@@ -177,11 +171,11 @@ export const allParsers = [
       value: c.dmgValue,
       dmgModType: GLOBAL,
       addn: true,
-      cond: C.enemy_is_cursed,
+      cond: "enemy_is_cursed",
     })),
     spec("DmgTakenPct", (c) => ({
       value: c.takenValue,
-      cond: C.enemy_is_cursed,
+      cond: "enemy_is_cursed",
     })),
   ]),
   t("{value:+dec%} [additional] damage against cursed enemies").output(
@@ -190,7 +184,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: c.additional !== undefined,
-      cond: C.enemy_is_cursed,
+      cond: "enemy_is_cursed",
     }),
   ),
   t("{value:+dec%} additional erosion area damage against elites").output(
@@ -199,7 +193,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: "erosion_area" as const,
       addn: true,
-      cond: C.target_enemy_is_elite,
+      cond: "target_enemy_is_elite",
     }),
   ),
   t(
@@ -208,7 +202,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: c.additional !== undefined,
-    resolvedCond: RC.have_both_sealed_mana_and_life,
+    resolvedCond: "have_both_sealed_mana_and_life",
   })),
   t("{value:+dec%} damage {(when|while)} focus blessing is active").output(
     "DmgPct",
@@ -216,7 +210,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: false,
-      cond: C.has_focus_blessing,
+      cond: "has_focus_blessing",
     }),
   ),
   t("{value:+dec%} spell damage when having focus blessing").output(
@@ -225,7 +219,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: "spell" as const,
       addn: false,
-      cond: C.has_focus_blessing,
+      cond: "has_focus_blessing",
     }),
   ),
   t("{value:+dec%} additional spell damage at max focus blessings").output(
@@ -234,7 +228,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: "spell" as const,
       addn: true,
-      resolvedCond: RC.at_max_focus_blessing,
+      resolvedCond: "at_max_focus_blessing",
     }),
   ),
   t("{value:+dec%} [additional] damage while having fervor").output(
@@ -243,7 +237,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: c.additional !== undefined,
-      cond: C.has_fervor,
+      cond: "has_fervor",
     }),
   ),
   t("{value:+dec%} damage if you have blocked recently").output(
@@ -252,14 +246,14 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: false,
-      cond: C.has_blocked_recently,
+      cond: "has_blocked_recently",
     }),
   ),
   t("{value:+dec%} attack damage when dual wielding").output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: ATTACK,
     addn: false,
-    cond: C.is_dual_wielding,
+    cond: "is_dual_wielding",
   })),
   t(
     "{value:+dec%} additional damage taken by enemies frozen by you recently",
@@ -268,7 +262,7 @@ export const allParsers = [
     dmgModType: GLOBAL,
     addn: true,
     isEnemyDebuff: true,
-    cond: C.target_enemy_frozen_recently,
+    cond: "target_enemy_frozen_recently",
   })),
   t("{value:+dec%} additional damage taken by nearby enemies").output(
     "DmgPct",
@@ -277,7 +271,7 @@ export const allParsers = [
       dmgModType: GLOBAL,
       addn: true,
       isEnemyDebuff: true,
-      cond: C.target_enemy_is_nearby,
+      cond: "target_enemy_is_nearby",
     }),
   ),
   t(
@@ -286,7 +280,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    per: { stackable: S.frostbite_rating, amt: c.amt },
+    per: { stackable: "frostbite_rating", amt: c.amt },
   })),
   t("{value:+dec%} additional damage per {amt:int} fervor rating").output(
     "DmgPct",
@@ -294,7 +288,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: true,
-      per: { stackable: S.fervor, amt: c.amt },
+      per: { stackable: "fervor", amt: c.amt },
     }),
   ),
   t("{value:+dec%} damage per {amt:int} of the highest stat").output(
@@ -303,14 +297,14 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: false,
-      per: { stackable: S.highest_stat, amt: c.amt },
+      per: { stackable: "highest_stat", amt: c.amt },
     }),
   ),
   t("{value:+dec%} damage per {amt:int} stats").output("DmgPct", (c) => ({
     value: c.value,
     dmgModType: GLOBAL,
     addn: false,
-    per: { stackable: S.stat, amt: c.amt },
+    per: { stackable: "stat", amt: c.amt },
   })),
   t(
     "{value:+dec%} [additional] damage for every {amt:+int} additional max channeled stack(s)",
@@ -318,7 +312,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: c.additional !== undefined,
-    per: { stackable: S.additional_max_channel_stack, amt: c.amt },
+    per: { stackable: "additional_max_channel_stack", amt: c.amt },
   })),
   t(
     "deals up to {value:+dec%} additional attack damage to enemies in proximity, and this {(effect|damage)} reduces as the distance from the enemy grows",
@@ -326,7 +320,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: ATTACK,
     addn: true,
-    cond: C.target_enemy_is_in_proximity,
+    cond: "target_enemy_is_in_proximity",
   })),
   t(
     "{value:+dec%} additional attack damage and ailment damage dealt by attacks when there are elites within 10m nearby",
@@ -335,13 +329,13 @@ export const allParsers = [
       value: c.value,
       dmgModType: ATTACK,
       addn: true,
-      cond: C.has_elites_nearby,
+      cond: "has_elites_nearby",
     })),
     spec("DmgPct", (c) => ({
       value: c.value,
       dmgModType: AILMENT,
       addn: true,
-      cond: C.has_elites_nearby,
+      cond: "has_elites_nearby",
     })),
   ]),
   t("{value:+dec%} additional attack damage dealt to nearby enemies").output(
@@ -350,7 +344,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: ATTACK,
       addn: true,
-      cond: C.target_enemy_is_nearby,
+      cond: "target_enemy_is_nearby",
     }),
   ),
   t(
@@ -359,7 +353,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: ATTACK,
     addn: true,
-    cond: C.has_one_handed_weapon,
+    cond: "has_one_handed_weapon",
   })),
   t(
     "{value:+dec%} additional attack damage for each unique type of weapon equipped while dual wielding",
@@ -367,8 +361,8 @@ export const allParsers = [
     value: c.value,
     dmgModType: ATTACK,
     addn: true,
-    per: { stackable: S.num_unique_weapon_types_equipped },
-    cond: C.is_dual_wielding,
+    per: { stackable: "num_unique_weapon_types_equipped" },
+    cond: "is_dual_wielding",
   })),
   t(
     "blur gains an additional effect: {value:+dec%} additional damage over time",
@@ -376,7 +370,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: "damage_over_time" as const,
     addn: true,
-    cond: C.has_blur,
+    cond: "has_blur",
   })),
   t("{value:+dec%} [additional] damage over time").output("DmgPct", (c) => ({
     value: c.value,
@@ -389,7 +383,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: c.modType,
     addn: true,
-    cond: C.enemy_numbed,
+    cond: "enemy_numbed",
   })),
   t("{value:dec%} additional damage applied to life").output("DmgPct", (c) => ({
     value: c.value,
@@ -402,7 +396,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: "channeled" as const,
     addn: true,
-    cond: C.at_max_channeled_stacks,
+    cond: "at_max_channeled_stacks",
   })),
   t("{value:+dec%} [additional] damage for channeled skills").output(
     "DmgPct",
@@ -418,7 +412,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: true,
-      cond: C.blur_ended_recently,
+      cond: "blur_ended_recently",
     }),
   ),
   t(
@@ -427,7 +421,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    cond: C.has_used_mobility_skill_recently,
+    cond: "has_used_mobility_skill_recently",
   })),
   t(
     "{value:+dec%} additional damage for {dur:int}s after using mobility skills",
@@ -435,7 +429,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    cond: C.has_used_mobility_skill_recently,
+    cond: "has_used_mobility_skill_recently",
   })),
   t(
     "{value:+dec%} additional damage if you have recently moved more than {dist:int} m",
@@ -443,7 +437,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: GLOBAL,
     addn: true,
-    cond: C.has_moved_recently,
+    cond: "has_moved_recently",
   })),
   t("{value:+dec%} [additional] elemental damage dealt by spell skills").output(
     "ElementalSpellDmgPct",
@@ -459,11 +453,11 @@ export const allParsers = [
   ),
   t("{value:+dec%} critical strike rating against frostbitten enemies").output(
     "CritRatingPct",
-    (c) => ({ value: c.value, modType: GLOBAL, cond: C.enemy_frostbitten }),
+    (c) => ({ value: c.value, modType: GLOBAL, cond: "enemy_frostbitten" }),
   ),
   t("{value:+int} critical strike rating against frostbitten enemies").output(
     "FlatCritRating",
-    (c) => ({ value: c.value, modType: GLOBAL, cond: C.enemy_frostbitten }),
+    (c) => ({ value: c.value, modType: GLOBAL, cond: "enemy_frostbitten" }),
   ),
   t("{value:+dec%} critical strike damage against frostbitten enemies").output(
     "CritDmgPct",
@@ -471,7 +465,7 @@ export const allParsers = [
       value: c.value,
       addn: false,
       modType: GLOBAL,
-      cond: C.enemy_frostbitten,
+      cond: "enemy_frostbitten",
     }),
   ),
   t("{value:+dec%} sentry skill critical strike rating").output(
@@ -508,7 +502,7 @@ export const allParsers = [
     value: c.value,
     addn: false,
     modType: GLOBAL,
-    per: { stackable: S.num_spell_skills_used_recently, limit: c.limit },
+    per: { stackable: "num_spell_skills_used_recently", limit: c.limit },
   })),
   t(
     "{value:+dec%} [{modType:CritDmgModType}] critical strike damage per stack of focus blessing owned",
@@ -516,7 +510,7 @@ export const allParsers = [
     value: c.value,
     addn: false,
     modType: c.modType ?? "global",
-    per: { stackable: S.focus_blessing },
+    per: { stackable: "focus_blessing" },
   })),
   t("{value:+dec%} [additional] physical skill critical strike damage").output(
     "CritDmgPct",
@@ -690,7 +684,7 @@ export const allParsers = [
     dmgType: "lightning" as const,
     addn: true as const,
     condThreshold: {
-      target: S.enemy_numbed_stacks,
+      target: "enemy_numbed_stacks",
       comparator: "gte" as const,
       value: c.threshold,
     },
@@ -709,12 +703,12 @@ export const allParsers = [
     spec("AspdPct", (c) => ({
       value: c.value,
       addn: c.additional !== undefined,
-      cond: C.has_full_mana,
+      cond: "has_full_mana",
     })),
     spec("CspdPct", (c) => ({
       value: c.value,
       addn: c.additional !== undefined,
-      cond: C.has_full_mana,
+      cond: "has_full_mana",
     })),
   ]),
   t(
@@ -723,17 +717,17 @@ export const allParsers = [
     spec("AspdPct", (c) => ({
       value: c.value,
       addn: false,
-      cond: C.has_hasten,
+      cond: "has_hasten",
     })),
     spec("CspdPct", (c) => ({
       value: c.value,
       addn: false,
-      cond: C.has_hasten,
+      cond: "has_hasten",
     })),
     spec("MovementSpeedPct", (c) => ({
       value: c.value,
       addn: false,
-      cond: C.has_hasten,
+      cond: "has_hasten",
     })),
   ]),
   t("{value:+dec%} [additional] attack and cast speed").outputMany([
@@ -752,12 +746,12 @@ export const allParsers = [
     spec("AspdPct", (c) => ({
       value: c.value,
       addn: false,
-      per: { stackable: S.total_block_pct, amt: c.amt },
+      per: { stackable: "total_block_pct", amt: c.amt },
     })),
     spec("MovementSpeedPct", (c) => ({
       value: c.value,
       addn: false,
-      per: { stackable: S.total_block_pct, amt: c.amt },
+      per: { stackable: "total_block_pct", amt: c.amt },
     })),
   ]),
   t(
@@ -766,7 +760,7 @@ export const allParsers = [
     value: c.value,
     addn: true,
     condThreshold: {
-      target: S.num_enemies_nearby,
+      target: "num_enemies_nearby",
       comparator: "eq" as const,
       value: c.count,
     },
@@ -776,22 +770,22 @@ export const allParsers = [
   ).output("AspdPct", (c) => ({
     value: c.value,
     addn: true,
-    cond: C.has_crit_recently,
+    cond: "has_crit_recently",
   })),
   t("{value:+dec%} additional attack speed while dual wielding").output(
     "AspdPct",
-    (c) => ({ value: c.value, addn: true, cond: C.is_dual_wielding }),
+    (c) => ({ value: c.value, addn: true, cond: "is_dual_wielding" }),
   ),
   t(
     "{value:+dec%} additional cast speed if you have dealt a critical strike recently",
   ).output("CspdPct", (c) => ({
     value: c.value,
     addn: true,
-    cond: C.has_crit_recently,
+    cond: "has_crit_recently",
   })),
   t("{value:+dec%} cast speed when focus blessing is active").output(
     "CspdPct",
-    (c) => ({ value: c.value, addn: false, cond: C.has_focus_blessing }),
+    (c) => ({ value: c.value, addn: false, cond: "has_focus_blessing" }),
   ),
   t(
     "{value:+dec%} additional attack speed when performing multistrikes",
@@ -805,8 +799,8 @@ export const allParsers = [
   ).output("CspdPct", (c) => ({
     value: c.value,
     addn: true,
-    per: { stackable: S.seconds_with_elite_nearby, valueLimit: c.limit },
-    cond: C.has_elites_nearby,
+    per: { stackable: "seconds_with_elite_nearby", valueLimit: c.limit },
+    cond: "has_elites_nearby",
   })),
   t("{value:+dec%} [additional] cast speed").output("CspdPct", (c) => ({
     value: c.value,
@@ -860,7 +854,7 @@ export const allParsers = [
     value: c.value,
     penType: "elemental" as const,
     per: {
-      stackable: S.has_hit_enemy_with_elemental_dmg_recently,
+      stackable: "has_hit_enemy_with_elemental_dmg_recently",
       amt: 1,
       limit: c.limit,
     },
@@ -871,7 +865,7 @@ export const allParsers = [
     value: c.value,
     penType: "elemental" as const,
     per: {
-      stackable: S.has_hit_enemy_with_elemental_dmg_recently,
+      stackable: "has_hit_enemy_with_elemental_dmg_recently",
       amt: 1,
       limit: c.limit,
     },
@@ -957,7 +951,7 @@ export const allParsers = [
   })),
   t("{value:+dec%} block ratio when holding a shield").output(
     "BlockRatioPct",
-    (c) => ({ value: c.value, cond: C.holding_shield }),
+    (c) => ({ value: c.value, cond: "holding_shield" }),
   ),
   t("{value:+dec} max life").output("MaxLife", (c) => ({ value: c.value })),
   t("{value:+dec%} [additional] max life").output("MaxLifePct", (c) => ({
@@ -979,7 +973,7 @@ export const allParsers = [
     (c) => ({
       value: c.value,
       addn: c.additional !== undefined,
-      cond: C.is_moving,
+      cond: "is_moving",
     }),
   ),
   t("{value:+dec%} [additional] evasion while moving").output(
@@ -987,7 +981,7 @@ export const allParsers = [
     (c) => ({
       value: c.value,
       addn: c.additional !== undefined,
-      cond: C.is_moving,
+      cond: "is_moving",
     }),
   ),
   t("{value:+dec%} [additional] armor").output("ArmorPct", (c) => ({
@@ -1048,14 +1042,14 @@ export const allParsers = [
   ).output("ResistancePct", (c) => ({
     value: c.value,
     resType: c.resType,
-    per: { stackable: S.repentance },
+    per: { stackable: "repentance" },
   })),
   t("{value:+dec%} {resType:ResType} resistance per {amt:int} stats").output(
     "ResistancePct",
     (c) => ({
       value: c.value,
       resType: c.resType,
-      per: { stackable: S.stat, amt: c.amt },
+      per: { stackable: "stat", amt: c.amt },
     }),
   ),
   t("{value:+dec%} {resType:ResType} resistance").output(
@@ -1098,7 +1092,7 @@ export const allParsers = [
     .output("Stat", (c) => ({
       value: c.value,
       statModType: c.statModType,
-      per: { stackable: S.level, amt: c.amt },
+      per: { stackable: "level", amt: c.amt },
     })),
   t("{value:+dec} {statModType:StatWord}")
     .enum("StatWord", StatWordMapping)
@@ -1122,7 +1116,7 @@ export const allParsers = [
       dmgModType: "cold" as const,
       addn: true,
       condThreshold: {
-        target: S.focus_blessing,
+        target: "focus_blessing",
         comparator: "gte" as const,
         value: c.threshold,
       },
@@ -1131,7 +1125,7 @@ export const allParsers = [
       value: c.penValue,
       penType: "cold" as const,
       condThreshold: {
-        target: S.focus_blessing,
+        target: "focus_blessing",
         comparator: "gte" as const,
         value: c.threshold,
       },
@@ -1145,7 +1139,7 @@ export const allParsers = [
       dmgModType: "fire" as const,
       addn: true,
       condThreshold: {
-        target: S.tenacity_blessing,
+        target: "tenacity_blessing",
         comparator: "gte" as const,
         value: c.threshold,
       },
@@ -1154,7 +1148,7 @@ export const allParsers = [
       value: c.penValue,
       penType: "fire" as const,
       condThreshold: {
-        target: S.tenacity_blessing,
+        target: "tenacity_blessing",
         comparator: "gte" as const,
         value: c.threshold,
       },
@@ -1168,7 +1162,7 @@ export const allParsers = [
       dmgModType: "lightning" as const,
       addn: true,
       condThreshold: {
-        target: S.agility_blessing,
+        target: "agility_blessing",
         comparator: "gte" as const,
         value: c.threshold,
       },
@@ -1177,7 +1171,7 @@ export const allParsers = [
       value: c.penValue,
       penType: "lightning" as const,
       condThreshold: {
-        target: S.agility_blessing,
+        target: "agility_blessing",
         comparator: "gte" as const,
         value: c.threshold,
       },
@@ -1220,7 +1214,7 @@ export const allParsers = [
   })),
   t("{value:+int} to max spell burst when having squidnova").output(
     "MaxSpellBurst",
-    (c) => ({ value: c.value, cond: C.has_squidnova }),
+    (c) => ({ value: c.value, cond: "has_squidnova" }),
   ),
   t(
     "activating spell burst with at least {stacks:int} stack(s) of max spell burst grants {grant:int} stack of squidnova",
@@ -1234,7 +1228,7 @@ export const allParsers = [
       value: c.value,
       dmgModType: "spell" as const,
       addn: true,
-      cond: C.has_squidnova,
+      cond: "has_squidnova",
     }),
   ),
   t("{value:+dec%} [additional] spell burst charge speed").output(
@@ -1264,13 +1258,13 @@ export const allParsers = [
     value: 1,
     dmgModType: "projectile" as const,
     addn: true,
-    per: { stackable: S.proj_speed_pct, amt: 100 / c.value },
+    per: { stackable: "proj_speed_pct", amt: 100 / c.value },
   })),
   t(
     "{value:+int} max channeled stacks when equipped in the left ring slot",
   ).output("MaxChannel", (c) => ({
     value: c.value,
-    cond: C.equipped_in_left_ring_slot,
+    cond: "equipped_in_left_ring_slot",
   })),
   t("max channeled stacks {value:+int}").output("MaxChannel", (c) => ({
     value: c.value,
@@ -1323,7 +1317,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: c.modType,
     addn: true,
-    per: { stackable: S.focus_blessing },
+    per: { stackable: "focus_blessing" },
   })),
   t(
     "{value:+dec%} additional {modType:DmgModType} damage per stack of focus blessing owned",
@@ -1331,7 +1325,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: c.modType,
     addn: true,
-    per: { stackable: S.focus_blessing },
+    per: { stackable: "focus_blessing" },
   })),
   t("{value:+dec%} blessing duration").outputMany([
     spec("FocusBlessingDurationPct", (c) => ({ value: c.value })),
@@ -1364,7 +1358,7 @@ export const allParsers = [
     "{value:+dec%} spell aggression effect for every main spell skill cast recently. stacks up to {limit:int} times",
   ).output("SpellAggressionEffPct", (c) => ({
     value: c.value,
-    per: { stackable: S.num_main_spell_skills_cast_recently, limit: c.limit },
+    per: { stackable: "num_main_spell_skills_cast_recently", limit: c.limit },
   })),
   t("{value:+dec%} spell aggression effect").output(
     "SpellAggressionEffPct",
@@ -1378,15 +1372,15 @@ export const allParsers = [
   ).output("MovementSpeedPct", (c) => ({
     value: c.value,
     addn: false,
-    cond: C.has_used_mobility_skill_recently,
+    cond: "has_used_mobility_skill_recently",
   })),
   t(
     "{value:+dec%} movement speed when an elite is nearby, up to {limit:+dec%}",
   ).output("MovementSpeedPct", (c) => ({
     value: c.value,
     addn: false,
-    per: { stackable: S.seconds_with_elite_nearby, valueLimit: c.limit },
-    cond: C.has_elites_nearby,
+    per: { stackable: "seconds_with_elite_nearby", valueLimit: c.limit },
+    cond: "has_elites_nearby",
   })),
   t("{value:+dec%} [additional] movement speed").output(
     "MovementSpeedPct",
@@ -1425,8 +1419,8 @@ export const allParsers = [
   ).output("SkillLevel", (c) => ({
     value: 1,
     skillLevelType: "main" as const,
-    per: { stackable: S.sealed_life_pct, amt: c.amt },
-    cond: C.has_full_mana,
+    per: { stackable: "sealed_life_pct", amt: c.amt },
+    cond: "has_full_mana",
   })),
   t("{value:+int} skill cost").output("SkillCost", (c) => ({ value: c.value })),
   t("{value:+int} to hero trait level").output("HeroTraitLevel", (c) => ({
@@ -1533,17 +1527,17 @@ export const allParsers = [
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "cold" as const,
-      cond: C.sages_insight_fire,
+      cond: "sages_insight_fire",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "lightning" as const,
-      cond: C.sages_insight_fire,
+      cond: "sages_insight_fire",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "erosion" as const,
-      cond: C.sages_insight_fire,
+      cond: "sages_insight_fire",
     })),
   ]),
   t(
@@ -1552,17 +1546,17 @@ export const allParsers = [
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "fire" as const,
-      cond: C.sages_insight_cold,
+      cond: "sages_insight_cold",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "lightning" as const,
-      cond: C.sages_insight_cold,
+      cond: "sages_insight_cold",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "erosion" as const,
-      cond: C.sages_insight_cold,
+      cond: "sages_insight_cold",
     })),
   ]),
   t(
@@ -1571,17 +1565,17 @@ export const allParsers = [
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "fire" as const,
-      cond: C.sages_insight_lightning,
+      cond: "sages_insight_lightning",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "cold" as const,
-      cond: C.sages_insight_lightning,
+      cond: "sages_insight_lightning",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "erosion" as const,
-      cond: C.sages_insight_lightning,
+      cond: "sages_insight_lightning",
     })),
   ]),
   t(
@@ -1590,17 +1584,17 @@ export const allParsers = [
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "fire" as const,
-      cond: C.sages_insight_erosion,
+      cond: "sages_insight_erosion",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "cold" as const,
-      cond: C.sages_insight_erosion,
+      cond: "sages_insight_erosion",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "lightning" as const,
-      cond: C.sages_insight_erosion,
+      cond: "sages_insight_erosion",
     })),
   ]),
   t("{value:+int} to max frostbite rating").output(
@@ -1689,22 +1683,22 @@ export const allParsers = [
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "fire" as const,
-      cond: C.enemy_at_max_affliction,
+      cond: "enemy_at_max_affliction",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "cold" as const,
-      cond: C.enemy_at_max_affliction,
+      cond: "enemy_at_max_affliction",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "lightning" as const,
-      cond: C.enemy_at_max_affliction,
+      cond: "enemy_at_max_affliction",
     })),
     spec("EnemyRes", (c) => ({
       value: c.value,
       resType: "erosion" as const,
-      cond: C.enemy_at_max_affliction,
+      cond: "enemy_at_max_affliction",
     })),
   ]),
   t("{value:+int} jumps").output("Jump", (c) => ({ value: c.value })),
@@ -1738,7 +1732,7 @@ export const allParsers = [
     "{value:+dec%} additional numbed effect on critical strike with {dmgType:DmgChunkType} damage for {dur:int} s",
   ).output("NumbedEffPct", (c) => ({
     value: c.value,
-    cond: C.has_crit_recently,
+    cond: "has_crit_recently",
   })),
   t("inflicts {value:int} additional stack(s) of numbed").output(
     "InflictNumbed",
@@ -1767,7 +1761,7 @@ export const allParsers = [
     "regenerates {value:dec%} mana per second {(when|while)} focus blessing is active",
   ).output("ManaRegenPerSecPct", (c) => ({
     value: c.value,
-    cond: C.has_focus_blessing,
+    cond: "has_focus_blessing",
   })),
   t("{value:+dec%} mana regeneration speed").output(
     "ManaRegenSpeedPct",
@@ -1775,7 +1769,7 @@ export const allParsers = [
   ),
   t("{value:+int%} additional damage taken from cursed enemies").output(
     "DmgTakenPct",
-    (c) => ({ value: c.value, cond: C.enemy_is_cursed }),
+    (c) => ({ value: c.value, cond: "enemy_is_cursed" }),
   ),
   t("{value:+dec%} additional skill cost").output("SkillCostPct", (c) => ({
     value: c.value,
@@ -1783,7 +1777,7 @@ export const allParsers = [
   })),
   t("you and minions deal lucky damage against numbed enemies").output(
     "LuckyDmg",
-    () => ({ cond: C.enemy_numbed }),
+    () => ({ cond: "enemy_numbed" }),
   ),
   t("lucky critical strike").output("LuckyCrit", () => ({})),
   // Joined Force (core talent)
@@ -1892,7 +1886,7 @@ export const allParsers = [
     value: c.value,
     dmgModType: "projectile" as const,
     addn: true,
-    cond: C.target_enemy_is_distant,
+    cond: "target_enemy_is_distant",
   })),
   t("projectile quantity {value:+int}").output("Projectile", (c) => ({
     value: c.value,
@@ -1913,21 +1907,21 @@ export const allParsers = [
   })),
   t("regenerates {value:dec%} mana per second while moving").output(
     "ManaRegenPerSecPct",
-    (c) => ({ value: c.value, cond: C.is_moving }),
+    (c) => ({ value: c.value, cond: "is_moving" }),
   ),
   t("regenerates {value:dec%} [of] life per second while moving").output(
     "LifeRegenPerSecPct",
-    (c) => ({ value: c.value, cond: C.is_moving }),
+    (c) => ({ value: c.value, cond: "is_moving" }),
   ),
   t(
     "regenerates {value:dec%} life per second when taking damage over time",
   ).output("LifeRegenPerSecPct", (c) => ({
     value: c.value,
-    cond: C.taking_damage_over_time,
+    cond: "taking_damage_over_time",
   })),
   t("restores {value:dec%} energy shield per second while moving").output(
     "EnergyShieldRegenPerSecPct",
-    (c) => ({ value: c.value, cond: C.is_moving }),
+    (c) => ({ value: c.value, cond: "is_moving" }),
   ),
   t("regenerates {value:dec%} life per second").output(
     "LifeRegenPerSecPct",
@@ -2043,7 +2037,7 @@ export const allParsers = [
   ).output("FlatDmgToAtks", (c) => ({
     value: { min: c.min, max: c.max },
     dmgType: c.dmgType,
-    per: { stackable: S.armor, amt: c.amt },
+    per: { stackable: "armor", amt: c.amt },
   })),
   t(
     "{value:+dec%} additional damage over time taken when having at least {threshold:int} armor",
@@ -2052,7 +2046,7 @@ export const allParsers = [
     addn: true,
     dmgTakenType: "damage_over_time" as const,
     condThreshold: {
-      target: S.armor,
+      target: "armor",
       comparator: "gte" as const,
       value: c.threshold,
     },
@@ -2064,7 +2058,7 @@ export const allParsers = [
     addn: true,
     dmgTakenType: "damage_over_time" as const,
     condThreshold: {
-      target: S.evasion,
+      target: "evasion",
       comparator: "gte" as const,
       value: c.threshold,
     },
@@ -2076,7 +2070,7 @@ export const allParsers = [
     addn: true,
     dmgTakenType: "damage_over_time" as const,
     condThreshold: {
-      target: S.energy_shield,
+      target: "energy_shield",
       comparator: "gte" as const,
       value: c.threshold,
     },
@@ -2087,7 +2081,7 @@ export const allParsers = [
   ),
   t("{value:+dec%} additional damage dealt by nearby enemies").output(
     "DmgTakenPct",
-    (c) => ({ value: c.value, addn: true, cond: C.target_enemy_is_nearby }),
+    (c) => ({ value: c.value, addn: true, cond: "target_enemy_is_nearby" }),
   ),
   // MUST come before non-curse triggers, or else the Curse keyword will be
   // captured by {skillName:words}
@@ -2148,19 +2142,19 @@ export const allParsers = [
       value: c.value,
       dmgModType: GLOBAL,
       addn: c.additional !== undefined,
-      cond: C.channeling,
+      cond: "channeling",
     }),
   ),
   t("{value:+dec%} additional damage taken at low mana").output(
     "DmgTakenPct",
-    (c) => ({ value: c.value, addn: true, cond: C.has_low_mana }),
+    (c) => ({ value: c.value, addn: true, cond: "has_low_mana" }),
   ),
   t("{value:+dec%} [additional] max energy shield while moving").output(
     "MaxEnergyShieldPct",
     (c) => ({
       value: c.value,
       addn: c.additional !== undefined,
-      cond: C.is_moving,
+      cond: "is_moving",
     }),
   ),
   t("{value:+dec%} [additional] knockback distance").output(
@@ -2176,13 +2170,13 @@ export const allParsers = [
     spec("CritRatingPct", (c) => ({
       value: c.value,
       modType: GLOBAL,
-      per: { stackable: S.attack_block_pct, amt: c.amt },
+      per: { stackable: "attack_block_pct", amt: c.amt },
     })),
     spec("CritDmgPct", (c) => ({
       value: c.value,
       modType: GLOBAL,
       addn: false,
-      per: { stackable: S.attack_block_pct, amt: c.amt },
+      per: { stackable: "attack_block_pct", amt: c.amt },
     })),
   ]),
   t("{value:+dec%} gear armor").output("GearArmorPct", (c) => ({
@@ -2282,6 +2276,6 @@ export const allParsers = [
     value: c.value,
     dmgModType: "cold" as const,
     addn: true,
-    per: { stackable: S.num_ice_puppet_stacks, limit: c.limit },
+    per: { stackable: "num_ice_puppet_stacks", limit: c.limit },
   })),
 ];

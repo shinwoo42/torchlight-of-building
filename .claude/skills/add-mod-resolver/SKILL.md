@@ -181,8 +181,8 @@ const pushHasSealedLifeAndManaCond = (): void => {
 ```
 
 To add a new resolved condition:
-1. Add the condition string to `ResolvedConditionValues` in `src/tli/mod.ts`
-2. In the mod parser template (`src/tli/mod-parser/templates.ts`), use `resolvedCond: RC.condition_name` (imported as `ResolvedConditions as RC`) instead of `cond: C.condition_name`
+1. Add the condition string to `ResolvedConditions` in `src/tli/mod.ts`
+2. In the mod parser template (`src/tli/mod-parser/templates.ts`), use `resolvedCond: "condition_name"` instead of `cond: "condition_name"`
 3. Write a `push*` resolver that filters `resolvedCondMods` and pushes matching mods via `pm()`, and call it at the appropriate point in the execution sequence
 
 **Resolver with step dependencies (rare, only when other resolvers depend on this one):**

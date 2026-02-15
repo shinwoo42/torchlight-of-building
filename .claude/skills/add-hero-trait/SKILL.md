@@ -31,8 +31,8 @@ Hero traits are implemented as mod factories in `src/tli/hero/hero-trait-mods.ts
 | Trait descriptions (source of truth) | `src/data/hero-trait/hero-traits.ts` |
 | Trait mod factories | `src/tli/hero/hero-trait-mods.ts` |
 | Mod type definitions | `src/tli/mod.ts` |
-| Stackable types | `src/tli/mod.ts` (`StackableValues`) |
-| Condition types | `src/tli/mod.ts` (`ConditionValues`) |
+| Stackable types | `src/tli/mod.ts` (`Stackables`) |
+| Condition types | `src/tli/mod.ts` (`Conditions`) |
 | Configuration interface & defaults | `src/tli/core.ts` |
 | Configuration schema | `src/lib/schemas/config.schema.ts` |
 | Configuration UI | `src/components/configuration/ConfigurationTab.tsx` |
@@ -91,10 +91,10 @@ interface ModDefinitions {
 
 ### 3. Add New Stackable (if needed, `src/tli/mod.ts`)
 
-If the trait has a per-stack mechanic, add a stackable to `StackableValues`:
+If the trait has a per-stack mechanic, add a stackable to `Stackables`:
 
 ```typescript
-const StackableValues = [
+export const Stackables = [
   // ... existing values ...
   // hero-specific
   "stalker",
@@ -106,10 +106,10 @@ const StackableValues = [
 
 ### 4. Add New Condition (if needed, `src/tli/mod.ts`)
 
-If the trait has a conditional activation, add to `ConditionValues`:
+If the trait has a conditional activation, add to `Conditions`:
 
 ```typescript
-const ConditionValues = [
+export const Conditions = [
   // ... existing values ...
   "frostbitten_heart_is_active",
   "new_condition_name",           // Add here

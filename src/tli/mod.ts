@@ -101,18 +101,7 @@ export const SealedManaCompTypes = ["spirit_magus"] as const;
 
 export type SealedManaCompSkillType = (typeof SealedManaCompTypes)[number];
 
-// Helper to create an object where each key equals its value
-const createUnionMap = <T extends readonly string[]>(
-  values: T,
-): { readonly [K in T[number]]: K } => {
-  const result = {} as { [K in T[number]]: K };
-  for (const value of values) {
-    (result as Record<string, string>)[value] = value;
-  }
-  return result;
-};
-
-const StackableValues = [
+export const Stackables = [
   "willpower",
   "main_stat",
   "stat",
@@ -178,8 +167,7 @@ const StackableValues = [
   "num_main_spell_skills_cast_recently",
 ] as const;
 
-export const Stackables = createUnionMap(StackableValues);
-export type Stackable = (typeof StackableValues)[number];
+export type Stackable = (typeof Stackables)[number];
 
 export type StatType = "str" | "dex" | "int";
 
@@ -202,7 +190,7 @@ export interface PerStackable {
   multiplicative?: boolean; // default false
 }
 
-const ConditionValues = [
+export const Conditions = [
   "holding_shield",
   "is_dual_wielding",
   "has_one_handed_weapon",
@@ -256,18 +244,16 @@ const ConditionValues = [
   "frostbitten_heart_is_active",
 ] as const;
 
-export const Conditions = createUnionMap(ConditionValues);
-export type Condition = (typeof ConditionValues)[number];
+export type Condition = (typeof Conditions)[number];
 
 // Conditions that depend on intermediate calculations in resolveModsForOffenseSkill,
 // rather than static configuration values
-const ResolvedConditionValues = [
+export const ResolvedConditions = [
   "have_both_sealed_mana_and_life",
   "at_max_focus_blessing",
 ] as const;
 
-export const ResolvedConditions = createUnionMap(ResolvedConditionValues);
-export type ResolvedCondition = (typeof ResolvedConditionValues)[number];
+export type ResolvedCondition = (typeof ResolvedConditions)[number];
 
 export type Comparator = "lt" | "lte" | "eq" | "gt" | "gte";
 
