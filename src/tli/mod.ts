@@ -51,7 +51,7 @@ export const MinionDmgModTypes = [
 
 export type MinionDmgModType = (typeof MinionDmgModTypes)[number];
 
-export const SkillAreaModTypes = ["global", "curse"];
+export const SkillAreaModTypes = ["global", "curse"] as const;
 
 export type SkillAreaModType = (typeof SkillAreaModTypes)[number];
 
@@ -89,7 +89,11 @@ export const DmgTakenTypes = ["physical", "damage_over_time"] as const;
 
 export type DmgTakenType = (typeof DmgTakenTypes)[number];
 
-export const HeroTraitLevelTypes = ["origin", "discipline", "progress"];
+export const HeroTraitLevelTypes = [
+  "origin",
+  "discipline",
+  "progress",
+] as const;
 
 export type HeroTraitLevelType = (typeof HeroTraitLevelTypes)[number];
 
