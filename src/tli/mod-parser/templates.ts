@@ -2,12 +2,6 @@ import type { InfiltrationType, PerStackable } from "../mod";
 import { StatWordMapping } from "./enums";
 import { spec, t } from "./template";
 
-// Literal constants to avoid repetition
-const GLOBAL = "global" as const;
-const ATTACK = "attack" as const;
-const AILMENT = "ailment" as const;
-const ALL = "all" as const;
-
 export const allParsers = [
   t(
     "{dmgValue:+dec%} additional damage; {minionValue:+dec%} additional minion damage",
@@ -15,7 +9,7 @@ export const allParsers = [
     spec((c) => ({
       type: "DmgPct",
       value: c.dmgValue,
-      dmgModType: GLOBAL,
+      dmgModType: "global",
       addn: true,
     })),
     spec((c) => ({ type: "MinionDmgPct", value: c.minionValue, addn: true })),
@@ -28,7 +22,7 @@ export const allParsers = [
       type: "DmgPct",
       value: c.dmg,
       addn: true,
-      dmgModType: ATTACK,
+      dmgModType: "attack",
     })),
   ]),
   t(
@@ -83,7 +77,7 @@ export const allParsers = [
         stackable: "mana_consumed_recently",
         amt: c.amt,
       };
-      return { type: "CritRatingPct", value: c.value, modType: GLOBAL, per };
+      return { type: "CritRatingPct", value: c.value, modType: "global", per };
     }),
     spec((c) => {
       const per: PerStackable = {
@@ -93,7 +87,7 @@ export const allParsers = [
       return {
         type: "CritDmgPct",
         value: c.value,
-        modType: GLOBAL,
+        modType: "global",
         addn: false,
         per,
       };
@@ -102,11 +96,11 @@ export const allParsers = [
   t(
     "{value:+dec%} critical strike rating and critical strike damage",
   ).outputMany([
-    spec((c) => ({ type: "CritRatingPct", value: c.value, modType: GLOBAL })),
+    spec((c) => ({ type: "CritRatingPct", value: c.value, modType: "global" })),
     spec((c) => ({
       type: "CritDmgPct",
       value: c.value,
-      modType: GLOBAL,
+      modType: "global",
       addn: false,
     })),
   ]),
@@ -131,7 +125,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     per: { stackable: "total_block_pct", amt: c.amt, valueLimit: c.limit },
   })),
@@ -146,7 +140,7 @@ export const allParsers = [
     return {
       type: "DmgPct",
       value: c.value,
-      dmgModType: GLOBAL,
+      dmgModType: "global",
       addn: true,
       per,
     };
@@ -185,7 +179,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     cond: "has_full_mana",
   })),
@@ -194,14 +188,14 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     cond: "enemy_has_ailment",
   })),
   t("{value:+dec%} [additional] damage against frozen enemies").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: c.additional !== undefined,
     cond: "enemy_frozen",
   })),
@@ -211,7 +205,7 @@ export const allParsers = [
     spec((c) => ({
       type: "DmgPct",
       value: c.dmgValue,
-      dmgModType: GLOBAL,
+      dmgModType: "global",
       addn: true,
       cond: "enemy_is_cursed",
     })),
@@ -224,7 +218,7 @@ export const allParsers = [
   t("{value:+dec%} [additional] damage against cursed enemies").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: c.additional !== undefined,
     cond: "enemy_is_cursed",
   })),
@@ -242,7 +236,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: c.additional !== undefined,
     resolvedCond: "have_both_sealed_mana_and_life",
   })),
@@ -250,7 +244,7 @@ export const allParsers = [
     (c) => ({
       type: "DmgPct",
       value: c.value,
-      dmgModType: GLOBAL,
+      dmgModType: "global",
       addn: false,
       cond: "has_focus_blessing",
     }),
@@ -274,21 +268,21 @@ export const allParsers = [
   t("{value:+dec%} [additional] damage while having fervor").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: c.additional !== undefined,
     cond: "has_fervor",
   })),
   t("{value:+dec%} damage if you have blocked recently").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: false,
     cond: "has_blocked_recently",
   })),
   t("{value:+dec%} attack damage when dual wielding").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: ATTACK,
+    dmgModType: "attack",
     addn: false,
     cond: "is_dual_wielding",
   })),
@@ -297,7 +291,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     isEnemyDebuff: true,
     cond: "target_enemy_frozen_recently",
@@ -305,7 +299,7 @@ export const allParsers = [
   t("{value:+dec%} additional damage taken by nearby enemies").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     isEnemyDebuff: true,
     cond: "target_enemy_is_nearby",
@@ -315,7 +309,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     per: { stackable: "frostbite_rating", amt: c.amt },
   })),
@@ -323,7 +317,7 @@ export const allParsers = [
     (c) => ({
       type: "DmgPct",
       value: c.value,
-      dmgModType: GLOBAL,
+      dmgModType: "global",
       addn: true,
       per: { stackable: "fervor", amt: c.amt },
     }),
@@ -331,14 +325,14 @@ export const allParsers = [
   t("{value:+dec%} damage per {amt:int} of the highest stat").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: false,
     per: { stackable: "highest_stat", amt: c.amt },
   })),
   t("{value:+dec%} damage per {amt:int} stats").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: false,
     per: { stackable: "stat", amt: c.amt },
   })),
@@ -347,7 +341,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: c.additional !== undefined,
     per: { stackable: "additional_max_channel_stack", amt: c.amt },
   })),
@@ -356,7 +350,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: ATTACK,
+    dmgModType: "attack",
     addn: true,
     cond: "target_enemy_is_in_proximity",
   })),
@@ -366,14 +360,14 @@ export const allParsers = [
     spec((c) => ({
       type: "DmgPct",
       value: c.value,
-      dmgModType: ATTACK,
+      dmgModType: "attack",
       addn: true,
       cond: "has_elites_nearby",
     })),
     spec((c) => ({
       type: "DmgPct",
       value: c.value,
-      dmgModType: AILMENT,
+      dmgModType: "ailment",
       addn: true,
       cond: "has_elites_nearby",
     })),
@@ -382,7 +376,7 @@ export const allParsers = [
     (c) => ({
       type: "DmgPct",
       value: c.value,
-      dmgModType: ATTACK,
+      dmgModType: "attack",
       addn: true,
       cond: "target_enemy_is_nearby",
     }),
@@ -392,7 +386,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: ATTACK,
+    dmgModType: "attack",
     addn: true,
     cond: "has_one_handed_weapon",
   })),
@@ -401,7 +395,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: ATTACK,
+    dmgModType: "attack",
     addn: true,
     per: { stackable: "num_unique_weapon_types_equipped" },
     cond: "is_dual_wielding",
@@ -433,7 +427,7 @@ export const allParsers = [
   t("{value:dec%} additional damage applied to life").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
   })),
   t(
@@ -455,7 +449,7 @@ export const allParsers = [
     (c) => ({
       type: "DmgPct",
       value: c.value,
-      dmgModType: GLOBAL,
+      dmgModType: "global",
       addn: true,
       cond: "blur_ended_recently",
     }),
@@ -465,7 +459,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     cond: "has_used_mobility_skill_recently",
   })),
@@ -474,7 +468,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     cond: "has_used_mobility_skill_recently",
   })),
@@ -483,7 +477,7 @@ export const allParsers = [
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: true,
     cond: "has_moved_recently",
   })),
@@ -504,7 +498,7 @@ export const allParsers = [
     (c) => ({
       type: "CritRatingPct",
       value: c.value,
-      modType: GLOBAL,
+      modType: "global",
       cond: "enemy_frostbitten",
     }),
   ),
@@ -512,7 +506,7 @@ export const allParsers = [
     (c) => ({
       type: "FlatCritRating",
       value: c.value,
-      modType: GLOBAL,
+      modType: "global",
       cond: "enemy_frostbitten",
     }),
   ),
@@ -521,7 +515,7 @@ export const allParsers = [
       type: "CritDmgPct",
       value: c.value,
       addn: false,
-      modType: GLOBAL,
+      modType: "global",
       cond: "enemy_frostbitten",
     }),
   ),
@@ -563,7 +557,7 @@ export const allParsers = [
     type: "CritDmgPct",
     value: c.value,
     addn: false,
-    modType: GLOBAL,
+    modType: "global",
     per: { stackable: "num_spell_skills_used_recently", limit: c.limit },
   })),
   t(
@@ -985,7 +979,7 @@ export const allParsers = [
     },
   })),
   t("{value:+dec%} elemental and erosion resistance penetration").output(
-    (c) => ({ type: "ResPenPct", value: c.value, penType: ALL }),
+    (c) => ({ type: "ResPenPct", value: c.value, penType: "all" }),
   ),
   t
     .multi([
@@ -1009,7 +1003,7 @@ export const allParsers = [
     (c) => ({
       type: "DoubleDmgChancePct",
       value: c.value,
-      doubleDmgModType: ATTACK,
+      doubleDmgModType: "attack",
     }),
   ),
   t("{value:+dec%} chance for spells to deal double damage").output((c) => ({
@@ -1697,7 +1691,7 @@ export const allParsers = [
   t("{value:+dec%} [additional] skill area").output((c) => ({
     type: "SkillAreaPct",
     value: c.value,
-    skillAreaModType: GLOBAL,
+    skillAreaModType: "global",
     addn: c.additional !== undefined,
   })),
   t("{value:+dec%} skill effect duration").output((c) => ({
@@ -2422,7 +2416,7 @@ export const allParsers = [
   t("{value:+dec%} [additional] damage when channeling").output((c) => ({
     type: "DmgPct",
     value: c.value,
-    dmgModType: GLOBAL,
+    dmgModType: "global",
     addn: c.additional !== undefined,
     cond: "channeling",
   })),
@@ -2455,13 +2449,13 @@ export const allParsers = [
     spec((c) => ({
       type: "CritRatingPct",
       value: c.value,
-      modType: GLOBAL,
+      modType: "global",
       per: { stackable: "attack_block_pct", amt: c.amt },
     })),
     spec((c) => ({
       type: "CritDmgPct",
       value: c.value,
-      modType: GLOBAL,
+      modType: "global",
       addn: false,
       per: { stackable: "attack_block_pct", amt: c.amt },
     })),
