@@ -197,6 +197,8 @@ export interface Configuration {
   // --------------------
 
   realmOfMercuryEnabled: boolean;
+  // default to 0
+  numEnemiesInsideRealmOfMercury: number;
   // default to false
   baptismOfPurityEnabled: boolean;
   // default to false
@@ -303,6 +305,7 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   numMaxMultistrikesRecently: 0,
   numBerserkingBladeBuffStacks: undefined,
   realmOfMercuryEnabled: false,
+  numEnemiesInsideRealmOfMercury: 0,
   baptismOfPurityEnabled: false,
   frostbittenHeartIsActive: false,
   danceOfFrostStacks: undefined,

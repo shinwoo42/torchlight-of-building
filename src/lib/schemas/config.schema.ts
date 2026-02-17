@@ -106,6 +106,9 @@ export const ConfigurationPageSchema = z
       .optional()
       .catch(d.numBerserkingBladeBuffStacks),
     realmOfMercuryEnabled: z.boolean().catch(d.realmOfMercuryEnabled),
+    numEnemiesInsideRealmOfMercury: z
+      .number()
+      .catch(d.numEnemiesInsideRealmOfMercury),
     baptismOfPurityEnabled: z.boolean().catch(d.baptismOfPurityEnabled),
     frostbittenHeartIsActive: z.boolean().catch(d.frostbittenHeartIsActive),
     danceOfFrostStacks: z.number().optional().catch(d.danceOfFrostStacks),

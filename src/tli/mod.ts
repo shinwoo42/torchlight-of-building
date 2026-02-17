@@ -152,6 +152,7 @@ export const Stackables = [
   "stalker",
   "twisted_spacetime",
   "dance_of_frost",
+  "num_enemies_inside_realm_of_mercury",
   // pactspirit-specific
   "repentance",
   "pure_heart",

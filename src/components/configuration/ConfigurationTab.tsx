@@ -249,6 +249,22 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
             className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 accent-amber-500"
           />
 
+          {config.realmOfMercuryEnabled && (
+            <>
+              <label className="text-right text-zinc-50">
+                Enemies Inside Realm of Mercury
+                <InfoTooltip text="Number of enemies inside Realm of Mercury. Defaults to 0." />
+              </label>
+              <NumberInput
+                value={config.numEnemiesInsideRealmOfMercury}
+                onChange={(v) =>
+                  onUpdate({ numEnemiesInsideRealmOfMercury: v ?? 0 })
+                }
+                min={0}
+              />
+            </>
+          )}
+
           <label className="text-right text-zinc-50">
             Baptism of Purity
             <InfoTooltip text="Include Rosa 2's Baptism of Purity recorded damage" />

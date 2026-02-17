@@ -124,6 +124,18 @@ const heroTraitModFactories: Partial<Record<HeroTraitName, ModFactory>> = {
   ],
   // Rosa 2
   "Unsullied Blade": () => [{ type: "SpellDmgBonusAppliesToAtkDmg" }],
+  "Boundless Sanctuary": (i) => [
+    {
+      type: "DmgPct",
+      value: [6, 7, 8, 9, 10][i],
+      dmgModType: "elemental",
+      addn: true,
+      per: {
+        stackable: "num_enemies_inside_realm_of_mercury",
+        valueLimit: [60, 70, 80, 90, 100][i],
+      },
+    },
+  ],
   "Baptism of Purity": (i) => [
     { type: "MaxManaPct", value: 20, addn: true },
     { type: "InflictsInfiltration", infiltrationType: "cold" },
