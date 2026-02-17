@@ -249,6 +249,15 @@ export const allParsers = [
       cond: "has_focus_blessing",
     }),
   ),
+  t(
+    "{value:+dec%} {modType:DmgModType} damage {(when|while)} tenacity blessing is active",
+  ).output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: c.modType,
+    addn: false,
+    cond: "has_tenacity_blessing",
+  })),
   t("{value:+dec%} spell damage when having focus blessing").output((c) => ({
     type: "DmgPct",
     value: c.value,
@@ -519,6 +528,22 @@ export const allParsers = [
       cond: "enemy_frostbitten",
     }),
   ),
+  t(
+    "{value:+dec%} [additional] critical strike damage against paralyzed enemies",
+  ).output((c) => ({
+    type: "CritDmgPct",
+    value: c.value,
+    addn: c.additional !== undefined,
+    modType: "global",
+    cond: "enemy_paralyzed",
+  })),
+  t("{value:dec%} critical strike damage per fervor rating").output((c) => ({
+    type: "CritDmgPct",
+    value: c.value,
+    addn: false,
+    modType: "global",
+    per: { stackable: "fervor" },
+  })),
   t("{value:+dec%} sentry skill critical strike rating").output((c) => ({
     type: "CritRatingPct",
     value: c.value,
@@ -1964,6 +1989,9 @@ export const allParsers = [
     "{value:+dec%} chance to gain {stacks:int} stack of tenacity blessing on defeat",
   ).output(() => ({ type: "GeneratesTenacityBlessing" })),
   t(
+    "{value:+dec%} chance to gain {stacks:int} stack(s) of tenacity blessing when hitting an enemy",
+  ).output(() => ({ type: "GeneratesTenacityBlessing" })),
+  t(
     "{value:+dec%} chance to gain blur when inflicting crowd control effects",
   ).output((c) => ({ type: "GeneratesBlur", value: c.value })),
   t("{value:+dec%} numbed effect").output((c) => ({
@@ -2108,6 +2136,9 @@ export const allParsers = [
   t("{value:+dec%} additional damage taken when Pure Heart is active").output(
     (c) => ({ type: "DmgTakenPct", value: c.value }),
   ),
+  t(
+    "gains {stacks:int} stack of pure heart when using an attack mobility skill",
+  ).outputNone(),
   t(
     "converts {value:dec%} of {from:DmgChunkType} damage taken to {to:DmgChunkType} damage",
   ).output((c) => ({
@@ -2485,6 +2516,9 @@ export const allParsers = [
     type: "InflictParalysisPct",
     value: c.value,
   })),
+  t("{value:+dec%} chance for attacks to inflict paralysis on hit").output(
+    (c) => ({ type: "InflictParalysisPct", value: c.value }),
+  ),
   t("{value:+dec%} max life and max mana").outputMany([
     spec((c) => ({ type: "MaxLifePct", value: c.value, addn: false })),
     spec((c) => ({ type: "MaxManaPct", value: c.value, addn: false })),
@@ -2520,6 +2554,9 @@ export const allParsers = [
     value: c.value,
     addn: c.additional !== undefined,
   })),
+  t(
+    "immediately casts warcry. {value:+dec%} additional warcry skill effect",
+  ).output((c) => ({ type: "WarcryEffPct", value: c.value, addn: true })),
   t("warcry is cast immediately").outputNone(),
   t("gains hasten when minions land a critical strike").output(() => ({
     type: "GeneratesHasten",

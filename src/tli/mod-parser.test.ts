@@ -4062,3 +4062,74 @@ test("parse ice prison cold damage debuff", () => {
     },
   ]);
 });
+
+test("parse critical strike damage per fervor rating", () => {
+  const result = parseMod("0.5% Critical Strike Damage per Fervor Rating");
+  expect(result).toEqual([
+    {
+      type: "CritDmgPct",
+      value: 0.5,
+      addn: false,
+      modType: "global",
+      per: { stackable: "fervor" },
+    },
+  ]);
+});
+
+test("parse immediately casts warcry with warcry skill effect", () => {
+  const result = parseMod(
+    "Immediately casts Warcry. +20% additional Warcry Skill Effect",
+  );
+  expect(result).toEqual([{ type: "WarcryEffPct", value: 20, addn: true }]);
+});
+
+test("parse gains pure heart stack on attack mobility skill", () => {
+  const result = parseMod(
+    "Gains 1 stack of Pure Heart when using an Attack Mobility Skill",
+  );
+  expect(result).toEqual([]);
+});
+
+test("parse chance to gain tenacity blessing when hitting", () => {
+  const result = parseMod(
+    "+100% chance to gain 1 stack(s) of Tenacity Blessing when hitting an enemy",
+  );
+  expect(result).toEqual([{ type: "GeneratesTenacityBlessing" }]);
+});
+
+test("parse chance for attacks to inflict paralysis", () => {
+  const result = parseMod(
+    "+100% chance for Attacks to inflict Paralysis on hit",
+  );
+  expect(result).toEqual([{ type: "InflictParalysisPct", value: 100 }]);
+});
+
+test("parse additional critical strike damage against paralyzed enemies", () => {
+  const result = parseMod(
+    "+25% additional Critical Strike Damage against Paralyzed enemies",
+  );
+  expect(result).toEqual([
+    {
+      type: "CritDmgPct",
+      value: 25,
+      addn: true,
+      modType: "global",
+      cond: "enemy_paralyzed",
+    },
+  ]);
+});
+
+test("parse attack damage while tenacity blessing is active", () => {
+  const result = parseMod(
+    "+30% Attack Damage while Tenacity Blessing is active",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 30,
+      dmgModType: "attack",
+      addn: false,
+      cond: "has_tenacity_blessing",
+    },
+  ]);
+});
