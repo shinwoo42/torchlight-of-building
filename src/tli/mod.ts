@@ -63,6 +63,10 @@ export const DoubleDmgModTypes = ["attack", "spell"] as const;
 
 export type DoubleDmgModType = (typeof DoubleDmgModTypes)[number];
 
+export const SkillCostTypes = ["attack"] as const;
+
+export type SkillCostType = (typeof SkillCostTypes)[number];
+
 export const SkillLevelTypes = [
   "main",
   "support",
@@ -481,7 +485,7 @@ interface ModDefinitions {
   GearBasePhysDmg: { value: number };
   GearBaseCritRating: { value: number };
   GearBaseAttackSpeed: { value: number };
-  SkillCost: { value: number };
+  SkillCost: { value: number; skillCostType?: SkillCostType };
   SkillCostPct: { value: number; addn?: boolean };
   GeneratesAttackAggression: object;
   HasAttackAggression: object;

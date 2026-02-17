@@ -1,4 +1,4 @@
-import type { InfiltrationType, PerStackable } from "../mod";
+import type { InfiltrationType, PerStackable, SkillCostType } from "../mod";
 import { StatWordMapping } from "./enums";
 import { spec, t } from "./template";
 
@@ -1490,6 +1490,9 @@ export const allParsers = [
   t(
     "damage becomes lucky and at least {stacks:int} stack(s) of spell burst charge is consumed when spell burst is activated",
   ).output(() => ({ type: "LuckyDmg" })),
+  t(
+    "gains additional fervor rating equal to {value:dec%} of the current fervor rating on hit. cooldown: {cd:dec} s",
+  ).output(() => ({ type: "GainsFervor" })),
   t("have fervor").output(() => ({ type: "HaveFervor" })),
   t("has {value:int} point(s) of fixed fervor rating").output((c) => ({
     type: "FixedFervorPts",
@@ -1643,6 +1646,11 @@ export const allParsers = [
     skillLevelType: "main",
     per: { stackable: "sealed_life_pct", amt: c.amt },
     cond: "has_full_mana",
+  })),
+  t("{value:+int} {skillCostType:SkillCostType} skill cost").output((c) => ({
+    type: "SkillCost",
+    value: c.value,
+    skillCostType: c.skillCostType as SkillCostType,
   })),
   t("{value:+int} skill cost").output((c) => ({
     type: "SkillCost",
@@ -2552,6 +2560,14 @@ export const allParsers = [
   })),
   t("cooldown: {value:dec}s").outputNone(),
   t("energy shield starts to charge when blocking").outputNone(),
+  t("energy shield charge cannot be interrupted").outputNone(),
+  t(
+    "restores {value:dec%} missing energy shield when suffering a severe injury",
+  ).outputNone(),
+  t("loses fervor at low life").outputNone(),
+  t(
+    "consumes {value:dec%} of current life and energy shield per second while fervor is active",
+  ).outputNone(),
   t("you can cast {value:int} additional curse(s)").output((c) => ({
     type: "AddnCurse",
     value: c.value,

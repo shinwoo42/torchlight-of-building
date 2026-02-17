@@ -10,6 +10,7 @@ import {
   MinionDmgModTypes,
   ResPenTypes,
   ResTypes,
+  SkillCostTypes,
   SkillLevelTypes,
 } from "../mod";
 
@@ -32,6 +33,7 @@ registerEnum("CoreTalentName", CoreTalentNames);
 registerEnum("SkillLevelType", SkillLevelTypes);
 registerEnum("ResType", ResTypes);
 registerEnum("InfiltrationType", InfiltrationTypes);
+registerEnum("SkillCostType", SkillCostTypes);
 
 // GearDmgModType for FlatGearDmg (includes "elemental" unlike DmgChunkType)
 export const GearDmgModTypes = [

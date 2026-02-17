@@ -4151,3 +4151,41 @@ test("parse attack damage while tenacity blessing is active", () => {
     },
   ]);
 });
+
+test("parse gains fervor rating on hit", () => {
+  const result = parseMod(
+    "Gains additional Fervor Rating equal to 25% of the current Fervor Rating on hit. Cooldown: 0.3 s",
+  );
+  expect(result).toEqual([{ type: "GainsFervor" }]);
+});
+
+test("parse attack skill cost", () => {
+  const result = parseMod("-12 Attack Skill Cost");
+  expect(result).toEqual([
+    { type: "SkillCost", value: -12, skillCostType: "attack" },
+  ]);
+});
+
+test("parse restores missing energy shield on severe injury", () => {
+  const result = parseMod(
+    "Restores 15% Missing Energy Shield when suffering a Severe Injury",
+  );
+  expect(result).toEqual([]);
+});
+
+test("parse loses fervor at low life", () => {
+  const result = parseMod("Loses Fervor at Low Life");
+  expect(result).toEqual([]);
+});
+
+test("parse consumes life and energy shield while fervor active", () => {
+  const result = parseMod(
+    "Consumes 11% of current Life and Energy Shield per second while Fervor is active",
+  );
+  expect(result).toEqual([]);
+});
+
+test("parse energy shield charge cannot be interrupted", () => {
+  const result = parseMod("Energy Shield charge cannot be interrupted");
+  expect(result).toEqual([]);
+});
