@@ -1219,6 +1219,21 @@ const resolveSelectedSkillSupportMods = (
       );
     }
   }
+
+  // Resolve CurrentSkillSupportedBy mods from support skill affixes
+  const embeddedSupports = filterMods(supportMods, "CurrentSkillSupportedBy");
+  for (const m of embeddedSupports) {
+    supportMods.push(
+      ...resolveNormalSupportSkillMods(
+        { name: m.skillName, level: m.level },
+        loadoutMods,
+        loadout,
+        config,
+        derivedCtx,
+      ),
+    );
+  }
+
   return supportMods;
 };
 
@@ -2120,6 +2135,19 @@ const resolveModsForOffenseSkill = (
     }
     normalize("agility_blessing", agilityBlessings);
     normalize("tenacity_blessing", tenacityBlessings);
+
+    const changeTenacity = findMod(mods, "ChangeTenacityToAddnDmgPct");
+    if (changeTenacity !== undefined) {
+      mods.push({
+        type: "DmgPct",
+        value: changeTenacity.value,
+        dmgModType: "global",
+        addn: true,
+        per: { stackable: "tenacity_blessing" },
+        cond: "has_tenacity_blessing",
+        src: "Tenacity Blessing (changed to additional damage)",
+      });
+    }
   };
   const pushTangle = (): TangleSummary | undefined => {
     if (!modExists(mods, "IsTangle")) return undefined;

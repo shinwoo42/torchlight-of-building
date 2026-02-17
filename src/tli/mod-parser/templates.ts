@@ -2038,6 +2038,9 @@ export const allParsers = [
   t(
     "changes the base effect of numbed to: {value:+dec%} additional lightning damage taken",
   ).output((c) => ({ type: "Conductive", value: c.value })),
+  t(
+    "changes the base effect of tenacity blessing to: {value:+dec%} additional damage",
+  ).output((c) => ({ type: "ChangeTenacityToAddnDmgPct", value: c.value })),
   // Tradeoff mods (Impermanence core talent)
   t(
     "{value:+dec%} additional attack speed when dexterity is no less than strength",

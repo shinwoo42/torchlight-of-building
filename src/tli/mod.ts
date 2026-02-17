@@ -486,6 +486,7 @@ interface ModDefinitions {
   HasSpellAggression: object;
   SpellAggressionEffPct: { value: number };
   MainSkillSupportedBy: { skillName: string; level: number };
+  CurrentSkillSupportedBy: { skillName: string; level: number };
   TriggersSkill: { skillName: string; level: number };
   EliminationPct: { value: number };
   SealConversion: object;
@@ -549,6 +550,7 @@ interface ModDefinitions {
   JoinedForceDisableOffhand: object;
   JoinedForceAddOffhandToMainhandPct: { value: number };
   Conductive: { value: number };
+  ChangeTenacityToAddnDmgPct: { value: number };
   TradeoffDexGteStrAspdPct: { value: number };
   TradeoffStrGteDexDmgPct: { value: number };
   // hero-specific mods

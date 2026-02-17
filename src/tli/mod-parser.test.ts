@@ -2512,6 +2512,13 @@ test("parse conductive", () => {
   expect(result).toEqual([{ type: "Conductive", value: 11 }]);
 });
 
+test("parse change tenacity blessing to additional damage", () => {
+  const result = parseMod(
+    "Changes the base effect of Tenacity Blessing to: +8% additional damage",
+  );
+  expect(result).toEqual([{ type: "ChangeTenacityToAddnDmgPct", value: 8 }]);
+});
+
 test("parse additional min damage", () => {
   const result = parseMod("-40% additional min damage");
   expect(result).toEqual([{ type: "AddnMinDmgPct", value: -40, addn: true }]);

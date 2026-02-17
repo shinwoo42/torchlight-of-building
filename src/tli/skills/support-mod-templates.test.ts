@@ -195,4 +195,21 @@ describe("parseSupportAffixes", () => {
     ]);
     expect(result).toEqual([[]]);
   });
+
+  test("parse SkillSupportedBy Willpower", () => {
+    const result = parseSupportAffixes([
+      "The supported skill is supported by Lv. 15 Willpower",
+    ]);
+    expect(result).toEqual([
+      [
+        {
+          mod: {
+            type: "CurrentSkillSupportedBy",
+            skillName: "Willpower",
+            level: 15,
+          },
+        },
+      ],
+    ]);
+  });
 });

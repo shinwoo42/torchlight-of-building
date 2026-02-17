@@ -339,6 +339,13 @@ const allSupportParsers = [
   t(
     "gains a stack of buff when using the supported skill every {_:int} s. the buff lasts {_:int}s",
   ).outputMany([]),
+  t(
+    "the supported skill is supported by lv. {level:int} {skillName:words}",
+  ).output((c) => ({
+    type: "CurrentSkillSupportedBy",
+    skillName: c.skillName,
+    level: c.level,
+  })),
 ];
 
 const parseSupportAffix = (text: string): SupportMod[] | undefined => {
