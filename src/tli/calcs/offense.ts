@@ -1862,6 +1862,10 @@ const resolveModsForOffenseSkill = (
     const projSpeedPct = sumByValue(filterMods(mods, "ProjSpdPct"));
     normalize("proj_speed_pct", projSpeedPct);
   };
+  const pushSkillArea = (): void => {
+    const skillAreaPct = sumByValue(filterMods(mods, "SkillAreaPct"));
+    normalize("skill_area", skillAreaPct);
+  };
   const pushFervor = () => {
     if (resourcePool.hasFervor) {
       mods.push(calculateFervorCritRateMod(mods, resourcePool));
@@ -2244,6 +2248,7 @@ const resolveModsForOffenseSkill = (
   normalize("desecration", desecration ?? 0);
   normalize("willpower", willpowerStacks);
   pushProjectiles();
+  pushSkillArea();
   pushFervor();
   pushShadowStrike();
 

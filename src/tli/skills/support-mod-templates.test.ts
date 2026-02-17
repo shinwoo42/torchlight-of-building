@@ -270,4 +270,22 @@ describe("parseSupportAffixes", () => {
       ],
     ]);
   });
+
+  test("parse skill area bonus applied to steep strike damage", () => {
+    const result = parseSupportAffixes([
+      "27% of the bonuses and additional bonuses to Skill Area is also applied to the skill's additional Steep Strike Damage",
+    ]);
+    expect(result).toEqual([
+      [
+        {
+          mod: {
+            type: "SteepStrikeDmgPct",
+            value: 1,
+            addn: true,
+            per: { stackable: "skill_area", amt: 100 / 27 },
+          },
+        },
+      ],
+    ]);
+  });
 });

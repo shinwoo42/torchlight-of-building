@@ -372,6 +372,14 @@ const allSupportParsers = [
     addn: true,
     per: { stackable: "fervor", amt: c.amt },
   })),
+  t(
+    "{value:dec%} of the bonuses and additional bonuses to skill area is also applied to the skill's additional steep strike damage",
+  ).output((c) => ({
+    type: "SteepStrikeDmgPct",
+    value: 1,
+    addn: true,
+    per: { stackable: "skill_area", amt: 100 / c.value },
+  })),
 ];
 
 const parseSupportAffix = (text: string): SupportMod[] | undefined => {
