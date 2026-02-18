@@ -585,6 +585,7 @@ interface ModDefinitions {
   SquidnovaEffPct: { value: number };
   GeneratesSquidnova: object;
   MaxPureHeartStacks: { value: number };
+  MaxFelineStimulantStacks: { value: number };
   // legendary gear
   DisableMainStatDmg: object;
   TrinityElePen: object;

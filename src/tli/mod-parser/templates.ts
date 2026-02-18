@@ -2219,6 +2219,10 @@ export const allParsers = [
     type: "MaxPureHeartStacks",
     value: c.value,
   })),
+  t("{value:+int} to max feline stimulant stacks").output((c) => ({
+    type: "MaxFelineStimulantStacks",
+    value: c.value,
+  })),
   t("{value:+dec%} additional damage taken when Pure Heart is active").output(
     (c) => ({ type: "DmgTakenPct", value: c.value }),
   ),

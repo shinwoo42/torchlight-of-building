@@ -3078,6 +3078,11 @@ test("parse max fortitude stacks", () => {
   expect(result).toEqual([{ type: "MaxFortitudeStack", value: 1 }]);
 });
 
+test("parse max feline stimulant stacks", () => {
+  const result = parseMod("+2 to Max Feline Stimulant stacks");
+  expect(result).toEqual([{ type: "MaxFelineStimulantStacks", value: 2 }]);
+});
+
 test("parse additional armor while moving", () => {
   const result = parseMod("+10% additional Armor while moving");
   expect(result).toEqual([

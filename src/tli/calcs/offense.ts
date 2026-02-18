@@ -2007,7 +2007,11 @@ const resolveModsForOffenseSkill = (
       normalize("pure_heart", stacks);
     }
     {
-      const maxStacks = 3;
+      const baseStacks = 3;
+      const addedMaxStacks = sumByValue(
+        filterMods(mods, "MaxFelineStimulantStacks"),
+      );
+      const maxStacks = baseStacks + addedMaxStacks;
       const stacks = Math.min(
         maxStacks,
         config.numFelineStimulant ?? maxStacks,
