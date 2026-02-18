@@ -163,6 +163,13 @@ const allSupportParsers = [
     value: c.value,
     skillAreaModType: GLOBAL,
   })),
+  t(
+    "the supported skill {value:dec%} aura effect for each aura that affects you, stacking up to {limit:int} time(s)",
+  ).output((c) => ({
+    type: "AuraEffPct",
+    value: c.value,
+    per: { stackable: "num_aura", limit: c.limit },
+  })),
   t("{value:dec%} aura effect for the supported skill").output((c) => ({
     type: "AuraEffPct",
     value: c.value,

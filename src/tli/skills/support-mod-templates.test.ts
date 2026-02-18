@@ -308,4 +308,21 @@ describe("parseSupportAffixes", () => {
       ],
     ]);
   });
+
+  test("parse per-aura aura effect with stacking limit", () => {
+    const result = parseSupportAffixes([
+      "The supported skill 6% Aura Effect for each Aura that affects you, stacking up to 5 time(s)",
+    ]);
+    expect(result).toEqual([
+      [
+        {
+          mod: {
+            type: "AuraEffPct",
+            value: 6,
+            per: { stackable: "num_aura", limit: 5 },
+          },
+        },
+      ],
+    ]);
+  });
 });

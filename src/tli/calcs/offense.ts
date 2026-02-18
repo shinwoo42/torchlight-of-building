@@ -1039,6 +1039,16 @@ const resolveBuffSkillMods = (
   ];
   const resolvedMods: Mod[] = [];
 
+  const numAuraSkills = passiveSkillSlots.filter((slot) => {
+    if (!slot.enabled || slot.skillName === undefined) {
+      return false;
+    }
+    const skill = PassiveSkills.find((s) => s.name === slot.skillName) as
+      | BasePassiveSkill
+      | undefined;
+    return skill?.tags.includes("Aura") === true;
+  }).length;
+
   for (const skillSlot of allSkillSlots) {
     if (!skillSlot.enabled || skillSlot.skillName === undefined) {
       continue;
@@ -1114,6 +1124,7 @@ const resolveBuffSkillMods = (
       config,
       derivedCtx,
       skill.name,
+      numAuraSkills,
     );
 
     // === Apply multipliers to buff mods ===
@@ -1362,6 +1373,7 @@ const resolveBuffSkillEffMults = (
   config: Configuration,
   derivedCtx: DerivedCtx,
   buffSkillName: string,
+  numAuraSkills: number,
 ): {
   skillEffMult: number;
   auraEffMult: number;
@@ -1394,6 +1406,7 @@ const resolveBuffSkillEffMults = (
     "cruelty_buff",
     config.crueltyBuffStacks ?? 40,
   );
+  pushNormalizedStackable(mods, prenormMods, "num_aura", numAuraSkills);
 
   const skillEffMult = calcEffMult(mods, "SkillEffPct");
   const auraEffMult = calcEffMult(mods, "AuraEffPct");
