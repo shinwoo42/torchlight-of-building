@@ -2084,6 +2084,19 @@ test("parse additional spell damage per stack of focus blessing owned", () => {
   ]);
 });
 
+test("parse damage per stack of any blessing", () => {
+  const result = parseMod("+3% Damage per stack of any Blessing");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 3,
+      dmgModType: "global",
+      addn: false,
+      per: { stackable: "any_blessing" },
+    },
+  ]);
+});
+
 test("parse blessing duration (all types)", () => {
   const result = parseMod("+30% Blessing Duration");
   expect(result).toEqual([

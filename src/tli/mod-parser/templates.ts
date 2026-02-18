@@ -1597,6 +1597,13 @@ export const allParsers = [
     addn: true,
     per: { stackable: "focus_blessing" },
   })),
+  t("{value:+dec%} damage per stack of any blessing").output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: "global",
+    addn: false,
+    per: { stackable: "any_blessing" },
+  })),
   t("{value:+dec%} blessing duration").outputMany([
     spec((c) => ({ type: "FocusBlessingDurationPct", value: c.value })),
     spec((c) => ({ type: "AgilityBlessingDurationPct", value: c.value })),

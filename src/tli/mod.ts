@@ -131,6 +131,7 @@ export const Stackables = [
   "focus_blessing",
   "agility_blessing",
   "tenacity_blessing",
+  "any_blessing",
   "desecration",
   "torment",
   "num_enemies_affected_by_warcry",

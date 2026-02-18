@@ -2212,6 +2212,10 @@ const resolveModsForOffenseSkill = (
     }
     normalize("agility_blessing", agilityBlessings);
     normalize("tenacity_blessing", tenacityBlessings);
+    normalize(
+      "any_blessing",
+      tenacityBlessings + focusBlessings + agilityBlessings,
+    );
 
     const changeTenacity = findMod(mods, "ChangeTenacityToAddnDmgPct");
     if (changeTenacity !== undefined) {
