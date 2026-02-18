@@ -1638,6 +1638,10 @@ export const allParsers = [
     type: "SpellAggressionEffPct",
     value: c.value,
   })),
+  t("{value:+dec%} attack aggression effect").output((c) => ({
+    type: "AttackAggressionEffPct",
+    value: c.value,
+  })),
   t(
     "{value:dec%} chance to gain a barrier for every {dist:int} m you move",
   ).output(() => ({ type: "GeneratesBarrier" })),

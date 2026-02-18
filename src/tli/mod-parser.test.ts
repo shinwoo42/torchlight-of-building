@@ -2018,6 +2018,11 @@ test("parse spell aggression effect per main spell skill cast recently", () => {
   ]);
 });
 
+test("parse attack aggression effect", () => {
+  const result = parseMod("+60% Attack Aggression Effect");
+  expect(result).toEqual([{ type: "AttackAggressionEffPct", value: 60 }]);
+});
+
 test("parse skill cost", () => {
   const result = parseMod("-4 Skill Cost");
   expect(result).toEqual([{ type: "SkillCost", value: -4 }]);
