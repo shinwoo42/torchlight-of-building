@@ -2017,6 +2017,13 @@ const resolveModsForOffenseSkill = (
         config.numFelineStimulant ?? maxStacks,
       );
       normalize("feline_stimulant", stacks);
+      if (stacks >= maxStacks) {
+        pm(
+          ...resolvedCondMods.filter(
+            (m) => m.resolvedCond === "at_max_feline_stimulant_stacks",
+          ),
+        );
+      }
     }
   };
   const pushTradeoff = (): void => {

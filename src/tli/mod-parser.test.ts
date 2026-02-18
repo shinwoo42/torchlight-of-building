@@ -3945,6 +3945,18 @@ test("parse has attack aggression", () => {
   expect(result).toEqual([{ type: "HasAttackAggression" }]);
 });
 
+test("parse has attack aggression when reaching max feline stimulant stacks", () => {
+  const result = parseMod(
+    "Has Attack Aggression when reaching Max Feline Stimulant stacks",
+  );
+  expect(result).toEqual([
+    {
+      type: "HasAttackAggression",
+      resolvedCond: "at_max_feline_stimulant_stacks",
+    },
+  ]);
+});
+
 test("parse damage while focus blessing is active", () => {
   const result = parseMod("+30% damage while Focus Blessing is active");
   expect(result).toEqual([

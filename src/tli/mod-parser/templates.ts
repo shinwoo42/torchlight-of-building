@@ -1630,6 +1630,12 @@ export const allParsers = [
     type: "GeneratesSpellAggression",
   })),
   t("has spell aggression").output(() => ({ type: "HasSpellAggression" })),
+  t("has attack aggression when reaching max feline stimulant stacks").output(
+    () => ({
+      type: "HasAttackAggression",
+      resolvedCond: "at_max_feline_stimulant_stacks",
+    }),
+  ),
   t("has attack aggression").output(() => ({ type: "HasAttackAggression" })),
   t(
     "{value:+dec%} spell aggression effect for every main spell skill cast recently. stacks up to {limit:int} times",

@@ -262,6 +262,7 @@ export type Condition = (typeof Conditions)[number];
 export const ResolvedConditions = [
   "have_both_sealed_mana_and_life",
   "at_max_focus_blessing",
+  "at_max_feline_stimulant_stacks",
 ] as const;
 
 export type ResolvedCondition = (typeof ResolvedConditions)[number];
