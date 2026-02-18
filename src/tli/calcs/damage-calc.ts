@@ -644,11 +644,17 @@ export const calculateGearDmg = (gear: Gear, allMods: Mod[]): GearDmg => {
 
   phys.min += basePhysDmg;
   phys.max += basePhysDmg;
-  let physBonusPct = 0;
+  let physMult = 1;
 
   const gearPhysDmgPct = findMod(gearMods, "GearPhysDmgPct");
   if (gearPhysDmgPct !== undefined) {
-    physBonusPct += gearPhysDmgPct.value;
+    physMult += gearPhysDmgPct.value / 100;
+  }
+
+  let eleMult = 1;
+  const gearEleDmgPct = findMod(gearMods, "GearEleDmgPct");
+  if (gearEleDmgPct !== undefined) {
+    eleMult += gearEleDmgPct.value / 100;
   }
 
   filterMods(gearMods, "FlatGearDmg").forEach((a) => {
@@ -681,11 +687,10 @@ export const calculateGearDmg = (gear: Gear, allMods: Mod[]): GearDmg => {
     addnMHDmgMult *= 1 + a.value / 100;
   });
 
-  phys = multDR(phys, 1 + physBonusPct);
-  phys = multDR(phys, addnMHDmgMult);
-  cold = multDR(cold, addnMHDmgMult);
-  lightning = multDR(lightning, addnMHDmgMult);
-  fire = multDR(fire, addnMHDmgMult);
+  phys = multDR(phys, physMult * addnMHDmgMult);
+  cold = multDR(cold, eleMult * addnMHDmgMult);
+  lightning = multDR(lightning, eleMult * addnMHDmgMult);
+  fire = multDR(fire, eleMult * addnMHDmgMult);
   erosion = multDR(erosion, addnMHDmgMult);
   return {
     mainHand: {

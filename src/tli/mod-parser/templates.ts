@@ -2183,6 +2183,10 @@ export const allParsers = [
     type: "GearPhysDmgPct",
     value: c.value,
   })),
+  t("{value:+dec%} gear elemental damage").output((c) => ({
+    type: "GearEleDmgPct",
+    value: c.value,
+  })),
   // Legendary gear mods
   t("the main stat base no longer additionally increases damage").output(
     () => ({ type: "DisableMainStatDmg" }),

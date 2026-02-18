@@ -344,7 +344,7 @@ describe("basic damage modifiers", () => {
             modType: "elemental",
             value: { min: 50, max: 50 },
           },
-          { type: "GearPhysDmgPct", value: -1 },
+          { type: "GearPhysDmgPct", value: -100 },
         ]),
       ],
       affixLines([
@@ -3553,7 +3553,7 @@ describe("penetration", () => {
             baseAffixes: [
               affix([
                 { type: "FlatGearDmg", modType, value: { min: dmg, max: dmg } },
-                { type: "GearPhysDmgPct", value: -1 },
+                { type: "GearPhysDmgPct", value: -100 },
               ]),
             ],
           };

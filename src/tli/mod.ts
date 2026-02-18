@@ -356,6 +356,7 @@ interface ModDefinitions {
       | "elemental";
   };
   GearPhysDmgPct: { value: number };
+  GearEleDmgPct: { value: number };
   // defenses
   AttackBlockChancePct: { value: number };
   SpellBlockChancePct: { value: number };
