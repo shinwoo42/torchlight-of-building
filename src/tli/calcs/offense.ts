@@ -3052,6 +3052,32 @@ const calcAvgSlashStrikeDps = (
 // TODO: calculate combo points per hit and based on mods
 const COMBO_POINTS = 2;
 
+// Combo Attack Archetype
+//
+// Combo skills have a 3-part rotation: Starter 1 → Starter 2 → Finisher.
+// Each part has its own weapon attack damage % (which also serves as added
+// damage effectiveness). The DPS is time-weighted across the full cycle.
+//
+// Key mechanics:
+// - Combo Points: Currently hardcoded to 2 (COMBO_POINTS). Starter hits
+//   generate combo points; the finisher consumes them.
+// - Finisher Amplification: The finisher's damage is multiplied by
+//   1 + comboPoints * amplificationMult. This is the main scaling mechanic.
+// - Per-part attack speed: Each part can have its own aspd modifier
+//   (e.g. finisher typically has -40% aspd, making it slower).
+// - Dual wield: Unlike normal attacks which alternate hands, combos average
+//   the two weapons' gear damage, attack speed, and crit rating into a
+//   single effective weapon.
+// - Multistrike: Ignored entirely for combo skills.
+//
+// Skill-specific mechanics (handled via skill name matching):
+// - Spectral Slash: Starter 1 inflicts a special mark causing subsequent
+//   hits to deal 30% more damage (applied to starter 2 and finisher).
+//   The finisher also spawns clones equal to combo points, each dealing
+//   finisher damage with a shotgun falloff coefficient.
+//
+// Skills using this archetype: Spectral Slash (implemented),
+// Crescent Slash, Gale Slash, Serpent Beam (future).
 const calcAvgComboDps = (
   mods: Mod[],
   loadout: Loadout,
