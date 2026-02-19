@@ -111,14 +111,14 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
   );
 
   return (
-    <div className="overflow-x-auto pt-4">
+    <div className="overflow-x-auto pt-4 p-2">
       <div
         className="relative"
         style={{ width: gridWidth, height: gridHeight }}
       >
         {/* SVG for prerequisite lines */}
         <svg
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none overflow-visible"
           style={{ width: gridWidth, height: gridHeight, zIndex: 0 }}
         >
           {nodes
