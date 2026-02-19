@@ -6,7 +6,6 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { Prisms } from "@/src/data/prism/prisms";
 import { i18n } from "@/src/lib/i18n";
 import type { CraftedInverseImage, CraftedPrism } from "@/src/tli/core";
 import {
@@ -185,8 +184,9 @@ function TalentsSlotPage(): React.ReactNode {
       if (node && node.points > 0) return;
 
       // Check if this prism replaces core talents
-      const prismData = Prisms.find((p) => p.affix === prism.baseAffix);
-      const replacesCoreTalent = prismData?.replacementCoreTalent !== undefined;
+      const replacesCoreTalent = prism.baseAffix.startsWith(
+        "Replaces the Core Talent",
+      );
 
       // Place the prism (action removes from inventory and places)
       placePrism(prism, treeSlot, { x, y });

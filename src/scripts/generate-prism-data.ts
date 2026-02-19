@@ -47,8 +47,7 @@ const cleanTlidbHtml = (html: string): string => {
     $(el).replaceWith($(el).text());
   });
 
-  // Remove span.Hyperlink tooltip elements (used in replacement core talents)
-  // but keep their text content
+  // Replace span.Hyperlink elements with just their text content
   $("span.Hyperlink").each((_, el) => {
     $(el).replaceWith($(el).text());
   });
@@ -76,35 +75,6 @@ const cleanTlidbHtml = (html: string): string => {
     .join("\n");
 };
 
-// Clean the title attribute from Hyperlink tooltips (replacement core talent descriptions)
-// These may contain HTML entities and <e> tags
-const cleanTitleHtml = (title: string): string => {
-  // Decode HTML entities first (title attributes are entity-encoded)
-  let text = title
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#039;/g, "'")
-    .replace(/&nbsp;/g, " ");
-
-  // Now parse as HTML to handle <br/> and <e> tags
-  const $ = cheerio.load(text, null, false);
-  $("br").replaceWith("\n");
-  $("e").each((_, el) => {
-    $(el).replaceWith($(el).text());
-  });
-
-  text = $.text();
-
-  return text
-    .split("\n")
-    .map((line) => line.replace(/\s+/g, " ").trim())
-    .filter((line) => line.length > 0)
-    .join("\n");
-};
-
 // ============================================================================
 // Parsing
 // ============================================================================
@@ -119,36 +89,7 @@ const extractBaseAffixes = ($: cheerio.CheerioAPI): Prism[] => {
     const rawHtml = td.html() ?? "";
     const affix = cleanTlidbHtml(rawHtml);
 
-    const item: Prism = { type: "Base Affix", rarity: "", affix };
-
-    // Extract replacement core talent if present
-    if (affix.includes("Replaces the Core Talent")) {
-      const hyperlinkSpan = td.find("span.Hyperlink");
-      if (hyperlinkSpan.length > 0) {
-        const name = hyperlinkSpan.text().trim();
-        const rawTitle = hyperlinkSpan.attr("title") ?? "";
-        if (name !== "" && rawTitle !== "") {
-          item.replacementCoreTalent = {
-            name,
-            affix: cleanTitleHtml(rawTitle),
-          };
-        }
-      }
-    }
-
-    // Extract added core talent affix if present
-    const addedPrefix = "Adds an additional effect to the Core Talent";
-    if (affix.startsWith(addedPrefix)) {
-      const delimiter = "Advanced Talent Panel:\n";
-      const delimiterIndex = affix.indexOf(delimiter);
-      if (delimiterIndex !== -1) {
-        item.addedCoreTalentAffix = affix.slice(
-          delimiterIndex + delimiter.length,
-        );
-      }
-    }
-
-    items.push(item);
+    items.push({ type: "Base Affix", rarity: "", affix });
   });
 
   return items;

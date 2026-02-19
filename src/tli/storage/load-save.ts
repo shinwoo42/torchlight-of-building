@@ -12,7 +12,6 @@ import {
 } from "@/src/data/hyperlink";
 import { Pactspirits } from "@/src/data/pactspirit/pactspirits";
 import type { Pactspirit } from "@/src/data/pactspirit/types";
-import { Prisms } from "@/src/data/prism/prisms";
 import { SupportSkills as SupportSkillsData } from "@/src/data/skill/support";
 import { MagnificentSupportSkills } from "@/src/data/skill/support-magnificent";
 import { NobleSupportSkills } from "@/src/data/skill/support-noble";
@@ -337,6 +336,55 @@ const createTalentNode = (
   return base;
 };
 
+const REPLACES_CORE_TALENT_PREFIX =
+  "Replaces the Core Talent on the God of Might/Goddess of Hunting/Goddess of Knowledge/God of War/Goddess of Deception/God of Machines Advanced Talent Panel with ";
+
+const ADDS_CORE_TALENT_DELIMITER = "Advanced Talent Panel:\n";
+
+const extractReplacementCoreTalent = (
+  baseAffix: string | undefined,
+  src: string,
+): Affix | undefined => {
+  if (
+    baseAffix === undefined ||
+    !baseAffix.startsWith(REPLACES_CORE_TALENT_PREFIX)
+  ) {
+    return undefined;
+  }
+  const name = baseAffix.slice(REPLACES_CORE_TALENT_PREFIX.length);
+  const hyperlinkName = getHyperlinkName(name);
+  if (hyperlinkName === undefined) {
+    console.error(`Unknown hyperlink for replacement core talent: ${name}`);
+    return undefined;
+  }
+  const description = Hyperlinks[hyperlinkName];
+  const affixLines: AffixLine[] = description
+    .split("\n")
+    .map((text) => ({
+      text,
+      mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
+    }));
+  return { specialName: hyperlinkName, affixLines, src };
+};
+
+const extractAddedCoreTalentAffix = (
+  baseAffix: string | undefined,
+  src: string,
+): Affix | undefined => {
+  if (
+    baseAffix === undefined ||
+    !baseAffix.startsWith("Adds an additional effect to the Core Talent")
+  ) {
+    return undefined;
+  }
+  const delimiterIndex = baseAffix.indexOf(ADDS_CORE_TALENT_DELIMITER);
+  if (delimiterIndex === -1) return undefined;
+  const affixText = baseAffix.slice(
+    delimiterIndex + ADDS_CORE_TALENT_DELIMITER.length,
+  );
+  return convertAffix(affixText, src);
+};
+
 const convertTalentTree = (
   tree: SaveDataTalentTree,
   treeSlot: TreeSlot,
@@ -414,29 +462,21 @@ const convertTalentTree = (
     }
   }
 
-  // Look up prism data to get the new structured fields
-  const prismData =
+  // Derive core talent prism effects from the base affix text
+  const baseAffix =
     placedPrism && placedPrism.treeSlot === treeSlot
-      ? Prisms.find((p) => p.affix === placedPrism.prism.baseAffix)
+      ? placedPrism.prism.baseAffix
       : undefined;
 
-  const additionalCoreTalentPrismAffix =
-    prismData?.addedCoreTalentAffix !== undefined
-      ? convertAffix(prismData.addedCoreTalentAffix, src)
-      : undefined;
+  const additionalCoreTalentPrismAffix = extractAddedCoreTalentAffix(
+    baseAffix,
+    src,
+  );
 
-  const replacementPrismCoreTalent =
-    prismData?.replacementCoreTalent !== undefined
-      ? {
-          specialName: prismData.replacementCoreTalent.name,
-          affixLines: prismData.replacementCoreTalent.affix
-            .split("\n")
-            .map((text) => ({
-              text,
-              mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
-            })),
-        }
-      : undefined;
+  const replacementPrismCoreTalent = extractReplacementCoreTalent(
+    baseAffix,
+    src,
+  );
 
   return {
     name: tree.name,
