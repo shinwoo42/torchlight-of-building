@@ -1,6 +1,6 @@
 import { Tooltip, TooltipTitle } from "@/src/components/ui/Tooltip";
 import { useTooltip } from "@/src/hooks/useTooltip";
-import { getLegendaryGaugeAffixes } from "@/src/lib/prism-utils";
+import { getAreaLabel, getLegendaryGaugeAffixes } from "@/src/lib/prism-utils";
 import type { CraftedPrism } from "@/src/tli/core";
 
 interface PrismInventoryItemProps {
@@ -25,10 +25,19 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
   const { isVisible, triggerRef, triggerRect } = useTooltip();
 
   const legendaryGauges = getLegendaryGaugeAffixes();
-  const legendaryCount = prism.gaugeAffixes.filter((a) =>
+
+  // Find area affix (if any) and classify gauge affixes
+  const areaAffix = prism.gaugeAffixes.find((a) =>
+    a.startsWith("The Effect Area expands to"),
+  );
+  const nonAreaAffixes = prism.gaugeAffixes.filter(
+    (a) => !a.startsWith("The Effect Area expands to"),
+  );
+  const legendaryCount = nonAreaAffixes.filter((a) =>
     legendaryGauges.some((lg) => lg.affix === a),
   ).length;
-  const rareCount = prism.gaugeAffixes.length - legendaryCount;
+  const rareCount = nonAreaAffixes.length - legendaryCount;
+  const areaLabel = getAreaLabel(areaAffix);
 
   const baseAffixFirstLine = prism.baseAffix.split("\n")[0];
   const displayText =
@@ -36,8 +45,8 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
       ? `${baseAffixFirstLine.slice(0, 60)}...`
       : baseAffixFirstLine;
 
-  const handleClick = () => {
-    if (selectionMode && onSelect) {
+  const handleClick = (): void => {
+    if (selectionMode && onSelect !== undefined) {
       onSelect();
     }
   };
@@ -66,6 +75,7 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
             <span className="text-sm font-medium text-zinc-200 capitalize">
               {prism.rarity}
             </span>
+            <span className="text-xs text-zinc-500">{areaLabel}</span>
           </div>
           <div className="text-xs text-zinc-400 truncate">{displayText}</div>
           <div className="flex items-center gap-1 mt-1">
@@ -117,15 +127,22 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
       >
         <TooltipTitle>
           <span className="capitalize">{prism.rarity} Prism</span>
+          <span className="ml-2 text-xs text-zinc-500">({areaLabel})</span>
         </TooltipTitle>
         <div className="mb-2 text-xs text-zinc-300 whitespace-pre-line">
           <span className="text-zinc-500">Base: </span>
           {prism.baseAffix}
         </div>
-        {prism.gaugeAffixes.length > 0 && (
+        {areaAffix !== undefined && (
+          <div className="mb-1 text-xs text-zinc-400">
+            <span className="text-zinc-500">Area: </span>
+            {areaAffix}
+          </div>
+        )}
+        {nonAreaAffixes.length > 0 && (
           <div className="space-y-1">
             <span className="text-xs text-zinc-500">Gauge Affixes:</span>
-            {prism.gaugeAffixes.map((affix, index) => {
+            {nonAreaAffixes.map((affix, index) => {
               const isLegendary = legendaryGauges.some(
                 (lg) => lg.affix === affix,
               );

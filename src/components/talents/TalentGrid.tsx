@@ -3,6 +3,7 @@ import {
   getTargetAreaPositions,
   isInSourceArea as isInSourceAreaUtil,
 } from "@/src/lib/inverse-image-utils";
+import { parseAreaAffix } from "@/src/lib/prism-utils";
 import {
   type CraftedInverseImage,
   type CraftedPrism,
@@ -202,11 +203,12 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
             placedPrism.treeSlot === treeSlot &&
             (() => {
               const { x: prismX, y: prismY } = placedPrism.position;
+              const area = parseAreaAffix(placedPrism.prism.areaAffix);
               // Calculate bounds of affected area (clamped to grid)
-              const minX = Math.max(0, prismX - 1);
-              const maxX = Math.min(6, prismX + 1);
-              const minY = Math.max(0, prismY - 1);
-              const maxY = Math.min(4, prismY + 1);
+              const minX = Math.max(0, prismX - area.anchorCol);
+              const maxX = Math.min(6, prismX - area.anchorCol + area.w - 1);
+              const minY = Math.max(0, prismY - area.anchorRow);
+              const maxY = Math.min(4, prismY - area.anchorRow + area.h - 1);
 
               const padding = 4;
               const left = minX * COL_STRIDE - padding;

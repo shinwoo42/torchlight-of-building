@@ -5,10 +5,10 @@ import {
 } from "@/src/components/ui/SearchableSelect";
 import { i18n } from "@/src/lib/i18n";
 import {
+  getAreaAffixes,
   getBaseAffixes,
   getLegendaryGaugeAffixes,
-  getMaxLegendaryGaugeAffixes,
-  getMaxRareGaugeAffixes,
+  getMutationAffixes,
   getRareGaugeAffixes,
 } from "@/src/lib/prism-utils";
 import { generateItemId } from "@/src/lib/storage";
@@ -18,15 +18,19 @@ import {
   type PrismRarity,
 } from "@/src/tli/core";
 
+// Classify a gauge affix string into its slot type
+const classifyGaugeAffix = (affix: string): "area" | "rare" | "legendary" => {
+  if (affix.startsWith("The Effect Area expands to")) return "area";
+  if (affix.startsWith("All Legendary Medium Talent")) return "legendary";
+  if (affix.startsWith("Points can be allocated to all")) return "legendary";
+  if (affix.includes("Mutated Core Talents")) return "legendary";
+  return "rare";
+};
+
 interface PrismCrafterProps {
   editingPrism: CraftedPrism | undefined;
   onSave: (prism: CraftedPrism) => void;
   onCancel?: () => void;
-}
-
-interface SelectedGaugeAffix {
-  affix: string;
-  isLegendary: boolean;
 }
 
 export const PrismCrafter: React.FC<PrismCrafterProps> = ({
@@ -40,27 +44,36 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
   const [baseAffix, setBaseAffix] = useState<string | undefined>(
     editingPrism?.baseAffix,
   );
-  const [selectedGaugeAffixes, setSelectedGaugeAffixes] = useState<
-    SelectedGaugeAffix[]
-  >([]);
+  const [areaAffix, setAreaAffix] = useState<string | undefined>(undefined);
+  const [rareAffix, setRareAffix] = useState<string | undefined>(undefined);
+  const [legendaryAffix, setLegendaryAffix] = useState<string | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
-    if (editingPrism) {
+    if (editingPrism !== undefined) {
       setRarity(editingPrism.rarity);
       setBaseAffix(editingPrism.baseAffix);
 
-      const legendaryGauges = getLegendaryGaugeAffixes();
-
-      const gaugeAffixes: SelectedGaugeAffix[] = editingPrism.gaugeAffixes.map(
-        (affix) => ({
-          affix,
-          isLegendary: legendaryGauges.some((g) => g.affix === affix),
-        }),
-      );
-      setSelectedGaugeAffixes(gaugeAffixes);
+      // Decompose gaugeAffixes into slots
+      let area: string | undefined;
+      let rare: string | undefined;
+      let legendary: string | undefined;
+      for (const affix of editingPrism.gaugeAffixes) {
+        const kind = classifyGaugeAffix(affix);
+        if (kind === "area" && area === undefined) area = affix;
+        else if (kind === "rare" && rare === undefined) rare = affix;
+        else if (kind === "legendary" && legendary === undefined)
+          legendary = affix;
+      }
+      setAreaAffix(area);
+      setRareAffix(rare);
+      setLegendaryAffix(legendary);
     } else {
-      setSelectedGaugeAffixes([]);
       setBaseAffix(undefined);
+      setAreaAffix(undefined);
+      setRareAffix(undefined);
+      setLegendaryAffix(undefined);
     }
   }, [editingPrism]);
 
@@ -71,72 +84,71 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
     }));
   }, [rarity]);
 
-  const rareGaugeCount = selectedGaugeAffixes.filter(
-    (a) => !a.isLegendary,
-  ).length;
-  const legendaryGaugeCount = selectedGaugeAffixes.filter(
-    (a) => a.isLegendary,
-  ).length;
-
-  const maxRare = getMaxRareGaugeAffixes();
-  const maxLegendary = getMaxLegendaryGaugeAffixes(rarity);
+  const areaAffixOptions = useMemo((): SearchableSelectOption<string>[] => {
+    return getAreaAffixes().map((affix) => ({
+      value: affix.affix,
+      label: affix.affix,
+    }));
+  }, []);
 
   const rareGaugeOptions = useMemo((): SearchableSelectOption<string>[] => {
-    if (rareGaugeCount >= maxRare) return [];
     return getRareGaugeAffixes().map((affix) => ({
       value: affix.affix,
       label: affix.affix.split("\n")[0],
       sublabel: "Rare",
     }));
-  }, [rareGaugeCount, maxRare]);
+  }, []);
 
   const legendaryGaugeOptions =
     useMemo((): SearchableSelectOption<string>[] => {
-      if (legendaryGaugeCount >= maxLegendary) return [];
-      return getLegendaryGaugeAffixes().map((affix) => ({
+      const gaugeAffixes = getLegendaryGaugeAffixes().map((affix) => ({
         value: affix.affix,
         label: affix.affix.split("\n")[0],
-        sublabel: "Legendary",
+        sublabel: "Legendary Gauge",
       }));
-    }, [legendaryGaugeCount, maxLegendary]);
 
-  const handleRarityChange = (newRarity: PrismRarity) => {
+      const mutationAffixes = getMutationAffixes().map((affix) => ({
+        value: affix.affix,
+        label: affix.affix.split("\n").at(-1) ?? affix.affix,
+        sublabel: "Mutation",
+      }));
+
+      return [...gaugeAffixes, ...mutationAffixes];
+    }, []);
+
+  const handleRarityChange = (newRarity: PrismRarity): void => {
     if (newRarity === rarity) return;
     setRarity(newRarity);
     setBaseAffix(undefined);
     if (newRarity === "rare") {
-      setSelectedGaugeAffixes((prev) => prev.filter((a) => !a.isLegendary));
+      setLegendaryAffix(undefined);
     }
   };
 
-  const handleAddGaugeAffix = (
-    affixValue: string | undefined,
-    isLegendary: boolean,
-  ) => {
-    if (!affixValue) return;
-    setSelectedGaugeAffixes([
-      ...selectedGaugeAffixes,
-      { affix: affixValue, isLegendary },
-    ]);
-  };
+  const handleSave = (): void => {
+    if (baseAffix === undefined) return;
 
-  const handleRemoveGaugeAffix = (index: number) => {
-    setSelectedGaugeAffixes(selectedGaugeAffixes.filter((_, i) => i !== index));
-  };
-
-  const handleSave = () => {
-    if (!baseAffix) return;
+    // Compose gaugeAffixes from the individual slots
+    const gaugeAffixes: string[] = [];
+    if (areaAffix !== undefined) gaugeAffixes.push(areaAffix);
+    if (rareAffix !== undefined) gaugeAffixes.push(rareAffix);
+    if (legendaryAffix !== undefined) gaugeAffixes.push(legendaryAffix);
 
     const prism: CraftedPrism = {
       id: editingPrism?.id ?? generateItemId(),
       rarity,
       baseAffix,
-      gaugeAffixes: selectedGaugeAffixes.map((a) => a.affix),
+      gaugeAffixes,
+      areaAffix,
+      rareAffix,
+      legendaryAffix,
     };
     onSave(prism);
 
-    if (!editingPrism) {
-      setSelectedGaugeAffixes([]);
+    if (editingPrism === undefined) {
+      setAreaAffix(undefined);
+      setRareAffix(undefined);
+      setLegendaryAffix(undefined);
       setBaseAffix(undefined);
     }
   };
@@ -146,7 +158,9 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
   return (
     <div className="rounded-lg border border-zinc-700 bg-zinc-800 p-4">
       <h3 className="mb-4 text-lg font-medium text-zinc-200">
-        {editingPrism ? i18n._("Edit Prism") : i18n._("Craft Prism")}
+        {editingPrism !== undefined
+          ? i18n._("Edit Prism")
+          : i18n._("Craft Prism")}
       </h3>
 
       <div className="mb-4">
@@ -179,7 +193,7 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
           options={baseAffixOptions}
           placeholder="Select base affix..."
         />
-        {baseAffix && (
+        {baseAffix !== undefined && (
           <div className="mt-2 rounded bg-zinc-900 p-2 text-xs text-zinc-300 whitespace-pre-line">
             {baseAffix}
           </div>
@@ -188,62 +202,81 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
 
       <div className="mb-4">
         <label className="mb-2 block text-sm text-zinc-400">
-          Gauge Affixes ({selectedGaugeAffixes.length}/{maxRare + maxLegendary})
+          Area Expansion (optional)
         </label>
-        <div className="mb-2 flex flex-col gap-1">
-          {selectedGaugeAffixes.map((gauge, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-2 rounded bg-zinc-700 px-2 py-1"
+        <SearchableSelect
+          value={areaAffix}
+          onChange={setAreaAffix}
+          options={areaAffixOptions}
+          placeholder="Select area expansion..."
+        />
+        {areaAffix !== undefined && (
+          <div className="mt-1 flex items-center gap-2">
+            <span className="text-xs text-zinc-400">{areaAffix}</span>
+            <button
+              type="button"
+              onClick={() => setAreaAffix(undefined)}
+              className="text-xs text-zinc-500 hover:text-red-400"
             >
-              <span
-                className={`h-3 w-3 rounded-sm ${
-                  gauge.isLegendary ? "bg-orange-500" : "bg-purple-500"
-                }`}
-              />
-              <span className="flex-1 text-sm text-zinc-200 truncate">
-                {gauge.affix.split("\n")[0]}
+              ×
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label className="mb-2 block text-sm text-zinc-400">
+          Rare Gauge Affix (optional)
+        </label>
+        <SearchableSelect
+          value={rareAffix}
+          onChange={setRareAffix}
+          options={rareGaugeOptions}
+          placeholder="Search rare gauge affixes..."
+        />
+        {rareAffix !== undefined && (
+          <div className="mt-1 flex items-center gap-2">
+            <span className="h-2 w-2 rounded-sm bg-purple-500" />
+            <span className="text-xs text-zinc-300 truncate flex-1">
+              {rareAffix.split("\n")[0]}
+            </span>
+            <button
+              type="button"
+              onClick={() => setRareAffix(undefined)}
+              className="text-xs text-zinc-500 hover:text-red-400"
+            >
+              ×
+            </button>
+          </div>
+        )}
+      </div>
+
+      {rarity === "legendary" && (
+        <div className="mb-4">
+          <label className="mb-2 block text-sm text-zinc-400">
+            Legendary / Mutation Affix (optional)
+          </label>
+          <SearchableSelect
+            value={legendaryAffix}
+            onChange={setLegendaryAffix}
+            options={legendaryGaugeOptions}
+            placeholder="Search legendary / mutation affixes..."
+          />
+          {legendaryAffix !== undefined && (
+            <div className="mt-1 flex items-center gap-2">
+              <span className="h-2 w-2 rounded-sm bg-orange-500" />
+              <span className="text-xs text-zinc-300 truncate flex-1">
+                {legendaryAffix.split("\n").at(-1)}
               </span>
               <button
                 type="button"
-                onClick={() => handleRemoveGaugeAffix(index)}
-                className="text-zinc-400 hover:text-red-400"
+                onClick={() => setLegendaryAffix(undefined)}
+                className="text-xs text-zinc-500 hover:text-red-400"
               >
                 ×
               </button>
             </div>
-          ))}
-          {selectedGaugeAffixes.length === 0 && (
-            <p className="text-sm text-zinc-500">No gauge affixes selected</p>
           )}
-        </div>
-      </div>
-
-      {rareGaugeCount < maxRare && (
-        <div className="mb-4">
-          <label className="mb-2 block text-sm text-zinc-400">
-            Add Rare Gauge ({rareGaugeCount}/{maxRare})
-          </label>
-          <SearchableSelect
-            value={undefined}
-            onChange={(v) => handleAddGaugeAffix(v, false)}
-            options={rareGaugeOptions}
-            placeholder="Search rare gauge affixes..."
-          />
-        </div>
-      )}
-
-      {rarity === "legendary" && legendaryGaugeCount < maxLegendary && (
-        <div className="mb-4">
-          <label className="mb-2 block text-sm text-zinc-400">
-            Add Legendary Gauge ({legendaryGaugeCount}/{maxLegendary})
-          </label>
-          <SearchableSelect
-            value={undefined}
-            onChange={(v) => handleAddGaugeAffix(v, true)}
-            options={legendaryGaugeOptions}
-            placeholder="Search legendary gauge affixes..."
-          />
         </div>
       )}
 
@@ -254,9 +287,9 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
           disabled={!canSave}
           className="flex-1 rounded bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-500 disabled:cursor-not-allowed disabled:bg-zinc-600"
         >
-          {editingPrism ? "Update Prism" : "Save to Inventory"}
+          {editingPrism !== undefined ? "Update Prism" : "Save to Inventory"}
         </button>
-        {onCancel && (
+        {onCancel !== undefined && (
           <button
             type="button"
             onClick={onCancel}

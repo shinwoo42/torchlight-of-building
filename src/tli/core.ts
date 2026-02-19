@@ -400,6 +400,10 @@ export interface CraftedPrism {
   // prism affixes are a special case that are not parsed into normal mods
   baseAffix: string;
   gaugeAffixes: string[];
+  // Structured fields derived from gaugeAffixes during loadSave()
+  areaAffix?: string; // "The Effect Area expands to 3x3 Rectangle"
+  rareAffix?: string; // Prism Gauge - Rare
+  legendaryAffix?: string; // Prism Gauge - Legendary OR mutation affix (legendary only)
 }
 
 export interface PlacedPrism {

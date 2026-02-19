@@ -1,5 +1,6 @@
 import { Prisms } from "@/src/data/prism/prisms";
-import type { PlacedPrism, PrismRarity } from "./save-data";
+import type { PlacedPrism } from "@/src/tli/core";
+import type { PrismRarity } from "./save-data";
 
 export interface PrismAffix {
   type: string;
@@ -24,13 +25,77 @@ export const getLegendaryGaugeAffixes = (): PrismAffix[] => {
   );
 };
 
-export const getMaxRareGaugeAffixes = (): number => 2;
+export const getMaxRareGaugeAffixes = (): number => 1;
 
 export const getMaxLegendaryGaugeAffixes = (rarity: PrismRarity): number =>
   rarity === "legendary" ? 1 : 0;
 
-export const getMaxTotalGaugeAffixes = (rarity: PrismRarity): number =>
-  getMaxRareGaugeAffixes() + getMaxLegendaryGaugeAffixes(rarity);
+// Area expansion affixes (deduplicated)
+export const getAreaAffixes = (): PrismAffix[] => {
+  const seen = new Set<string>();
+  return Prisms.filter((p) => {
+    if (p.type !== "Random Affix") return false;
+    if (!p.affix.startsWith("The Effect Area expands to")) return false;
+    if (seen.has(p.affix)) return false;
+    seen.add(p.affix);
+    return true;
+  });
+};
+
+// Mutation affixes (for legendary prisms only)
+export const getMutationAffixes = (): PrismAffix[] => {
+  const seen = new Set<string>();
+  return Prisms.filter((p) => {
+    if (p.type !== "Random Affix") return false;
+    if (!p.affix.includes("Mutated Core Talents")) return false;
+    if (seen.has(p.affix)) return false;
+    seen.add(p.affix);
+    return true;
+  });
+};
+
+// Extract core talent name from a "Replaces...with X" base affix
+export const getCoreTalentFromBaseAffix = (
+  baseAffix: string,
+): string | undefined => {
+  const match = baseAffix.match(/with\s+(.+)$/);
+  return match !== null ? match[1] : undefined;
+};
+
+// Prism area dimensions and anchor points
+export interface PrismArea {
+  w: number;
+  h: number;
+  anchorCol: number;
+  anchorRow: number;
+}
+
+const PRISM_AREAS: Record<string, PrismArea> = {
+  "3x3": { w: 3, h: 3, anchorCol: 1, anchorRow: 1 },
+  "3x4": { w: 3, h: 4, anchorCol: 1, anchorRow: 1 },
+  "4x3": { w: 4, h: 3, anchorCol: 1, anchorRow: 1 },
+  "2x2": { w: 2, h: 2, anchorCol: 0, anchorRow: 0 },
+  "7x1": { w: 7, h: 1, anchorCol: 3, anchorRow: 0 },
+  "2x4": { w: 2, h: 4, anchorCol: 0, anchorRow: 1 },
+  "4x2": { w: 4, h: 2, anchorCol: 1, anchorRow: 0 },
+  "1x1": { w: 1, h: 1, anchorCol: 0, anchorRow: 0 },
+};
+
+// Parse area dimensions from an area affix string
+export const parseAreaAffix = (affix: string | undefined): PrismArea => {
+  if (affix === undefined) return PRISM_AREAS["1x1"];
+  const match = affix.match(/(\d+x\d+) Rectangle/);
+  return (
+    (match !== null ? PRISM_AREAS[match[1]] : undefined) ?? PRISM_AREAS["1x1"]
+  );
+};
+
+// Get display label for an area affix (e.g. "3x3")
+export const getAreaLabel = (affix: string | undefined): string => {
+  if (affix === undefined) return "1x1";
+  const match = affix.match(/(\d+x\d+) Rectangle/);
+  return match !== null ? match[1] : "1x1";
+};
 
 // Types for prism gauge affix effects
 export interface ParsedGaugeAffix {
@@ -42,7 +107,7 @@ export interface NodeBonusAffix {
   bonusText: string;
 }
 
-// Parse a Rare Gauge affix to extract target type and bonus text
+// Parse a Gauge affix to extract target type and bonus text
 export const parseRareGaugeAffix = (
   affix: string,
 ): ParsedGaugeAffix | undefined => {
@@ -62,26 +127,27 @@ export const parseRareGaugeAffix = (
   return { targetType: typeMapping[match[1]], bonusText: match[2].trim() };
 };
 
-// Get positions affected by a prism (8 surrounding nodes in 3x3 area)
+// Get positions affected by a prism based on its area dimensions
 export const getAffectedPositions = (
   prismX: number,
   prismY: number,
+  area: PrismArea = PRISM_AREAS["1x1"],
   gridWidth: number = 7,
   gridHeight: number = 5,
 ): { x: number; y: number }[] => {
   const positions: { x: number; y: number }[] = [];
 
-  for (let dx = -1; dx <= 1; dx++) {
-    for (let dy = -1; dy <= 1; dy++) {
-      // Skip the prism position itself
-      if (dx === 0 && dy === 0) continue;
+  for (let col = 0; col < area.w; col++) {
+    for (let row = 0; row < area.h; row++) {
+      const x = prismX + col - area.anchorCol;
+      const y = prismY + row - area.anchorRow;
 
-      const newX = prismX + dx;
-      const newY = prismY + dy;
+      // Skip the prism position itself
+      if (x === prismX && y === prismY) continue;
 
       // Check bounds
-      if (newX >= 0 && newX < gridWidth && newY >= 0 && newY < gridHeight) {
-        positions.push({ x: newX, y: newY });
+      if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
+        positions.push({ x, y });
       }
     }
   }
@@ -138,6 +204,14 @@ export const scaleAffixText = (text: string, multiplier: number): string => {
   );
 };
 
+// Collect gauge affixes from the new structured fields
+const collectGaugeAffixes = (prism: PlacedPrism["prism"]): string[] => {
+  const affixes: string[] = [];
+  if (prism.rareAffix !== undefined) affixes.push(prism.rareAffix);
+  if (prism.legendaryAffix !== undefined) affixes.push(prism.legendaryAffix);
+  return affixes;
+};
+
 // Get bonus affixes that apply to a specific node from the placed prism
 // Scales the bonus values based on allocated points (like normal talent affixes)
 // When 0 points allocated, displays as if 1 point (shows base value)
@@ -150,9 +224,11 @@ export const getNodeBonusAffixes = (
 ): NodeBonusAffix[] => {
   if (!placedPrism || placedPrism.treeSlot !== treeSlot) return [];
 
+  const area = parseAreaAffix(placedPrism.prism.areaAffix);
   const affectedPositions = getAffectedPositions(
     placedPrism.position.x,
     placedPrism.position.y,
+    area,
   );
 
   const isAffected = affectedPositions.some(
@@ -163,7 +239,7 @@ export const getNodeBonusAffixes = (
 
   const bonuses: NodeBonusAffix[] = [];
 
-  for (const gaugeAffix of placedPrism.prism.gaugeAffixes) {
+  for (const gaugeAffix of collectGaugeAffixes(placedPrism.prism)) {
     const parsed = parseRareGaugeAffix(gaugeAffix);
     if (!parsed) continue;
 

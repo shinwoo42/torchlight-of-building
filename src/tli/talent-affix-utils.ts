@@ -3,8 +3,8 @@ import {
   TalentTrees,
   type TreeName,
 } from "@/src/data/talent-tree";
-import type { PlacedPrism as SaveDataPlacedPrism } from "@/src/lib/save-data";
-import type { Affix, AffixLine } from "./core";
+import { type PrismArea, parseAreaAffix } from "@/src/lib/prism-utils";
+import type { Affix, AffixLine, PlacedPrism } from "./core";
 import { parseMod } from "./mod-parser/index";
 
 export type TreeSlot = "tree1" | "tree2" | "tree3" | "tree4";
@@ -105,24 +105,25 @@ const parseRareGaugeAffix = (affix: string): ParsedGaugeAffix | undefined => {
   return { targetType: typeMapping[match[1]], bonusText: match[2].trim() };
 };
 
-// Get positions affected by a prism (8 surrounding nodes in 3x3 area)
+// Get positions affected by a prism based on its area dimensions
 const getAffectedPositions = (
   prismX: number,
   prismY: number,
+  area: PrismArea = { w: 1, h: 1, anchorCol: 0, anchorRow: 0 },
   gridWidth: number = 7,
   gridHeight: number = 5,
 ): { x: number; y: number }[] => {
   const positions: { x: number; y: number }[] = [];
 
-  for (let dx = -1; dx <= 1; dx++) {
-    for (let dy = -1; dy <= 1; dy++) {
-      if (dx === 0 && dy === 0) continue;
+  for (let col = 0; col < area.w; col++) {
+    for (let row = 0; row < area.h; row++) {
+      const x = prismX + col - area.anchorCol;
+      const y = prismY + row - area.anchorRow;
 
-      const newX = prismX + dx;
-      const newY = prismY + dy;
+      if (x === prismX && y === prismY) continue;
 
-      if (newX >= 0 && newX < gridWidth && newY >= 0 && newY < gridHeight) {
-        positions.push({ x: newX, y: newY });
+      if (x >= 0 && x < gridWidth && y >= 0 && y < gridHeight) {
+        positions.push({ x, y });
       }
     }
   }
@@ -143,15 +144,17 @@ export const getPrismAffixesForNode = (
   nodePosition: { x: number; y: number },
   nodeType: "micro" | "medium" | "legendary",
   points: number,
-  placedPrism: SaveDataPlacedPrism | undefined,
+  placedPrism: PlacedPrism | undefined,
   treeSlot: TreeSlot,
   src: string,
 ): Affix[] => {
   if (!placedPrism || placedPrism.treeSlot !== treeSlot) return [];
 
+  const area = parseAreaAffix(placedPrism.prism.areaAffix);
   const affectedPositions = getAffectedPositions(
     placedPrism.position.x,
     placedPrism.position.y,
+    area,
   );
 
   const isAffected = affectedPositions.some(
@@ -162,7 +165,14 @@ export const getPrismAffixesForNode = (
 
   const prismAffixes: Affix[] = [];
 
-  for (const gaugeAffix of placedPrism.prism.gaugeAffixes) {
+  // Collect gauge affixes from the structured fields
+  const gaugeAffixes: string[] = [];
+  if (placedPrism.prism.rareAffix !== undefined)
+    gaugeAffixes.push(placedPrism.prism.rareAffix);
+  if (placedPrism.prism.legendaryAffix !== undefined)
+    gaugeAffixes.push(placedPrism.prism.legendaryAffix);
+
+  for (const gaugeAffix of gaugeAffixes) {
     const parsed = parseRareGaugeAffix(gaugeAffix);
     if (!parsed) continue;
 

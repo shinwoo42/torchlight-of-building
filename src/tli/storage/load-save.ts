@@ -293,7 +293,7 @@ const createTalentNode = (
   nodeData: TalentNodeData,
   points: number,
   treeSlot: TreeSlot,
-  placedPrism: SaveDataPlacedPrism | undefined,
+  placedPrism: PlacedPrism | undefined,
   src: string,
   isReflected: boolean,
   sourcePosition?: { x: number; y: number },
@@ -340,7 +340,7 @@ const createTalentNode = (
 const convertTalentTree = (
   tree: SaveDataTalentTree,
   treeSlot: TreeSlot,
-  placedPrism: SaveDataPlacedPrism | undefined,
+  placedPrism: PlacedPrism | undefined,
   placedInverseImage: SaveDataPlacedInverseImage | undefined,
   src: string,
 ): TalentTree => {
@@ -452,15 +452,44 @@ const convertTalentTree = (
   };
 };
 
+// Classify a gauge affix string as area, rare, or legendary
+const classifyGaugeAffix = (affix: string): "area" | "rare" | "legendary" => {
+  if (affix.startsWith("The Effect Area expands to")) return "area";
+  // Legendary gauge affixes target "Legendary Medium" or add extra allocation points
+  if (affix.startsWith("All Legendary Medium Talent")) return "legendary";
+  if (affix.startsWith("Points can be allocated to all")) return "legendary";
+  // Mutation affixes (contain "Mutated Core Talents")
+  if (affix.includes("Mutated Core Talents")) return "legendary";
+  return "rare";
+};
+
 const convertCraftedPrism = (
   prism: SaveDataCraftedPrism,
   _src: string,
 ): CraftedPrism => {
+  let areaAffix: string | undefined;
+  let rareAffix: string | undefined;
+  let legendaryAffix: string | undefined;
+
+  for (const affix of prism.gaugeAffixes) {
+    const kind = classifyGaugeAffix(affix);
+    if (kind === "area" && areaAffix === undefined) {
+      areaAffix = affix;
+    } else if (kind === "rare" && rareAffix === undefined) {
+      rareAffix = affix;
+    } else if (kind === "legendary" && legendaryAffix === undefined) {
+      legendaryAffix = affix;
+    }
+  }
+
   return {
     id: prism.id,
     rarity: prism.rarity,
     baseAffix: prism.baseAffix,
     gaugeAffixes: prism.gaugeAffixes,
+    areaAffix,
+    rareAffix,
+    legendaryAffix,
   };
 };
 
@@ -479,8 +508,16 @@ const convertTalentPage = (
   saveDataTalentPage: SaveDataTalentPage,
 ): TalentPage => {
   const treeSlots: TreeSlot[] = ["tree1", "tree2", "tree3", "tree4"];
-  const placedPrism = saveDataTalentPage.talentTrees.placedPrism;
+  const saveDataPlacedPrism = saveDataTalentPage.talentTrees.placedPrism;
   const placedInverseImage = saveDataTalentPage.talentTrees.placedInverseImage;
+
+  // Convert prism early so all tree conversions use the engine type with structured fields
+  const convertedPlacedPrism = saveDataPlacedPrism
+    ? convertPlacedPrism(
+        saveDataPlacedPrism,
+        getTalentSrc(saveDataPlacedPrism.treeSlot),
+      )
+    : undefined;
 
   const allocatedTalents: TalentTrees = {};
 
@@ -491,16 +528,15 @@ const convertTalentPage = (
       allocatedTalents[slot] = convertTalentTree(
         tree,
         slot,
-        placedPrism,
+        convertedPlacedPrism,
         placedInverseImage,
         src,
       );
     }
   }
 
-  if (placedPrism) {
-    const src = getTalentSrc(placedPrism.treeSlot);
-    allocatedTalents.placedPrism = convertPlacedPrism(placedPrism, src);
+  if (convertedPlacedPrism !== undefined) {
+    allocatedTalents.placedPrism = convertedPlacedPrism;
   }
 
   if (placedInverseImage) {
@@ -512,7 +548,9 @@ const convertTalentPage = (
   }
 
   const inventory: TalentInventory = {
-    prismList: saveDataTalentPage.inventory.prismList,
+    prismList: saveDataTalentPage.inventory.prismList.map((p) =>
+      convertCraftedPrism(p, "inventory"),
+    ),
     inverseImageList: saveDataTalentPage.inventory.inverseImageList,
   };
 
