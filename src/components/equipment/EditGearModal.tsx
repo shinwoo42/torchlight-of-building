@@ -3,6 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   type FilterAffixType,
+  getBaseGear,
   getFilteredAffixes,
   isGroupableAffixType,
 } from "@/src/lib/affix-utils";
@@ -21,7 +22,11 @@ import { generateItemId } from "@/src/lib/storage";
 import type { AffixSlotState } from "@/src/lib/types";
 import { type Gear, getAffixText } from "@/src/tli/core";
 import { craft } from "@/src/tli/crafting/craft";
-import type { BaseGearAffix, EquipmentType } from "@/src/tli/gear-data-types";
+import type {
+  BaseGear,
+  BaseGearAffix,
+  EquipmentType,
+} from "@/src/tli/gear-data-types";
 import { Modal, ModalActions, ModalButton } from "../ui/Modal";
 import { SearchableSelect } from "../ui/SearchableSelect";
 import { AffixSlotComponent } from "./AffixSlotComponent";
@@ -49,9 +54,13 @@ const createNewSlot = (): EditableAffixSlot => ({
   percentage: DEFAULT_QUALITY,
 });
 
-// Helper to get text from BaseStats
-const getBaseStatsText = (baseStats: NonNullable<Gear["baseStats"]>): string =>
-  baseStats.src ?? baseStats.baseStatLines.map((l) => l.text).join("\n");
+// Helper to get display label from BaseStats
+const getBaseStatsLabel = (
+  baseStats: NonNullable<Gear["baseStats"]>,
+): string => {
+  if (baseStats.name !== undefined) return baseStats.name;
+  return baseStats.baseStatLines.map((l) => l.text).join("\n");
+};
 
 interface EditGearModalProps {
   isOpen: boolean;
@@ -102,9 +111,8 @@ export const EditGearModal = ({
     [equipmentType],
   );
 
-  const baseStatsAffixes = useMemo(
-    () =>
-      equipmentType ? getFilteredAffixes(equipmentType, "Base Stats") : [],
+  const baseGearOptions = useMemo(
+    () => (equipmentType ? getBaseGear(equipmentType) : []),
     [equipmentType],
   );
 
@@ -150,7 +158,7 @@ export const EditGearModal = ({
         }
         // Base Stats
         if (item.baseStats !== undefined) {
-          setBaseStats(createExistingSlot(getBaseStatsText(item.baseStats)));
+          setBaseStats(createExistingSlot(getBaseStatsLabel(item.baseStats)));
         } else {
           setBaseStats(createNewSlot());
         }
@@ -422,10 +430,20 @@ export const EditGearModal = ({
 
     // Build base stats
     let newBaseStats: string | undefined;
+    let newBaseGearName: string | undefined;
     if (baseStats.type === "existing" && baseStats.value !== undefined) {
-      newBaseStats = baseStats.value;
+      // Find matching base gear by name to get the stats text
+      const matchingGear = baseGearOptions.find(
+        (g) => g.name === baseStats.value,
+      );
+      if (matchingGear !== undefined) {
+        newBaseStats = matchingGear.stats;
+        newBaseGearName = matchingGear.name;
+      }
     } else if (baseStats.type === "new" && baseStats.affixIndex !== undefined) {
-      newBaseStats = baseStatsAffixes[baseStats.affixIndex].craftableAffix;
+      const selected = baseGearOptions[baseStats.affixIndex];
+      newBaseStats = selected.stats;
+      newBaseGearName = selected.name;
     }
 
     // Build base affixes
@@ -521,6 +539,7 @@ export const EditGearModal = ({
         id: generateItemId(),
         equipmentType,
         baseStats: newBaseStats,
+        baseGearName: newBaseGearName,
         baseAffixes: newBaseAffixes.length > 0 ? newBaseAffixes : undefined,
         sweetDreamAffix: newSweetDreamAffix,
         towerSequenceAffix: newTowerSequenceAffix,
@@ -538,6 +557,7 @@ export const EditGearModal = ({
         rarity: item.rarity === "rare" ? undefined : item.rarity,
         legendaryName: item.legendaryName,
         baseStats: newBaseStats,
+        baseGearName: newBaseGearName,
         baseAffixes: newBaseAffixes.length > 0 ? newBaseAffixes : undefined,
         sweetDreamAffix: newSweetDreamAffix,
         towerSequenceAffix: newTowerSequenceAffix,
@@ -555,7 +575,7 @@ export const EditGearModal = ({
     equipmentType,
     customAffixText,
     baseStats,
-    baseStatsAffixes,
+    baseGearOptions,
     baseAffixes,
     baseAffixOptions,
     sweetDreamAffix,
@@ -707,21 +727,51 @@ export const EditGearModal = ({
         {equipmentType !== undefined && (
           <>
             {/* Base Stats Section */}
-            {baseStatsAffixes.length > 0 && (
+            {baseGearOptions.length > 0 && (
               <div>
                 <h3 className="mb-3 text-lg font-semibold text-zinc-50">
                   <Trans>Base Stats (1 max)</Trans>
                 </h3>
-                {renderAffixSlot(
-                  baseStats,
-                  0,
-                  "Base Stats",
-                  baseStatsAffixes,
-                  handleBaseStatsSelect,
-                  () => {},
-                  handleDeleteBaseStats,
-                  handleDeleteBaseStats,
-                  { hideQualitySlider: true },
+                {baseStats.type === "existing" &&
+                baseStats.value !== undefined ? (
+                  <ExistingAffixDisplay
+                    value={baseStats.value}
+                    onDelete={handleDeleteBaseStats}
+                  />
+                ) : (
+                  <div className="rounded-lg bg-zinc-800 p-4">
+                    <SearchableSelect
+                      value={baseStats.affixIndex ?? undefined}
+                      onChange={(value) =>
+                        handleBaseStatsSelect(0, value?.toString() ?? "")
+                      }
+                      options={baseGearOptions.map(
+                        (gear: BaseGear, idx: number) => ({
+                          value: idx,
+                          label: `${gear.name} — ${gear.stats.replace(/\n/g, "/")}`,
+                        }),
+                      )}
+                      placeholder={`<Select Base Stats>`}
+                    />
+                    {baseStats.affixIndex !== undefined &&
+                      baseGearOptions[baseStats.affixIndex] !== undefined && (
+                        <div className="mt-3 space-y-1">
+                          <p className="text-sm font-medium text-amber-400">
+                            {baseGearOptions[baseStats.affixIndex].name}
+                          </p>
+                          <p className="whitespace-pre-wrap text-sm text-zinc-300">
+                            {baseGearOptions[baseStats.affixIndex].stats}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteBaseStats()}
+                            className="mt-2 text-xs text-zinc-500 hover:text-red-400"
+                          >
+                            <Trans>Clear</Trans>
+                          </button>
+                        </div>
+                      )}
+                  </div>
                 )}
               </div>
             )}

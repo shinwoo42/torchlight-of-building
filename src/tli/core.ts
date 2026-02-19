@@ -38,6 +38,7 @@ export interface BaseStatLine {
 }
 
 export interface BaseStats {
+  name?: string;
   baseStatLines: BaseStatLine[];
   src?: string;
 }

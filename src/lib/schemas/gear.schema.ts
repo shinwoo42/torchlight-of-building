@@ -26,6 +26,7 @@ const BaseGearSchema = z.preprocess(
     rarity: GearRaritySchema.optional(),
     legendaryName: z.string().optional(),
     baseStats: z.string().optional(),
+    baseGearName: z.string().optional(),
     baseAffixes: z.array(z.string()).optional(),
     prefixes: z.array(z.string()).optional(),
     suffixes: z.array(z.string()).optional(),

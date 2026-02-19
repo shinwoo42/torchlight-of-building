@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process";
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
 import type {
@@ -16,6 +16,13 @@ interface BaseGearAffix {
   craftingPool: CraftingPool;
   tier: string;
   craftableAffix: string;
+}
+
+interface BaseGear {
+  name: string;
+  equipmentSlot: EquipmentSlot;
+  equipmentType: EquipmentType;
+  stats: string;
 }
 
 // Mapping from filename to equipment type and slot
@@ -200,28 +207,32 @@ const parseSequences = (
 };
 
 /**
- * Parse base stats from #Item section
- * Extracts from item cards
+ * Parse base gear from #Item section
+ * Extracts item name and stats from item cards
  */
-const parseBaseStats = (
+const parseBaseGear = (
   $: cheerio.CheerioAPI,
   equipmentType: EquipmentType,
   slot: EquipmentSlot,
-): BaseGearAffix[] => {
-  const affixes: BaseGearAffix[] = [];
+): BaseGear[] => {
+  const items: BaseGear[] = [];
   const section = $("#Item");
-  if (!section.length) return affixes;
+  if (!section.length) return items;
 
   // Find all item cards
   section.find(".col").each((_, col) => {
     const $col = $(col);
 
-    // Extract base stats - look for divs after the "Require lv X" div
-    const statsLines: string[] = [];
-
-    // The structure is: flex container -> flex-grow-1 div -> multiple divs with stats
     const statsContainer = $col.find(".flex-grow-1");
     if (!statsContainer.length) return;
+
+    // Extract item name from the <a> tag inside .flex-grow-1
+    const nameAnchor = statsContainer.children("a").first();
+    const name = nameAnchor.text().trim();
+    if (!name) return;
+
+    // Extract base stats - look for divs after the "Require lv X" div
+    const statsLines: string[] = [];
 
     statsContainer.children("div").each((_, div) => {
       const $div = $(div);
@@ -250,18 +261,16 @@ const parseBaseStats = (
     });
 
     if (statsLines.length > 0) {
-      affixes.push({
+      items.push({
+        name,
         equipmentSlot: slot,
         equipmentType,
-        affixType: "Base Stats",
-        craftingPool: "",
-        tier: "",
-        craftableAffix: statsLines.join("\n"),
+        stats: statsLines.join("\n"),
       });
     }
   });
 
-  return affixes;
+  return items;
 };
 
 /**
@@ -406,6 +415,15 @@ export const ${constName}: readonly BaseGearAffix[] = ${JSON.stringify(affixes)}
 `;
 };
 
+const generateBaseGearFile = (items: BaseGear[]): string => {
+  return `// This file is machine-generated. Do not modify manually.
+// To regenerate, run: pnpm exec tsx src/scripts/generate-gear-affix-data.ts
+import type { BaseGear } from "../../tli/gear-data-types";
+
+export const ALL_BASE_GEAR: readonly BaseGear[] = ${JSON.stringify(items)};
+`;
+};
+
 const generateAllAffixesFile = (fileKeys: string[]): string => {
   const imports = fileKeys
     .map((key) => {
@@ -441,6 +459,7 @@ const main = async (): Promise<void> => {
   console.log(`Found ${htmlFiles.length} gear files`);
 
   const allAffixes: BaseGearAffix[] = [];
+  const allBaseGear: BaseGear[] = [];
 
   for (const file of htmlFiles) {
     const equipmentInfo = EQUIPMENT_MAP[file];
@@ -460,7 +479,7 @@ const main = async (): Promise<void> => {
 
     // Parse all sections
     const sequences = parseSequences($, type, slot);
-    const baseStats = parseBaseStats($, type, slot);
+    const baseGear = parseBaseGear($, type, slot);
     const baseAffixes = parseSimpleAffixTable(
       $,
       `#${sectionPrefix}BaseAffix`,
@@ -491,15 +510,16 @@ const main = async (): Promise<void> => {
 
     allAffixes.push(
       ...sequences,
-      ...baseStats,
       ...baseAffixes,
       ...corrosionBase,
       ...sweetDreamAffixes,
       ...craftAffixes,
     );
 
+    allBaseGear.push(...baseGear);
+
     console.log(
-      `  Sequences: ${sequences.length}, BaseStats: ${baseStats.length}, BaseAffix: ${baseAffixes.length}, Corrosion: ${corrosionBase.length}, SweetDream: ${sweetDreamAffixes.length}, Craft: ${craftAffixes.length}`,
+      `  Sequences: ${sequences.length}, BaseGear: ${baseGear.length}, BaseAffix: ${baseAffixes.length}, Corrosion: ${corrosionBase.length}, SweetDream: ${sweetDreamAffixes.length}, Craft: ${craftAffixes.length}`,
     );
   }
 
@@ -541,9 +561,42 @@ const main = async (): Promise<void> => {
   await writeFile(allAffixesPath, allAffixesContent, "utf-8");
   console.log(`Generated all-affixes.ts`);
 
+  // Delete old *-base-stats.ts files from gear-affix/
+  const existingFiles = await readdir(outDir);
+  const baseStatsFiles = existingFiles.filter((f) =>
+    f.endsWith("-base-stats.ts"),
+  );
+  for (const file of baseStatsFiles) {
+    await rm(join(outDir, file));
+    console.log(`Deleted old ${file}`);
+  }
+
+  // Generate single BaseGear file in src/data/gear-base/
+  const baseGearOutDir = join(process.cwd(), "src", "data", "gear-base");
+  await mkdir(baseGearOutDir, { recursive: true });
+
+  // Delete old per-type base gear files
+  const existingBaseGearFiles = await readdir(baseGearOutDir);
+  for (const file of existingBaseGearFiles) {
+    if (file !== "all-base-gear.ts" && file.endsWith(".ts")) {
+      await rm(join(baseGearOutDir, file));
+      console.log(`Deleted old gear-base/${file}`);
+    }
+  }
+
+  const allBaseGearPath = join(baseGearOutDir, "all-base-gear.ts");
+  const allBaseGearContent = generateBaseGearFile(allBaseGear);
+  await writeFile(allBaseGearPath, allBaseGearContent, "utf-8");
+  console.log(
+    `Generated gear-base/all-base-gear.ts (${allBaseGear.length} items)`,
+  );
+
   console.log("\nCode generation complete!");
   console.log(
     `Generated ${grouped.size} affix files with ${allAffixes.length} total affixes`,
+  );
+  console.log(
+    `Generated base gear file with ${allBaseGear.length} total items`,
   );
 
   execSync("pnpm format", { stdio: "inherit" });

@@ -102,6 +102,7 @@ const getSrc = (gearSlot: GearSlot): string => {
 
 const convertBaseStats = (
   baseStatText: string,
+  name: string | undefined,
   src: string | undefined,
 ): BaseStats => {
   const lines = baseStatText.split(/\n/);
@@ -109,7 +110,7 @@ const convertBaseStats = (
     const mods = parseMod(lineText);
     return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
-  return { baseStatLines, src };
+  return { name, baseStatLines, src };
 };
 
 // Set for fast core talent name lookup (case-insensitive)
@@ -232,7 +233,7 @@ const convertGear = (gear: SaveDataGear, src: string | undefined): Gear => {
     rarity: gear.rarity,
     legendaryName: gear.legendaryName,
     baseStats: gear.baseStats
-      ? convertBaseStats(gear.baseStats, src)
+      ? convertBaseStats(gear.baseStats, gear.baseGearName, src)
       : undefined,
     baseAffixes: convertAffixArray(gear.baseAffixes, src),
     prefixes: convertAffixArray(gear.prefixes, src),

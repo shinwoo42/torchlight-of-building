@@ -56,7 +56,6 @@ export type EquipmentType = (typeof EQUIPMENT_TYPES)[number];
 
 export const AFFIX_TYPES = [
   "Base Affix",
-  "Base Stats",
   "Corrosion Base",
   "Prefix",
   "Suffix",
@@ -83,4 +82,11 @@ export interface BaseGearAffix {
   craftingPool: CraftingPool;
   tier: string;
   craftableAffix: string;
+}
+
+export interface BaseGear {
+  name: string;
+  equipmentSlot: EquipmentSlot;
+  equipmentType: EquipmentType;
+  stats: string;
 }

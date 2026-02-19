@@ -186,7 +186,14 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
       legendaryAffixes,
       blendAffix,
       rarity: "legendary",
-      baseStats: selectedLegendary.baseStat,
+      baseStats:
+        selectedLegendary.baseStat !== ""
+          ? selectedLegendary.baseStat
+          : undefined,
+      baseGearName:
+        selectedLegendary.baseStat !== ""
+          ? selectedLegendary.baseItem
+          : undefined,
       legendaryName: selectedLegendary.name,
     };
 

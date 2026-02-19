@@ -1,10 +1,14 @@
+import { ALL_BASE_GEAR } from "@/src/data/gear-base/all-base-gear";
 import { ALL_GEAR_AFFIXES } from "@/src/tli/all-affixes";
-import type { BaseGearAffix, EquipmentType } from "@/src/tli/gear-data-types";
+import type {
+  BaseGear,
+  BaseGearAffix,
+  EquipmentType,
+} from "@/src/tli/gear-data-types";
 
 export const FILTER_AFFIX_TYPES = [
   "Prefix",
   "Suffix",
-  "Base Stats",
   "Base Affix",
   "Sweet Dream Affix",
   "Tower Sequence",
@@ -14,7 +18,6 @@ export const FILTER_AFFIX_TYPES = [
 export type FilterAffixType = (typeof FILTER_AFFIX_TYPES)[number];
 
 export const NON_GROUPABLE_AFFIX_TYPES = [
-  "Base Stats",
   "Sweet Dream Affix",
   "Tower Sequence",
   "Blend",
@@ -38,17 +41,16 @@ export const getFilteredAffixes = (
   equipmentType: EquipmentType,
   affixType: FilterAffixType,
 ): BaseGearAffix[] => {
-  const filtered = ALL_GEAR_AFFIXES.filter(
+  return ALL_GEAR_AFFIXES.filter(
     (affix) =>
       affix.equipmentType === equipmentType && affix.affixType === affixType,
   );
+};
 
-  // Reverse base stats so highest values appear first
-  if (affixType === "Base Stats") {
-    return filtered.toReversed();
-  }
-
-  return filtered;
+export const getBaseGear = (equipmentType: EquipmentType): BaseGear[] => {
+  return ALL_BASE_GEAR.filter(
+    (item) => item.equipmentType === equipmentType,
+  ).toReversed();
 };
 
 // Represents a group of affixes with the same base name (e.g., all Max Life tiers)

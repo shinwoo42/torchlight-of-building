@@ -23,11 +23,6 @@ const main = (): void => {
 
   // Gear affixes
   for (const affix of ALL_GEAR_AFFIXES) {
-    // Skip base stats - they don't need to be parsed
-    if (affix.affixType === "Base Stats") {
-      continue;
-    }
-
     const craftedAffix = craft(affix, 50);
     addLines(allLines, craftedAffix);
   }
