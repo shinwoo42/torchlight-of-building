@@ -192,7 +192,7 @@ export const ImportItemsModal = ({
       <ModalDescription>
         See the{" "}
         <a
-          href="https://github.com/aclinia/torchlight-of-building/blob/main/docs/public/import-items.md"
+          href="https://aclinia.github.io/torchlight-of-building/import-items/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-amber-400 underline hover:text-amber-300"
