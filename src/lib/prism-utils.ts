@@ -10,19 +10,33 @@ export interface PrismAffix {
 
 export const getBaseAffixes = (rarity: PrismRarity): PrismAffix[] => {
   const prefix = rarity === "rare" ? "Adds" : "Replaces";
-  return Prisms.filter(
-    (p) => p.type === "Base Affix" && p.affix.startsWith(prefix),
-  );
+  const seen = new Set<string>();
+  return Prisms.filter((p) => {
+    if (p.type !== "Base Affix" || !p.affix.startsWith(prefix)) return false;
+    if (seen.has(p.affix)) return false;
+    seen.add(p.affix);
+    return true;
+  });
 };
 
 export const getRareGaugeAffixes = (): PrismAffix[] => {
-  return Prisms.filter((p) => p.type === "Prism Gauge" && p.rarity === "Rare");
+  const seen = new Set<string>();
+  return Prisms.filter((p) => {
+    if (p.type !== "Prism Gauge" || p.rarity !== "Rare") return false;
+    if (seen.has(p.affix)) return false;
+    seen.add(p.affix);
+    return true;
+  });
 };
 
 export const getLegendaryGaugeAffixes = (): PrismAffix[] => {
-  return Prisms.filter(
-    (p) => p.type === "Prism Gauge" && p.rarity === "Legendary",
-  );
+  const seen = new Set<string>();
+  return Prisms.filter((p) => {
+    if (p.type !== "Prism Gauge" || p.rarity !== "Legendary") return false;
+    if (seen.has(p.affix)) return false;
+    seen.add(p.affix);
+    return true;
+  });
 };
 
 export const getMaxRareGaugeAffixes = (): number => 1;
