@@ -741,9 +741,6 @@
         "flippedH": false,
         "flippedV": false,
         "affixes": [],
-        "metaAffixes": [
-          "Copies the last Talent on all adjacent slates. Unable to copy Core Talents."
-        ],
         "isLegendary": true,
         "legendaryName": "When Sparks Set the Prairie Ablaze"
       },
@@ -754,9 +751,6 @@
         "flippedH": false,
         "flippedV": false,
         "affixes": [],
-        "metaAffixes": [
-          "Copies the last Talent on the adjacent slate on the right to this slate. Unable to copy the Core Talent."
-        ],
         "isLegendary": true,
         "legendaryName": "Sparks of Moth Fire"
       },
@@ -773,8 +767,7 @@
           "8% of damage is taken from Mana before life",
           "+20% Attack and Cast Speed when at Full Mana\n+15% Max Mana",
           "Max Focus Blessing Stacks +1\nRegenerates 0.4% Mana per second when Focus Blessing is active (Max Divinity Effect: 1)"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "1f01042e-5f92-497a-9c4c-2dc31866d453",
@@ -783,9 +776,6 @@
         "flippedH": false,
         "flippedV": false,
         "affixes": [],
-        "metaAffixes": [
-          "Copies the last Talent on the adjacent slate on the left to this slate. Unable to copy the Core Talent."
-        ],
         "isLegendary": true,
         "legendaryName": "Sparks of Moth Fire"
       },
@@ -801,7 +791,6 @@
           "+8% Spell Burst Charge Speed",
           "+20% Attack and Cast Speed when at Full Mana\n+15% Max Mana"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -817,7 +806,6 @@
           "+6% additional Attack Speed if you have dealt a Critical Strike recently (Max Divinity Effect: 1)",
           "Regains additional Life based on Missing Energy Shield\nRegains additional Energy Shield regain based on Missing Life (Max Divinity Effect: 1)"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -831,7 +819,6 @@
           "+12% Spell Block Chance\n+15% Energy Shield gained from Shield",
           "+20% Attack and Cast Speed when at Full Mana\n+15% Max Mana"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "A Corner of Divinity"
       },
@@ -845,7 +832,6 @@
           "+5% Block ratio when holding a Shield (Max Divinity Effect: 1)",
           "+20% Attack and Cast Speed when at Full Mana\n+15% Max Mana"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "A Corner of Divinity"
       },
@@ -861,7 +847,6 @@
           "Poisoned Relief",
           "Full Load"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Pedigree of Gods"
       }

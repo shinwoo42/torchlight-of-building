@@ -801,7 +801,6 @@
           "+6% Max Life\n+6% Max Energy Shield",
           "Conductive"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Pedigree of Gods"
       },
@@ -815,7 +814,6 @@
           "Multistrikes deal 16% increasing damage",
           "+10% additional damage for 4s after using Mobility Skills"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "A Corner of Divinity"
       },
@@ -829,7 +827,6 @@
           "+1 to Attack Skill Level",
           "Restores 3% of Energy Shield on defeat (Max Divinity Effect: 1)"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "A Corner of Divinity"
       },
@@ -843,7 +840,6 @@
           "+6% additional Attack Speed while Dual Wielding (Max Divinity Effect: 1)",
           "Gains a stack of Fortitude when using a Melee Skill (Max Divinity Effect: 1)"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "A Corner of Divinity"
       },
@@ -860,8 +856,7 @@
           "+16% Lightning Damage\n+12% Numbed chance",
           "Max Agility Blessing Stacks +1 (Max Divinity Effect: 1)",
           "For each Spell Skill used recently, +4% Critical Strike Damage, stacking up to 12 time(s) (Max Divinity Effect: 1)"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "d266b795-ac8f-4a3f-aa33-4a146ba54f77",
@@ -876,8 +871,7 @@
           "+8% Fervor effect",
           "+40% Defense from Shield",
           "+1% Movement Speed per 10 Fervor Rating"
-        ],
-        "metaAffixes": []
+        ]
       }
     ]
   },

@@ -892,8 +892,7 @@
           "+20% Critical Strike Rating\n+5% Critical Strike Damage",
           "+14% Evasion",
           "+6% Max Life"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "155219af-fe4b-4047-b87f-70c8aecbdece",
@@ -908,8 +907,7 @@
           "+18% Lightning Damage\n+18% Minion Lightning Damage",
           "+9% Projectile Speed",
           "+40% Spell Critical Strike Rating"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "4981cd5f-43ec-42c5-b266-8cd5088b6526",
@@ -924,8 +922,7 @@
           "+14% Evasion",
           "+30% Projectile Critical Strike Rating",
           "+6% Max Energy Shield"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "133ef3bb-9b9d-4b20-8895-801912d2d595",
@@ -940,8 +937,7 @@
           "+6% Max Energy Shield\n+6% Max Life",
           "+18% Damage Over Time",
           "+4% Max Energy Shield\n+4% Energy Shield Charge Speed"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "9872a645-59e1-4cad-b6b2-59bdbaa6625f",
@@ -956,8 +952,7 @@
           "+6% Max Energy Shield",
           "+6% Attack and Cast Speed\n+6% Minion Attack and Cast Speed",
           "+18% Ailment Damage"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "4d56fc82-d466-42ef-aaf4-e75b3f4d0590",
@@ -972,8 +967,7 @@
           "+3% additional Attack Speed when performing Multistrikes",
           "+6% Max Life\n+6% Max Energy Shield",
           "+14% Evasion"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "cd8289ab-f1aa-43ad-88ca-f530948cdf91",
@@ -987,7 +981,6 @@
           "Bunch",
           "Extreme Coldness"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Pedigree of Gods"
       },
@@ -1003,7 +996,6 @@
           "Max Focus Blessing Stacks +1\nRegenerates 0.4% Mana per second when Focus Blessing is active (Max Divinity Effect: 1)",
           "+1 Lightning Skill Level"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -1019,7 +1011,6 @@
           "Max Focus Blessing Stacks +1 (Max Divinity Effect: 1)",
           "+1 Lightning Skill Level"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -1036,8 +1027,7 @@
           "+3% Energy Shield Regain",
           "+18% Spell Damage",
           "Energy Shield Charge cannot be interrupted by damage for 1 s after it starts (Max Divinity Effect: 1)"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "ed56bfe1-0ad2-441d-bf42-1790bc27a53c",
@@ -1052,8 +1042,7 @@
           "+6% Max Energy Shield",
           "+6% Attack and Cast Speed\n+6% Minion Attack and Cast Speed",
           "Gains 1 stack(s) of Focus Blessing when Reaping (Max Divinity Effect: 1)"
-        ],
-        "metaAffixes": []
+        ]
       }
     ]
   },

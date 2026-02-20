@@ -110,7 +110,7 @@ describe("parseImportedSlates", () => {
     expect(slates[0].affixes).toEqual(["+10% damage"]);
   });
 
-  it("stores copy slate affixes as metaAffixes", () => {
+  it("stores copy slate affixes as regular affixes", () => {
     const json = JSON.stringify([
       {
         name: "Sparks of Moth Fire",
@@ -130,27 +130,22 @@ describe("parseImportedSlates", () => {
     expect(errors).toEqual([]);
     expect(slates).toHaveLength(2);
 
-    // Sparks of Moth Fire - affixes in both places
+    // Sparks of Moth Fire - affixes stored as regular affixes
     expect(slates[0].affixes).toHaveLength(1);
     expect(slates[0].affixes[0]).toContain("Copies the last Talent");
-    expect(slates[0].metaAffixes).toHaveLength(1);
-    expect(slates[0].metaAffixes[0]).toContain("Copies the last Talent");
 
-    // When Sparks Set the Prairie Ablaze - affixes in both places
+    // When Sparks Set the Prairie Ablaze - affixes stored as regular affixes
     expect(slates[1].affixes).toHaveLength(1);
     expect(slates[1].affixes[0]).toContain("Copies the last Talent");
-    expect(slates[1].metaAffixes).toHaveLength(1);
-    expect(slates[1].metaAffixes[0]).toContain("Copies the last Talent");
   });
 
-  it("stores regular legendary slate affixes as affixes not metaAffixes", () => {
+  it("stores regular legendary slate affixes as affixes", () => {
     const json = JSON.stringify([
       { name: "Fallen Starlight", affixes: ["+15% Critical Strike Rating"] },
     ]);
 
     const { slates } = parseImportedSlates(json);
     expect(slates[0].affixes).toEqual(["+15% Critical Strike Rating"]);
-    expect(slates[0].metaAffixes).toEqual([]);
   });
 
   it("handles all entries when none are invalid", () => {

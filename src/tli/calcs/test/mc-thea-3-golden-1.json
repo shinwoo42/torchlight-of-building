@@ -691,7 +691,6 @@
           "Full Load",
           "Perception"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Pedigree of Gods"
       },
@@ -707,7 +706,6 @@
           "+9% Minion Damage",
           "Max Tenacity Blessing Stacks +1 (Max Divinity Effect: 1)"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -723,7 +721,6 @@
           "+9% Attack Damage",
           "+1 Persistent Skill Level"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -740,8 +737,7 @@
           "+9% Damage Over Time\n+2% Skill Effect Duration",
           "+18 Affliction inflicted per second\n-8% All Resistance when the enemy has max Affliction",
           "+8% additional damage against Cursed enemies"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "cb6540c7-af41-48f5-b9df-cd1eb5d5050e",
@@ -756,8 +752,7 @@
           "+9% Damage Over Time\n+2% Skill Effect Duration",
           "+10% Max Energy Shield\nGains Blur when Energy Shield starts to Charge (Max Divinity Effect: 1)",
           "8% additional damage applied to Life"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "d8f0f368-29ae-48c5-996c-f951efa7c0b0",
@@ -772,8 +767,7 @@
           "+6% damage for every +1 additional Max Channeled Stack(s)",
           "Max Focus Blessing Stacks +1 (Max Divinity Effect: 1)",
           "+1 Spell Skill Level"
-        ],
-        "metaAffixes": []
+        ]
       }
     ]
   },

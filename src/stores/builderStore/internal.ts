@@ -70,7 +70,6 @@ const toSaveDataSlate = (slate: CoreDivinitySlate): DivinitySlate => ({
   flippedH: slate.flippedH,
   flippedV: slate.flippedV,
   affixes: slate.affixes.map(getAffixText),
-  metaAffixes: slate.metaAffixes,
   isLegendary: slate.isLegendary,
   legendaryName: slate.legendaryName,
 });

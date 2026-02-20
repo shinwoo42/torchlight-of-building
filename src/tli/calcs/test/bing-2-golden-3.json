@@ -1142,7 +1142,6 @@
           "Source",
           "Bunch"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Pedigree of Gods"
       },
@@ -1158,7 +1157,6 @@
           "+1 Jumps",
           "8% of damage taken is transferred to a random Minion\nSpirit Magi -80% additional damage taken (Max Divinity Effect: 1)"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -1174,7 +1172,6 @@
           "Upon dealing damage to a Cursed target, there is a +25% chance to Paralyze it",
           "100% chance to gain Agility Blessing on Critical Strike (Max Divinity Effect: 1)"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -1190,7 +1187,6 @@
           "+10% chance to gain Blur when inflicting crowd control effects (Max Divinity Effect: 1)",
           "+1 Lightning Skill Level"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "Fallen Starlight"
       },
@@ -1204,7 +1200,6 @@
           "+25% chance to Mark the enemy on Critical Strike\n+20% Mark effect (Max Divinity Effect: 1)",
           "+1 Jumps"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "A Corner of Divinity"
       },
@@ -1218,7 +1213,6 @@
           "+5% Spell Critical Strike Damage per stack of Focus Blessing owned (Max Divinity Effect: 1)",
           "+10% additional damage for 4s after using Mobility Skills"
         ],
-        "metaAffixes": [],
         "isLegendary": true,
         "legendaryName": "A Corner of Divinity"
       },
@@ -1235,8 +1229,7 @@
           "+6% Cast Speed\n-4 Skill Cost\n+5% Movement Speed",
           "Max Focus Blessing Stacks +1 (Max Divinity Effect: 1)",
           "+1 Spell Skill Level"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "d115d63e-2093-49f0-b8ab-cf8bc31b2eaf",
@@ -1245,9 +1238,6 @@
         "flippedH": false,
         "flippedV": false,
         "affixes": [],
-        "metaAffixes": [
-          "Copies the last Talent on all adjacent slates. Unable to copy Core Talents."
-        ],
         "isLegendary": true,
         "legendaryName": "When Sparks Set the Prairie Ablaze"
       }

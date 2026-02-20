@@ -58,11 +58,6 @@ export const parseImportedSlates = (
     // Try matching as legendary slate
     const legendaryTemplate = LEGENDARY_NAME_MAP.get(entry.name);
     if (legendaryTemplate !== undefined) {
-      // Copy slates (those with fixedAffixes) store their affix as metaAffixes
-      const hasFixedAffixes =
-        legendaryTemplate.fixedAffixes !== undefined &&
-        legendaryTemplate.fixedAffixes.length > 0;
-
       slates.push({
         id: generateItemId(),
         shape: legendaryTemplate.shape,
@@ -70,7 +65,6 @@ export const parseImportedSlates = (
         flippedH: false,
         flippedV: false,
         affixes,
-        metaAffixes: hasFixedAffixes ? affixes : [],
         isLegendary: true,
         legendaryName: legendaryTemplate.displayName,
       });
@@ -88,7 +82,6 @@ export const parseImportedSlates = (
         flippedH: false,
         flippedV: false,
         affixes,
-        metaAffixes: [],
       });
       continue;
     }
@@ -101,7 +94,6 @@ export const parseImportedSlates = (
       flippedH: false,
       flippedV: false,
       affixes,
-      metaAffixes: [],
       isLegendary: true,
       legendaryName: entry.name,
     });

@@ -658,8 +658,7 @@
           "+20% Critical Strike Rating\n+5% Critical Strike Damage",
           "+14% Evasion",
           "+6% Max Life"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "155219af-fe4b-4047-b87f-70c8aecbdece",
@@ -674,8 +673,7 @@
           "+18% Lightning Damage\n+18% Minion Lightning Damage",
           "+9% Projectile Speed",
           "+40% Spell Critical Strike Rating"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "4981cd5f-43ec-42c5-b266-8cd5088b6526",
@@ -690,8 +688,7 @@
           "+14% Evasion",
           "+30% Projectile Critical Strike Rating",
           "+6% Max Energy Shield"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "133ef3bb-9b9d-4b20-8895-801912d2d595",
@@ -706,8 +703,7 @@
           "+6% Max Energy Shield\n+6% Max Life",
           "+18% Damage Over Time",
           "+4% Max Energy Shield\n+4% Energy Shield Charge Speed"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "9872a645-59e1-4cad-b6b2-59bdbaa6625f",
@@ -722,8 +718,7 @@
           "+6% Max Energy Shield",
           "+6% Attack and Cast Speed\n+6% Minion Attack and Cast Speed",
           "+18% Ailment Damage"
-        ],
-        "metaAffixes": []
+        ]
       },
       {
         "id": "4d56fc82-d466-42ef-aaf4-e75b3f4d0590",
@@ -738,8 +733,7 @@
           "+3% additional Attack Speed when performing Multistrikes",
           "+6% Max Life\n+6% Max Energy Shield",
           "+14% Evasion"
-        ],
-        "metaAffixes": []
+        ]
       }
     ]
   },

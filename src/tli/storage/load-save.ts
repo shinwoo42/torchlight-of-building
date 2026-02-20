@@ -754,16 +754,27 @@ const isCoreTalentLine = (affixLineText: string): boolean => {
 
 type CopyDirection = "up" | "down" | "left" | "right";
 
-// Parse the copy direction from a meta affix text
-const parseCopyDirection = (
-  metaAffixText: string,
-): CopyDirection | "all" | undefined => {
-  const lowerText = metaAffixText.toLowerCase();
-  if (lowerText.includes("all adjacent")) return "all";
-  if (lowerText.includes("above")) return "up";
-  if (lowerText.includes("below")) return "down";
-  if (lowerText.includes("on the left")) return "left";
-  if (lowerText.includes("on the right")) return "right";
+const MOTH_FIRE_NAME = "Sparks of Moth Fire";
+const PRAIRIE_NAME = "When Sparks Set the Prairie Ablaze";
+
+const isCopySlate = (slate: { legendaryName?: string }): boolean =>
+  slate.legendaryName === MOTH_FIRE_NAME ||
+  slate.legendaryName === PRAIRIE_NAME;
+
+// Parse the copy direction from a copy slate
+const parseCopyDirection = (slate: {
+  legendaryName?: string;
+  affixes: { affixLines: { text: string }[] }[];
+}): CopyDirection | "all" | undefined => {
+  if (slate.legendaryName === PRAIRIE_NAME) return "all";
+  if (slate.legendaryName === MOTH_FIRE_NAME) {
+    const firstAffixText = slate.affixes[0]?.affixLines[0]?.text ?? "";
+    const lowerText = firstAffixText.toLowerCase();
+    if (lowerText.includes("above")) return "up";
+    if (lowerText.includes("below")) return "down";
+    if (lowerText.includes("on the left")) return "left";
+    if (lowerText.includes("on the right")) return "right";
+  }
   return undefined;
 };
 
@@ -811,8 +822,8 @@ const getLastCopyableAffix = (
   slate: DivinitySlate,
   src: string,
 ): Affix | undefined => {
-  // Don't copy from other copy slates (they have metaAffixes)
-  if (slate.metaAffixes.length > 0) return undefined;
+  // Don't copy from other copy slates
+  if (isCopySlate(slate)) return undefined;
 
   // Work backwards through affixes to find the last non-Core one
   for (let i = slate.affixes.length - 1; i >= 0; i--) {
@@ -840,11 +851,11 @@ const getCopiedAffixesForSlate = (
   inventory: DivinitySlate[],
   placements: PlacedSlate[],
 ): Affix[] => {
-  // Only process slates with metaAffixes (copy slates)
-  if (slate.metaAffixes.length === 0) return [];
+  // Only process copy slates
+  if (!isCopySlate(slate)) return [];
 
   const src = getDivinitySrc(slate.legendaryName);
-  const direction = parseCopyDirection(slate.metaAffixes[0]);
+  const direction = parseCopyDirection(slate);
   if (direction === undefined) return [];
 
   const adjacentSlates = getAdjacentSlates(
@@ -897,7 +908,6 @@ const convertDivinitySlate = (slate: SaveDataDivinitySlate): DivinitySlate => {
     flippedH: slate.flippedH,
     flippedV: slate.flippedV,
     affixes: slate.affixes.map((text) => convertAffix(text, src)),
-    metaAffixes: slate.metaAffixes ?? [],
     isLegendary: slate.isLegendary,
     legendaryName: slate.legendaryName,
   };
@@ -910,13 +920,13 @@ const convertDivinityPage = (
   const inventory = saveDataDivinityPage.inventory.map(convertDivinitySlate);
   const placements = saveDataDivinityPage.placedSlates;
 
-  // For each placed slate with metaAffixes, populate copied affixes from adjacent slates
+  // For each placed copy slate, populate copied affixes from adjacent slates
   for (const placement of placements) {
     const slateIndex = inventory.findIndex((s) => s.id === placement.slateId);
     if (slateIndex === -1) continue;
 
     const slate = inventory[slateIndex];
-    if (slate.metaAffixes.length > 0) {
+    if (isCopySlate(slate)) {
       const copiedAffixes = getCopiedAffixesForSlate(
         slate,
         placement,

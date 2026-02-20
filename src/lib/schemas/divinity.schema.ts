@@ -15,7 +15,6 @@ const BaseDivinitySlateSchema = z.object({
   flippedH: z.boolean(),
   flippedV: z.boolean(),
   affixes: z.array(z.string()).catch([]),
-  metaAffixes: z.array(z.string()).catch([]),
   isLegendary: z.boolean().optional().catch(undefined),
   legendaryName: z.string().optional().catch(undefined),
 });
