@@ -126,12 +126,33 @@ export const getPactspiritAffixes = (
     pactspiritPage.slot2,
     pactspiritPage.slot3,
   ];
+
+  // Count dual kismet occurrences by destinyName across all slots
+  const dualKismetCounts = new Map<string, number>();
+  for (const slot of slots) {
+    if (slot === undefined) continue;
+    for (const ring of Object.values(slot.rings)) {
+      if (ring.installedDestiny?.destinyType === "Dual Kismet") {
+        const name = ring.installedDestiny.destinyName;
+        dualKismetCounts.set(name, (dualKismetCounts.get(name) ?? 0) + 1);
+      }
+    }
+  }
+
+  const addedDualKismets = new Set<string>();
+
   for (const slot of slots) {
     if (slot === undefined) continue;
     affixes.push(slot.mainAffix);
     for (const ring of Object.values(slot.rings)) {
-      // TODO: implement dual kismets
       if (ring.installedDestiny?.destinyType === "Dual Kismet") {
+        const name = ring.installedDestiny.destinyName;
+        const count = dualKismetCounts.get(name) ?? 0;
+        // Only add affix if 2+ of the same dual kismet exist, and only once
+        if (count >= 2 && !addedDualKismets.has(name)) {
+          addedDualKismets.add(name);
+          affixes.push(ring.installedDestiny.affix);
+        }
         continue;
       }
       affixes.push(ring.installedDestiny?.affix ?? ring.originalAffix);

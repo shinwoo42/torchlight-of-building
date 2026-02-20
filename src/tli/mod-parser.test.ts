@@ -4363,3 +4363,10 @@ test("parse copies talent on all adjacent slates (no-op)", () => {
   );
   expect(result).toEqual([]);
 });
+
+test("parse dual kismet activation header (no-op)", () => {
+  const result = parseMod(
+    "Activates the following effects when there are 2 of this Kismet on the same pact page:",
+  );
+  expect(result).toEqual([]);
+});

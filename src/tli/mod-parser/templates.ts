@@ -2740,4 +2740,7 @@ export const allParsers = [
   t(
     "copies the last talent on all adjacent slates. unable to copy core talents.",
   ).outputNone(),
+  t(
+    "activates the following effects when there are 2 of this kismet on the same pact page:",
+  ).outputNone(),
 ];
