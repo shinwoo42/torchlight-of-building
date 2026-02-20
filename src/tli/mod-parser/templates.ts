@@ -2238,7 +2238,7 @@ export const allParsers = [
     value: c.value,
   })),
   t(
-    "{value:+dec%} additional attack damage when having feline stimulants",
+    "{value:+dec%} additional attack damage when having feline {(stimulants|stimulant)}",
   ).output((c) => ({
     type: "DmgPct",
     value: c.value,

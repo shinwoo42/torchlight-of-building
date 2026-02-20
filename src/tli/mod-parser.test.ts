@@ -4342,6 +4342,21 @@ test("parse additional attack damage when having feline stimulants", () => {
   ]);
 });
 
+test("parse additional attack damage when having feline stimulant (singular)", () => {
+  const result = parseMod(
+    "+8% additional Attack Damage when having Feline Stimulant",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 8,
+      dmgModType: "attack",
+      addn: true,
+      condThreshold: { target: "feline_stimulant", comparator: "gt", value: 0 },
+    },
+  ]);
+});
+
 test("parse copies talent on all adjacent slates (no-op)", () => {
   const result = parseMod(
     "Copies the last Talent on all adjacent slates. Unable to copy Core Talents.",
