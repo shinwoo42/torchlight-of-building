@@ -23,6 +23,33 @@ const interpolateValue = (
   return value.toFixed(decimalPlaces);
 };
 
+// Pattern to match range values like (17-24), (-6--4), or (0.13-0.18)
+const RANGE_PATTERN = /\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)/g;
+
+const interpolateRange = (
+  minStr: string,
+  maxStr: string,
+  percentage: number,
+): string => {
+  const min = parseFloat(minStr);
+  const max = parseFloat(maxStr);
+  const decimalPlaces = Math.max(
+    getDecimalPlaces(minStr),
+    getDecimalPlaces(maxStr),
+  );
+  const interpolated = interpolateValue(
+    { min, max },
+    percentage,
+    decimalPlaces,
+  );
+
+  // Add + prefix for non-negative values from ranges that span negative to positive
+  if (min < 0 && max > 0 && parseFloat(interpolated) >= 0) {
+    return `+${interpolated}`;
+  }
+  return interpolated;
+};
+
 /**
  * Crafts a single affix string by interpolating value ranges from the craftableAffix format
  *
@@ -40,29 +67,44 @@ export const craft = <T extends { craftableAffix: string }>(
   percentage: number,
 ): string => {
   let result = affix.craftableAffix;
-
-  // Pattern to match range values like (17-24), (-6--4), or (0.13-0.18)
-  const rangePattern = /\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)/g;
-
-  result = result.replace(rangePattern, (_match, minStr, maxStr) => {
-    const min = parseFloat(minStr);
-    const max = parseFloat(maxStr);
-    const decimalPlaces = Math.max(
-      getDecimalPlaces(minStr),
-      getDecimalPlaces(maxStr),
-    );
-    const interpolated = interpolateValue(
-      { min, max },
-      percentage,
-      decimalPlaces,
-    );
-
-    // Add + prefix for non-negative values from ranges that span negative to positive
-    if (min < 0 && max > 0 && parseFloat(interpolated) >= 0) {
-      return `+${interpolated}`;
-    }
-    return interpolated;
-  });
-
+  result = result.replace(RANGE_PATTERN, (_match, minStr, maxStr) =>
+    interpolateRange(minStr, maxStr, percentage),
+  );
   return result;
+};
+
+/**
+ * Crafts an affix string using individual percentages for each value range.
+ * Falls back to DEFAULT_QUALITY (or 50) for any missing percentage entries.
+ */
+export const craftMulti = <T extends { craftableAffix: string }>(
+  affix: T,
+  percentages: number[],
+): string => {
+  let result = affix.craftableAffix;
+  let rangeIndex = 0;
+  result = result.replace(RANGE_PATTERN, (_match, minStr, maxStr) => {
+    const percentage = percentages[rangeIndex] ?? 50;
+    rangeIndex++;
+    return interpolateRange(minStr, maxStr, percentage);
+  });
+  return result;
+};
+
+/**
+ * Extracts range descriptors from an affix string for labeling sliders.
+ * Returns an array of { min, max } for each range found.
+ */
+export type RangeDescriptor = { min: string; max: string };
+
+export const extractRanges = (affixString: string): RangeDescriptor[] => {
+  const ranges: RangeDescriptor[] = [];
+  const pattern = /\((-?\d+(?:\.\d+)?)-(-?\d+(?:\.\d+)?)\)/g;
+  let match: RegExpExecArray | null;
+  match = pattern.exec(affixString);
+  while (match !== null) {
+    ranges.push({ min: match[1], max: match[2] });
+    match = pattern.exec(affixString);
+  }
+  return ranges;
 };

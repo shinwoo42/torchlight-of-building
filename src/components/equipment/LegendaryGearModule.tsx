@@ -5,7 +5,7 @@ import { Legendaries } from "@/src/data/legendary/legendaries";
 import type { LegendaryAffix } from "@/src/data/legendary/types";
 import type { Gear } from "@/src/lib/save-data";
 import type { Affix, AffixLine, Gear as CoreGear } from "@/src/tli/core";
-import { craft } from "@/src/tli/crafting/craft";
+import { craft, craftMulti, extractRanges } from "@/src/tli/crafting/craft";
 import { parseMod } from "@/src/tli/mod-parser";
 import {
   formatBlendAffix,
@@ -42,8 +42,16 @@ const getAffixString = (
   return undefined;
 };
 
-const craftAffix = (affix: string, percentage: number): string => {
+const craftAffixSingle = (affix: string, percentage: number): string => {
   return craft({ craftableAffix: affix }, percentage);
+};
+
+const craftAffixMulti = (affix: string, percentages: number[]): string => {
+  return craftMulti({ craftableAffix: affix }, percentages);
+};
+
+const countRanges = (affix: string): number => {
+  return extractRanges(affix).length;
 };
 
 const convertAffixStringToAffix = (affixText: string): Affix => {
@@ -108,10 +116,17 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
     if (index !== undefined) {
       const legendary = sortedLegendaries[index];
       setAffixStates(
-        legendary.normalAffixes.map(() => ({
-          isCorrupted: false,
-          percentage: DEFAULT_QUALITY,
-        })),
+        legendary.normalAffixes.map((affix) => {
+          const affixStr = typeof affix === "string" ? affix : affix.choices[0];
+          const rangeCount = countRanges(affixStr);
+          return {
+            isCorrupted: false,
+            percentages: Array.from(
+              { length: rangeCount },
+              () => DEFAULT_QUALITY,
+            ),
+          };
+        }),
       );
     } else {
       setAffixStates([]);
@@ -119,22 +134,42 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
   };
 
   const handleToggleCorruption = (index: number) => {
+    if (selectedLegendary === undefined) return;
     setAffixStates((prev) =>
-      prev.map((state, i) =>
-        i === index
-          ? {
-              ...state,
-              isCorrupted: !state.isCorrupted,
-              selectedChoiceIndex: undefined,
-            }
-          : state,
-      ),
+      prev.map((state, i) => {
+        if (i !== index) return state;
+        const newIsCorrupted = !state.isCorrupted;
+        const newAffix = newIsCorrupted
+          ? selectedLegendary.corruptionAffixes[i]
+          : selectedLegendary.normalAffixes[i];
+        const affixStr =
+          typeof newAffix === "string" ? newAffix : newAffix.choices[0];
+        const rangeCount = countRanges(affixStr);
+        return {
+          ...state,
+          isCorrupted: newIsCorrupted,
+          selectedChoiceIndex: undefined,
+          percentages: Array.from(
+            { length: rangeCount },
+            () => DEFAULT_QUALITY,
+          ),
+        };
+      }),
     );
   };
 
-  const handlePercentageChange = (index: number, percentage: number) => {
+  const handlePercentageChange = (
+    affixIndex: number,
+    rangeIndex: number,
+    percentage: number,
+  ) => {
     setAffixStates((prev) =>
-      prev.map((state, i) => (i === index ? { ...state, percentage } : state)),
+      prev.map((state, i) => {
+        if (i !== affixIndex) return state;
+        const newPercentages = [...state.percentages];
+        newPercentages[rangeIndex] = percentage;
+        return { ...state, percentages: newPercentages };
+      }),
     );
   };
 
@@ -142,10 +177,28 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
     index: number,
     choiceIndex: number | undefined,
   ) => {
+    if (selectedLegendary === undefined) return;
     setAffixStates((prev) =>
-      prev.map((state, i) =>
-        i === index ? { ...state, selectedChoiceIndex: choiceIndex } : state,
-      ),
+      prev.map((state, i) => {
+        if (i !== index) return state;
+        if (choiceIndex === undefined) {
+          return { ...state, selectedChoiceIndex: undefined, percentages: [] };
+        }
+        const affix = state.isCorrupted
+          ? selectedLegendary.corruptionAffixes[i]
+          : selectedLegendary.normalAffixes[i];
+        const affixStr =
+          typeof affix === "string" ? affix : affix.choices[choiceIndex];
+        const rangeCount = countRanges(affixStr);
+        return {
+          ...state,
+          selectedChoiceIndex: choiceIndex,
+          percentages: Array.from(
+            { length: rangeCount },
+            () => DEFAULT_QUALITY,
+          ),
+        };
+      }),
     );
   };
 
@@ -172,7 +225,7 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
         console.error(`Unselected choice at index ${i}, cannot save item`);
         return;
       }
-      legendaryAffixes.push(craftAffix(affixString, state.percentage));
+      legendaryAffixes.push(craftAffixMulti(affixString, state.percentages));
     }
 
     const blendAffix =
@@ -209,7 +262,7 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
 
     const legendaryAffixes: Affix[] = legendary.normalAffixes.map((affix) => {
       const affixString = getAffixStringFromLegendary(affix);
-      const crafted = craftAffix(affixString, DEFAULT_QUALITY);
+      const crafted = craftAffixSingle(affixString, DEFAULT_QUALITY);
       return convertAffixStringToAffix(crafted);
     });
 

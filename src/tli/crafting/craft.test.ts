@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { craft } from "./craft";
+import { craft, craftMulti, extractRanges } from "./craft";
 
 describe("craft", () => {
   test("crafts affix at 0% returns min value", () => {
@@ -102,5 +102,52 @@ describe("craft", () => {
     expect(craft(affix, 50)).toBe(
       "Reaps 0.15 s of Damage Over Time when dealing Damage Over Time. The effect has a 1 s cooldown against the same target",
     );
+  });
+});
+
+describe("craftMulti", () => {
+  test("uses individual percentages per range", () => {
+    const affix = { craftableAffix: "Adds (1-2) - (5-6) Lightning Damage" };
+    // First range at 0% → 1, second range at 100% → 6
+    expect(craftMulti(affix, [0, 100])).toBe("Adds 1 - 6 Lightning Damage");
+    // First range at 100% → 2, second range at 0% → 5
+    expect(craftMulti(affix, [100, 0])).toBe("Adds 2 - 5 Lightning Damage");
+  });
+
+  test("falls back to 50% for missing percentages", () => {
+    const affix = { craftableAffix: "Adds (10-20) - (30-40) Damage" };
+    // Only provide first percentage
+    expect(craftMulti(affix, [0])).toBe("Adds 10 - 35 Damage");
+  });
+
+  test("works with single range same as craft", () => {
+    const affix = { craftableAffix: "+(17-24)% Speed" };
+    expect(craftMulti(affix, [0])).toBe("+17% Speed");
+    expect(craftMulti(affix, [100])).toBe("+24% Speed");
+  });
+});
+
+describe("extractRanges", () => {
+  test("extracts single range", () => {
+    expect(extractRanges("+(17-24)% Speed")).toEqual([
+      { min: "17", max: "24" },
+    ]);
+  });
+
+  test("extracts multiple ranges", () => {
+    expect(extractRanges("Adds (1-2) - (5-6) Lightning Damage")).toEqual([
+      { min: "1", max: "2" },
+      { min: "5", max: "6" },
+    ]);
+  });
+
+  test("returns empty array for no ranges", () => {
+    expect(extractRanges("Has Hasten")).toEqual([]);
+  });
+
+  test("extracts decimal ranges", () => {
+    expect(extractRanges("Reaps (0.13-0.18) s")).toEqual([
+      { min: "0.13", max: "0.18" },
+    ]);
   });
 });
