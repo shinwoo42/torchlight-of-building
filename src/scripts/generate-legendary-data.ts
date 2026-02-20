@@ -10,75 +10,20 @@ import type {
 } from "../data/legendary/types";
 import type { EquipmentSlot, EquipmentType } from "../tli/gear-data-types";
 import { LegendaryDataOverrides } from "./legendaries/legendary-data-overrides";
-import { fetchPage, processInBatches, toSnakeCase } from "./tlidb-tools";
-
-// ============================================================================
-// Equipment type → tlidb page mapping (same as fetch-gear-craft-pages.ts)
-// ============================================================================
-
-const EQUIPMENT_TYPE_PAGES: Record<
-  string,
-  { type: EquipmentType; slot: EquipmentSlot }
-> = {
-  // One-Handed Weapons
-  Scepter: { type: "Scepter", slot: "One-Handed" },
-  Wand: { type: "Wand", slot: "One-Handed" },
-  Cane: { type: "Cane", slot: "One-Handed" },
-  Rod: { type: "Rod", slot: "One-Handed" },
-  Cudgel: { type: "Cudgel", slot: "One-Handed" },
-  Dagger: { type: "Dagger", slot: "One-Handed" },
-  Claw: { type: "Claw", slot: "One-Handed" },
-  "One-Handed_Axe": { type: "One-Handed Axe", slot: "One-Handed" },
-  "One-Handed_Sword": { type: "One-Handed Sword", slot: "One-Handed" },
-  "One-Handed_Hammer": { type: "One-Handed Hammer", slot: "One-Handed" },
-  Pistol: { type: "Pistol", slot: "One-Handed" },
-
-  // Two-Handed Weapons
-  Tin_Staff: { type: "Tin Staff", slot: "Two-Handed" },
-  Bow: { type: "Bow", slot: "Two-Handed" },
-  Crossbow: { type: "Crossbow", slot: "Two-Handed" },
-  Musket: { type: "Musket", slot: "Two-Handed" },
-  Fire_Cannon: { type: "Fire Cannon", slot: "Two-Handed" },
-  "Two-Handed_Axe": { type: "Two-Handed Axe", slot: "Two-Handed" },
-  "Two-Handed_Sword": { type: "Two-Handed Sword", slot: "Two-Handed" },
-  "Two-Handed_Hammer": { type: "Two-Handed Hammer", slot: "Two-Handed" },
-
-  // Armor - STR
-  STR_Chest_Armor: { type: "Chest Armor (STR)", slot: "Chest Armor" },
-  STR_Boots: { type: "Boots (STR)", slot: "Boots" },
-  STR_Gloves: { type: "Gloves (STR)", slot: "Gloves" },
-  STR_Helmet: { type: "Helmet (STR)", slot: "Helmet" },
-
-  // Armor - DEX
-  DEX_Chest_Armor: { type: "Chest Armor (DEX)", slot: "Chest Armor" },
-  DEX_Boots: { type: "Boots (DEX)", slot: "Boots" },
-  DEX_Gloves: { type: "Gloves (DEX)", slot: "Gloves" },
-  DEX_Helmet: { type: "Helmet (DEX)", slot: "Helmet" },
-
-  // Armor - INT
-  INT_Chest_Armor: { type: "Chest Armor (INT)", slot: "Chest Armor" },
-  INT_Boots: { type: "Boots (INT)", slot: "Boots" },
-  INT_Gloves: { type: "Gloves (INT)", slot: "Gloves" },
-  INT_Helmet: { type: "Helmet (INT)", slot: "Helmet" },
-
-  // Shields
-  STR_Shield: { type: "Shield (STR)", slot: "Shield" },
-  DEX_Shield: { type: "Shield (DEX)", slot: "Shield" },
-  INT_Shield: { type: "Shield (INT)", slot: "Shield" },
-
-  // Accessories
-  Belt: { type: "Belt", slot: "Trinket" },
-  Necklace: { type: "Necklace", slot: "Trinket" },
-  Ring: { type: "Ring", slot: "Trinket" },
-  Spirit_Ring: { type: "Spirit Ring", slot: "Trinket" },
-};
+import {
+  EQUIPMENT_TYPE_PAGES,
+  fetchGearTypePages,
+  fetchPage,
+  GEAR_TYPE_DIR,
+  processInBatches,
+  toSnakeCase,
+} from "./tlidb-tools";
 
 // ============================================================================
 // Fetching
 // ============================================================================
 
 const BASE_URL = "https://tlidb.com/en";
-const GEAR_TYPE_DIR = join(process.cwd(), ".garbage", "tlidb", "gear");
 const LEGENDARY_GEAR_DIR = join(
   process.cwd(),
   ".garbage",
@@ -117,32 +62,16 @@ const extractLegendaryLinksFromGearPage = (
 };
 
 const fetchLegendaryPages = async (): Promise<void> => {
-  await mkdir(GEAR_TYPE_DIR, { recursive: true });
   await mkdir(LEGENDARY_GEAR_DIR, { recursive: true });
 
   // Step 1: Fetch all gear type pages
-  const gearTypePages = Object.keys(EQUIPMENT_TYPE_PAGES);
-  console.log(`Fetching ${gearTypePages.length} gear type pages...`);
-
-  await processInBatches(gearTypePages, async (pageName) => {
-    const snakeCaseName = toSnakeCase(pageName);
-    const filepath = join(GEAR_TYPE_DIR, `${snakeCaseName}.html`);
-
-    try {
-      const url = `${BASE_URL}/${encodeURIComponent(pageName)}`;
-      const html = await fetchPage(url);
-      await writeFile(filepath, html);
-      console.log(`Saved: ${filepath}`);
-    } catch (error) {
-      console.error(`Error fetching gear type page ${pageName}:`, error);
-    }
-  });
+  await fetchGearTypePages();
 
   // Step 2: Collect all legendary links from gear type pages
   console.log("\nCollecting legendary links from gear type pages...");
   const allLegendaryLinks = new Map<string, { href: string; name: string }>();
 
-  for (const pageName of gearTypePages) {
+  for (const pageName of Object.keys(EQUIPMENT_TYPE_PAGES)) {
     const snakeCaseName = toSnakeCase(pageName);
     const filepath = join(GEAR_TYPE_DIR, `${snakeCaseName}.html`);
 

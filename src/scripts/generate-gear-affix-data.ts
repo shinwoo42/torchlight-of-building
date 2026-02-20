@@ -2,12 +2,19 @@ import { execSync } from "node:child_process";
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as cheerio from "cheerio";
+import { program } from "commander";
 import type {
   AffixType,
   CraftingPool,
   EquipmentSlot,
   EquipmentType,
 } from "../tli/gear-data-types";
+import {
+  EQUIPMENT_TYPE_PAGES,
+  fetchGearTypePages,
+  GEAR_TYPE_DIR,
+  toSnakeCase,
+} from "./tlidb-tools";
 
 interface BaseGearAffix {
   equipmentSlot: EquipmentSlot;
@@ -25,63 +32,16 @@ interface BaseGear {
   stats: string;
 }
 
-// Mapping from filename to equipment type and slot
+// Derive filename-keyed map from the shared EQUIPMENT_TYPE_PAGES
 const EQUIPMENT_MAP: Record<
   string,
   { type: EquipmentType; slot: EquipmentSlot }
-> = {
-  // One-Handed Weapons
-  "scepter.html": { type: "Scepter", slot: "One-Handed" },
-  "wand.html": { type: "Wand", slot: "One-Handed" },
-  "cane.html": { type: "Cane", slot: "One-Handed" },
-  "rod.html": { type: "Rod", slot: "One-Handed" },
-  "cudgel.html": { type: "Cudgel", slot: "One-Handed" },
-  "dagger.html": { type: "Dagger", slot: "One-Handed" },
-  "claw.html": { type: "Claw", slot: "One-Handed" },
-  "one_handed_axe.html": { type: "One-Handed Axe", slot: "One-Handed" },
-  "one_handed_sword.html": { type: "One-Handed Sword", slot: "One-Handed" },
-  "one_handed_hammer.html": { type: "One-Handed Hammer", slot: "One-Handed" },
-  "pistol.html": { type: "Pistol", slot: "One-Handed" },
-
-  // Two-Handed Weapons
-  "tin_staff.html": { type: "Tin Staff", slot: "Two-Handed" },
-  "bow.html": { type: "Bow", slot: "Two-Handed" },
-  "crossbow.html": { type: "Crossbow", slot: "Two-Handed" },
-  "musket.html": { type: "Musket", slot: "Two-Handed" },
-  "fire_cannon.html": { type: "Fire Cannon", slot: "Two-Handed" },
-  "two_handed_axe.html": { type: "Two-Handed Axe", slot: "Two-Handed" },
-  "two_handed_sword.html": { type: "Two-Handed Sword", slot: "Two-Handed" },
-  "two_handed_hammer.html": { type: "Two-Handed Hammer", slot: "Two-Handed" },
-
-  // Armor - STR
-  "str_chest_armor.html": { type: "Chest Armor (STR)", slot: "Chest Armor" },
-  "str_boots.html": { type: "Boots (STR)", slot: "Boots" },
-  "str_gloves.html": { type: "Gloves (STR)", slot: "Gloves" },
-  "str_helmet.html": { type: "Helmet (STR)", slot: "Helmet" },
-
-  // Armor - DEX
-  "dex_chest_armor.html": { type: "Chest Armor (DEX)", slot: "Chest Armor" },
-  "dex_boots.html": { type: "Boots (DEX)", slot: "Boots" },
-  "dex_gloves.html": { type: "Gloves (DEX)", slot: "Gloves" },
-  "dex_helmet.html": { type: "Helmet (DEX)", slot: "Helmet" },
-
-  // Armor - INT
-  "int_chest_armor.html": { type: "Chest Armor (INT)", slot: "Chest Armor" },
-  "int_boots.html": { type: "Boots (INT)", slot: "Boots" },
-  "int_gloves.html": { type: "Gloves (INT)", slot: "Gloves" },
-  "int_helmet.html": { type: "Helmet (INT)", slot: "Helmet" },
-
-  // Shields
-  "str_shield.html": { type: "Shield (STR)", slot: "Shield" },
-  "dex_shield.html": { type: "Shield (DEX)", slot: "Shield" },
-  "int_shield.html": { type: "Shield (INT)", slot: "Shield" },
-
-  // Accessories
-  "belt.html": { type: "Belt", slot: "Trinket" },
-  "necklace.html": { type: "Necklace", slot: "Trinket" },
-  "ring.html": { type: "Ring", slot: "Trinket" },
-  "spirit_ring.html": { type: "Spirit Ring", slot: "Trinket" },
-};
+> = Object.fromEntries(
+  Object.entries(EQUIPMENT_TYPE_PAGES).map(([pageName, info]) => [
+    `${toSnakeCase(pageName)}.html`,
+    info,
+  ]),
+);
 
 // Get section ID prefix from filename (e.g., "scepter.html" -> "Scepter", "str_chest_armor.html" -> "STRChestArmor")
 // Note: Some equipment like "one_handed_axe" has section IDs like "#One-HandedAxeBaseAffix" (with hyphen)
@@ -446,12 +406,20 @@ ${arraySpread}
 `;
 };
 
-const main = async (): Promise<void> => {
-  const gearDir = join(process.cwd(), ".garbage", "tlidb", "gear");
+interface Options {
+  refetch: boolean;
+}
+
+const main = async (options: Options): Promise<void> => {
+  if (options.refetch) {
+    console.log("Refetching gear type pages from tlidb...\n");
+    await fetchGearTypePages();
+    console.log("");
+  }
   const outDir = join(process.cwd(), "src", "data", "gear-affix");
 
   console.log("Reading gear files from tlidb...");
-  const files = await readdir(gearDir);
+  const files = await readdir(GEAR_TYPE_DIR);
   const htmlFiles = files.filter(
     (f) => f.endsWith(".html") && f !== "craft.html",
   );
@@ -469,7 +437,7 @@ const main = async (): Promise<void> => {
     }
 
     const { type, slot } = equipmentInfo;
-    const filePath = join(gearDir, file);
+    const filePath = join(GEAR_TYPE_DIR, file);
     const html = await readFile(filePath, "utf-8");
     const $ = cheerio.load(html);
 
@@ -602,11 +570,15 @@ const main = async (): Promise<void> => {
   execSync("pnpm format", { stdio: "inherit" });
 };
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error("Script failed:", error);
-    process.exit(1);
-  });
-
-export { main as generateGearAffixData };
+program
+  .description("Generate gear affix data from cached HTML pages")
+  .option("--refetch", "Refetch HTML pages from tlidb before generating")
+  .action((options: Options) => {
+    main(options)
+      .then(() => process.exit(0))
+      .catch((error) => {
+        console.error("Script failed:", error);
+        process.exit(1);
+      });
+  })
+  .parse();
