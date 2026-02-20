@@ -149,9 +149,9 @@ const convertAffix = (
   affixTextParam: string,
   src: string | undefined,
 ): Affix => {
-  const divinityText = " (Max Divinity Effect: 1)";
+  const divinityText = "(Max Divinity Effect: 1)";
   const maxDivinity = affixTextParam.endsWith(divinityText) ? 1 : undefined;
-  const affixText = affixTextParam.replace(divinityText, "");
+  const affixText = affixTextParam.replace(divinityText, "").trimEnd();
   const lines = affixText.split(/\n/);
 
   // Check if the entire affix is a single core talent name
