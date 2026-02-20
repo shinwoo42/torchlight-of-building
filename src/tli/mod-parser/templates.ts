@@ -2725,4 +2725,10 @@ export const allParsers = [
     addn: true,
     per: { stackable: "num_ice_puppet_stacks", limit: c.limit },
   })),
+  t(
+    "copies the last talent on all adjacent slates. unable to copy core talents.",
+  ).outputNone(),
+  t(
+    "copies the last talent on the adjacent slate {(above|left|below|right)} to this slate. unable to copy the core talent.",
+  ).outputNone(),
 ];

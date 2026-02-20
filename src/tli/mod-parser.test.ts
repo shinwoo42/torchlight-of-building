@@ -4318,3 +4318,38 @@ test("parse additional attack damage when having feline stimulants", () => {
     },
   ]);
 });
+
+test("parse copies talent on all adjacent slates (no-op)", () => {
+  const result = parseMod(
+    "Copies the last Talent on all adjacent slates. Unable to copy Core Talents.",
+  );
+  expect(result).toEqual([]);
+});
+
+test("parse copies talent on adjacent slate above (no-op)", () => {
+  const result = parseMod(
+    "Copies the last Talent on the adjacent slate above to this slate. Unable to copy the Core Talent.",
+  );
+  expect(result).toEqual([]);
+});
+
+test("parse copies talent on adjacent slate left (no-op)", () => {
+  const result = parseMod(
+    "Copies the last Talent on the adjacent slate left to this slate. Unable to copy the Core Talent.",
+  );
+  expect(result).toEqual([]);
+});
+
+test("parse copies talent on adjacent slate below (no-op)", () => {
+  const result = parseMod(
+    "Copies the last Talent on the adjacent slate below to this slate. Unable to copy the Core Talent.",
+  );
+  expect(result).toEqual([]);
+});
+
+test("parse copies talent on adjacent slate right (no-op)", () => {
+  const result = parseMod(
+    "Copies the last Talent on the adjacent slate right to this slate. Unable to copy the Core Talent.",
+  );
+  expect(result).toEqual([]);
+});
