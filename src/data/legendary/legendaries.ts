@@ -6549,25 +6549,6 @@ export const Legendaries: readonly Legendary[] = [
     equipmentType: "Belt",
   },
   {
-    baseItem: "Demon Slayer's Eyes",
-    baseStat: "+1777 gear Evasion",
-    name: "Trauma's Embrace",
-    normalAffixes: [
-      "+(2000-2880) gear Evasion",
-      "+(1-2) TraumaLimit",
-      "Gains Hasten when inflicting Trauma for 1.5 s",
-      "-35% additional Trauma Damage\n-35% additional Trauma Duration",
-    ],
-    corruptionAffixes: [
-      "+(3100-3744) gear Evasion",
-      "+(1-2) TraumaLimit\n+(10-15)% additional Trauma Damage dealt by Critical Strikes",
-      "Gains Hasten when inflicting Trauma for 2 s",
-      "-30% additional Trauma Damage\n-30% additional Trauma Duration",
-    ],
-    equipmentSlot: "Helmet",
-    equipmentType: "Helmet (DEX)",
-  },
-  {
     baseItem: "Prospector's Short Boots",
     baseStat: "+599 gear Evasion",
     name: "Trickster's Tread",

@@ -10,20 +10,75 @@ import type {
 } from "../data/legendary/types";
 import type { EquipmentSlot, EquipmentType } from "../tli/gear-data-types";
 import { LegendaryDataOverrides } from "./legendaries/legendary-data-overrides";
-import { readCodexHtml } from "./lib/codex";
-import {
-  extractLegendaryGearLinks,
-  fetchPage,
-  processInBatches,
-  toSnakeCase,
-} from "./tlidb-tools";
+import { fetchPage, processInBatches, toSnakeCase } from "./tlidb-tools";
+
+// ============================================================================
+// Equipment type → tlidb page mapping (same as fetch-gear-craft-pages.ts)
+// ============================================================================
+
+const EQUIPMENT_TYPE_PAGES: Record<
+  string,
+  { type: EquipmentType; slot: EquipmentSlot }
+> = {
+  // One-Handed Weapons
+  Scepter: { type: "Scepter", slot: "One-Handed" },
+  Wand: { type: "Wand", slot: "One-Handed" },
+  Cane: { type: "Cane", slot: "One-Handed" },
+  Rod: { type: "Rod", slot: "One-Handed" },
+  Cudgel: { type: "Cudgel", slot: "One-Handed" },
+  Dagger: { type: "Dagger", slot: "One-Handed" },
+  Claw: { type: "Claw", slot: "One-Handed" },
+  "One-Handed_Axe": { type: "One-Handed Axe", slot: "One-Handed" },
+  "One-Handed_Sword": { type: "One-Handed Sword", slot: "One-Handed" },
+  "One-Handed_Hammer": { type: "One-Handed Hammer", slot: "One-Handed" },
+  Pistol: { type: "Pistol", slot: "One-Handed" },
+
+  // Two-Handed Weapons
+  Tin_Staff: { type: "Tin Staff", slot: "Two-Handed" },
+  Bow: { type: "Bow", slot: "Two-Handed" },
+  Crossbow: { type: "Crossbow", slot: "Two-Handed" },
+  Musket: { type: "Musket", slot: "Two-Handed" },
+  Fire_Cannon: { type: "Fire Cannon", slot: "Two-Handed" },
+  "Two-Handed_Axe": { type: "Two-Handed Axe", slot: "Two-Handed" },
+  "Two-Handed_Sword": { type: "Two-Handed Sword", slot: "Two-Handed" },
+  "Two-Handed_Hammer": { type: "Two-Handed Hammer", slot: "Two-Handed" },
+
+  // Armor - STR
+  STR_Chest_Armor: { type: "Chest Armor (STR)", slot: "Chest Armor" },
+  STR_Boots: { type: "Boots (STR)", slot: "Boots" },
+  STR_Gloves: { type: "Gloves (STR)", slot: "Gloves" },
+  STR_Helmet: { type: "Helmet (STR)", slot: "Helmet" },
+
+  // Armor - DEX
+  DEX_Chest_Armor: { type: "Chest Armor (DEX)", slot: "Chest Armor" },
+  DEX_Boots: { type: "Boots (DEX)", slot: "Boots" },
+  DEX_Gloves: { type: "Gloves (DEX)", slot: "Gloves" },
+  DEX_Helmet: { type: "Helmet (DEX)", slot: "Helmet" },
+
+  // Armor - INT
+  INT_Chest_Armor: { type: "Chest Armor (INT)", slot: "Chest Armor" },
+  INT_Boots: { type: "Boots (INT)", slot: "Boots" },
+  INT_Gloves: { type: "Gloves (INT)", slot: "Gloves" },
+  INT_Helmet: { type: "Helmet (INT)", slot: "Helmet" },
+
+  // Shields
+  STR_Shield: { type: "Shield (STR)", slot: "Shield" },
+  DEX_Shield: { type: "Shield (DEX)", slot: "Shield" },
+  INT_Shield: { type: "Shield (INT)", slot: "Shield" },
+
+  // Accessories
+  Belt: { type: "Belt", slot: "Trinket" },
+  Necklace: { type: "Necklace", slot: "Trinket" },
+  Ring: { type: "Ring", slot: "Trinket" },
+  Spirit_Ring: { type: "Spirit Ring", slot: "Trinket" },
+};
 
 // ============================================================================
 // Fetching
 // ============================================================================
 
 const BASE_URL = "https://tlidb.com/en";
-const LEGENDARY_GEAR_LIST_URL = `${BASE_URL}/Legendary_Gear`;
+const GEAR_TYPE_DIR = join(process.cwd(), ".garbage", "tlidb", "gear");
 const LEGENDARY_GEAR_DIR = join(
   process.cwd(),
   ".garbage",
@@ -32,22 +87,94 @@ const LEGENDARY_GEAR_DIR = join(
   "legendary_gear",
 );
 
+/** Extract legendary gear links from a gear type page's #LegendaryGear tab */
+const extractLegendaryLinksFromGearPage = (
+  html: string,
+): { href: string; name: string }[] => {
+  const $ = cheerio.load(html);
+  const links: { href: string; name: string }[] = [];
+  const seen = new Set<string>();
+
+  // Find links with item_rarity100 class (legendary items) within the page
+  $("a.item_rarity100[href]").each((_, el) => {
+    const href = $(el).attr("href") ?? "";
+    const name = $(el).text().trim();
+
+    if (
+      href !== "" &&
+      name !== "" &&
+      !href.startsWith("http") &&
+      !href.startsWith("#") &&
+      !href.startsWith("/") &&
+      !seen.has(href)
+    ) {
+      seen.add(href);
+      links.push({ href, name });
+    }
+  });
+
+  return links;
+};
+
 const fetchLegendaryPages = async (): Promise<void> => {
+  await mkdir(GEAR_TYPE_DIR, { recursive: true });
   await mkdir(LEGENDARY_GEAR_DIR, { recursive: true });
 
-  console.log("Fetching legendary gear list page...");
-  const listHtml = await fetchPage(LEGENDARY_GEAR_LIST_URL);
+  // Step 1: Fetch all gear type pages
+  const gearTypePages = Object.keys(EQUIPMENT_TYPE_PAGES);
+  console.log(`Fetching ${gearTypePages.length} gear type pages...`);
 
-  const gearLinks = extractLegendaryGearLinks(listHtml);
-  console.log(`Found ${gearLinks.length} legendary gear links`);
+  await processInBatches(gearTypePages, async (pageName) => {
+    const snakeCaseName = toSnakeCase(pageName);
+    const filepath = join(GEAR_TYPE_DIR, `${snakeCaseName}.html`);
 
-  if (gearLinks.length === 0) {
+    try {
+      const url = `${BASE_URL}/${encodeURIComponent(pageName)}`;
+      const html = await fetchPage(url);
+      await writeFile(filepath, html);
+      console.log(`Saved: ${filepath}`);
+    } catch (error) {
+      console.error(`Error fetching gear type page ${pageName}:`, error);
+    }
+  });
+
+  // Step 2: Collect all legendary links from gear type pages
+  console.log("\nCollecting legendary links from gear type pages...");
+  const allLegendaryLinks = new Map<string, { href: string; name: string }>();
+
+  for (const pageName of gearTypePages) {
+    const snakeCaseName = toSnakeCase(pageName);
+    const filepath = join(GEAR_TYPE_DIR, `${snakeCaseName}.html`);
+
+    try {
+      const html = await readFile(filepath, "utf-8");
+      const links = extractLegendaryLinksFromGearPage(html);
+
+      for (const link of links) {
+        if (!allLegendaryLinks.has(link.href)) {
+          allLegendaryLinks.set(link.href, link);
+        }
+      }
+
+      if (links.length > 0) {
+        console.log(`  ${pageName}: ${links.length} legendaries`);
+      }
+    } catch (error) {
+      console.error(`Error reading ${pageName}:`, error);
+    }
+  }
+
+  const legendaryLinks = Array.from(allLegendaryLinks.values());
+  console.log(`\nFound ${legendaryLinks.length} unique legendary links`);
+
+  if (legendaryLinks.length === 0) {
     throw new Error("No legendary gear links found. Check the page structure.");
   }
 
-  console.log(`Fetching ${gearLinks.length} pages...`);
+  // Step 3: Fetch each legendary's individual page
+  console.log(`Fetching ${legendaryLinks.length} legendary pages...`);
 
-  await processInBatches(gearLinks, async ({ href, name }) => {
+  await processInBatches(legendaryLinks, async ({ href, name }) => {
     const snakeCaseName = toSnakeCase(name);
     const filename = `${snakeCaseName}.html`;
     const filepath = join(LEGENDARY_GEAR_DIR, filename);
@@ -151,11 +278,6 @@ const extractAffixChoiceCards = (
   return choiceCards;
 };
 
-interface CodexLegendaryInfo {
-  equipmentSlot: EquipmentSlot;
-  equipmentType: EquipmentType;
-}
-
 /** Legendary data extracted from tlidb (without equipment slot/type) */
 interface TlidbLegendary {
   name: string;
@@ -164,41 +286,6 @@ interface TlidbLegendary {
   normalAffixes: LegendaryAffix[];
   corruptionAffixes: LegendaryAffix[];
 }
-
-/**
- * Extracts legendary equipment info (slot and type) from codex.html's legendary table.
- * Returns a map keyed by legendary name.
- */
-const extractCodexLegendaryData = (
-  html: string,
-): Map<string, CodexLegendaryInfo> => {
-  const $ = cheerio.load(html);
-  const legendaryMap = new Map<string, CodexLegendaryInfo>();
-
-  const rows = $('#legendary tbody tr[class*="thing"]');
-  console.log(`Found ${rows.length} legendary rows in codex.html`);
-
-  rows.each((_, row) => {
-    const tds = $(row).find("td");
-
-    if (tds.length < 3) {
-      console.warn(
-        `Skipping codex row with ${tds.length} columns (expected at least 3)`,
-      );
-      return;
-    }
-
-    const equipmentSlot = $(tds[0]).text().trim() as EquipmentSlot;
-    const equipmentType = $(tds[1]).text().trim() as EquipmentType;
-    const name = $($(tds[2]).find("span.name").get(0)).text().trim();
-
-    if (name) {
-      legendaryMap.set(name, { equipmentSlot, equipmentType });
-    }
-  });
-
-  return legendaryMap;
-};
 
 /**
  * Converts an affix text to a LegendaryAffix (string or LegendaryAffixChoice).
@@ -368,6 +455,48 @@ const extractLegendary = (
   return { baseItem, baseStat, name, normalAffixes, corruptionAffixes };
 };
 
+// ============================================================================
+// Equipment type mapping from gear type pages
+// ============================================================================
+
+/**
+ * Builds a map from legendary name → equipment info by reading gear type pages
+ * and extracting legendary links from each one.
+ */
+const buildEquipmentMap = async (): Promise<
+  Map<string, { equipmentSlot: EquipmentSlot; equipmentType: EquipmentType }>
+> => {
+  const equipmentMap = new Map<
+    string,
+    { equipmentSlot: EquipmentSlot; equipmentType: EquipmentType }
+  >();
+
+  for (const [pageName, info] of Object.entries(EQUIPMENT_TYPE_PAGES)) {
+    const snakeCaseName = toSnakeCase(pageName);
+    const filepath = join(GEAR_TYPE_DIR, `${snakeCaseName}.html`);
+
+    try {
+      const html = await readFile(filepath, "utf-8");
+      const links = extractLegendaryLinksFromGearPage(html);
+
+      for (const link of links) {
+        equipmentMap.set(link.name, {
+          equipmentSlot: info.slot,
+          equipmentType: info.type,
+        });
+      }
+    } catch {
+      // Gear type page not cached yet - skip
+    }
+  }
+
+  return equipmentMap;
+};
+
+// ============================================================================
+// Output
+// ============================================================================
+
 const applyOverrides = (legendaries: Legendary[]): Legendary[] => {
   // Create a map for efficient lookup
   const legendaryMap = new Map(legendaries.map((l) => [l.name, l]));
@@ -411,17 +540,17 @@ interface Options {
 
 const main = async (options: Options): Promise<void> => {
   if (options.refetch) {
-    console.log("Refetching legendary pages from tlidb...\n");
+    console.log("Refetching pages from tlidb...\n");
     await fetchLegendaryPages();
     console.log("");
   }
 
   const outDir = join(process.cwd(), "src", "data", "legendary");
 
-  // Step 1: Read codex.html and extract equipment slot/type mapping
-  console.log("Reading codex.html for equipment info...");
-  const codexHtml = await readCodexHtml();
-  const codexLegendaryMap = extractCodexLegendaryData(codexHtml);
+  // Step 1: Build equipment slot/type mapping from gear type pages
+  console.log("Building equipment info from gear type pages...");
+  const equipmentMap = await buildEquipmentMap();
+  console.log(`Found equipment info for ${equipmentMap.size} legendaries`);
 
   // Step 2: Read tlidb legendary files
   console.log("Reading HTML files from:", LEGENDARY_GEAR_DIR);
@@ -445,23 +574,23 @@ const main = async (options: Options): Promise<void> => {
       continue;
     }
 
-    // Step 3: Merge with codex data
-    const codexInfo = codexLegendaryMap.get(tlidbData.name);
-    if (!codexInfo) {
-      console.warn(`No codex data found for: ${tlidbData.name} - skipping`);
+    // Step 3: Merge with equipment data from gear type pages
+    const equipmentInfo = equipmentMap.get(tlidbData.name);
+    if (equipmentInfo === undefined) {
+      console.warn(`No equipment data found for: ${tlidbData.name} - skipping`);
       skippedCount++;
       continue;
     }
 
     legendaries.push({
       ...tlidbData,
-      equipmentSlot: codexInfo.equipmentSlot,
-      equipmentType: codexInfo.equipmentType,
+      equipmentSlot: equipmentInfo.equipmentSlot,
+      equipmentType: equipmentInfo.equipmentType,
     });
   }
 
   console.log(
-    `Extracted ${legendaries.length} legendaries (skipped ${skippedCount} without codex data)`,
+    `Extracted ${legendaries.length} legendaries (skipped ${skippedCount} without equipment data)`,
   );
 
   // Apply manual overrides
