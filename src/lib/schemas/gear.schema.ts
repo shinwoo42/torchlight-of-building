@@ -58,19 +58,26 @@ const EMPTY_EQUIPPED_GEAR = {
   offHand: undefined,
 } as const;
 
+// Equipped gear slot schema: stores { id } referencing inventory.
+// Backwards compatible with old saves that stored full Gear objects (they also have `id`).
+const EquippedGearSlotSchema = z
+  .object({ id: z.string() })
+  .optional()
+  .catch(undefined);
+
 // Equipped gear slots
 export const EquippedGearSchema = z
   .object({
-    helmet: GearSchema.optional().catch(undefined),
-    chest: GearSchema.optional().catch(undefined),
-    neck: GearSchema.optional().catch(undefined),
-    gloves: GearSchema.optional().catch(undefined),
-    belt: GearSchema.optional().catch(undefined),
-    boots: GearSchema.optional().catch(undefined),
-    leftRing: GearSchema.optional().catch(undefined),
-    rightRing: GearSchema.optional().catch(undefined),
-    mainHand: GearSchema.optional().catch(undefined),
-    offHand: GearSchema.optional().catch(undefined),
+    helmet: EquippedGearSlotSchema,
+    chest: EquippedGearSlotSchema,
+    neck: EquippedGearSlotSchema,
+    gloves: EquippedGearSlotSchema,
+    belt: EquippedGearSlotSchema,
+    boots: EquippedGearSlotSchema,
+    leftRing: EquippedGearSlotSchema,
+    rightRing: EquippedGearSlotSchema,
+    mainHand: EquippedGearSlotSchema,
+    offHand: EquippedGearSlotSchema,
   })
   .catch(EMPTY_EQUIPPED_GEAR);
 

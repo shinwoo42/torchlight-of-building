@@ -24,19 +24,22 @@ describe("build-code", () => {
     const loadout: SaveData = {
       equipmentPage: {
         equippedGear: {
-          helmet: {
+          helmet: { id: "test-helmet-1" },
+          mainHand: { id: "test-sword-1" },
+        },
+        inventory: [
+          {
             id: "test-helmet-1",
             equipmentType: "Helmet (STR)",
             prefixes: ["+10% fire damage"],
             suffixes: ["+5% attack speed"],
           },
-          mainHand: {
+          {
             id: "test-sword-1",
             equipmentType: "One-Handed Sword",
             prefixes: ["+100 physical damage"],
           },
-        },
-        inventory: [],
+        ],
       },
       talentPage: {
         talentTrees: {},
@@ -137,20 +140,19 @@ describe("build-code", () => {
 
     const loadout: SaveData = {
       equipmentPage: {
-        equippedGear: {
-          helmet: {
+        equippedGear: { helmet: { id: "test-1" }, chest: { id: "test-2" } },
+        inventory: [
+          {
             id: "test-1",
             equipmentType: "Helmet (STR)",
             prefixes: ["+10% fire damage"],
             suffixes: ["+5% attack speed"],
           },
-          chest: {
+          {
             id: "test-2",
             equipmentType: "Chest Armor (STR)",
             prefixes: ["+100 health"],
           },
-        },
-        inventory: [
           { id: "inv-1", equipmentType: "Ring", suffixes: ["+10% crit"] },
         ],
       },

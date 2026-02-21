@@ -276,10 +276,15 @@ const convertGearPage = (saveDataGearPage: SaveDataGearPage): GearPage => {
   const equippedGear: EquippedGear = {};
 
   for (const slot of slots) {
-    const gear = saveDataGearPage.equippedGear[slot];
-    if (gear) {
-      const src = getSrc(slot);
-      equippedGear[slot] = convertGear(gear, src);
+    const equippedSlot = saveDataGearPage.equippedGear[slot];
+    if (equippedSlot !== undefined) {
+      const gear = saveDataGearPage.inventory.find(
+        (g) => g.id === equippedSlot.id,
+      );
+      if (gear !== undefined) {
+        const src = getSrc(slot);
+        equippedGear[slot] = convertGear(gear, src);
+      }
     }
   }
 

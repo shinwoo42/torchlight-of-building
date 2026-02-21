@@ -51,16 +51,15 @@ const createMinimalSaveData = (
 });
 
 test("loadSave converts gear with parseable affix", () => {
+  const weapon = {
+    id: "test-weapon",
+    equipmentType: "One-Handed Sword" as const,
+    prefixes: ["+10% fire damage"],
+  };
   const saveData = createMinimalSaveData({
     equipmentPage: {
-      equippedGear: {
-        mainHand: {
-          id: "test-weapon",
-          equipmentType: "One-Handed Sword",
-          prefixes: ["+10% fire damage"],
-        },
-      },
-      inventory: [],
+      equippedGear: { mainHand: { id: "test-weapon" } },
+      inventory: [weapon],
     },
   });
 
@@ -82,24 +81,23 @@ test("loadSave converts gear with parseable affix", () => {
 });
 
 test("loadSave handles affix that fails to parse", () => {
+  const helmet = {
+    id: "test-helmet",
+    equipmentType: "Helmet (STR)" as const,
+    suffixes: ["some unparseable affix text"],
+  };
   const saveData = createMinimalSaveData({
     equipmentPage: {
-      equippedGear: {
-        helmet: {
-          id: "test-helmet",
-          equipmentType: "Helmet (STR)",
-          suffixes: ["some unparseable affix text"],
-        },
-      },
-      inventory: [],
+      equippedGear: { helmet: { id: "test-helmet" } },
+      inventory: [helmet],
     },
   });
 
   const loadout = loadSave(saveData);
 
   expect(loadout.gearPage.equippedGear.helmet).toBeDefined();
-  const helmet = loadout.gearPage.equippedGear.helmet!;
-  const affixes = getGearAffixes(helmet);
+  const loadedHelmet = loadout.gearPage.equippedGear.helmet!;
+  const affixes = getGearAffixes(loadedHelmet);
   expect(affixes).toHaveLength(1);
 
   const affix = affixes[0];
@@ -109,26 +107,29 @@ test("loadSave handles affix that fails to parse", () => {
 });
 
 test("loadSave sets correct src for different gear slots", () => {
+  const helmetGear = {
+    id: "h",
+    equipmentType: "Helmet (STR)" as const,
+    suffixes: ["+5% armor"],
+  };
+  const leftRingGear = {
+    id: "lr",
+    equipmentType: "Ring" as const,
+    prefixes: ["+5% max life"],
+  };
+  const offHandGear = {
+    id: "oh",
+    equipmentType: "Shield (STR)" as const,
+    suffixes: ["+4% attack block chance"],
+  };
   const saveData = createMinimalSaveData({
     equipmentPage: {
       equippedGear: {
-        helmet: {
-          id: "h",
-          equipmentType: "Helmet (STR)",
-          suffixes: ["+5% armor"],
-        },
-        leftRing: {
-          id: "lr",
-          equipmentType: "Ring",
-          prefixes: ["+5% max life"],
-        },
-        offHand: {
-          id: "oh",
-          equipmentType: "Shield (STR)",
-          suffixes: ["+4% attack block chance"],
-        },
+        helmet: { id: "h" },
+        leftRing: { id: "lr" },
+        offHand: { id: "oh" },
       },
-      inventory: [],
+      inventory: [helmetGear, leftRingGear, offHandGear],
     },
   });
 
@@ -195,18 +196,18 @@ test("loadSave converts gear in inventory", () => {
 });
 
 test("loadSave preserves UI fields (id, rarity, legendaryName)", () => {
+  const helmetGear = {
+    id: "legendary-helm-123",
+    equipmentType: "Helmet (STR)" as const,
+    rarity: "legendary" as const,
+    legendaryName: "Crown of the Eternal",
+    legendaryAffixes: ["+50% fire damage"],
+  };
   const saveData = createMinimalSaveData({
     equipmentPage: {
-      equippedGear: {
-        helmet: {
-          id: "legendary-helm-123",
-          equipmentType: "Helmet (STR)",
-          rarity: "legendary",
-          legendaryName: "Crown of the Eternal",
-          legendaryAffixes: ["+50% fire damage"],
-        },
-      },
+      equippedGear: { helmet: { id: "legendary-helm-123" } },
       inventory: [
+        helmetGear,
         {
           id: "inv-item-456",
           equipmentType: "Ring",
@@ -226,7 +227,7 @@ test("loadSave preserves UI fields (id, rarity, legendaryName)", () => {
   expect(helmet.legendaryName).toBe("Crown of the Eternal");
 
   // Check inventory preserves UI fields
-  const ring = loadout.gearPage.inventory[0];
+  const ring = loadout.gearPage.inventory[1];
   expect(ring.id).toBe("inv-item-456");
   expect(ring.rarity).toBe("rare");
   expect(ring.legendaryName).toBeUndefined();

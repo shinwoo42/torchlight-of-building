@@ -330,3 +330,7 @@ Guided workflows for common tasks (invoke with `/skill-name`):
 - **No backwards compatibility** - Changing SaveData schema invalidates old builds. Users lose old saves.
 
 - **Two data formats** - Raw strings in app layer, parsed Mods in engine layer. `loadSave()` in `src/tli/storage/load-save.ts` bridges them.
+
+## Special Instructions
+
+- Whenever modifying files in src/lib/schemas, you must pay attention to backwards compatibility and confirm that any backwards incompatible changes are okay.

@@ -196,41 +196,21 @@ export const internalStore = create(
           if (itemIndex === -1) return;
 
           state.saveData.equipmentPage.inventory[itemIndex] = updatedItem;
-
-          // Also update equipped slots if this item is equipped
-          const slots: GearSlot[] = [
-            "helmet",
-            "chest",
-            "neck",
-            "gloves",
-            "belt",
-            "boots",
-            "leftRing",
-            "rightRing",
-            "mainHand",
-            "offHand",
-          ];
-          for (const slot of slots) {
-            if (
-              state.saveData.equipmentPage.equippedGear[slot]?.id === itemId
-            ) {
-              state.saveData.equipmentPage.equippedGear[slot] = updatedItem;
-            }
-          }
         });
       },
 
       selectItemForSlot: (slot: GearSlot, itemId: string | undefined) => {
         set((state) => {
-          if (!itemId) {
+          if (itemId === undefined) {
             delete state.saveData.equipmentPage.equippedGear[slot];
             return;
           }
+          // Verify item exists in inventory before equipping
           const item = state.saveData.equipmentPage.inventory.find(
             (i) => i.id === itemId,
           );
-          if (!item) return;
-          state.saveData.equipmentPage.equippedGear[slot] = item;
+          if (item === undefined) return;
+          state.saveData.equipmentPage.equippedGear[slot] = { id: itemId };
         });
       },
 
