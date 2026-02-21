@@ -47,6 +47,7 @@ export const createEmptyPactspiritSlot = (): PactspiritSlot => ({
     midRing2: createEmptyRingSlotState(),
     midRing3: createEmptyRingSlotState(),
   },
+  undeterminedFate: undefined,
 });
 
 export const createEmptyPactspiritPage = (): PactspiritPage => ({

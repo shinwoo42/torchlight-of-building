@@ -22,6 +22,16 @@ export const getDestiniesForRingSlot = (ringSlot: RingSlotKey): Destiny[] => {
   );
 };
 
+export const getDestiniesForUndeterminedSlot = (
+  slotType: "micro" | "medium",
+): Destiny[] => {
+  return Destinies.filter((d) =>
+    slotType === "micro"
+      ? d.type === "Micro Fate"
+      : ["Medium Fate", "Kismet", "Dual Kismet"].includes(d.type),
+  );
+};
+
 export const getDestinyByName = (name: string): Destiny | undefined =>
   Destinies.find((d) => d.name === name);
 

@@ -11,6 +11,7 @@ import {
   DEFAULT_CONFIGURATION,
   type DmgRange,
   type Loadout,
+  type PactspiritSlot,
   type SupportAffix,
 } from "../core";
 import type { Mod } from "../mod";
@@ -100,6 +101,27 @@ const emptyRingSlotState = () => ({
 const ringSlotWithOriginalAffix = (originalAffix: Affix) => ({
   originalRingName: "Test Ring",
   originalAffix,
+});
+
+const testPactspiritSlot = (
+  overrides: Partial<PactspiritSlot> & Pick<PactspiritSlot, "pactspiritName">,
+): PactspiritSlot => ({
+  pactspiritName: overrides.pactspiritName,
+  level: overrides.level ?? 1,
+  mainAffix: overrides.mainAffix ?? emptyAffix(),
+  rings: overrides.rings ?? {
+    innerRing1: emptyRingSlotState(),
+    innerRing2: emptyRingSlotState(),
+    innerRing3: emptyRingSlotState(),
+    innerRing4: emptyRingSlotState(),
+    innerRing5: emptyRingSlotState(),
+    innerRing6: emptyRingSlotState(),
+    midRing1: emptyRingSlotState(),
+    midRing2: emptyRingSlotState(),
+    midRing3: emptyRingSlotState(),
+  },
+  defaultUndeterminedAffix: overrides.defaultUndeterminedAffix ?? emptyAffix(),
+  undeterminedFate: overrides.undeterminedFate,
 });
 
 const initLoadout = (pl: Partial<Loadout> = {}): Loadout => {
@@ -2953,10 +2975,8 @@ describe("Pactspirit Ring Mods", () => {
         passiveSkills: {},
       },
       pactspiritPage: {
-        slot1: {
+        slot1: testPactspiritSlot({
           pactspiritName: "Test Pactspirit",
-          level: 1,
-          mainAffix: emptyAffix(),
           rings: {
             innerRing1: ringSlotWithOriginalAffix(
               affix([
@@ -2977,7 +2997,7 @@ describe("Pactspirit Ring Mods", () => {
             midRing2: emptyRingSlotState(),
             midRing3: emptyRingSlotState(),
           },
-        },
+        }),
       },
     });
 
@@ -3007,10 +3027,8 @@ describe("Pactspirit Ring Mods", () => {
         passiveSkills: {},
       },
       pactspiritPage: {
-        slot1: {
+        slot1: testPactspiritSlot({
           pactspiritName: "Test Pactspirit",
-          level: 1,
-          mainAffix: emptyAffix(),
           rings: {
             innerRing1: ringSlotWithOriginalAffix(
               affix([
@@ -3040,7 +3058,7 @@ describe("Pactspirit Ring Mods", () => {
             midRing2: emptyRingSlotState(),
             midRing3: emptyRingSlotState(),
           },
-        },
+        }),
       },
     });
 
@@ -3071,10 +3089,8 @@ describe("Pactspirit Ring Mods", () => {
         passiveSkills: {},
       },
       pactspiritPage: {
-        slot1: {
+        slot1: testPactspiritSlot({
           pactspiritName: "Test Pactspirit",
-          level: 1,
-          mainAffix: emptyAffix(),
           rings: {
             innerRing1: {
               installedDestiny: {
@@ -3108,7 +3124,7 @@ describe("Pactspirit Ring Mods", () => {
             midRing2: emptyRingSlotState(),
             midRing3: emptyRingSlotState(),
           },
-        },
+        }),
       },
     });
 
@@ -3138,10 +3154,8 @@ describe("Pactspirit Ring Mods", () => {
         passiveSkills: {},
       },
       pactspiritPage: {
-        slot1: {
+        slot1: testPactspiritSlot({
           pactspiritName: "Test Pactspirit 1",
-          level: 1,
-          mainAffix: emptyAffix(),
           rings: {
             innerRing1: ringSlotWithOriginalAffix(
               affix([
@@ -3162,11 +3176,9 @@ describe("Pactspirit Ring Mods", () => {
             midRing2: emptyRingSlotState(),
             midRing3: emptyRingSlotState(),
           },
-        },
-        slot2: {
+        }),
+        slot2: testPactspiritSlot({
           pactspiritName: "Test Pactspirit 2",
-          level: 1,
-          mainAffix: emptyAffix(),
           rings: {
             innerRing1: ringSlotWithOriginalAffix(
               affix([
@@ -3187,7 +3199,7 @@ describe("Pactspirit Ring Mods", () => {
             midRing2: emptyRingSlotState(),
             midRing3: emptyRingSlotState(),
           },
-        },
+        }),
       },
     });
 
@@ -6268,22 +6280,10 @@ describe("Pactspirits", () => {
         ]),
         {
           pactspiritPage: {
-            slot1: {
+            slot1: testPactspiritSlot({
               pactspiritName: "Azure Gunslinger",
               level: 6,
-              mainAffix: emptyAffix(),
-              rings: {
-                innerRing1: emptyRingSlotState(),
-                innerRing2: emptyRingSlotState(),
-                innerRing3: emptyRingSlotState(),
-                innerRing4: emptyRingSlotState(),
-                innerRing5: emptyRingSlotState(),
-                innerRing6: emptyRingSlotState(),
-                midRing1: emptyRingSlotState(),
-                midRing2: emptyRingSlotState(),
-                midRing3: emptyRingSlotState(),
-              },
-            },
+            }),
           },
         },
         { pureHeartStacks: stacks, targetEnemyIsNearby: true },
@@ -6312,22 +6312,11 @@ describe("Pactspirits", () => {
         ]),
         {
           pactspiritPage: {
-            slot1: {
+            slot1: testPactspiritSlot({
               pactspiritName: "Azure Gunslinger",
               level,
               mainAffix: { affixLines: pactspiritAffixes },
-              rings: {
-                innerRing1: emptyRingSlotState(),
-                innerRing2: emptyRingSlotState(),
-                innerRing3: emptyRingSlotState(),
-                innerRing4: emptyRingSlotState(),
-                innerRing5: emptyRingSlotState(),
-                innerRing6: emptyRingSlotState(),
-                midRing1: emptyRingSlotState(),
-                midRing2: emptyRingSlotState(),
-                midRing3: emptyRingSlotState(),
-              },
-            },
+            }),
           },
         },
         { targetEnemyIsNearby: true },
@@ -6357,22 +6346,10 @@ describe("Pactspirits", () => {
         ]),
         {
           pactspiritPage: {
-            slot1: {
+            slot1: testPactspiritSlot({
               pactspiritName: "Azure Gunslinger",
               level: 6,
-              mainAffix: emptyAffix(),
-              rings: {
-                innerRing1: emptyRingSlotState(),
-                innerRing2: emptyRingSlotState(),
-                innerRing3: emptyRingSlotState(),
-                innerRing4: emptyRingSlotState(),
-                innerRing5: emptyRingSlotState(),
-                innerRing6: emptyRingSlotState(),
-                midRing1: emptyRingSlotState(),
-                midRing2: emptyRingSlotState(),
-                midRing3: emptyRingSlotState(),
-              },
-            },
+            }),
           },
         },
         { pureHeartStacks, targetEnemyIsNearby: false },

@@ -19,6 +19,23 @@ interface PactspiritTabProps {
     destiny: InstalledDestinyResult,
   ) => void;
   onRevertRing: (slotIndex: PactspiritSlotIndex, ringSlot: RingSlotKey) => void;
+  onInstallUndeterminedFate: (
+    slotIndex: PactspiritSlotIndex,
+    numMicro: number,
+    numMedium: number,
+  ) => void;
+  onRemoveUndeterminedFate: (slotIndex: PactspiritSlotIndex) => void;
+  onInstallFateDestiny: (
+    slotIndex: PactspiritSlotIndex,
+    slotType: "micro" | "medium",
+    slotIdx: number,
+    destiny: InstalledDestinyResult,
+  ) => void;
+  onClearFateDestiny: (
+    slotIndex: PactspiritSlotIndex,
+    slotType: "micro" | "medium",
+    slotIdx: number,
+  ) => void;
 }
 
 export const PactspiritTab: React.FC<PactspiritTabProps> = ({
@@ -27,6 +44,10 @@ export const PactspiritTab: React.FC<PactspiritTabProps> = ({
   onLevelChange,
   onInstallDestiny,
   onRevertRing,
+  onInstallUndeterminedFate,
+  onRemoveUndeterminedFate,
+  onInstallFateDestiny,
+  onClearFateDestiny,
 }) => {
   const slotIndices: PactspiritSlotIndex[] = [1, 2, 3];
 
@@ -47,6 +68,16 @@ export const PactspiritTab: React.FC<PactspiritTabProps> = ({
               onInstallDestiny(slotIndex, ringSlot, destiny)
             }
             onRevertRing={(ringSlot) => onRevertRing(slotIndex, ringSlot)}
+            onInstallUndeterminedFate={(numMicro, numMedium) =>
+              onInstallUndeterminedFate(slotIndex, numMicro, numMedium)
+            }
+            onRemoveUndeterminedFate={() => onRemoveUndeterminedFate(slotIndex)}
+            onInstallFateDestiny={(slotType, slotIdx, destiny) =>
+              onInstallFateDestiny(slotIndex, slotType, slotIdx, destiny)
+            }
+            onClearFateDestiny={(slotType, slotIdx) =>
+              onClearFateDestiny(slotIndex, slotType, slotIdx)
+            }
           />
         );
       })}

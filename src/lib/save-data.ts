@@ -61,4 +61,6 @@ export {
   type TalentPage,
   type TalentTree,
   type TalentTrees,
+  type UndeterminedFate,
+  type UndeterminedFateSlot,
 } from "./schemas";

@@ -52,11 +52,31 @@ export const PactspiritRingsSchema = z
 
 export type PactspiritRings = z.infer<typeof PactspiritRingsSchema>;
 
+// Undetermined fate sub-slot (micro or medium)
+export const UndeterminedFateSlotSchema = z
+  .object({
+    installedDestiny: InstalledDestinySchema.optional().catch(undefined),
+  })
+  .catch({ installedDestiny: undefined });
+
+export type UndeterminedFateSlot = z.infer<typeof UndeterminedFateSlotSchema>;
+
+// Undetermined fate configuration
+export const UndeterminedFateSchema = z.object({
+  numMicroSlots: z.number().catch(0),
+  numMediumSlots: z.number().catch(0),
+  microSlots: z.array(UndeterminedFateSlotSchema).catch([]),
+  mediumSlots: z.array(UndeterminedFateSlotSchema).catch([]),
+});
+
+export type UndeterminedFate = z.infer<typeof UndeterminedFateSchema>;
+
 // Default empty pactspirit slot
 const EMPTY_PACTSPIRIT_SLOT = {
   pactspiritName: undefined,
   level: 1,
   rings: EMPTY_RINGS,
+  undeterminedFate: undefined,
 } as const;
 
 // Pactspirit slot
@@ -65,6 +85,7 @@ export const PactspiritSlotSchema = z
     pactspiritName: z.string().optional().catch(undefined),
     level: z.number().catch(1),
     rings: PactspiritRingsSchema,
+    undeterminedFate: UndeterminedFateSchema.optional().catch(undefined),
   })
   .catch(EMPTY_PACTSPIRIT_SLOT);
 

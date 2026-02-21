@@ -11,6 +11,7 @@ import {
 } from "../../lib/types";
 import { DestinySelectionModal } from "../modals/DestinySelectionModal";
 import { RingSlot } from "./RingSlot";
+import { UndeterminedFateSection } from "./UndeterminedFateSection";
 
 interface PactspiritColumnProps {
   slotIndex: PactspiritSlotIndex;
@@ -22,6 +23,14 @@ interface PactspiritColumnProps {
     destiny: InstalledDestinyResult,
   ) => void;
   onRevertRing: (ringSlot: RingSlotKey) => void;
+  onInstallUndeterminedFate: (numMicro: number, numMedium: number) => void;
+  onRemoveUndeterminedFate: () => void;
+  onInstallFateDestiny: (
+    slotType: "micro" | "medium",
+    slotIdx: number,
+    destiny: InstalledDestinyResult,
+  ) => void;
+  onClearFateDestiny: (slotType: "micro" | "medium", slotIdx: number) => void;
 }
 
 export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
@@ -31,6 +40,10 @@ export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
   onLevelChange,
   onInstallDestiny,
   onRevertRing,
+  onInstallUndeterminedFate,
+  onRemoveUndeterminedFate,
+  onInstallFateDestiny,
+  onClearFateDestiny,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeRingSlot, setActiveRingSlot] = useState<RingSlotKey | undefined>(
@@ -136,6 +149,17 @@ export const PactspiritColumn: React.FC<PactspiritColumnProps> = ({
             />
           ))}
         </div>
+      )}
+
+      {/* Undetermined Fate */}
+      {slot && selectedPactspirit && (
+        <UndeterminedFateSection
+          slot={slot}
+          onInstallUndeterminedFate={onInstallUndeterminedFate}
+          onRemoveUndeterminedFate={onRemoveUndeterminedFate}
+          onInstallFateDestiny={onInstallFateDestiny}
+          onClearFateDestiny={onClearFateDestiny}
+        />
       )}
 
       {/* No pactspirit selected message */}

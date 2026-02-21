@@ -647,6 +647,16 @@ export interface RingSlotState {
   originalAffix: Affix;
 }
 
+export interface UndeterminedFateSlotState {
+  slotType: "micro" | "medium";
+  installedDestiny?: InstalledDestiny;
+  defaultAffix: Affix; // parsed "+6% damage\n+6% minion damage"
+}
+
+export interface UndeterminedFate {
+  slots: UndeterminedFateSlotState[];
+}
+
 export interface PactspiritSlot {
   pactspiritName: string;
   level: number;
@@ -662,6 +672,11 @@ export interface PactspiritSlot {
     midRing2: RingSlotState;
     midRing3: RingSlotState;
   };
+  // 10th node: undetermined fate
+  // When undefined: provides defaultUndeterminedAffix
+  undeterminedFate?: UndeterminedFate;
+  // Always present - the default "+6% damage\n+6% minion damage" for the 10th node
+  defaultUndeterminedAffix: Affix;
 }
 
 export interface PactspiritPage {

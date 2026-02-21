@@ -13,6 +13,10 @@ function PactspiritPage(): React.ReactNode {
     setPactspiritLevel,
     installDestiny,
     clearRingDestiny,
+    installUndeterminedFate,
+    removeUndeterminedFate,
+    installUndeterminedFateDestiny,
+    clearUndeterminedFateDestiny,
   } = useBuilderActions();
 
   return (
@@ -22,6 +26,10 @@ function PactspiritPage(): React.ReactNode {
       onLevelChange={setPactspiritLevel}
       onInstallDestiny={installDestiny}
       onRevertRing={clearRingDestiny}
+      onInstallUndeterminedFate={installUndeterminedFate}
+      onRemoveUndeterminedFate={removeUndeterminedFate}
+      onInstallFateDestiny={installUndeterminedFateDestiny}
+      onClearFateDestiny={clearUndeterminedFateDestiny}
     />
   );
 }

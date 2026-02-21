@@ -20,6 +20,7 @@ import type {
   SaveData,
   SkillPage,
   SupportSkillSlot,
+  UndeterminedFateSlot,
 } from "../../lib/save-data";
 import type { SavesIndex } from "../../lib/saves";
 import {
@@ -850,6 +851,75 @@ export const internalStore = create(
           state.saveData.pactspiritPage[slotKey].rings[ringSlot] = {
             installedDestiny: destiny,
           };
+        });
+      },
+
+      installUndeterminedFate: (
+        slotIndex: PactspiritSlotIndex,
+        numMicro: number,
+        numMedium: number,
+      ) => {
+        set((state) => {
+          const slotKey =
+            `slot${slotIndex}` as keyof typeof state.saveData.pactspiritPage;
+          const emptySlot: UndeterminedFateSlot = {
+            installedDestiny: undefined,
+          };
+          state.saveData.pactspiritPage[slotKey].undeterminedFate = {
+            numMicroSlots: numMicro,
+            numMediumSlots: numMedium,
+            microSlots: Array.from({ length: numMicro }, () => ({
+              ...emptySlot,
+            })),
+            mediumSlots: Array.from({ length: numMedium }, () => ({
+              ...emptySlot,
+            })),
+          };
+        });
+      },
+
+      removeUndeterminedFate: (slotIndex: PactspiritSlotIndex) => {
+        set((state) => {
+          const slotKey =
+            `slot${slotIndex}` as keyof typeof state.saveData.pactspiritPage;
+          state.saveData.pactspiritPage[slotKey].undeterminedFate = undefined;
+        });
+      },
+
+      installUndeterminedFateDestiny: (
+        slotIndex: PactspiritSlotIndex,
+        slotType: "micro" | "medium",
+        slotIdx: number,
+        destiny: InstalledDestinyResult,
+      ) => {
+        set((state) => {
+          const slotKey =
+            `slot${slotIndex}` as keyof typeof state.saveData.pactspiritPage;
+          const fate = state.saveData.pactspiritPage[slotKey].undeterminedFate;
+          if (fate === undefined) return;
+          const slotsArray =
+            slotType === "micro" ? fate.microSlots : fate.mediumSlots;
+          if (slotIdx < slotsArray.length) {
+            slotsArray[slotIdx] = { installedDestiny: destiny };
+          }
+        });
+      },
+
+      clearUndeterminedFateDestiny: (
+        slotIndex: PactspiritSlotIndex,
+        slotType: "micro" | "medium",
+        slotIdx: number,
+      ) => {
+        set((state) => {
+          const slotKey =
+            `slot${slotIndex}` as keyof typeof state.saveData.pactspiritPage;
+          const fate = state.saveData.pactspiritPage[slotKey].undeterminedFate;
+          if (fate === undefined) return;
+          const slotsArray =
+            slotType === "micro" ? fate.microSlots : fate.mediumSlots;
+          if (slotIdx < slotsArray.length) {
+            slotsArray[slotIdx] = { installedDestiny: undefined };
+          }
         });
       },
 

@@ -52,6 +52,7 @@ import type {
   SkillSlot as SaveDataSkillSlot,
   TalentPage as SaveDataTalentPage,
   TalentTree as SaveDataTalentTree,
+  UndeterminedFate as SaveDataUndeterminedFate,
 } from "@/src/lib/save-data";
 import type {
   ActiveSkillSlots,
@@ -86,6 +87,8 @@ import type {
   TalentPage,
   TalentTree,
   TalentTrees,
+  UndeterminedFate,
+  UndeterminedFateSlotState,
 } from "../core";
 import { parseMod } from "../mod-parser/index";
 import { parseSupportAffixes } from "../skills/support-mod-templates";
@@ -678,6 +681,52 @@ const RING_SLOT_KEYS = [
 const getPactspiritByName = (name: string): Pactspirit | undefined =>
   Pactspirits.find((p) => p.name === name);
 
+const UNDETERMINED_FATE_DEFAULT_TEXT = "+6% damage\n+6% minion damage";
+
+const convertUndeterminedFate = (
+  saveDataFate: SaveDataUndeterminedFate,
+  slotIndex: number,
+): UndeterminedFate => {
+  const slots: UndeterminedFateSlotState[] = [];
+  const baseSrc = `Pactspirit#slot${slotIndex}#undeterminedFate`;
+
+  for (let i = 0; i < saveDataFate.numMicroSlots; i++) {
+    const saveSlot = saveDataFate.microSlots[i];
+    const src = `${baseSrc}#micro${i}`;
+    const defaultAffix = convertAffix(UNDETERMINED_FATE_DEFAULT_TEXT, src);
+    let installedDestiny: InstalledDestiny | undefined;
+
+    if (saveSlot?.installedDestiny !== undefined) {
+      installedDestiny = {
+        destinyName: saveSlot.installedDestiny.destinyName,
+        destinyType: saveSlot.installedDestiny.destinyType,
+        affix: convertAffix(saveSlot.installedDestiny.resolvedAffix, src),
+      };
+    }
+
+    slots.push({ slotType: "micro", installedDestiny, defaultAffix });
+  }
+
+  for (let i = 0; i < saveDataFate.numMediumSlots; i++) {
+    const saveSlot = saveDataFate.mediumSlots[i];
+    const src = `${baseSrc}#medium${i}`;
+    const defaultAffix = convertAffix(UNDETERMINED_FATE_DEFAULT_TEXT, src);
+    let installedDestiny: InstalledDestiny | undefined;
+
+    if (saveSlot?.installedDestiny !== undefined) {
+      installedDestiny = {
+        destinyName: saveSlot.installedDestiny.destinyName,
+        destinyType: saveSlot.installedDestiny.destinyType,
+        affix: convertAffix(saveSlot.installedDestiny.resolvedAffix, src),
+      };
+    }
+
+    slots.push({ slotType: "medium", installedDestiny, defaultAffix });
+  }
+
+  return { slots };
+};
+
 const convertPactspiritSlot = (
   saveDataSlot: SaveDataPactspiritSlot,
   slotIndex: number,
@@ -718,11 +767,23 @@ const convertPactspiritSlot = (
     `Pactspirit#slot${slotIndex}#mainAffix`,
   );
 
+  const defaultUndeterminedAffix = convertAffix(
+    UNDETERMINED_FATE_DEFAULT_TEXT,
+    `Pactspirit#slot${slotIndex}#undeterminedFate#default`,
+  );
+
+  const undeterminedFate =
+    saveDataSlot.undeterminedFate !== undefined
+      ? convertUndeterminedFate(saveDataSlot.undeterminedFate, slotIndex)
+      : undefined;
+
   return {
     pactspiritName: saveDataSlot.pactspiritName,
     level: saveDataSlot.level,
     mainAffix,
     rings,
+    undeterminedFate,
+    defaultUndeterminedAffix,
   };
 };
 

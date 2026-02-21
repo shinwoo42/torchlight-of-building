@@ -127,7 +127,7 @@ export const getPactspiritAffixes = (
     pactspiritPage.slot3,
   ];
 
-  // Count dual kismet occurrences by destinyName across all slots
+  // Count dual kismet occurrences by destinyName across all slots (rings + undetermined fate slots)
   const dualKismetCounts = new Map<string, number>();
   for (const slot of slots) {
     if (slot === undefined) continue;
@@ -135,6 +135,14 @@ export const getPactspiritAffixes = (
       if (ring.installedDestiny?.destinyType === "Dual Kismet") {
         const name = ring.installedDestiny.destinyName;
         dualKismetCounts.set(name, (dualKismetCounts.get(name) ?? 0) + 1);
+      }
+    }
+    if (slot.undeterminedFate !== undefined) {
+      for (const fateSlot of slot.undeterminedFate.slots) {
+        if (fateSlot.installedDestiny?.destinyType === "Dual Kismet") {
+          const name = fateSlot.installedDestiny.destinyName;
+          dualKismetCounts.set(name, (dualKismetCounts.get(name) ?? 0) + 1);
+        }
       }
     }
   }
@@ -156,6 +164,26 @@ export const getPactspiritAffixes = (
         continue;
       }
       affixes.push(ring.installedDestiny?.affix ?? ring.originalAffix);
+    }
+
+    // Undetermined fate (10th node)
+    if (slot.undeterminedFate === undefined) {
+      // No undetermined fate configured: add the default affix
+      affixes.push(slot.defaultUndeterminedAffix);
+    } else {
+      // Undetermined fate configured: add affix for each sub-slot
+      for (const fateSlot of slot.undeterminedFate.slots) {
+        if (fateSlot.installedDestiny?.destinyType === "Dual Kismet") {
+          const name = fateSlot.installedDestiny.destinyName;
+          const count = dualKismetCounts.get(name) ?? 0;
+          if (count >= 2 && !addedDualKismets.has(name)) {
+            addedDualKismets.add(name);
+            affixes.push(fateSlot.installedDestiny.affix);
+          }
+          continue;
+        }
+        affixes.push(fateSlot.installedDestiny?.affix ?? fateSlot.defaultAffix);
+      }
     }
   }
   return affixes;
