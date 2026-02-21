@@ -124,6 +124,7 @@ interface TangleSummary {
 export interface OffenseComboDpsSummary {
   comboFinisherAmplificationPct: number;
   comboPoints: number;
+  comboFinisherCount: number;
   critDmgMult: number;
   avgDps: number;
 }
@@ -3091,7 +3092,6 @@ const calcAvgComboDps = (
   derivedCtx: DerivedCtx,
   config: Configuration,
 ): OffenseComboDpsSummary | undefined => {
-  // TODO: calculate with multiple finisher charges
   const skill = perSkillContext.skill;
   const skillMods = getActiveSkillMods(
     skill.name as ActiveSkillName,
@@ -3160,11 +3160,18 @@ const calcAvgComboDps = (
   const starter2Aspd = starter2Atk.aspd * starter2AspdMult;
   const finisherAspd = finisherAtk.aspd * finisherAspdMult;
 
+  // Combo finisher charges: base 1 + additional charges from mods
+  const additionalFinisherCharges = filterMods(
+    mods,
+    "ComboFinisherCharge",
+  ).reduce((sum, m) => sum + m.value, 0);
+  const comboFinisherCount = 1 + additionalFinisherCharges;
+
   // Time-weighted rotation
   const interval1 = 1 / starter1Aspd;
   const interval2 = 1 / starter2Aspd;
   const intervalF = 1 / finisherAspd;
-  const fullCycleTime = interval1 + interval2 + intervalF;
+  const fullCycleTime = interval1 + interval2 + intervalF * comboFinisherCount;
 
   // Combo Finisher Amplification
   const comboFinisherAmplificationMult = calcEffMult(
@@ -3195,12 +3202,14 @@ const calcAvgComboDps = (
   const doubleDmgMult = calculateDoubleDmgMult(mods, skill);
   const extraMult = calculateExtraOffenseMults(mods, config);
 
-  const cycleDmg = starter1HitDmg + starter2HitDmg + finisherHitDmg;
+  const cycleDmg =
+    starter1HitDmg + starter2HitDmg + finisherHitDmg * comboFinisherCount;
   const avgDps = (cycleDmg / fullCycleTime) * doubleDmgMult * extraMult;
 
   return {
     comboFinisherAmplificationPct: (comboFinisherAmplificationMult - 1) * 100,
     comboPoints: COMBO_POINTS,
+    comboFinisherCount,
     critDmgMult,
     avgDps,
   };

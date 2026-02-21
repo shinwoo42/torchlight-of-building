@@ -398,6 +398,8 @@ interface ModDefinitions {
   // initial multistrike count, e.g. if there's 3 of this, first strike will
   // get bonuses as if it's the 4th hit instead of the 1st
   InitialMultistrikeCount: { value: number };
+  // combo
+  ComboFinisherCharge: { value: number };
   ConvertDmgPct: { from: DmgChunkType; to: DmgChunkType; value: number };
   AddsDmgAsPct: { from: DmgChunkType; to: DmgChunkType; value: number };
   MaxWillpowerStacks: { value: number };
