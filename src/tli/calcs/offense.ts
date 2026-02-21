@@ -3055,18 +3055,16 @@ const calcAvgSlashStrikeDps = (
   };
 };
 
-// TODO: calculate combo points per hit and based on mods
-const COMBO_POINTS = 2;
-
 // Combo Attack Archetype
 //
-// Combo skills have a 3-part rotation: Starter 1 → Starter 2 → Finisher.
+// Combo skills have a 3-part rotation: Starter 1 → Starter 2 → Finisher(s).
 // Each part has its own weapon attack damage % (which also serves as added
 // damage effectiveness). The DPS is time-weighted across the full cycle.
 //
 // Key mechanics:
-// - Combo Points: Currently hardcoded to 2 (COMBO_POINTS). Starter hits
-//   generate combo points; the finisher consumes them.
+// - Combo Points: Each starter generates 1 point (+ ComboPointGainedFromStarter
+//   mods). Points accumulate through both starters and are consumed by the
+//   finisher. With multiple finisher charges, points persist across finishers.
 // - Finisher Amplification: The finisher's damage is multiplied by
 //   1 + comboPoints * amplificationMult. This is the main scaling mechanic.
 // - Per-part attack speed: Each part can have its own aspd modifier
@@ -3160,6 +3158,15 @@ const calcAvgComboDps = (
   const starter2Aspd = starter2Atk.aspd * starter2AspdMult;
   const finisherAspd = finisherAtk.aspd * finisherAspdMult;
 
+  // Combo points: each starter generates 1 + additional points from mods
+  const additionalPointsPerStarter = filterMods(
+    mods,
+    "ComboPointGainedFromStarter",
+  ).reduce((sum, m) => sum + m.value, 0);
+  const pointsPerStarter = 1 + additionalPointsPerStarter;
+  // 2 starters total, so combo points = 2 * pointsPerStarter
+  const comboPoints = 2 * pointsPerStarter;
+
   // Combo finisher charges: base 1 + additional charges from mods
   const additionalFinisherCharges = filterMods(
     mods,
@@ -3179,14 +3186,14 @@ const calcAvgComboDps = (
     "ComboFinisherAmplificationPct",
   );
   const finisherDmgMult =
-    1 + COMBO_POINTS * (comboFinisherAmplificationMult - 1);
+    1 + comboPoints * (comboFinisherAmplificationMult - 1);
 
   // Spectral Slash-specific multipliers:
   // - Finisher generates clones (= combo points) with shotgun falloff
   // - Starter 1 marks the target for 30% additional damage on subsequent hits
   const isSpectralSlash = skill.name === "Spectral Slash";
   const spectralFinisherCloneMult = isSpectralSlash
-    ? 1 + COMBO_POINTS * ((offense.shotgunEffFalloffPct?.value ?? 0) / 100)
+    ? 1 + comboPoints * ((offense.shotgunEffFalloffPct?.value ?? 0) / 100)
     : 1;
   const markDmgMult = isSpectralSlash ? 1.3 : 1;
 
@@ -3208,7 +3215,7 @@ const calcAvgComboDps = (
 
   return {
     comboFinisherAmplificationPct: (comboFinisherAmplificationMult - 1) * 100,
-    comboPoints: COMBO_POINTS,
+    comboPoints,
     comboFinisherCount,
     critDmgMult,
     avgDps,

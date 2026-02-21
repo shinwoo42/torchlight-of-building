@@ -562,6 +562,7 @@ interface ModDefinitions {
   ComboStarter2AspdPct: { value: number; addn?: boolean };
   ComboFinisherAmplificationPct: { value: number; addn?: boolean };
   ComboFinisherCharge: { value: number };
+  ComboPointGainedFromStarter: { value: number };
   DoubleBerserkingBladeUpperLimit: object;
   // enemy mods
   EnemyRes: { value: number; resType: ResType };
