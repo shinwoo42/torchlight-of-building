@@ -256,7 +256,12 @@ const calculateDefenseStat = (
   const baseFlatFromMods = sumByValue(filterMods(mods, modTypes.finalFlat));
   const totalFlat = totalFromGear + baseFlatFromMods;
 
-  const finalMultPct = calcEffMult(mods, modTypes.finalMultPct);
+  const finalMultPct = calcEffMult(
+    R.concat(
+      filterMods(mods, "DefensePct"),
+      filterMods(mods, modTypes.finalMultPct),
+    ),
+  );
 
   return Math.round(totalFlat * finalMultPct);
 };
