@@ -123,7 +123,7 @@ function EquipmentPage(): React.ReactNode {
               onClick={() => setIsImportModalOpen(true)}
               className="rounded-lg border border-zinc-600 bg-zinc-800 px-4 py-3 font-semibold text-zinc-200 transition-colors hover:bg-zinc-700"
             >
-              <Trans>Import Items</Trans>
+              Import Items
             </button>
           </div>
         </div>
