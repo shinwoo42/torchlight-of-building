@@ -18,8 +18,6 @@ export const ConfigurationPageSchema = z
     crueltyBuffStacks: z.number().optional().catch(d.crueltyBuffStacks),
     numShadowHits: z.number().optional().catch(d.numShadowHits),
     manaConsumedRecently: z.number().optional().catch(d.manaConsumedRecently),
-    sealedManaPct: z.number().optional().catch(d.sealedManaPct),
-    sealedLifePct: z.number().optional().catch(d.sealedLifePct),
     focusBlessings: z.number().optional().catch(d.focusBlessings),
     hasFocusBlessing: z.boolean().catch(d.hasFocusBlessing),
     agilityBlessings: z.number().optional().catch(d.agilityBlessings),

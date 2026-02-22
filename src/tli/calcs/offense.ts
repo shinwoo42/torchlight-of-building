@@ -1049,6 +1049,7 @@ const resolveBuffSkillMods = (
   loadoutMods: Mod[],
   config: Configuration,
   derivedCtx: DerivedCtx,
+  resourcePool: ResourcePool,
 ): Mod[] => {
   const activeSkillSlots = listActiveSkillSlots(loadout);
   const passiveSkillSlots = listPassiveSkillSlots(loadout);
@@ -1094,6 +1095,7 @@ const resolveBuffSkillMods = (
       loadout,
       config,
       derivedCtx,
+      resourcePool,
     );
 
     // Get level mods from factory based on skill type
@@ -1108,6 +1110,7 @@ const resolveBuffSkillMods = (
         loadout,
         config,
         derivedCtx,
+        resourcePool,
       );
     const buffSrc = `${buffSkillType}: ${skill.name} Lv.${level}`;
     if (skill.type === "Active") {
@@ -1226,6 +1229,7 @@ const resolveNormalSupportSkillMods = (
   loadout: Loadout,
   config: Configuration,
   derivedCtx: DerivedCtx,
+  resourcePool: ResourcePool,
 ): Mod[] => {
   const supportSkill = SupportSkills.find((s) => s.name === ss.name) as
     | BaseSupportSkill
@@ -1240,6 +1244,7 @@ const resolveNormalSupportSkillMods = (
       loadout,
       config,
       derivedCtx,
+      resourcePool,
     );
 
   // Build affixes with the calculated level (includes added skill levels)
@@ -1262,6 +1267,7 @@ const resolveSelectedSkillSupportMods = (
   loadout: Loadout,
   config: Configuration,
   derivedCtx: DerivedCtx,
+  resourcePool: ResourcePool,
 ): Mod[] => {
   const supportSlots = Object.values(slot.supportSkills) as (
     | BaseSupportSkillSlot
@@ -1281,6 +1287,7 @@ const resolveSelectedSkillSupportMods = (
           loadout,
           config,
           derivedCtx,
+          resourcePool,
         ),
       );
     }
@@ -1302,6 +1309,7 @@ const resolveSelectedSkillSupportMods = (
           loadout,
           config,
           derivedCtx,
+          resourcePool,
         ),
       );
     }
@@ -1317,6 +1325,7 @@ const resolveSelectedSkillSupportMods = (
         loadout,
         config,
         derivedCtx,
+        resourcePool,
       ),
     );
   }
@@ -1338,6 +1347,7 @@ const resolvePerSkillMods = (
   loadout: Loadout,
   config: Configuration,
   derivedCtx: DerivedCtx,
+  resourcePool: ResourcePool,
 ): PerSkillModContext | undefined => {
   if (skillSlot.skillName === undefined) {
     return undefined;
@@ -1351,7 +1361,14 @@ const resolvePerSkillMods = (
 
   const level =
     (skillSlot.level || 20) +
-    calculateAddedSkillLevels(loadoutMods, skill, loadout, config, derivedCtx);
+    calculateAddedSkillLevels(
+      loadoutMods,
+      skill,
+      loadout,
+      config,
+      derivedCtx,
+      resourcePool,
+    );
 
   // Check if the skill's factory returns offense data
   const skillMods = getActiveSkillMods(skill.name as ActiveSkillName, level);
@@ -1370,6 +1387,7 @@ const resolvePerSkillMods = (
     loadout,
     config,
     derivedCtx,
+    resourcePool,
   );
 
   return { mods: [...selectedSkillMods, ...supportMods], skill };
@@ -1495,6 +1513,7 @@ const calculateAddedSkillLevels = (
   loadout: Loadout,
   config: Configuration,
   derivedCtx: DerivedCtx,
+  resourcePool: ResourcePool,
 ): number => {
   const { prenormMods, mods } = applyModFilters(
     loadoutMods,
@@ -1503,8 +1522,12 @@ const calculateAddedSkillLevels = (
     derivedCtx,
   );
 
-  const sealedLifePct = config.sealedLifePct ?? 0;
-  pushNormalizedStackable(mods, prenormMods, "sealed_life_pct", sealedLifePct);
+  pushNormalizedStackable(
+    mods,
+    prenormMods,
+    "sealed_life_pct",
+    resourcePool.sealedResources.sealedLifePct,
+  );
 
   let addedSkillLevels = 0;
   for (const mod of filterMods(mods, "SkillLevel")) {
@@ -1826,8 +1849,14 @@ const resolveModsForOffenseSkill = (
       config.numSpellSkillsUsedRecently,
     );
     normalize("mana_consumed_recently", config.manaConsumedRecently ?? 0);
-    normalize("unsealed_mana_pct", 100 - (config.sealedManaPct ?? 0));
-    normalize("unsealed_life_pct", 100 - (config.sealedLifePct ?? 0));
+    normalize(
+      "unsealed_mana_pct",
+      100 - resourcePool.sealedResources.sealedManaPct,
+    );
+    normalize(
+      "unsealed_life_pct",
+      100 - resourcePool.sealedResources.sealedLifePct,
+    );
     normalize(
       "num_enemies_affected_by_warcry",
       config.numEnemiesAffectedByWarcry,
@@ -2480,12 +2509,31 @@ const calculateSealedResources = (
     }
 
     // Get support skill mods for this passive skill to calculate per-skill sealed mana comp
+    // Pass empty sealed resources since we're computing them here
+    // TODO: we may not need to actually resolve any mods, and can just use
+    // them directly from skills, thus not requiring empty resource pool
+    const EMPTY_RESOURCE_POOL: ResourcePool = {
+      stats: { str: 0, dex: 0, int: 0 },
+      maxLife: 0,
+      maxMana: 0,
+      focusBlessings: 0,
+      maxFocusBlessings: 0,
+      agilityBlessings: 0,
+      maxAgilityBlessings: 0,
+      tenacityBlessings: 0,
+      maxTenacityBlessings: 0,
+      additionalMaxChanneledStacks: 0,
+      hasFervor: false,
+      fervorPts: 0,
+      sealedResources: { sealedManaPct: 0, sealedLifePct: 0, sealPerSkill: {} },
+    };
     const supportMods = resolveSelectedSkillSupportMods(
       slot,
       loadoutMods,
       loadout,
       config,
       derivedCtx,
+      EMPTY_RESOURCE_POOL,
     );
 
     const sealedManaCompMods = filterMods(
@@ -3439,7 +3487,13 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const unresolvedLoadoutAndBuffMods = [
     ...loadoutMods,
     ...calculateImplicitMods(),
-    ...resolveBuffSkillMods(loadout, loadoutMods, config, derivedCtx),
+    ...resolveBuffSkillMods(
+      loadout,
+      loadoutMods,
+      config,
+      derivedCtx,
+      resourcePool,
+    ),
   ];
 
   const defenses = calculateDefenses(
@@ -3463,6 +3517,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
       loadout,
       config,
       derivedCtx,
+      resourcePool,
     );
     if (perSkillContext === undefined) {
       continue; // Skip non-implemented skills
@@ -3475,6 +3530,7 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
         loadout,
         config,
         derivedCtx,
+        resourcePool,
       );
 
     const derivedOffenseCtx = resolveModsForOffenseSkill(

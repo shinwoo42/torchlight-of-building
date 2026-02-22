@@ -398,28 +398,6 @@ export const ConfigurationTab: React.FC<ConfigurationTabProps> = ({
           />
 
           <label className="text-right text-zinc-50">
-            Sealed Mana %
-            <InfoTooltip text="Percentage of mana currently sealed. Defaults to 0." />
-          </label>
-          <NumberInput
-            value={config.sealedManaPct}
-            onChange={(v) => onUpdate({ sealedManaPct: v })}
-            min={0}
-            max={100}
-          />
-
-          <label className="text-right text-zinc-50">
-            Sealed Life %
-            <InfoTooltip text="Percentage of life currently sealed. Defaults to 0." />
-          </label>
-          <NumberInput
-            value={config.sealedLifePct}
-            onChange={(v) => onUpdate({ sealedLifePct: v })}
-            min={0}
-            max={100}
-          />
-
-          <label className="text-right text-zinc-50">
             Current Life %
             <InfoTooltip text="Current life percentage. 100 = full life. Used for 'life lost' calculations." />
           </label>

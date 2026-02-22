@@ -70,10 +70,6 @@ export interface Configuration {
   numShadowHits?: number;
   // default to 0
   manaConsumedRecently?: number;
-  // default to 0
-  sealedManaPct?: number;
-  // default to 0
-  sealedLifePct?: number;
   // default to max
   focusBlessings?: number;
   hasFocusBlessing: boolean;
@@ -251,8 +247,6 @@ export const DEFAULT_CONFIGURATION: Configuration = {
   crueltyBuffStacks: 40,
   numShadowHits: undefined,
   manaConsumedRecently: undefined,
-  sealedManaPct: undefined,
-  sealedLifePct: undefined,
   focusBlessings: undefined,
   hasFocusBlessing: false,
   agilityBlessings: undefined,
