@@ -95,6 +95,7 @@ import { parseSupportAffixes } from "../skills/support-mod-templates";
 import {
   convertAffixTextToAffix,
   getPrismAffixesForNode,
+  parseGaugeAffix,
   scaleTalentAffix,
   type TreeSlot,
   treeDataByName,
@@ -517,11 +518,13 @@ const convertCraftedPrism = (
     }
   }
 
+  const gaugeAffixes = prism.gaugeAffixes.map(parseGaugeAffix);
+
   return {
     id: prism.id,
     rarity: prism.rarity,
     baseAffix: prism.baseAffix,
-    gaugeAffixes: prism.gaugeAffixes,
+    gaugeAffixes,
     areaAffix,
     rareAffix,
     legendaryAffix,

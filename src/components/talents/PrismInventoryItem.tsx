@@ -32,16 +32,16 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
 
   // Find area affix (if any) and classify gauge affixes
   const areaAffix = prism.gaugeAffixes.find((a) =>
-    a.startsWith("The Effect Area expands to"),
+    a.text.startsWith("The Effect Area expands to"),
   );
   const nonAreaAffixes = prism.gaugeAffixes.filter(
-    (a) => !a.startsWith("The Effect Area expands to"),
+    (a) => !a.text.startsWith("The Effect Area expands to"),
   );
   const legendaryCount = nonAreaAffixes.filter((a) =>
-    legendaryGauges.some((lg) => lg.affix === a),
+    legendaryGauges.some((lg) => lg.affix === a.text),
   ).length;
   const rareCount = nonAreaAffixes.length - legendaryCount;
-  const areaLabel = getAreaLabel(areaAffix);
+  const areaLabel = getAreaLabel(areaAffix?.text);
 
   const displayText = getBaseAffixLabel(prism.baseAffix);
 
@@ -136,7 +136,7 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
         {areaAffix !== undefined && (
           <div className="mb-1 text-xs text-zinc-400">
             <span className="text-zinc-500">Area: </span>
-            {areaAffix}
+            {areaAffix.text}
           </div>
         )}
         {nonAreaAffixes.length > 0 && (
@@ -144,7 +144,7 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
             <span className="text-xs text-zinc-500">Gauge Affixes:</span>
             {nonAreaAffixes.map((affix, index) => {
               const isLegendary = legendaryGauges.some(
-                (lg) => lg.affix === affix,
+                (lg) => lg.affix === affix.text,
               );
               return (
                 <div key={index} className="flex items-start gap-1">
@@ -154,7 +154,7 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
                     }`}
                   />
                   <span className="text-xs text-zinc-300 whitespace-pre-line">
-                    {affix}
+                    {affix.text}
                   </span>
                 </div>
               );

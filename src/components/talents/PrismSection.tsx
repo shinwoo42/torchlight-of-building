@@ -1,13 +1,14 @@
 import { Trans } from "@lingui/react/macro";
 import { useState } from "react";
+import type { CraftedPrism as SaveDataCraftedPrism } from "@/src/lib/save-data";
 import type { CraftedPrism } from "@/src/tli/core";
 import { PrismCrafter } from "./PrismCrafter";
 import { PrismInventory } from "./PrismInventory";
 
 interface PrismSectionProps {
   prisms: CraftedPrism[];
-  onSave: (prism: CraftedPrism) => void;
-  onUpdate: (prism: CraftedPrism) => void;
+  onSave: (prism: SaveDataCraftedPrism) => void;
+  onUpdate: (prism: SaveDataCraftedPrism) => void;
   onCopy: (prism: CraftedPrism) => void;
   onDelete: (prismId: string) => void;
   selectedPrismId?: string;
@@ -31,7 +32,7 @@ export const PrismSection: React.FC<PrismSectionProps> = ({
     undefined,
   );
 
-  const handleSave = (prism: CraftedPrism) => {
+  const handleSave = (prism: SaveDataCraftedPrism) => {
     if (editingPrism) {
       onUpdate(prism);
       setEditingPrism(undefined);

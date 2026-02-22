@@ -4,7 +4,7 @@ import {
   type TreeName,
 } from "@/src/data/talent-tree";
 import { type PrismArea, parseAreaAffix } from "@/src/lib/prism-utils";
-import type { Affix, AffixLine, PlacedPrism } from "./core";
+import type { Affix, AffixLine, PlacedPrism, PrismAffix } from "./core";
 import { parseMod } from "./mod-parser/index";
 
 export type TreeSlot = "tree1" | "tree2" | "tree3" | "tree4";
@@ -84,25 +84,25 @@ const scaleAffixText = (text: string, multiplier: number): string => {
   );
 };
 
-interface ParsedGaugeAffix {
-  targetType: "legendary" | "medium" | "micro";
-  bonusText: string;
-}
-
-// Parse a Rare Gauge affix to extract target type and bonus text
-const parseRareGaugeAffix = (affix: string): ParsedGaugeAffix | undefined => {
+// Parse a gauge affix string into a PrismAffix (BonusNodeAffix if parseable, UnsupportedPrismAffix otherwise)
+export const parseGaugeAffix = (affix: string): PrismAffix => {
   const match = affix.match(
     /^All (Legendary Medium|Medium|Micro) Talent within the area also gain:\s*([\s\S]+)$/,
   );
-  if (!match) return undefined;
+  if (!match) return { text: affix, type: "unsupported" };
 
-  const typeMapping: Record<string, ParsedGaugeAffix["targetType"]> = {
+  const typeMapping: Record<string, "legendary" | "medium" | "micro"> = {
     "Legendary Medium": "legendary",
     Medium: "medium",
     Micro: "micro",
   };
 
-  return { targetType: typeMapping[match[1]], bonusText: match[2].trim() };
+  return {
+    text: affix,
+    type: "bonusNode",
+    targetType: typeMapping[match[1]],
+    bonusText: match[2].trim(),
+  };
 };
 
 // Get positions affected by a prism based on its area dimensions
@@ -165,19 +165,14 @@ export const getPrismAffixesForNode = (
 
   const prismAffixes: Affix[] = [];
 
-  // Collect gauge affixes from the structured fields
-  const gaugeAffixes: string[] = [];
-  if (placedPrism.prism.rareAffix !== undefined)
-    gaugeAffixes.push(placedPrism.prism.rareAffix);
-  if (placedPrism.prism.legendaryAffix !== undefined)
-    gaugeAffixes.push(placedPrism.prism.legendaryAffix);
+  for (const gaugeAffix of placedPrism.prism.gaugeAffixes) {
+    if (gaugeAffix.type !== "bonusNode") continue;
 
-  for (const gaugeAffix of gaugeAffixes) {
-    const parsed = parseRareGaugeAffix(gaugeAffix);
-    if (!parsed) continue;
-
-    if (parsed.targetType === nodeType) {
-      const scaledText = scaleAffixText(parsed.bonusText, Math.max(1, points));
+    if (gaugeAffix.targetType === nodeType) {
+      const scaledText = scaleAffixText(
+        gaugeAffix.bonusText,
+        Math.max(1, points),
+      );
       prismAffixes.push(convertAffixTextToAffix(scaledText, src));
     }
   }

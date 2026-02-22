@@ -394,17 +394,47 @@ export interface TalentTree {
   replacementPrismCoreTalent?: Affix; // Ethereal talent affix if prism replaces core talents
 }
 
+export interface BonusNodeAffix {
+  type: "bonusNode";
+  targetType: "legendary" | "medium" | "micro";
+  bonusText: string;
+}
+
+export interface UnsupportedPrismAffix {
+  type: "unsupported";
+}
+
+export type PrismAffix = { text: string } & (
+  | BonusNodeAffix
+  | UnsupportedPrismAffix
+);
+
 export interface CraftedPrism {
   id: string;
   rarity: PrismRarity;
   // prism affixes are a special case that are not parsed into normal mods
   baseAffix: string;
-  gaugeAffixes: string[];
+  gaugeAffixes: PrismAffix[];
   // Structured fields derived from gaugeAffixes during loadSave()
   areaAffix?: string; // "The Effect Area expands to 3x3 Rectangle"
   rareAffix?: string; // Prism Gauge - Rare
   legendaryAffix?: string; // Prism Gauge - Legendary OR mutation affix (legendary only)
 }
+
+// Convert engine CraftedPrism back to SaveData-compatible format (string[] gaugeAffixes)
+export const toSaveDataPrism = (
+  prism: CraftedPrism,
+): {
+  id: string;
+  rarity: PrismRarity;
+  baseAffix: string;
+  gaugeAffixes: string[];
+} => ({
+  id: prism.id,
+  rarity: prism.rarity,
+  baseAffix: prism.baseAffix,
+  gaugeAffixes: prism.gaugeAffixes.map((a) => a.text),
+});
 
 export interface PlacedPrism {
   prism: CraftedPrism;

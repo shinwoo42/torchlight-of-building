@@ -7,7 +7,11 @@ import {
 } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { i18n } from "@/src/lib/i18n";
-import type { CraftedInverseImage, CraftedPrism } from "@/src/tli/core";
+import {
+  type CraftedInverseImage,
+  type CraftedPrism,
+  toSaveDataPrism,
+} from "@/src/tli/core";
 import {
   canPlaceInverseImage,
   canRemoveInverseImage,
@@ -192,7 +196,7 @@ function TalentsSlotPage(): React.ReactNode {
       );
 
       // Place the prism (action removes from inventory and places)
-      placePrism(prism, treeSlot, { x, y });
+      placePrism(toSaveDataPrism(prism), treeSlot, { x, y });
 
       // If prism replaces core talents, clear them
       if (replacesCoreTalent) {
@@ -477,7 +481,7 @@ function TalentsSlotPage(): React.ReactNode {
 
       <PrismSection
         prisms={prismList}
-        onSave={(prism: CraftedPrism) => addPrismToInventory(prism)}
+        onSave={(prism) => addPrismToInventory(prism)}
         onUpdate={updatePrism}
         onCopy={(prism: CraftedPrism) => copyPrism(prism.id)}
         onDelete={handleDeletePrism}

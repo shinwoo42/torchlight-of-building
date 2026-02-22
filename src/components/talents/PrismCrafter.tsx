@@ -12,6 +12,7 @@ import {
   getMutationAffixes,
   getRareGaugeAffixes,
 } from "@/src/lib/prism-utils";
+import type { CraftedPrism as SaveDataCraftedPrism } from "@/src/lib/save-data";
 import { generateItemId } from "@/src/lib/storage";
 import {
   type CraftedPrism,
@@ -30,7 +31,7 @@ const classifyGaugeAffix = (affix: string): "area" | "rare" | "legendary" => {
 
 interface PrismCrafterProps {
   editingPrism: CraftedPrism | undefined;
-  onSave: (prism: CraftedPrism) => void;
+  onSave: (prism: SaveDataCraftedPrism) => void;
   onCancel?: () => void;
 }
 
@@ -61,11 +62,11 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
       let rare: string | undefined;
       let legendary: string | undefined;
       for (const affix of editingPrism.gaugeAffixes) {
-        const kind = classifyGaugeAffix(affix);
-        if (kind === "area" && area === undefined) area = affix;
-        else if (kind === "rare" && rare === undefined) rare = affix;
+        const kind = classifyGaugeAffix(affix.text);
+        if (kind === "area" && area === undefined) area = affix.text;
+        else if (kind === "rare" && rare === undefined) rare = affix.text;
         else if (kind === "legendary" && legendary === undefined)
-          legendary = affix;
+          legendary = affix.text;
       }
       setAreaAffix(area);
       setRareAffix(rare);
@@ -135,14 +136,11 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
     if (rareAffix !== undefined) gaugeAffixes.push(rareAffix);
     if (legendaryAffix !== undefined) gaugeAffixes.push(legendaryAffix);
 
-    const prism: CraftedPrism = {
+    const prism: SaveDataCraftedPrism = {
       id: editingPrism?.id ?? generateItemId(),
       rarity,
       baseAffix,
       gaugeAffixes,
-      areaAffix,
-      rareAffix,
-      legendaryAffix,
     };
     onSave(prism);
 
