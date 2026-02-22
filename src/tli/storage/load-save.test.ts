@@ -277,3 +277,64 @@ test("loadSave does not set specialName for affixes without bracket prefix", () 
   const affixes = getGearAffixes(mainHand);
   expect(affixes[0].specialName).toBeUndefined();
 });
+
+test("loadSave extracts voraxLegendaryName from Vorax Gear affixes", () => {
+  const voraxGear = {
+    id: "vorax-1",
+    equipmentType: "Vorax Gear" as const,
+    prefixes: ["Double Rainbow+10% fire damage"],
+  };
+  const saveData = createMinimalSaveData({
+    equipmentPage: {
+      equippedGear: { mainHand: { id: "vorax-1" } },
+      inventory: [voraxGear],
+    },
+  });
+
+  const loadout = loadSave(saveData);
+  const mainHand = loadout.gearPage.equippedGear.mainHand!;
+  const affixes = getGearAffixes(mainHand);
+  expect(affixes).toHaveLength(1);
+  expect(affixes[0].voraxLegendaryName).toBe("Double Rainbow");
+  expect(getAffixText(affixes[0])).toBe("+10% fire damage");
+});
+
+test("loadSave does not extract voraxLegendaryName from non-Vorax gear", () => {
+  const weapon = {
+    id: "sword-1",
+    equipmentType: "One-Handed Sword" as const,
+    prefixes: ["Double Rainbow+10% fire damage"],
+  };
+  const saveData = createMinimalSaveData({
+    equipmentPage: {
+      equippedGear: { mainHand: { id: "sword-1" } },
+      inventory: [weapon],
+    },
+  });
+
+  const loadout = loadSave(saveData);
+  const mainHand = loadout.gearPage.equippedGear.mainHand!;
+  const affixes = getGearAffixes(mainHand);
+  expect(affixes[0].voraxLegendaryName).toBeUndefined();
+  expect(getAffixText(affixes[0])).toBe("Double Rainbow+10% fire damage");
+});
+
+test("loadSave does not set voraxLegendaryName when Vorax affix has no legendary prefix", () => {
+  const voraxGear = {
+    id: "vorax-2",
+    equipmentType: "Vorax Gear" as const,
+    prefixes: ["+10% fire damage"],
+  };
+  const saveData = createMinimalSaveData({
+    equipmentPage: {
+      equippedGear: { mainHand: { id: "vorax-2" } },
+      inventory: [voraxGear],
+    },
+  });
+
+  const loadout = loadSave(saveData);
+  const mainHand = loadout.gearPage.equippedGear.mainHand!;
+  const affixes = getGearAffixes(mainHand);
+  expect(affixes[0].voraxLegendaryName).toBeUndefined();
+  expect(getAffixText(affixes[0])).toBe("+10% fire damage");
+});

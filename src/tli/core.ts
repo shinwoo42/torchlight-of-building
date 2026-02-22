@@ -18,6 +18,7 @@ export interface AffixLine {
 
 export interface Affix {
   specialName?: string;
+  voraxLegendaryName?: string;
   affixLines: AffixLine[];
   maxDivinity?: number;
   src?: string;

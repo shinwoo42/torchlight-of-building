@@ -10,6 +10,7 @@ import {
   HyperlinkNames,
   Hyperlinks,
 } from "@/src/data/hyperlink";
+import { Legendaries } from "@/src/data/legendary/legendaries";
 import { Pactspirits } from "@/src/data/pactspirit/pactspirits";
 import type { Pactspirit } from "@/src/data/pactspirit/types";
 import { SupportSkills as SupportSkillsData } from "@/src/data/skill/support";
@@ -157,15 +158,35 @@ const extractBracketPrefix = (
   return { specialName: match[1], text: text.slice(match[0].length) };
 };
 
+// Legendary names sorted by length descending for longest-match-first
+const legendaryNamesSorted = Legendaries.map((l) => l.name).sort(
+  (a, b) => b.length - a.length,
+);
+
+const extractVoraxLegendaryName = (
+  affixText: string,
+): { voraxLegendaryName: string | undefined; text: string } => {
+  for (const name of legendaryNamesSorted) {
+    if (affixText.startsWith(name)) {
+      return { voraxLegendaryName: name, text: affixText.slice(name.length) };
+    }
+  }
+  return { voraxLegendaryName: undefined, text: affixText };
+};
+
 const convertAffix = (
   affixTextParam: string,
   src: string | undefined,
+  isVorax = false,
 ): Affix => {
   const divinityText = "(Max Divinity Effect: 1)";
   const maxDivinity = affixTextParam.endsWith(divinityText) ? 1 : undefined;
   const affixText = affixTextParam.replace(divinityText, "").trimEnd();
-  const { specialName: bracketName, text: cleanedText } =
+  const { specialName: bracketName, text: afterBracket } =
     extractBracketPrefix(affixText);
+  const { voraxLegendaryName, text: cleanedText } = isVorax
+    ? extractVoraxLegendaryName(afterBracket)
+    : { voraxLegendaryName: undefined, text: afterBracket };
   const lines = cleanedText.split(/\n/);
 
   // Check if the entire affix is a single core talent name
@@ -177,6 +198,7 @@ const convertAffix = (
         const talentLines = talent.affix.split("\n");
         return {
           specialName: coreTalentName,
+          voraxLegendaryName,
           affixLines: talentLines.map((text) => ({
             text,
             mods: parseMod(text)?.map((mod) => ({ ...mod, src })),
@@ -195,7 +217,13 @@ const convertAffix = (
         const mods = parseMod(lineText);
         return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
       });
-      return { specialName: hyperlinkName, affixLines, src, maxDivinity };
+      return {
+        specialName: hyperlinkName,
+        voraxLegendaryName,
+        affixLines,
+        src,
+        maxDivinity,
+      };
     }
   }
 
@@ -204,15 +232,22 @@ const convertAffix = (
     return { text: lineText, mods: mods?.map((mod) => ({ ...mod, src })) };
   });
 
-  return { specialName: bracketName, affixLines, src, maxDivinity };
+  return {
+    specialName: bracketName,
+    voraxLegendaryName,
+    affixLines,
+    src,
+    maxDivinity,
+  };
 };
 
 const convertAffixArray = (
   affixes: string[] | undefined,
   src: string | undefined,
+  isVorax = false,
 ): Affix[] | undefined => {
   if (!affixes || affixes.length === 0) return undefined;
-  return affixes.map((text) => convertAffix(text, src));
+  return affixes.map((text) => convertAffix(text, src, isVorax));
 };
 
 const convertCoreTalent = (
@@ -244,6 +279,7 @@ const convertCustomAffixLines = (lines: string[] | undefined): AffixLine[] => {
 };
 
 const convertGear = (gear: SaveDataGear, src: string | undefined): Gear => {
+  const isVorax = gear.equipmentType === "Vorax Gear";
   return {
     equipmentType: gear.equipmentType,
     equipmentSlot: gear.equipmentSlot,
@@ -254,8 +290,8 @@ const convertGear = (gear: SaveDataGear, src: string | undefined): Gear => {
       ? convertBaseStats(gear.baseStats, gear.baseGearName, src)
       : undefined,
     baseAffixes: convertAffixArray(gear.baseAffixes, src),
-    prefixes: convertAffixArray(gear.prefixes, src),
-    suffixes: convertAffixArray(gear.suffixes, src),
+    prefixes: convertAffixArray(gear.prefixes, src, isVorax),
+    suffixes: convertAffixArray(gear.suffixes, src, isVorax),
     blendAffix: gear.blendAffix
       ? convertAffix(gear.blendAffix, src)
       : undefined,
@@ -266,7 +302,7 @@ const convertGear = (gear: SaveDataGear, src: string | undefined): Gear => {
       ? convertAffix(gear.towerSequenceAffix, src)
       : undefined,
     legendaryAffixes: convertAffixArray(gear.legendaryAffixes, src),
-    customAffixes: convertAffixArray(gear.customAffixes, src),
+    customAffixes: convertAffixArray(gear.customAffixes, src, isVorax),
   };
 };
 

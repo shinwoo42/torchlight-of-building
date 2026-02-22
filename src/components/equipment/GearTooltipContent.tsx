@@ -21,6 +21,11 @@ export const GearTooltipContent: React.FC<{ item: Gear }> = ({ item }) => {
                 affixIdx > 0 ? "mt-2 pt-2 border-t border-zinc-500" : ""
               }
             >
+              {affix.voraxLegendaryName !== undefined && (
+                <div className="text-xs font-semibold text-amber-400 mb-0.5">
+                  [{affix.voraxLegendaryName}]
+                </div>
+              )}
               {affix.specialName !== undefined && (
                 <div className="text-xs font-semibold text-amber-400 mb-0.5">
                   [{affix.specialName}]
