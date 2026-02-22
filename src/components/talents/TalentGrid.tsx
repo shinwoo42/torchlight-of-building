@@ -3,7 +3,7 @@ import {
   getTargetAreaPositions,
   isInSourceArea as isInSourceAreaUtil,
 } from "@/src/lib/inverse-image-utils";
-import { parseAreaAffix } from "@/src/lib/prism-utils";
+import { getAreaFromDimensions } from "@/src/lib/prism-utils";
 import {
   type CraftedInverseImage,
   type CraftedPrism,
@@ -203,10 +203,12 @@ export const TalentGrid: React.FC<TalentGridProps> = ({
             placedPrism.treeSlot === treeSlot &&
             (() => {
               const { x: prismX, y: prismY } = placedPrism.position;
-              const areaText = placedPrism.prism.gaugeAffixes.find((a) =>
-                a.text.startsWith("The Effect Area expands to"),
-              )?.text;
-              const area = parseAreaAffix(areaText);
+              const areaAffix = placedPrism.prism.gaugeAffixes.find(
+                (a) => a.type === "area",
+              );
+              const area = getAreaFromDimensions(
+                areaAffix?.type === "area" ? areaAffix.dimensions : undefined,
+              );
               // Calculate bounds of affected area (clamped to grid)
               const minX = Math.max(0, prismX - area.anchorCol);
               const maxX = Math.min(6, prismX - area.anchorCol + area.w - 1);

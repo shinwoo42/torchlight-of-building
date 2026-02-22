@@ -3,7 +3,7 @@ import {
   TalentTrees,
   type TreeName,
 } from "@/src/data/talent-tree";
-import { type PrismArea, parseAreaAffix } from "@/src/lib/prism-utils";
+import { getAreaFromDimensions, type PrismArea } from "@/src/lib/prism-utils";
 import type { Affix, AffixLine, PlacedPrism, PrismAffix } from "./core";
 import { parseMod } from "./mod-parser/index";
 
@@ -84,25 +84,31 @@ const scaleAffixText = (text: string, multiplier: number): string => {
   );
 };
 
-// Parse a gauge affix string into a PrismAffix (BonusNodeAffix if parseable, UnsupportedPrismAffix otherwise)
+// Parse a gauge affix string into a PrismAffix
 export const parseGaugeAffix = (affix: string): PrismAffix => {
-  const match = affix.match(
+  const areaMatch = affix.match(/(\d+x\d+) Rectangle/);
+  if (areaMatch !== null) {
+    return { text: affix, type: "area", dimensions: areaMatch[1] };
+  }
+
+  const bonusMatch = affix.match(
     /^All (Legendary Medium|Medium|Micro) Talent within the area also gain:\s*([\s\S]+)$/,
   );
-  if (!match) return { text: affix, type: "unsupported" };
+  if (bonusMatch !== null) {
+    const typeMapping: Record<string, "legendary" | "medium" | "micro"> = {
+      "Legendary Medium": "legendary",
+      Medium: "medium",
+      Micro: "micro",
+    };
+    return {
+      text: affix,
+      type: "bonusNode",
+      targetType: typeMapping[bonusMatch[1]],
+      bonusText: bonusMatch[2].trim(),
+    };
+  }
 
-  const typeMapping: Record<string, "legendary" | "medium" | "micro"> = {
-    "Legendary Medium": "legendary",
-    Medium: "medium",
-    Micro: "micro",
-  };
-
-  return {
-    text: affix,
-    type: "bonusNode",
-    targetType: typeMapping[match[1]],
-    bonusText: match[2].trim(),
-  };
+  return { text: affix, type: "unsupported" };
 };
 
 // Get positions affected by a prism based on its area dimensions
@@ -150,10 +156,12 @@ export const getPrismAffixesForNode = (
 ): Affix[] => {
   if (!placedPrism || placedPrism.treeSlot !== treeSlot) return [];
 
-  const areaText = placedPrism.prism.gaugeAffixes.find((a) =>
-    a.text.startsWith("The Effect Area expands to"),
-  )?.text;
-  const area = parseAreaAffix(areaText);
+  const areaAffix = placedPrism.prism.gaugeAffixes.find(
+    (a) => a.type === "area",
+  );
+  const area = getAreaFromDimensions(
+    areaAffix?.type === "area" ? areaAffix.dimensions : undefined,
+  );
   const affectedPositions = getAffectedPositions(
     placedPrism.position.x,
     placedPrism.position.y,

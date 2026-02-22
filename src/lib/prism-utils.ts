@@ -130,18 +130,10 @@ const PRISM_AREAS: Record<string, PrismArea> = {
   "1x1": { w: 1, h: 1, anchorCol: 0, anchorRow: 0 },
 };
 
-// Parse area dimensions from an area affix string
-export const parseAreaAffix = (affix: string | undefined): PrismArea => {
-  if (affix === undefined) return PRISM_AREAS["1x1"];
-  const match = affix.match(/(\d+x\d+) Rectangle/);
-  return (
-    (match !== null ? PRISM_AREAS[match[1]] : undefined) ?? PRISM_AREAS["1x1"]
-  );
-};
-
-// Get display label for an area affix (e.g. "3x3")
-export const getAreaLabel = (affix: string | undefined): string => {
-  if (affix === undefined) return "1x1";
-  const match = affix.match(/(\d+x\d+) Rectangle/);
-  return match !== null ? match[1] : "1x1";
+// Look up area dimensions from a parsed dimension string (e.g. "3x3")
+export const getAreaFromDimensions = (
+  dimensions: string | undefined,
+): PrismArea => {
+  if (dimensions === undefined) return PRISM_AREAS["1x1"];
+  return PRISM_AREAS[dimensions] ?? PRISM_AREAS["1x1"];
 };

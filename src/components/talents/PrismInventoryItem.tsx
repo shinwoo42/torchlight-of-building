@@ -1,7 +1,6 @@
 import { Tooltip, TooltipTitle } from "@/src/components/ui/Tooltip";
 import { useTooltip } from "@/src/hooks/useTooltip";
 import {
-  getAreaLabel,
   getBaseAffixLabel,
   getLegendaryGaugeAffixes,
 } from "@/src/lib/prism-utils";
@@ -31,17 +30,13 @@ export const PrismInventoryItem: React.FC<PrismInventoryItemProps> = ({
   const legendaryGauges = getLegendaryGaugeAffixes();
 
   // Find area affix (if any) and classify gauge affixes
-  const areaAffix = prism.gaugeAffixes.find((a) =>
-    a.text.startsWith("The Effect Area expands to"),
-  );
-  const nonAreaAffixes = prism.gaugeAffixes.filter(
-    (a) => !a.text.startsWith("The Effect Area expands to"),
-  );
+  const areaAffix = prism.gaugeAffixes.find((a) => a.type === "area");
+  const nonAreaAffixes = prism.gaugeAffixes.filter((a) => a.type !== "area");
   const legendaryCount = nonAreaAffixes.filter((a) =>
     legendaryGauges.some((lg) => lg.affix === a.text),
   ).length;
   const rareCount = nonAreaAffixes.length - legendaryCount;
-  const areaLabel = getAreaLabel(areaAffix?.text);
+  const areaLabel = areaAffix?.type === "area" ? areaAffix.dimensions : "1x1";
 
   const displayText = getBaseAffixLabel(prism.baseAffix);
 

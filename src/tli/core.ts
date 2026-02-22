@@ -400,12 +400,18 @@ export interface BonusNodeAffix {
   bonusText: string;
 }
 
+export interface AreaAffix {
+  type: "area";
+  dimensions: string; // e.g. "3x3"
+}
+
 export interface UnsupportedPrismAffix {
   type: "unsupported";
 }
 
 export type PrismAffix = { text: string } & (
   | BonusNodeAffix
+  | AreaAffix
   | UnsupportedPrismAffix
 );
 
