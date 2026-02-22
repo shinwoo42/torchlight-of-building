@@ -2756,6 +2756,60 @@ test("parse additional lightning damage per dexterity", () => {
   ]);
 });
 
+test("parse lightning damage per dexterity (non-additional)", () => {
+  const result = parseMod("+1% Lightning Damage per 10 Dexterity");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 1,
+      dmgModType: "lightning",
+      addn: false,
+      per: { stackable: "dex", amt: 10 },
+    },
+  ]);
+});
+
+test("parse fire damage per strength (non-additional)", () => {
+  const result = parseMod("+1% Fire Damage per 10 Strength");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 1,
+      dmgModType: "fire",
+      addn: false,
+      per: { stackable: "str", amt: 10 },
+    },
+  ]);
+});
+
+test("parse cold damage per intelligence (non-additional)", () => {
+  const result = parseMod("+1% Cold Damage per 10 Intelligence");
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 1,
+      dmgModType: "cold",
+      addn: false,
+      per: { stackable: "int", amt: 10 },
+    },
+  ]);
+});
+
+test("parse additional elemental damage per highest stat", () => {
+  const result = parseMod(
+    "+1% additional Elemental Damage for every 28 of the highest stat among Strength, Dexterity, and Intelligence",
+  );
+  expect(result).toEqual([
+    {
+      type: "DmgPct",
+      value: 1,
+      dmgModType: "elemental",
+      addn: true,
+      per: { stackable: "highest_stat", amt: 28 },
+    },
+  ]);
+});
+
 test("parse additional attack speed when performing multistrikes", () => {
   const result = parseMod(
     "+9% additional Attack Speed when performing Multistrikes",

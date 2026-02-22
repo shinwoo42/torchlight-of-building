@@ -338,6 +338,15 @@ export const allParsers = [
     addn: false,
     per: { stackable: "highest_stat", amt: c.amt },
   })),
+  t(
+    "{value:+dec%} additional {modType:DmgModType} damage for every {amt:int} of the highest stat among strength, dexterity, and intelligence",
+  ).output((c) => ({
+    type: "DmgPct",
+    value: c.value,
+    dmgModType: c.modType,
+    addn: true,
+    per: { stackable: "highest_stat", amt: c.amt },
+  })),
   t("{value:+dec%} damage per {amt:int} stats").output((c) => ({
     type: "DmgPct",
     value: c.value,
@@ -2235,14 +2244,14 @@ export const allParsers = [
     addn: true,
   })),
   t(
-    "{value:+dec%} additional {dmgType:DmgChunkType} damage per {amt:int} {stat:StatWord}",
+    "{value:+dec%} [additional] {dmgType:DmgChunkType} damage per {amt:int} {stat:StatWord}",
   )
     .enum("StatWord", StatWordMapping)
     .output((c) => ({
       type: "DmgPct",
       value: c.value,
       dmgModType: c.dmgType,
-      addn: true,
+      addn: c.additional !== undefined,
       per: { stackable: c.stat, amt: c.amt },
     })),
   t("{value:+int} Max Pure Heart Stacks").output((c) => ({
