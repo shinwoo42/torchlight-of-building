@@ -6,7 +6,7 @@ Import your in-game skills into the build planner using AI-assisted screenshot p
 
 ### 1. Take in-game screenshots
 
-Open your skill page in Torchlight Infinite. For each active and passive skill, navigate to its detail view showing the main skill and its support skills. Take a screenshot of each skill slot.
+Open your skill page in Torchlight Infinite. For each active and passive skill, navigate to its detail view showing the main skill and its support skills. Take a screenshot of each skill slot. Ensure that the screenshot is a full-screen screenshot.
 
 ![Example skill screenshot](assets/skill-example-1.png)
 
