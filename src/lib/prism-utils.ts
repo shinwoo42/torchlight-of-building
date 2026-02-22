@@ -8,11 +8,19 @@ export interface PrismAffix {
   affix: string;
 }
 
+const PHANTASMAGORIA_AFFIX =
+  "+75% to the effects of Random Affixes on this Prism";
+
 export const getBaseAffixes = (rarity: PrismRarity): PrismAffix[] => {
   const prefix = rarity === "rare" ? "Adds" : "Replaces";
   const seen = new Set<string>();
   return Prisms.filter((p) => {
-    if (p.type !== "Base Affix" || !p.affix.startsWith(prefix)) return false;
+    if (p.type !== "Base Affix") return false;
+    if (
+      !p.affix.startsWith(prefix) &&
+      !(rarity === "legendary" && p.affix === PHANTASMAGORIA_AFFIX)
+    )
+      return false;
     if (seen.has(p.affix)) return false;
     seen.add(p.affix);
     return true;
@@ -96,6 +104,7 @@ export const extractAdditionalEffect = (
 
 // Get a short display label for a prism base affix
 export const getBaseAffixLabel = (baseAffix: string): string => {
+  if (baseAffix === PHANTASMAGORIA_AFFIX) return "Phantasmagoria";
   const additional = extractAdditionalEffect(baseAffix);
   if (additional !== undefined) return additional.replaceAll("\n", " / ");
   const replacement = extractReplacementName(baseAffix);
