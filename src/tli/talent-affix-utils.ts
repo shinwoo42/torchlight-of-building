@@ -150,7 +150,10 @@ export const getPrismAffixesForNode = (
 ): Affix[] => {
   if (!placedPrism || placedPrism.treeSlot !== treeSlot) return [];
 
-  const area = parseAreaAffix(placedPrism.prism.areaAffix);
+  const areaText = placedPrism.prism.gaugeAffixes.find((a) =>
+    a.text.startsWith("The Effect Area expands to"),
+  )?.text;
+  const area = parseAreaAffix(areaText);
   const affectedPositions = getAffectedPositions(
     placedPrism.position.x,
     placedPrism.position.y,

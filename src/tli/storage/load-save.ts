@@ -488,46 +488,15 @@ const convertTalentTree = (
   };
 };
 
-// Classify a gauge affix string as area, rare, or legendary
-const classifyGaugeAffix = (affix: string): "area" | "rare" | "legendary" => {
-  if (affix.startsWith("The Effect Area expands to")) return "area";
-  // Legendary gauge affixes target "Legendary Medium" or add extra allocation points
-  if (affix.startsWith("All Legendary Medium Talent")) return "legendary";
-  if (affix.startsWith("Points can be allocated to all")) return "legendary";
-  // Mutation affixes (contain "Mutated Core Talents")
-  if (affix.includes("Mutated Core Talents")) return "legendary";
-  return "rare";
-};
-
 const convertCraftedPrism = (
   prism: SaveDataCraftedPrism,
   _src: string,
 ): CraftedPrism => {
-  let areaAffix: string | undefined;
-  let rareAffix: string | undefined;
-  let legendaryAffix: string | undefined;
-
-  for (const affix of prism.gaugeAffixes) {
-    const kind = classifyGaugeAffix(affix);
-    if (kind === "area" && areaAffix === undefined) {
-      areaAffix = affix;
-    } else if (kind === "rare" && rareAffix === undefined) {
-      rareAffix = affix;
-    } else if (kind === "legendary" && legendaryAffix === undefined) {
-      legendaryAffix = affix;
-    }
-  }
-
-  const gaugeAffixes = prism.gaugeAffixes.map(parseGaugeAffix);
-
   return {
     id: prism.id,
     rarity: prism.rarity,
     baseAffix: prism.baseAffix,
-    gaugeAffixes,
-    areaAffix,
-    rareAffix,
-    legendaryAffix,
+    gaugeAffixes: prism.gaugeAffixes.map(parseGaugeAffix),
   };
 };
 

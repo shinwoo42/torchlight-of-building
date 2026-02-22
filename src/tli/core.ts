@@ -409,16 +409,13 @@ export type PrismAffix = { text: string } & (
   | UnsupportedPrismAffix
 );
 
+// gaugeAffixes layout: [0] = area, [1] = rare, [2] = legendary
 export interface CraftedPrism {
   id: string;
   rarity: PrismRarity;
   // prism affixes are a special case that are not parsed into normal mods
   baseAffix: string;
   gaugeAffixes: PrismAffix[];
-  // Structured fields derived from gaugeAffixes during loadSave()
-  areaAffix?: string; // "The Effect Area expands to 3x3 Rectangle"
-  rareAffix?: string; // Prism Gauge - Rare
-  legendaryAffix?: string; // Prism Gauge - Legendary OR mutation affix (legendary only)
 }
 
 // Convert engine CraftedPrism back to SaveData-compatible format (string[] gaugeAffixes)

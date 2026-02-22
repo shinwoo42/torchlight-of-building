@@ -20,15 +20,6 @@ import {
   type PrismRarity,
 } from "@/src/tli/core";
 
-// Classify a gauge affix string into its slot type
-const classifyGaugeAffix = (affix: string): "area" | "rare" | "legendary" => {
-  if (affix.startsWith("The Effect Area expands to")) return "area";
-  if (affix.startsWith("All Legendary Medium Talent")) return "legendary";
-  if (affix.startsWith("Points can be allocated to all")) return "legendary";
-  if (affix.includes("Mutated Core Talents")) return "legendary";
-  return "rare";
-};
-
 interface PrismCrafterProps {
   editingPrism: CraftedPrism | undefined;
   onSave: (prism: SaveDataCraftedPrism) => void;
@@ -57,20 +48,9 @@ export const PrismCrafter: React.FC<PrismCrafterProps> = ({
       setRarity(editingPrism.rarity);
       setBaseAffix(editingPrism.baseAffix);
 
-      // Decompose gaugeAffixes into slots
-      let area: string | undefined;
-      let rare: string | undefined;
-      let legendary: string | undefined;
-      for (const affix of editingPrism.gaugeAffixes) {
-        const kind = classifyGaugeAffix(affix.text);
-        if (kind === "area" && area === undefined) area = affix.text;
-        else if (kind === "rare" && rare === undefined) rare = affix.text;
-        else if (kind === "legendary" && legendary === undefined)
-          legendary = affix.text;
-      }
-      setAreaAffix(area);
-      setRareAffix(rare);
-      setLegendaryAffix(legendary);
+      setAreaAffix(editingPrism.gaugeAffixes[0]?.text);
+      setRareAffix(editingPrism.gaugeAffixes[1]?.text);
+      setLegendaryAffix(editingPrism.gaugeAffixes[2]?.text);
     } else {
       setBaseAffix(undefined);
       setAreaAffix(undefined);

@@ -172,23 +172,13 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
             </span>
           </TooltipTitle>
           <TooltipContent>{prism.baseAffix}</TooltipContent>
-          {prism.areaAffix !== undefined && (
-            <div className="mt-2 pt-2 border-t border-zinc-700">
-              <div className="text-xs text-zinc-400">{prism.areaAffix}</div>
-            </div>
-          )}
-          {(prism.rareAffix !== undefined ||
-            prism.legendaryAffix !== undefined) && (
-            <div className="mt-2 pt-2 border-t border-zinc-700">
-              <div className="text-xs text-zinc-500 mb-1">Gauge Affixes:</div>
-              {prism.rareAffix !== undefined && (
-                <div className="text-xs text-zinc-400">{prism.rareAffix}</div>
-              )}
-              {prism.legendaryAffix !== undefined && (
-                <div className="text-xs text-zinc-400">
-                  {prism.legendaryAffix}
+          {prism.gaugeAffixes.length > 0 && (
+            <div className="mt-2 pt-2 border-t border-zinc-700 space-y-2">
+              {prism.gaugeAffixes.map((affix) => (
+                <div key={affix.text} className="text-xs text-zinc-400">
+                  {affix.text}
                 </div>
-              )}
+              ))}
             </div>
           )}
         </Tooltip>
