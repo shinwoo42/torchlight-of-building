@@ -172,15 +172,23 @@ export const TalentNodeDisplay: React.FC<TalentNodeDisplayProps> = ({
             </span>
           </TooltipTitle>
           <TooltipContent>{prism.baseAffix}</TooltipContent>
-          {prism.gaugeAffixes.length > 0 && (
-            <div className="mt-2 pt-2 border-t border-zinc-700 space-y-2">
-              {prism.gaugeAffixes.map((affix) => (
-                <div key={affix.text} className="text-xs text-zinc-400">
-                  {affix.text}
+          {prism.gaugeAffixes.map((affix, idx) => (
+            <div
+              key={affix.text}
+              className={
+                idx > 0
+                  ? "mt-1 pt-1 border-t border-zinc-800"
+                  : "mt-2 pt-2 border-t border-zinc-700"
+              }
+            >
+              <div className="text-xs text-zinc-400">{affix.text}</div>
+              {affix.type === "unsupported" && (
+                <div className="text-xs text-red-500">
+                  (Mod not supported in TOB yet)
                 </div>
-              ))}
+              )}
             </div>
-          )}
+          ))}
         </Tooltip>
       </div>
     );
