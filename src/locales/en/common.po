@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. js-lingui-explicit-id
-#: src/components/equipment/EditGearModal.tsx:940
+#: src/components/equipment/EditGearModal.tsx:942
 msgid ""
 "+10% Fire Damage\n"
 "+20 to Maximum Life\n"
@@ -24,23 +24,27 @@ msgstr ""
 "+20 to Maximum Life\n"
 "+5% Attack Speed"
 
-#: src/components/equipment/EditGearModal.tsx:733
+#: src/components/equipment/EditGearModal.tsx:735
 msgid "Base Stats (1 max)"
 msgstr "Base Stats (1 max)"
+
+#: src/routes/builder/talents/$slot.tsx:408
+msgid "Tree"
+msgstr "Tree"
 
 #: src/routes/index.tsx:417
 msgid "Create your first character build to get started"
 msgstr "Create your first character build to get started"
 
 #: src/routes/builder/equipment.tsx:119
-msgid "Craft Item"
-msgstr "Craft Item"
+#~ msgid "Craft Item"
+#~ msgstr "Craft Item"
 
-#: src/components/equipment/EditGearModal.tsx:947
+#: src/components/equipment/EditGearModal.tsx:949
 msgid "Enter raw affix text, one per line. Use this for affixes not available in the dropdowns above."
 msgstr "Enter raw affix text, one per line. Use this for affixes not available in the dropdowns above."
 
-#: src/components/equipment/EditGearModal.tsx:935
+#: src/components/equipment/EditGearModal.tsx:937
 msgid "Custom Affixes"
 msgstr "Custom Affixes"
 
@@ -52,11 +56,15 @@ msgstr "Rename"
 #~ msgid "Select equipment type..."
 #~ msgstr "Select equipment type..."
 
+#: src/components/equipment/VoraxGearModule.tsx:685
+msgid "Vorax Limb"
+msgstr "Vorax Limb"
+
 #: src/routes/index.tsx:390
 msgid "Create New"
 msgstr "Create New"
 
-#: src/routes/builder/equipment.tsx:111
+#: src/routes/builder/equipment.tsx:142
 msgid "Craft New Item"
 msgstr "Craft New Item"
 
@@ -64,11 +72,13 @@ msgstr "Craft New Item"
 #~ msgid "Advanced Crafting"
 #~ msgstr "Advanced Crafting"
 
-#: src/routes/builder/equipment.tsx:138
+#: src/routes/builder/equipment.tsx:226
 msgid "No items in inventory. Craft items above to add them here."
 msgstr "No items in inventory. Craft items above to add them here."
 
-#: src/components/equipment/EditGearModal.tsx:974
+#: src/components/equipment/EditGearModal.tsx:976
+#: src/components/equipment/LegendaryGearModule.tsx:400
+#: src/components/equipment/VoraxGearModule.tsx:769
 msgid "Save to Inventory"
 msgstr "Save to Inventory"
 
@@ -76,6 +86,11 @@ msgstr "Save to Inventory"
 #: src/routes/builder/skills.tsx:81
 msgid "Active Skills"
 msgstr "Active Skills"
+
+#. js-lingui-explicit-id
+#: src/components/equipment/LegendaryGearModule.tsx:299
+msgid "Add Legendary"
+msgstr "Add Legendary"
 
 #. js-lingui-explicit-id
 #: src/components/equipment/AdvancedCraftingModal.tsx:94
@@ -164,14 +179,19 @@ msgid "Core Talent 2"
 msgstr "Core Talent 2"
 
 #. js-lingui-explicit-id
-#: src/components/equipment/EditGearModal.tsx:696
+#: src/components/equipment/EditGearModal.tsx:698
 msgid "Craft New Item"
 msgstr "Craft New Item"
 
 #. js-lingui-explicit-id
 #: src/components/talents/PrismCrafter.tsx:164
-msgid "Craft Prism"
-msgstr "Craft Prism"
+#~ msgid "Craft Prism"
+#~ msgstr "Craft Prism"
+
+#. js-lingui-explicit-id
+#: src/components/equipment/VoraxGearModule.tsx:677
+msgid "Craft Vorax Gear"
+msgstr "Craft Vorax Gear"
 
 #. js-lingui-explicit-id
 #: src/data/translate/equipment-types.ts:17
@@ -203,11 +223,11 @@ msgstr "Import Build"
 
 #. js-lingui-explicit-id
 #: src/components/talents/PrismCrafter.tsx:163
-msgid "Edit Prism"
-msgstr "Edit Prism"
+#~ msgid "Edit Prism"
+#~ msgstr "Edit Prism"
 
 #. js-lingui-explicit-id
-#: src/components/equipment/EditGearModal.tsx:697
+#: src/components/equipment/EditGearModal.tsx:699
 msgid "Edit {equipmentType}"
 msgstr "Edit {equipmentType}"
 
@@ -221,7 +241,7 @@ msgstr "Equipment"
 msgid "Fire Cannon"
 msgstr "Fire Cannon"
 
-#: src/components/equipment/EditGearModal.tsx:827
+#: src/components/equipment/EditGearModal.tsx:829
 msgid "Tower Sequence (1 max)"
 msgstr "Tower Sequence (1 max)"
 
@@ -323,7 +343,7 @@ msgstr "Neck"
 msgid "Necklace"
 msgstr "Necklace"
 
-#: src/components/equipment/EditGearModal.tsx:783
+#: src/components/equipment/EditGearModal.tsx:785
 msgid "Base Affixes (2 max)"
 msgstr "Base Affixes (2 max)"
 
@@ -373,8 +393,8 @@ msgid "Rod"
 msgstr "Rod"
 
 #: src/routes/builder/talents/$slot.tsx:310
-msgid "Tree Slots"
-msgstr "Tree Slots"
+#~ msgid "Tree Slots"
+#~ msgstr "Tree Slots"
 
 #. js-lingui-explicit-id
 #: src/data/translate/equipment-types.ts:42
@@ -382,7 +402,7 @@ msgid "Scepter"
 msgstr "Scepter"
 
 #. js-lingui-explicit-id
-#: src/components/equipment/EditGearModal.tsx:721
+#: src/components/equipment/EditGearModal.tsx:723
 msgid "Select equipment type..."
 msgstr "Select equipment type..."
 
@@ -408,18 +428,18 @@ msgstr "Skills"
 
 #. js-lingui-explicit-id
 #: src/routes/builder/talents/$slot.tsx:358
-msgid "Slot"
-msgstr "Slot"
+#~ msgid "Slot"
+#~ msgstr "Slot"
 
 #. js-lingui-explicit-id
 #: src/routes/builder/talents/$slot.tsx:357
-msgid "Slot 1"
-msgstr "Slot 1"
+#~ msgid "Slot 1"
+#~ msgstr "Slot 1"
 
 #. js-lingui-explicit-id
 #: src/routes/builder/talents/$slot.tsx:336
-msgid "Slot 1 (God/Goddess)"
-msgstr "Slot 1 (God/Goddess)"
+#~ msgid "Slot 1 (God/Goddess)"
+#~ msgstr "Slot 1 (God/Goddess)"
 
 #. js-lingui-explicit-id
 #: src/data/translate/equipment-types.ts:46
@@ -459,7 +479,7 @@ msgstr "My Builds"
 #~ msgid "Affix Lines (one per line)"
 #~ msgstr "Affix Lines (one per line)"
 
-#: src/routes/builder/equipment.tsx:89
+#: src/routes/builder/equipment.tsx:120
 msgid "Equipment Slots"
 msgstr "Equipment Slots"
 
@@ -477,11 +497,15 @@ msgstr "Updated: {0}"
 #~ msgid "No implemented active skills enabled. Enable an active skill in the Skills section (currently supported: Berserking Blade, Frost Spike)."
 #~ msgstr "No implemented active skills enabled. Enable an active skill in the Skills section (currently supported: Berserking Blade, Frost Spike)."
 
-#: src/components/equipment/EditGearModal.tsx:715
+#: src/components/equipment/EditGearModal.tsx:717
 msgid "Equipment Type"
 msgstr "Equipment Type"
 
-#: src/components/equipment/EditGearModal.tsx:959
+#: src/routes/builder/talents/$slot.tsx:363
+msgid "Tree Slot"
+msgstr "Tree Slot"
+
+#: src/components/equipment/EditGearModal.tsx:961
 msgid "Select an equipment type to begin crafting"
 msgstr "Select an equipment type to begin crafting"
 
@@ -489,7 +513,7 @@ msgstr "Select an equipment type to begin crafting"
 msgid "Active Skill"
 msgstr "Active Skill"
 
-#: src/routes/builder/equipment.tsx:133
+#: src/routes/builder/equipment.tsx:179
 msgid "Inventory"
 msgstr "Inventory"
 
@@ -498,21 +522,28 @@ msgstr "Inventory"
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/equipment/EditGearModal.tsx:891
+#: src/components/equipment/EditGearModal.tsx:893
+#: src/components/equipment/VoraxGearModule.tsx:720
 msgid "Prefixes (3 max)"
 msgstr "Prefixes (3 max)"
 
-#: src/components/equipment/EditGearModal.tsx:966
+#: src/components/equipment/EditGearModal.tsx:968
+#: src/components/equipment/LegendaryGearModule.tsx:393
+#: src/components/equipment/VoraxGearModule.tsx:762
 #: src/routes/index.tsx:108
 #: src/routes/index.tsx:151
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/equipment/EditGearModal.tsx:847
+#: src/components/equipment/VoraxGearModule.tsx:700
+msgid "Base Affix"
+msgstr "Base Affix"
+
+#: src/components/equipment/EditGearModal.tsx:849
 msgid "Blending (1 max)"
 msgstr "Blending (1 max)"
 
-#: src/components/talents/PrismSection.tsx:54
+#: src/components/talents/PrismSection.tsx:66
 msgid "Prisms"
 msgstr "Prisms"
 
@@ -520,17 +551,22 @@ msgstr "Prisms"
 msgid "Copy"
 msgstr "Copy"
 
-#: src/routes/builder/equipment.tsx:134
+#: src/routes/builder/equipment.tsx:180
 msgid "items"
 msgstr "items"
 
-#: src/components/equipment/EditGearModal.tsx:913
+#: src/components/equipment/EditGearModal.tsx:915
+#: src/components/equipment/VoraxGearModule.tsx:738
 msgid "Suffixes (3 max)"
 msgstr "Suffixes (3 max)"
 
-#: src/components/equipment/EditGearModal.tsx:807
+#: src/components/equipment/EditGearModal.tsx:809
 msgid "Sweet Dream Affix (1 max)"
 msgstr "Sweet Dream Affix (1 max)"
+
+#: src/components/equipment/VoraxGearModule.tsx:755
+msgid "Select a vorax limb to configure"
+msgstr "Select a vorax limb to configure"
 
 #: src/components/talents/CoreTalentSelector.tsx:90
 #: src/components/talents/CoreTalentSelector.tsx:102
@@ -542,20 +578,19 @@ msgstr "Core Talents"
 msgid "Are you sure you want to delete \"{0}\"?"
 msgstr "Are you sure you want to delete \"{0}\"?"
 
-#: src/components/equipment/LegendaryGearModule.tsx:298
+#: src/components/equipment/LegendaryGearModule.tsx:307
 msgid "Select Legendary"
 msgstr "Select Legendary"
 
 #: src/components/equipment/LegendaryGearModule.tsx:292
-msgid "Add Legendary"
-msgstr "Add Legendary"
+#~ msgid "Add Legendary"
+#~ msgstr "Add Legendary"
 
-#. placeholder {0}: activeTreeSlot === "tree1" ? i18n._("Slot 1") : i18n._("Slot") + " " + activeTreeSlot.slice(-1)
 #: src/routes/builder/talents/$slot.tsx:354
-msgid "Select Tree for {0}"
-msgstr "Select Tree for {0}"
+#~ msgid "Select Tree for {0}"
+#~ msgstr "Select Tree for {0}"
 
-#: src/components/equipment/EditGearModal.tsx:976
+#: src/components/equipment/EditGearModal.tsx:978
 #: src/routes/index.tsx:102
 msgid "Save"
 msgstr "Save"
@@ -564,7 +599,7 @@ msgstr "Save"
 #~ msgid "Enter raw affix text. Each line will be parsed as a separate affix."
 #~ msgstr "Enter raw affix text. Each line will be parsed as a separate affix."
 
-#: src/components/equipment/EditGearModal.tsx:770
+#: src/components/equipment/EditGearModal.tsx:772
 msgid "Clear"
 msgstr "Clear"
 

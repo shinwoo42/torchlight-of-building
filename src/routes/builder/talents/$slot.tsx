@@ -1,8 +1,8 @@
 import { Trans } from "@lingui/react/macro";
 import {
   createFileRoute,
-  Link,
   redirect,
+  useNavigate,
   useRouterState,
 } from "@tanstack/react-router";
 import { useCallback } from "react";
@@ -20,11 +20,14 @@ import {
   isGodGoddessTree,
   PROFESSION_TREES,
 } from "@/src/tli/talent-tree";
-import { CoreTalentSelector } from "../../../components/talents/CoreTalentSelector";
 import { InverseImageSection } from "../../../components/talents/InverseImageSection";
 import { PrismCoreTalentEffect } from "../../../components/talents/PrismCoreTalentEffect";
 import { PrismSection } from "../../../components/talents/PrismSection";
 import { TalentGrid } from "../../../components/talents/TalentGrid";
+import {
+  getAvailableGodGoddessCoreTalents,
+  getAvailableProfessionCoreTalents,
+} from "../../../lib/core-talent-utils";
 import {
   paramToTreeSlot,
   TALENT_SLOT_PARAMS,
@@ -64,6 +67,7 @@ function TalentsSlotPage(): React.ReactNode {
   // Router state for search params
   const routerState = useRouterState();
   const currentSearch = routerState.location.search as { id?: string };
+  const navigate = useNavigate();
 
   // Builder store - actions and loadout
   const loadout = useLoadout();
@@ -306,116 +310,178 @@ function TalentsSlotPage(): React.ReactNode {
   const totalPointsAvailable = configuration.level + 13;
   const isOverAllocated = totalPointsUsed > totalPointsAvailable;
 
+  // Core talent data for dropdowns
+  const coreTalentSlots = (() => {
+    if (!currentTalentTree) return [];
+    if (currentTalentTree.replacementPrismCoreTalent !== undefined) return [];
+
+    const isGodTree = isGodGoddessTree(currentTalentTree.name);
+    const selectedCoreTalents = currentTalentTree.selectedCoreTalentNames ?? [];
+
+    if (isGodTree) {
+      const { firstSlot, secondSlot } = getAvailableGodGoddessCoreTalents(
+        currentTalentTree.name,
+        selectedCoreTalents,
+      );
+      return [
+        {
+          index: 0,
+          label: "Core Talent 1",
+          available: firstSlot,
+          selected: selectedCoreTalents[0],
+        },
+        {
+          index: 1,
+          label: "Core Talent 2",
+          available: secondSlot,
+          selected: selectedCoreTalents[1],
+        },
+      ];
+    }
+
+    const available = getAvailableProfessionCoreTalents(
+      currentTalentTree.name,
+      selectedCoreTalents,
+    );
+    return [
+      {
+        index: 0,
+        label: "Core Talent",
+        available,
+        selected: selectedCoreTalents[0],
+      },
+    ];
+  })();
+
   return (
     <>
       <div>
-        <div className="mb-6">
-          <h2 className="mb-4 text-xl font-semibold text-zinc-50">
-            <Trans>Tree Slots</Trans>{" "}
-            <span className={isOverAllocated ? "text-red-500" : ""}>
-              ({totalPointsUsed}/{totalPointsAvailable})
-            </span>
-          </h2>
-          <div className="grid grid-cols-4 gap-2">
-            {(["tree1", "tree2", "tree3", "tree4"] as const).map((treeSlot) => {
-              const tree = loadout.talentPage.talentTrees[treeSlot];
-              const totalPoints = tree
-                ? tree.nodes.reduce((sum, node) => sum + node.points, 0)
-                : 0;
-
-              return (
-                <Link
-                  key={treeSlot}
-                  to="/builder/talents/$slot"
-                  params={{ slot: treeSlotToParam(treeSlot) }}
-                  search={{ id: currentSearch.id }}
-                  className={`rounded-lg border px-4 py-3 font-medium transition-colors ${
-                    activeTreeSlot === treeSlot
-                      ? "border-amber-500 bg-amber-500 text-zinc-950"
-                      : "border-zinc-700 bg-zinc-900 text-zinc-400 hover:bg-zinc-800"
-                  }`}
-                >
-                  <div className="font-semibold">
-                    {treeSlot === "tree1"
-                      ? i18n._("Slot 1 (God/Goddess)")
-                      : `Slot ${treeSlot.slice(-1)}`}
-                  </div>
-                  <div className="mt-1 truncate text-sm">
-                    {tree ? i18n._(tree.name.replace(/_/g, " ")) : "None"}
-                  </div>
-                  <div className="mt-1 text-xs">{totalPoints} points</div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="mb-6 rounded-lg border border-zinc-700 bg-zinc-900 p-4">
-          <label
-            htmlFor="tree-select"
-            className="mb-2 block text-sm font-medium text-zinc-400"
-          >
-            <Trans>
-              Select Tree for{" "}
-              {activeTreeSlot === "tree1"
-                ? i18n._("Slot 1")
-                : i18n._("Slot") + " " + activeTreeSlot.slice(-1)}
-            </Trans>
-          </label>
-          <div className="flex gap-2">
+        <div className="mb-4 flex flex-wrap items-end gap-3">
+          {/* Tree slot selector */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-zinc-400">
+              <Trans>Tree Slot</Trans>{" "}
+              <span
+                className={isOverAllocated ? "text-red-500" : "text-zinc-500"}
+              >
+                ({totalPointsUsed}/{totalPointsAvailable})
+              </span>
+            </label>
             <select
-              id="tree-select"
-              value={currentTalentTree?.name ?? ""}
-              onChange={(e) => handleTreeChange(activeTreeSlot, e.target.value)}
-              disabled={
-                currentTalentTree?.nodes.some((n) => n.points > 0) ?? false
-              }
-              className="flex-1 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
+              value={treeSlotToParam(activeTreeSlot)}
+              onChange={(e) => {
+                const newSlot = e.target.value as TalentSlotParam;
+                navigate({
+                  to: "/builder/talents/$slot",
+                  params: { slot: newSlot },
+                  search: { id: currentSearch.id },
+                });
+              }}
+              className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-50"
             >
-              <option value="">None</option>
-              {activeTreeSlot === "tree1" ? (
-                <optgroup label="God/Goddess Trees">
-                  {GOD_GODDESS_TREES.map((tree) => (
-                    <option key={tree} value={tree}>
-                      {i18n._(tree.replace(/_/g, " "))}
+              {(["tree1", "tree2", "tree3", "tree4"] as const).map(
+                (treeSlot) => {
+                  const tree = loadout.talentPage.talentTrees[treeSlot];
+                  const totalPoints = tree
+                    ? tree.nodes.reduce((sum, node) => sum + node.points, 0)
+                    : 0;
+                  const treeName = tree
+                    ? i18n._(tree.name.replace(/_/g, " "))
+                    : "None";
+                  const slotLabel =
+                    treeSlot === "tree1"
+                      ? "Slot 1"
+                      : `Slot ${treeSlot.slice(-1)}`;
+                  return (
+                    <option key={treeSlot} value={treeSlotToParam(treeSlot)}>
+                      {slotLabel}: {treeName} ({totalPoints} pts)
                     </option>
-                  ))}
-                </optgroup>
-              ) : (
-                <optgroup label="Profession Trees">
-                  {PROFESSION_TREES.map((tree) => (
-                    <option key={tree} value={tree}>
-                      {i18n._(tree.replace(/_/g, " "))}
-                    </option>
-                  ))}
-                </optgroup>
+                  );
+                },
               )}
             </select>
-
-            <button
-              type="button"
-              onClick={() => handleResetTree(activeTreeSlot)}
-              disabled={currentTreeTotalPoints === 0}
-              className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-500"
-            >
-              Reset
-            </button>
           </div>
-        </div>
 
-        {currentTalentTree && (
-          <CoreTalentSelector
-            treeName={currentTalentTree.name}
-            treeSlot={activeTreeSlot}
-            selectedCoreTalents={
-              currentTalentTree.selectedCoreTalentNames ?? []
-            }
-            onSelectCoreTalent={(slotIndex, name) =>
-              selectCoreTalent(activeTreeSlot, slotIndex, name)
-            }
-            replacedByPrism={currentTalentTree.replacementPrismCoreTalent}
-          />
-        )}
+          {/* Tree selector */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-zinc-400">
+              <Trans>Tree</Trans>
+            </label>
+            <div className="flex gap-2">
+              <select
+                value={currentTalentTree?.name ?? ""}
+                onChange={(e) =>
+                  handleTreeChange(activeTreeSlot, e.target.value)
+                }
+                disabled={
+                  currentTalentTree?.nodes.some((n) => n.points > 0) ?? false
+                }
+                className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">None</option>
+                {activeTreeSlot === "tree1" ? (
+                  <optgroup label="God/Goddess Trees">
+                    {GOD_GODDESS_TREES.map((tree) => (
+                      <option key={tree} value={tree}>
+                        {i18n._(tree.replace(/_/g, " "))}
+                      </option>
+                    ))}
+                  </optgroup>
+                ) : (
+                  <optgroup label="Profession Trees">
+                    {PROFESSION_TREES.map((tree) => (
+                      <option key={tree} value={tree}>
+                        {i18n._(tree.replace(/_/g, " "))}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+              </select>
+              <button
+                type="button"
+                onClick={() => handleResetTree(activeTreeSlot)}
+                disabled={currentTreeTotalPoints === 0}
+                className="rounded-lg bg-red-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-500"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+
+          {/* Core talent selector(s) */}
+          {coreTalentSlots.map((slot) => (
+            <div key={slot.index} className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-zinc-400">
+                {i18n._(slot.label)}
+              </label>
+              <select
+                value={slot.selected ?? ""}
+                onChange={(e) =>
+                  selectCoreTalent(
+                    activeTreeSlot,
+                    slot.index,
+                    e.target.value === "" ? undefined : e.target.value,
+                  )
+                }
+                className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-50"
+              >
+                <option value="">None</option>
+                {slot.available.map((ct) => (
+                  <option key={ct.name} value={ct.name}>
+                    {i18n._(ct.name)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+
+          {/* Prism replaced indicator */}
+          {currentTalentTree?.replacementPrismCoreTalent !== undefined && (
+            <div className="flex items-center gap-1 rounded-lg border border-purple-500/50 bg-purple-500/10 px-3 py-2 text-xs text-purple-400">
+              Core talents replaced by Prism
+            </div>
+          )}
+        </div>
 
         <PrismCoreTalentEffect
           placedPrism={placedPrism}
@@ -423,15 +489,13 @@ function TalentsSlotPage(): React.ReactNode {
         />
 
         {!currentTalentTree ? (
-          <div className="py-12 text-center text-zinc-500">
-            Select a tree to view
+          <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
+            {/* Empty placeholder matching TalentGrid dimensions (1040x560) + column headers */}
+            <div className="mb-2 h-5" />
+            <div style={{ width: 1040, height: 560 }} />
           </div>
         ) : currentTalentTree ? (
           <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
-            <h2 className="mb-4 text-xl font-semibold text-zinc-50">
-              {i18n._(currentTalentTree.name.replace(/_/g, " "))} Tree
-            </h2>
-
             <div className="mb-2 grid grid-cols-7 gap-2">
               {[0, 3, 6, 9, 12, 15, 18].map((points) => (
                 <div
