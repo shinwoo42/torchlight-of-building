@@ -90,11 +90,8 @@ const parseImportedItems = (
       ? entry.affixes.filter((a): a is string => typeof a === "string")
       : [];
 
-    // Strip "- Priceless" suffix for lookup purposes
-    const lookupName =
-      name !== undefined && name.endsWith("- Priceless")
-        ? name.slice(0, -"- Priceless".length).trimEnd()
-        : name;
+    // Strip "- Priceless" / "-Priceless" suffix for lookup purposes
+    const lookupName = name?.replace(/\s*-\s*Priceless$/, "");
 
     // Look up base stats from legendaries or base gear
     let baseStats: string | undefined;
