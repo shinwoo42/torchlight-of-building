@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ALL_BASE_GEAR } from "../../data/gear-base/all-base-gear";
 import { Legendaries } from "../../data/legendary/legendaries";
+import { ALL_VORAX_LIMBS } from "../../data/vorax/all-vorax-limbs";
 import type { Gear } from "../../lib/save-data";
 import { generateItemId } from "../../lib/storage";
 import { EQUIPMENT_TYPES, type EquipmentType } from "../../tli/gear-data-types";
@@ -19,6 +20,7 @@ interface ImportItemInput {
 }
 
 const EQUIPMENT_TYPE_SET = new Set<string>(EQUIPMENT_TYPES);
+const VORAX_LIMB_NAMES = new Set(ALL_VORAX_LIMBS.map((v) => v.name));
 
 // In-game format uses "INT Helmet" but the app expects "Helmet (INT)"
 const STAT_PREFIXES = ["STR", "DEX", "INT"] as const;
@@ -96,23 +98,28 @@ const parseImportedItems = (
     // Look up base stats from legendaries or base gear
     let baseStats: string | undefined;
     let baseGearName: string | undefined;
-    let rarity: "legendary" | undefined;
+    let rarity: "legendary" | "vorax" | undefined;
     let legendaryName: string | undefined;
 
     if (lookupName !== undefined) {
-      const legendary = Legendaries.find((l) => l.name === lookupName);
-      if (legendary !== undefined) {
-        baseStats =
-          legendary.baseStat.length > 0 ? legendary.baseStat : undefined;
-        baseGearName = legendary.baseItem;
-        rarity = "legendary";
-        legendaryName = lookupName;
-      } else {
-        const baseGear = ALL_BASE_GEAR.find((g) => g.name === lookupName);
-        if (baseGear !== undefined) {
-          baseStats = baseGear.stats.length > 0 ? baseGear.stats : undefined;
-        }
+      if (VORAX_LIMB_NAMES.has(lookupName)) {
+        rarity = "vorax";
         baseGearName = lookupName;
+      } else {
+        const legendary = Legendaries.find((l) => l.name === lookupName);
+        if (legendary !== undefined) {
+          baseStats =
+            legendary.baseStat.length > 0 ? legendary.baseStat : undefined;
+          baseGearName = legendary.baseItem;
+          rarity = "legendary";
+          legendaryName = lookupName;
+        } else {
+          const baseGear = ALL_BASE_GEAR.find((g) => g.name === lookupName);
+          if (baseGear !== undefined) {
+            baseStats = baseGear.stats.length > 0 ? baseGear.stats : undefined;
+          }
+          baseGearName = lookupName;
+        }
       }
     }
 
