@@ -340,6 +340,7 @@ export const VoraxGearModule: React.FC<VoraxGearModuleProps> = ({
     createRegularSlot(),
     createRegularSlot(),
   ]);
+  const [customAffixText, setCustomAffixText] = useState("");
 
   const limbOptions = useMemo(
     () =>
@@ -394,6 +395,7 @@ export const VoraxGearModule: React.FC<VoraxGearModuleProps> = ({
       createRegularSlot(),
       createRegularSlot(),
     ]);
+    setCustomAffixText("");
   };
 
   const toggleSlotType = (
@@ -565,6 +567,11 @@ export const VoraxGearModule: React.FC<VoraxGearModuleProps> = ({
       }
     }
 
+    const customAffixes = customAffixText
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line !== "");
+
     const newItem: Gear = {
       id: generateItemId(),
       equipmentType: "Vorax Gear",
@@ -573,6 +580,7 @@ export const VoraxGearModule: React.FC<VoraxGearModuleProps> = ({
       baseAffixes,
       prefixes: craftedPrefixes,
       suffixes: craftedSuffixes,
+      customAffixes: customAffixes.length > 0 ? customAffixes : undefined,
     };
 
     onSaveToInventory(newItem);
@@ -749,6 +757,28 @@ export const VoraxGearModule: React.FC<VoraxGearModuleProps> = ({
                   ),
                 )}
               </div>
+            </div>
+
+            {/* Custom Affixes */}
+            <div>
+              <h3 className="mb-3 text-lg font-semibold text-zinc-50">
+                <Trans>Custom Affixes</Trans>
+              </h3>
+              <textarea
+                value={customAffixText}
+                onChange={(e) => setCustomAffixText(e.target.value)}
+                placeholder={i18n._(
+                  "+10% Fire Damage\n+20 to Maximum Life\n+5% Attack Speed",
+                )}
+                rows={4}
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-zinc-50 placeholder-zinc-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+              />
+              <p className="mt-1 text-xs text-zinc-500">
+                <Trans>
+                  Enter raw affix text, one per line. Use this for affixes not
+                  available in the dropdowns above.
+                </Trans>
+              </p>
             </div>
           </>
         ) : (
