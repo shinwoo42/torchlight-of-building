@@ -87,6 +87,16 @@ const parseCraftableAffixes = (
 
   section.find("table").each((_, table) => {
     const $table = $(table);
+    const caption = $table.find("caption").text().trim().toLowerCase();
+
+    let sectionType: "prefix" | "suffix";
+    if (caption.includes("pre-fix")) {
+      sectionType = "prefix";
+    } else if (caption.includes("suffix")) {
+      sectionType = "suffix";
+    } else {
+      return; // Skip unknown tables
+    }
 
     $table.find("tbody tr").each((_, row) => {
       const $row = $(row);
@@ -101,6 +111,7 @@ const parseCraftableAffixes = (
         craftableAffix: modifier,
         tier,
         affixType: mapLibraryToAffixType(library),
+        section: sectionType,
       });
     });
   });

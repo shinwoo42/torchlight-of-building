@@ -5,6 +5,7 @@ export interface VoraxLimbData {
     craftableAffix: string;
     tier: string;
     affixType: "Basic" | "Advanced" | "Ultimate";
+    section: "prefix" | "suffix";
   }[];
   baseAffixes: { affix: string; tier: string }[];
 }
