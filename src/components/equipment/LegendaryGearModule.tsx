@@ -15,6 +15,7 @@ import {
 } from "../../lib/blend-utils";
 import { DEFAULT_QUALITY } from "../../lib/constants";
 import { generateItemId } from "../../lib/storage";
+import { Modal, ModalActions, ModalButton } from "../ui/Modal";
 import { SearchableSelect } from "../ui/SearchableSelect";
 import { Tooltip } from "../ui/Tooltip";
 import { GearTooltipContent } from "./GearTooltipContent";
@@ -68,10 +69,14 @@ const getAffixStringFromLegendary = (affix: LegendaryAffix): string => {
 };
 
 interface LegendaryGearModuleProps {
+  isOpen: boolean;
+  onClose: () => void;
   onSaveToInventory: (item: Gear) => void;
 }
 
 export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
+  isOpen,
+  onClose,
   onSaveToInventory,
 }) => {
   const [selectedLegendaryIndex, setSelectedLegendaryIndex] = useState<
@@ -255,6 +260,7 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
     setSelectedLegendaryIndex(undefined);
     setAffixStates([]);
     setSelectedBlendIndex(undefined);
+    onClose();
   };
 
   const createGearPreview = (index: number): CoreGear => {
@@ -287,110 +293,113 @@ export const LegendaryGearModule: React.FC<LegendaryGearModuleProps> = ({
   };
 
   return (
-    <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-700">
-      <h2 className="text-xl font-semibold mb-4 text-zinc-50">
-        <Trans>Add Legendary</Trans>
-      </h2>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={i18n._("Add Legendary")}
+      maxWidth="xl"
+      dismissible={false}
+    >
+      <div className="max-h-[70vh] space-y-6 overflow-y-auto pr-2">
+        {/* Legendary Selector */}
+        <div>
+          <label className="mb-2 block text-sm font-medium text-zinc-50">
+            <Trans>Select Legendary</Trans>
+          </label>
+          <SearchableSelect
+            value={selectedLegendaryIndex}
+            onChange={handleLegendarySelect}
+            options={legendaryOptions}
+            placeholder="Select a legendary..."
+            renderOptionTooltip={renderLegendaryTooltip}
+          />
+        </div>
 
-      {/* Legendary Selector */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium mb-2 text-zinc-50">
-          <Trans>Select Legendary</Trans>
-        </label>
-        <SearchableSelect
-          value={selectedLegendaryIndex}
-          onChange={handleLegendarySelect}
-          options={legendaryOptions}
-          placeholder="Select a legendary..."
-          renderOptionTooltip={renderLegendaryTooltip}
-        />
-      </div>
+        {selectedLegendary !== undefined ? (
+          <>
+            {/* Base Stat Display */}
+            {selectedLegendary.baseStat !== "" && (
+              <div>
+                <h3 className="mb-2 text-sm font-medium text-zinc-400">
+                  Base Stat
+                </h3>
+                <div className="rounded-lg border border-zinc-700 bg-zinc-800 p-3">
+                  <span className="whitespace-pre-line text-amber-400">
+                    {selectedLegendary.baseStat}
+                  </span>
+                </div>
+              </div>
+            )}
 
-      {selectedLegendary ? (
-        <>
-          {/* Base Stat Display */}
-          {selectedLegendary.baseStat && (
-            <div className="mb-6">
-              <h3 className="text-sm font-medium mb-2 text-zinc-400">
-                Base Stat
+            {/* Blending Section (Belts Only) */}
+            {isBelt && (
+              <div>
+                <h3 className="mb-3 text-lg font-semibold text-zinc-50">
+                  Blending (1 max)
+                </h3>
+                <SearchableSelect
+                  value={selectedBlendIndex}
+                  onChange={setSelectedBlendIndex}
+                  options={blendOptions}
+                  placeholder="Select a blend..."
+                />
+                {selectedBlendIndex !== undefined && (
+                  <div className="mt-3 rounded-lg border border-zinc-700 bg-zinc-800 p-3">
+                    <pre className="whitespace-pre-wrap font-sans text-sm text-amber-400">
+                      {formatBlendPreview(blendAffixes[selectedBlendIndex])}
+                    </pre>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedBlendIndex(undefined)}
+                      className="mt-2 text-xs text-zinc-400 hover:text-zinc-200"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Affixes Section */}
+            <div>
+              <h3 className="mb-3 text-lg font-semibold text-zinc-50">
+                Affixes
               </h3>
-              <div className="bg-zinc-800 p-3 rounded-lg border border-zinc-700">
-                <span className="text-amber-400 whitespace-pre-line">
-                  {selectedLegendary.baseStat}
-                </span>
+              <div className="space-y-3">
+                {selectedLegendary.normalAffixes.map((normalAffix, index) => (
+                  <LegendaryAffixRow
+                    key={index}
+                    index={index}
+                    normalAffix={normalAffix}
+                    corruptionAffix={selectedLegendary.corruptionAffixes[index]}
+                    state={affixStates[index]}
+                    onToggleCorruption={handleToggleCorruption}
+                    onPercentageChange={handlePercentageChange}
+                    onChoiceSelect={handleChoiceSelect}
+                  />
+                ))}
               </div>
             </div>
-          )}
+          </>
+        ) : (
+          <p className="py-8 text-center italic text-zinc-500">
+            Select a legendary to configure
+          </p>
+        )}
+      </div>
 
-          {/* Blending Section (Belts Only) */}
-          {isBelt && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3 text-zinc-50">
-                Blending (1 max)
-              </h3>
-              <SearchableSelect
-                value={selectedBlendIndex}
-                onChange={setSelectedBlendIndex}
-                options={blendOptions}
-                placeholder="Select a blend..."
-              />
-              {selectedBlendIndex !== undefined && (
-                <div className="mt-3 bg-zinc-800 p-3 rounded-lg border border-zinc-700">
-                  <pre className="text-sm text-amber-400 whitespace-pre-wrap font-sans">
-                    {formatBlendPreview(blendAffixes[selectedBlendIndex])}
-                  </pre>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedBlendIndex(undefined)}
-                    className="mt-2 text-xs text-zinc-400 hover:text-zinc-200"
-                  >
-                    Clear
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Affixes Section */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-zinc-50">Affixes</h3>
-            <div className="space-y-3">
-              {selectedLegendary.normalAffixes.map((normalAffix, index) => (
-                <LegendaryAffixRow
-                  key={index}
-                  index={index}
-                  normalAffix={normalAffix}
-                  corruptionAffix={selectedLegendary.corruptionAffixes[index]}
-                  state={affixStates[index]}
-                  onToggleCorruption={handleToggleCorruption}
-                  onPercentageChange={handlePercentageChange}
-                  onChoiceSelect={handleChoiceSelect}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Save Button */}
-          <button
-            type="button"
-            onClick={handleSaveToInventory}
-            disabled={hasUnselectedChoices}
-            className={`w-full px-4 py-3 rounded-lg font-semibold transition-colors ${
-              hasUnselectedChoices
-                ? "bg-zinc-600 text-zinc-400 cursor-not-allowed"
-                : "bg-amber-500 text-zinc-950 hover:bg-amber-600"
-            }`}
-          >
-            {hasUnselectedChoices
-              ? "Select all affix options to save"
-              : "Save to Inventory"}
-          </button>
-        </>
-      ) : (
-        <p className="text-zinc-500 italic text-center py-8">
-          Select a legendary to configure
-        </p>
-      )}
-    </div>
+      <ModalActions>
+        <ModalButton variant="secondary" onClick={onClose} fullWidth>
+          <Trans>Cancel</Trans>
+        </ModalButton>
+        <ModalButton
+          onClick={handleSaveToInventory}
+          fullWidth
+          disabled={selectedLegendary === undefined || hasUnselectedChoices}
+        >
+          <Trans>Save to Inventory</Trans>
+        </ModalButton>
+      </ModalActions>
+    </Modal>
   );
 };

@@ -37,6 +37,9 @@ function EquipmentPage(): React.ReactNode {
   // Vorax crafting modal state
   const [isVoraxModalOpen, setIsVoraxModalOpen] = useState(false);
 
+  // Legendary crafting modal state
+  const [isLegendaryModalOpen, setIsLegendaryModalOpen] = useState(false);
+
   const handleImportItems = useCallback(
     (items: SaveDataGear[]) => {
       for (const item of items) {
@@ -160,7 +163,18 @@ function EquipmentPage(): React.ReactNode {
           )}
         </div>
 
-        <LegendaryGearModule onSaveToInventory={addItemToInventory} />
+        <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
+          <h2 className="mb-4 text-xl font-semibold text-zinc-50">
+            <Trans>Add Legendary</Trans>
+          </h2>
+          <button
+            type="button"
+            onClick={() => setIsLegendaryModalOpen(true)}
+            className="w-full rounded-lg bg-amber-500 px-4 py-3 font-semibold text-zinc-950 transition-colors hover:bg-amber-600"
+          >
+            <Trans>Craft Legendary Item</Trans>
+          </button>
+        </div>
 
         <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
           <h2 className="mb-4 text-xl font-semibold text-zinc-50">
@@ -187,6 +201,12 @@ function EquipmentPage(): React.ReactNode {
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
         onImport={handleImportItems}
+      />
+
+      <LegendaryGearModule
+        isOpen={isLegendaryModalOpen}
+        onClose={() => setIsLegendaryModalOpen(false)}
+        onSaveToInventory={addItemToInventory}
       />
 
       <VoraxGearModule
