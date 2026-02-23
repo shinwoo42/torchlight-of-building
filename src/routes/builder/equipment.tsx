@@ -7,6 +7,7 @@ import { EquipmentSlotDropdown } from "../../components/equipment/EquipmentSlotD
 import { ImportItemsModal } from "../../components/equipment/ImportItemsModal";
 import { InventoryItem } from "../../components/equipment/InventoryItem";
 import { LegendaryGearModule } from "../../components/equipment/LegendaryGearModule";
+import { VoraxGearModule } from "../../components/equipment/VoraxGearModule";
 import { GEAR_SLOTS } from "../../lib/constants";
 import { getCompatibleItems } from "../../lib/equipment-utils";
 import type { Gear as SaveDataGear } from "../../lib/save-data";
@@ -32,6 +33,9 @@ function EquipmentPage(): React.ReactNode {
 
   // Import items modal state
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
+  // Vorax crafting modal state
+  const [isVoraxModalOpen, setIsVoraxModalOpen] = useState(false);
 
   const handleImportItems = useCallback(
     (items: SaveDataGear[]) => {
@@ -157,6 +161,19 @@ function EquipmentPage(): React.ReactNode {
         </div>
 
         <LegendaryGearModule onSaveToInventory={addItemToInventory} />
+
+        <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-6">
+          <h2 className="mb-4 text-xl font-semibold text-zinc-50">
+            <Trans>Craft Vorax Gear</Trans>
+          </h2>
+          <button
+            type="button"
+            onClick={() => setIsVoraxModalOpen(true)}
+            className="w-full rounded-lg bg-amber-500 px-4 py-3 font-semibold text-zinc-950 transition-colors hover:bg-amber-600"
+          >
+            <Trans>Craft Vorax Item</Trans>
+          </button>
+        </div>
       </div>
 
       <EditGearModal
@@ -170,6 +187,12 @@ function EquipmentPage(): React.ReactNode {
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
         onImport={handleImportItems}
+      />
+
+      <VoraxGearModule
+        isOpen={isVoraxModalOpen}
+        onClose={() => setIsVoraxModalOpen(false)}
+        onSaveToInventory={addItemToInventory}
       />
     </div>
   );

@@ -333,7 +333,7 @@ export interface Gear {
 
   // UI fields (preserved from SaveData for display, always present for inventory items)
   id?: string;
-  rarity?: "rare" | "legendary";
+  rarity?: "rare" | "legendary" | "vorax";
   legendaryName?: string;
 
   // Base stats (shared by both regular and legendary gear)

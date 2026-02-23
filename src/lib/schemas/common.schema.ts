@@ -62,7 +62,7 @@ export type HeroMemoryType = z.infer<typeof HeroMemoryTypeSchema>;
 export const PrismRaritySchema = z.enum(PRISM_RARITIES);
 export type PrismRarity = z.infer<typeof PrismRaritySchema>;
 
-export const GearRaritySchema = z.enum(["rare", "legendary"]);
+export const GearRaritySchema = z.enum(["rare", "legendary", "vorax"]);
 export type GearRarity = z.infer<typeof GearRaritySchema>;
 
 // Tree slot types
