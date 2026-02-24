@@ -3,8 +3,8 @@ import type {
   HeroMemory as SaveDataHeroMemory,
 } from "@/src/lib/save-data";
 import type { HeroMemory, HeroPage } from "@/src/tli/core";
+import { EditMemoryModal } from "./EditMemoryModal";
 import { HeroSelector } from "./HeroSelector";
-import { MemoryCrafter } from "./MemoryCrafter";
 import { MemoryInventory } from "./MemoryInventory";
 import { TraitSelector } from "./TraitSelector";
 
@@ -49,9 +49,8 @@ export const HeroTab = ({
         />
       </div>
 
-      {/* Right Column: Memory Crafting & Inventory */}
+      {/* Right Column: Memory Inventory */}
       <div className="space-y-6">
-        <MemoryCrafter onMemorySave={onMemorySave} />
         <MemoryInventory
           heroPage={heroPage}
           heroMemoryList={heroMemoryList}
@@ -59,6 +58,8 @@ export const HeroTab = ({
           onMemoryDelete={onMemoryDelete}
         />
       </div>
+
+      <EditMemoryModal onMemorySave={onMemorySave} />
     </div>
   );
 };

@@ -11,6 +11,9 @@ interface MemoryAffixSlotState {
 }
 
 interface HeroUIState {
+  // Memory craft modal state
+  isMemoryCraftModalOpen: boolean;
+
   // Memory crafting state
   craftingMemoryType: HeroMemoryType | undefined;
   craftingBaseStat: string | undefined;
@@ -18,6 +21,8 @@ interface HeroUIState {
   randomAffixSlots: MemoryAffixSlotState[];
 
   // Actions
+  openMemoryCraftModal: () => void;
+  closeMemoryCraftModal: () => void;
   setCraftingMemoryType: (type: HeroMemoryType | undefined) => void;
   setCraftingBaseStat: (stat: string | undefined) => void;
   setFixedAffixSlot: (
@@ -39,12 +44,27 @@ const createEmptyAffixSlots = (count: number): MemoryAffixSlotState[] =>
 export const useHeroUIStore = create<HeroUIState>()(
   immer((set) => ({
     // Initial state
+    isMemoryCraftModalOpen: false,
     craftingMemoryType: undefined,
     craftingBaseStat: undefined,
     fixedAffixSlots: createEmptyAffixSlots(2),
     randomAffixSlots: createEmptyAffixSlots(4),
 
     // Actions
+    openMemoryCraftModal: () =>
+      set((state) => {
+        state.isMemoryCraftModalOpen = true;
+      }),
+
+    closeMemoryCraftModal: () =>
+      set((state) => {
+        state.isMemoryCraftModalOpen = false;
+        state.craftingMemoryType = undefined;
+        state.craftingBaseStat = undefined;
+        state.fixedAffixSlots = createEmptyAffixSlots(2);
+        state.randomAffixSlots = createEmptyAffixSlots(4);
+      }),
+
     setCraftingMemoryType: (type) =>
       set((state) => {
         state.craftingMemoryType = type;
