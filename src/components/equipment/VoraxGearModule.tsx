@@ -347,72 +347,88 @@ export const VoraxGearModule: React.FC<VoraxGearModuleProps> = ({
   ]);
   const [customAffixText, setCustomAffixText] = useState("");
 
-  // Pre-populate state when editing an existing item, or reset to base state
+  // Initialize state when modal opens: populate from existing item or reset
   useEffect(() => {
-    if (editItem === undefined) {
-      setSelectedLimbIndex(undefined);
-      setSelectedBaseAffixIndex(undefined);
-      setPrefixSlots([
-        createRegularSlot(),
-        createRegularSlot(),
-        createRegularSlot(),
-      ]);
-      setSuffixSlots([
-        createRegularSlot(),
-        createRegularSlot(),
-        createRegularSlot(),
-      ]);
-      setCustomAffixText("");
-      return;
-    }
-
-    // Find the limb index from the item's baseGearName
-    const limbIdx = ALL_VORAX_LIMBS.findIndex(
-      (limb) => limb.name === editItem.baseGearName,
-    );
-    if (limbIdx !== -1) {
-      setSelectedLimbIndex(limbIdx);
-
-      // Try to match the base affix to the limb's base affix list
-      const limb = ALL_VORAX_LIMBS[limbIdx];
-      if (
-        editItem.baseAffixes !== undefined &&
-        editItem.baseAffixes.length > 0
-      ) {
-        const baseAffixText = getAffixText(editItem.baseAffixes[0]);
-        const baseIdx = limb.baseAffixes.findIndex(
-          (ba) => ba.affix === baseAffixText,
+    if (isOpen) {
+      if (editItem !== undefined) {
+        // Edit mode: populate from existing item
+        const limbIdx = ALL_VORAX_LIMBS.findIndex(
+          (limb) => limb.name === editItem.baseGearName,
         );
-        setSelectedBaseAffixIndex(baseIdx !== -1 ? baseIdx : undefined);
+        if (limbIdx !== -1) {
+          setSelectedLimbIndex(limbIdx);
+
+          const limb = ALL_VORAX_LIMBS[limbIdx];
+          if (
+            editItem.baseAffixes !== undefined &&
+            editItem.baseAffixes.length > 0
+          ) {
+            const baseAffixText = getAffixText(editItem.baseAffixes[0]);
+            const baseIdx = limb.baseAffixes.findIndex(
+              (ba) => ba.affix === baseAffixText,
+            );
+            setSelectedBaseAffixIndex(baseIdx !== -1 ? baseIdx : undefined);
+          } else {
+            setSelectedBaseAffixIndex(undefined);
+          }
+        } else {
+          setSelectedLimbIndex(undefined);
+          setSelectedBaseAffixIndex(undefined);
+        }
+
+        // Load existing prefixes into prefix slots as read-only "existing" entries
+        const existingPrefixes = (editItem.prefixes ?? []).map(
+          (a): ExistingVoraxSlot => ({
+            type: "existing",
+            text: getAffixText(a),
+          }),
+        );
+        setPrefixSlots([
+          ...existingPrefixes,
+          ...Array.from(
+            { length: 3 - existingPrefixes.length },
+            createRegularSlot,
+          ),
+        ]);
+
+        // Load existing suffixes into suffix slots as read-only "existing" entries
+        const existingSuffixes = (editItem.suffixes ?? []).map(
+          (a): ExistingVoraxSlot => ({
+            type: "existing",
+            text: getAffixText(a),
+          }),
+        );
+        setSuffixSlots([
+          ...existingSuffixes,
+          ...Array.from(
+            { length: 3 - existingSuffixes.length },
+            createRegularSlot,
+          ),
+        ]);
+
+        // Only load custom affixes into the text area
+        const customTexts = (editItem.customAffixes ?? []).map(getAffixText);
+        setCustomAffixText(
+          customTexts.length > 0 ? customTexts.join("\n") : "",
+        );
       } else {
+        // Creation mode: reset everything
+        setSelectedLimbIndex(undefined);
         setSelectedBaseAffixIndex(undefined);
+        setPrefixSlots([
+          createRegularSlot(),
+          createRegularSlot(),
+          createRegularSlot(),
+        ]);
+        setSuffixSlots([
+          createRegularSlot(),
+          createRegularSlot(),
+          createRegularSlot(),
+        ]);
+        setCustomAffixText("");
       }
-    } else {
-      setSelectedBaseAffixIndex(undefined);
     }
-
-    // Load existing prefixes into prefix slots as read-only "existing" entries
-    const existingPrefixes = (editItem.prefixes ?? []).map(
-      (a): ExistingVoraxSlot => ({ type: "existing", text: getAffixText(a) }),
-    );
-    setPrefixSlots([
-      ...existingPrefixes,
-      ...Array.from({ length: 3 - existingPrefixes.length }, createRegularSlot),
-    ]);
-
-    // Load existing suffixes into suffix slots as read-only "existing" entries
-    const existingSuffixes = (editItem.suffixes ?? []).map(
-      (a): ExistingVoraxSlot => ({ type: "existing", text: getAffixText(a) }),
-    );
-    setSuffixSlots([
-      ...existingSuffixes,
-      ...Array.from({ length: 3 - existingSuffixes.length }, createRegularSlot),
-    ]);
-
-    // Only load custom affixes into the text area
-    const customTexts = (editItem.customAffixes ?? []).map(getAffixText);
-    setCustomAffixText(customTexts.length > 0 ? customTexts.join("\n") : "");
-  }, [editItem]);
+  }, [isOpen, editItem]);
 
   const limbOptions = useMemo(
     () =>
