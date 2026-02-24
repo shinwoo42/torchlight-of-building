@@ -896,7 +896,7 @@ export const EditGearModal = ({
               <h3 className="mb-1 text-sm font-medium text-zinc-50">
                 <Trans>Prefixes (3 max)</Trans>
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {prefixes.map((slot, index) =>
                   renderAffixSlot(
                     slot,
@@ -918,7 +918,7 @@ export const EditGearModal = ({
               <h3 className="mb-1 text-sm font-medium text-zinc-50">
                 <Trans>Suffixes (3 max)</Trans>
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {suffixes.map((slot, index) =>
                   renderAffixSlot(
                     slot,
