@@ -1,3 +1,4 @@
+import { useCallback, useMemo, useState } from "react";
 import { useHeroUIStore } from "@/src/stores/heroUIStore";
 import type { HeroMemory, HeroPage } from "@/src/tli/core";
 import { HeroMemoryItem } from "./HeroMemoryItem";
@@ -16,6 +17,9 @@ export const MemoryInventory = ({
   onMemoryDelete,
 }: MemoryInventoryProps) => {
   const openModal = useHeroUIStore((s) => s.openMemoryModal);
+  const [selectedMemoryId, setSelectedMemoryId] = useState<
+    string | undefined
+  >();
 
   const isMemoryEquipped = (memoryId: string): boolean => {
     return (
@@ -25,34 +29,89 @@ export const MemoryInventory = ({
     );
   };
 
+  const handleSelect = useCallback((memoryId: string) => {
+    setSelectedMemoryId((prev) => (prev === memoryId ? undefined : memoryId));
+  }, []);
+
+  const handleDelete = useCallback(
+    (memoryId: string) => {
+      onMemoryDelete(memoryId);
+      if (selectedMemoryId === memoryId) {
+        setSelectedMemoryId(undefined);
+      }
+    },
+    [onMemoryDelete, selectedMemoryId],
+  );
+
+  const selectedMemory = useMemo(
+    () =>
+      selectedMemoryId !== undefined
+        ? heroMemoryList.find((m) => m.id === selectedMemoryId)
+        : undefined,
+    [selectedMemoryId, heroMemoryList],
+  );
+
+  const effectiveSelectedId =
+    selectedMemory !== undefined ? selectedMemoryId : undefined;
+
   return (
-    <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-700">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-zinc-50">
+    <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-700">
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-base font-semibold text-zinc-50">
           Memory Inventory ({heroMemoryList.length} items)
         </h2>
-        <button
-          type="button"
-          onClick={() => openModal()}
-          className="px-3 py-1.5 bg-amber-500 text-zinc-950 rounded-lg text-sm font-semibold hover:bg-amber-600 transition-colors"
-        >
-          Craft Memory
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            disabled={effectiveSelectedId === undefined}
+            onClick={() => {
+              if (effectiveSelectedId !== undefined) {
+                openModal(effectiveSelectedId);
+              }
+            }}
+            className="rounded bg-zinc-600 px-2 py-1 text-xs text-zinc-50 transition-colors hover:bg-zinc-500 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            disabled={effectiveSelectedId === undefined}
+            onClick={() => {
+              if (effectiveSelectedId !== undefined) {
+                onMemoryCopy(effectiveSelectedId);
+              }
+            }}
+            className="rounded bg-amber-500 px-2 py-1 text-xs text-zinc-950 transition-colors hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Copy
+          </button>
+          <button
+            type="button"
+            disabled={effectiveSelectedId === undefined}
+            onClick={() => {
+              if (effectiveSelectedId !== undefined) {
+                handleDelete(effectiveSelectedId);
+              }
+            }}
+            className="rounded bg-red-500 px-2 py-1 text-xs text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Delete
+          </button>
+        </div>
       </div>
       {heroMemoryList.length === 0 ? (
         <p className="text-zinc-500 italic text-center py-4">
           No memories in inventory. Click "Craft Memory" to add one.
         </p>
       ) : (
-        <div className="space-y-2 max-h-96 overflow-y-auto">
+        <div className="space-y-1 max-h-96 overflow-y-auto">
           {heroMemoryList.map((memory) => (
             <HeroMemoryItem
               key={memory.id}
               memory={memory}
               isEquipped={isMemoryEquipped(memory.id)}
-              onEdit={(memoryId) => openModal(memoryId)}
-              onCopy={onMemoryCopy}
-              onDelete={onMemoryDelete}
+              isSelected={effectiveSelectedId === memory.id}
+              onSelect={handleSelect}
             />
           ))}
         </div>

@@ -29,6 +29,19 @@ interface HeroTabProps {
   onMemoryDelete: (id: string) => void;
 }
 
+const CraftMemoryButton = () => {
+  const openModal = useHeroUIStore((s) => s.openMemoryModal);
+  return (
+    <button
+      type="button"
+      onClick={() => openModal()}
+      className="w-full rounded-lg bg-amber-500 px-3 py-1.5 text-sm font-semibold text-zinc-950 transition-colors hover:bg-amber-600"
+    >
+      Craft Memory
+    </button>
+  );
+};
+
 export const HeroTab = ({
   heroPage,
   heroMemoryList,
@@ -68,7 +81,8 @@ export const HeroTab = ({
       </div>
 
       {/* Right Column: Memory Inventory */}
-      <div className="space-y-6">
+      <div className="space-y-4">
+        <CraftMemoryButton />
         <MemoryInventory
           heroPage={heroPage}
           heroMemoryList={heroMemoryList}
