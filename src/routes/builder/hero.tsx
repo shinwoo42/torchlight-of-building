@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
+import { useOffenseResults } from "../../components/builder/OffenseResultsContext";
 import { HeroTab } from "../../components/hero/HeroTab";
 import type { HeroMemory, HeroMemorySlot } from "../../lib/save-data";
 import { useBuilderActions, useLoadout } from "../../stores/builderStore";
@@ -10,6 +11,7 @@ export const Route = createFileRoute("/builder/hero")({ component: HeroPage });
 function HeroPage(): React.ReactNode {
   const loadout = useLoadout();
   const saveData = useSaveDataRaw("export");
+  const { heroTraitLevels } = useOffenseResults();
   const {
     resetHeroPage,
     setTrait,
@@ -36,6 +38,7 @@ function HeroPage(): React.ReactNode {
       heroPage={loadout.heroPage}
       heroMemoryList={loadout.heroPage.memoryInventory}
       saveDataMemoryList={saveData.heroPage.memoryInventory}
+      heroTraitLevels={heroTraitLevels}
       onHeroChange={resetHeroPage}
       onTraitSelect={(
         level: 45 | 60 | 75,

@@ -1,19 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
-import {
-  type CritChance,
-  calculateOffense,
-  type OffenseComboDpsSummary,
-  type OffenseInput,
-  type OffenseSlashStrikeDpsSummary,
-  type OffenseSpellBurstDpsSummary,
-  type OffenseSpellDpsSummary,
-  type PersistentDpsSummary,
-  type ReapDpsSummary,
-  type Resistance,
-  type TotalReapDpsSummary,
+import type {
+  CritChance,
+  OffenseComboDpsSummary,
+  OffenseSlashStrikeDpsSummary,
+  OffenseSpellBurstDpsSummary,
+  OffenseSpellDpsSummary,
+  PersistentDpsSummary,
+  ReapDpsSummary,
+  Resistance,
+  TotalReapDpsSummary,
 } from "@/src/tli/calcs/offense";
+import { useOffenseResults } from "../../components/builder/OffenseResultsContext";
 import { ModGroup } from "../../components/calculations/ModGroup";
 import { SkillSelector } from "../../components/calculations/SkillSelector";
 import {
@@ -26,7 +25,6 @@ import {
 import {
   useBuilderActions,
   useCalculationsSelectedSkill,
-  useConfiguration,
   useLoadout,
 } from "../../stores/builderStore";
 
@@ -382,7 +380,6 @@ export const Route = createFileRoute("/builder/calculations")({
 
 function CalculationsPage(): React.ReactNode {
   const loadout = useLoadout();
-  const configuration = useConfiguration();
   const savedSkillName = useCalculationsSelectedSkill();
   const { setCalculationsSelectedSkill } = useBuilderActions();
 
@@ -390,11 +387,7 @@ function CalculationsPage(): React.ReactNode {
     | ImplementedActiveSkillName
     | undefined;
 
-  const offenseResults = useMemo(() => {
-    const input: OffenseInput = { loadout, configuration };
-    return calculateOffense(input);
-  }, [loadout, configuration]);
-
+  const offenseResults = useOffenseResults();
   const { skills, resourcePool, defenses } = offenseResults;
   const offenseSummary =
     selectedSkill !== undefined ? skills[selectedSkill] : undefined;

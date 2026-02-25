@@ -2,6 +2,7 @@ import * as R from "remeda";
 import { match } from "ts-pattern";
 import { bing2, type HeroName } from "@/src/data/hero-trait";
 import { hasPactspirit } from "@/src/lib/pactspirit-utils";
+import type { HeroTraitName } from "../../data/hero-trait/types";
 import {
   ActivationMediumSkills,
   type ActiveSkillName,
@@ -451,10 +452,13 @@ const calculateWillpower = (normalizedMods: Mod[]): number => {
 
 // === Hero Trait Mods ===
 
-const calculateHeroTraitMods = (loadout: Loadout): Mod[] => {
+const calculateHeroTraitMods = (
+  loadout: Loadout,
+): { mods: Mod[]; traitLevels: HeroTraitLevel[] } => {
   const { traits, memorySlots } = loadout.heroPage;
 
   const mods: Mod[] = [];
+  const traitLevels: HeroTraitLevel[] = [];
   // Primary traits with their associated memories
   // Secondary traits (for dual-trait heroes) share the same memory slots
   const traitToMemory = [
@@ -474,9 +478,10 @@ const calculateHeroTraitMods = (loadout: Loadout): Mod[] => {
       const baseLevel = memoryLevel >= 40 ? 3 : memoryLevel >= 20 ? 2 : 1;
       const level = baseLevel + addedLevel;
       mods.push(...getHeroTraitMods(trait.name, level));
+      traitLevels.push({ name: trait.name as HeroTraitName, level });
     }
   }
-  return mods;
+  return { mods, traitLevels };
 };
 
 const calculatePactspiritMods = (
@@ -764,11 +769,17 @@ export interface OffenseInput {
   configuration: Configuration;
 }
 
+export interface HeroTraitLevel {
+  name: HeroTraitName;
+  level: number;
+}
+
 export interface OffenseResults {
   errors: string[];
   skills: Partial<Record<ImplementedActiveSkillName, OffenseSummary>>;
   resourcePool: ResourcePool;
   defenses: Defenses;
+  heroTraitLevels: HeroTraitLevel[];
 }
 
 interface DerivedCtx {
@@ -3471,10 +3482,8 @@ const calcAvgSpellBurstDps = (
 export const calculateOffense = (input: OffenseInput): OffenseResults => {
   const errors: string[] = [];
   const { loadout, configuration: config } = input;
-  const loadoutMods = [
-    ...collectMods(loadout),
-    ...calculateHeroTraitMods(loadout),
-  ];
+  const heroTraitResult = calculateHeroTraitMods(loadout);
+  const loadoutMods = [...collectMods(loadout), ...heroTraitResult.mods];
 
   loadoutMods.push(...calculatePactspiritMods(loadout, loadoutMods));
 
@@ -3634,5 +3643,11 @@ export const calculateOffense = (input: OffenseInput): OffenseResults => {
     };
   }
 
-  return { errors, skills, resourcePool, defenses };
+  return {
+    errors,
+    skills,
+    resourcePool,
+    defenses,
+    heroTraitLevels: heroTraitResult.traitLevels,
+  };
 };

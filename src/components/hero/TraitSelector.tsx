@@ -8,6 +8,7 @@ import {
 import type { BaseHeroTrait, HeroTraitName } from "@/src/data/hero-trait/types";
 import { useTooltip } from "@/src/hooks/useTooltip";
 import type { HeroMemorySlot } from "@/src/lib/save-data";
+import type { HeroTraitLevel } from "@/src/tli/calcs/offense";
 import { getAffixText, type HeroMemory, type HeroPage } from "@/src/tli/core";
 import { isHeroTraitImplemented } from "@/src/tli/hero/hero-trait-mods";
 import {
@@ -80,6 +81,7 @@ const MemoryOptionWithTooltip: React.FC<MemoryOptionWithTooltipProps> = ({
 interface TraitSelectorProps {
   heroPage: HeroPage;
   heroMemoryList: HeroMemory[];
+  heroTraitLevels: HeroTraitLevel[];
   onTraitSelect: (
     level: 45 | 60 | 75,
     group: "a" | "b",
@@ -179,6 +181,7 @@ interface TraitRowProps {
   level: (typeof TRAIT_LEVELS)[number];
   heroPage: HeroPage;
   heroMemoryList: HeroMemory[];
+  heroTraitLevels: HeroTraitLevel[];
   onTraitSelect: (
     level: 45 | 60 | 75,
     group: "a" | "b",
@@ -191,6 +194,7 @@ const TraitRow = ({
   level,
   heroPage,
   heroMemoryList,
+  heroTraitLevels,
   onTraitSelect,
   onMemoryEquip,
 }: TraitRowProps) => {
@@ -332,8 +336,21 @@ const TraitRow = ({
         )}
 
         <div className="flex-1">
-          <div className="text-sm font-semibold text-amber-400 mb-2">
-            Level {level} {isLevel1 && "(Auto-selected)"}
+          <div className="text-sm font-semibold text-amber-400 mb-2 flex items-center gap-2">
+            <span>
+              Level {level} {isLevel1 && "(Auto-selected)"}
+            </span>
+            {selectedTraitA !== undefined &&
+              (() => {
+                const traitLevel = heroTraitLevels.find(
+                  (tl) => tl.name === selectedTraitA.name,
+                );
+                return traitLevel !== undefined ? (
+                  <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-xs text-amber-300">
+                    Lv. {traitLevel.level}
+                  </span>
+                ) : null;
+              })()}
           </div>
 
           {traitsGroupA.length === 0 && traitsGroupB.length === 0 ? (
@@ -366,6 +383,7 @@ const TraitRow = ({
 export const TraitSelector = ({
   heroPage,
   heroMemoryList,
+  heroTraitLevels,
   onTraitSelect,
   onMemoryEquip,
 }: TraitSelectorProps) => {
@@ -379,6 +397,7 @@ export const TraitSelector = ({
             level={level}
             heroPage={heroPage}
             heroMemoryList={heroMemoryList}
+            heroTraitLevels={heroTraitLevels}
             onTraitSelect={onTraitSelect}
             onMemoryEquip={onMemoryEquip}
           />

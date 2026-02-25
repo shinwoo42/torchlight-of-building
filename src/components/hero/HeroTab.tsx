@@ -4,6 +4,7 @@ import type {
   HeroMemory as SaveDataHeroMemory,
 } from "@/src/lib/save-data";
 import { useHeroUIStore } from "@/src/stores/heroUIStore";
+import type { HeroTraitLevel } from "@/src/tli/calcs/offense";
 import type { HeroMemory, HeroPage } from "@/src/tli/core";
 import { EditMemoryModal } from "./EditMemoryModal";
 import { HeroSelector } from "./HeroSelector";
@@ -14,6 +15,7 @@ interface HeroTabProps {
   heroPage: HeroPage;
   heroMemoryList: HeroMemory[];
   saveDataMemoryList: SaveDataHeroMemory[];
+  heroTraitLevels: HeroTraitLevel[];
   onHeroChange: (hero: string | undefined) => void;
   onTraitSelect: (
     level: 45 | 60 | 75,
@@ -46,6 +48,7 @@ export const HeroTab = ({
   heroPage,
   heroMemoryList,
   saveDataMemoryList,
+  heroTraitLevels,
   onHeroChange,
   onTraitSelect,
   onMemoryEquip,
@@ -75,6 +78,7 @@ export const HeroTab = ({
         <TraitSelector
           heroPage={heroPage}
           heroMemoryList={heroMemoryList}
+          heroTraitLevels={heroTraitLevels}
           onTraitSelect={onTraitSelect}
           onMemoryEquip={onMemoryEquip}
         />

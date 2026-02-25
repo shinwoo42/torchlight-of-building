@@ -30,6 +30,7 @@ import {
 import { AboutModal } from "../modals/AboutModal";
 import { ExportModal } from "../modals/ExportModal";
 import { PageTabs } from "../PageTabs";
+import { OffenseResultsProvider } from "./OffenseResultsContext";
 import { StatsPanel } from "./StatsPanel";
 
 interface BuilderLayoutProps {
@@ -231,17 +232,19 @@ export const BuilderLayout = ({ children }: BuilderLayoutProps) => {
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 gap-6">
-          <aside className="w-64 shrink-0 overflow-y-auto">
-            <StatsPanel />
-          </aside>
+        <OffenseResultsProvider>
+          <div className="flex min-h-0 flex-1 gap-6">
+            <aside className="w-64 shrink-0 overflow-y-auto">
+              <StatsPanel />
+            </aside>
 
-          <main className="min-w-0 flex-1 overflow-y-auto">
-            <PageTabs />
+            <main className="min-w-0 flex-1 overflow-y-auto">
+              <PageTabs />
 
-            {children}
-          </main>
-        </div>
+              {children}
+            </main>
+          </div>
+        </OffenseResultsProvider>
 
         <ExportModal
           isOpen={exportModalOpen}

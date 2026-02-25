@@ -1,23 +1,17 @@
-import { useMemo } from "react";
 import type { ImplementedActiveSkillName } from "@/src/data/skill/types";
-import {
-  type CritChance,
-  calculateOffense,
-  type OffenseComboDpsSummary,
-  type OffenseInput,
-  type OffenseSlashStrikeDpsSummary,
-  type OffenseSpellBurstDpsSummary,
-  type OffenseSpellDpsSummary,
-  type PersistentDpsSummary,
-  type Resistance,
-  type TotalReapDpsSummary,
+import type {
+  CritChance,
+  OffenseComboDpsSummary,
+  OffenseSlashStrikeDpsSummary,
+  OffenseSpellBurstDpsSummary,
+  OffenseSpellDpsSummary,
+  PersistentDpsSummary,
+  Resistance,
+  TotalReapDpsSummary,
 } from "@/src/tli/calcs/offense";
 import { formatStatValue } from "../../lib/calculations-utils";
-import {
-  useCalculationsSelectedSkill,
-  useConfiguration,
-  useLoadout,
-} from "../../stores/builderStore";
+import { useCalculationsSelectedSkill } from "../../stores/builderStore";
+import { useOffenseResults } from "./OffenseResultsContext";
 
 const formatRes = (res: Resistance): string => {
   if (res.potential > res.actual) {
@@ -254,18 +248,12 @@ const SpellBurstDpsSection = ({
 };
 
 export const StatsPanel = (): React.ReactNode => {
-  const loadout = useLoadout();
-  const configuration = useConfiguration();
   const savedSkillName = useCalculationsSelectedSkill();
   const selectedSkill = savedSkillName as
     | ImplementedActiveSkillName
     | undefined;
 
-  const offenseResults = useMemo(() => {
-    const input: OffenseInput = { loadout, configuration };
-    return calculateOffense(input);
-  }, [loadout, configuration]);
-
+  const offenseResults = useOffenseResults();
   const { skills, resourcePool, defenses } = offenseResults;
   const offenseSummary =
     selectedSkill !== undefined ? skills[selectedSkill] : undefined;
