@@ -3,10 +3,20 @@ import { z } from "zod";
 import { HeroMemoryTypeSchema } from "./common.schema";
 
 // Hero memory (SaveData version with string affixes)
+const MemoryBaseStatRaritySchema = z.enum([
+  "normal",
+  "magic",
+  "rare",
+  "epic",
+  "ultimate",
+]);
+
 const BaseHeroMemorySchema = z.object({
   id: z.string(),
   memoryType: HeroMemoryTypeSchema,
   baseStat: z.string(),
+  rarity: MemoryBaseStatRaritySchema.catch("epic"),
+  level: z.number().catch(40),
   fixedAffixes: z.array(z.string()).catch([]),
   randomAffixes: z.array(z.string()).catch([]),
 });

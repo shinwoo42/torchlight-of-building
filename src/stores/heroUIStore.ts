@@ -3,12 +3,16 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { DEFAULT_QUALITY } from "../lib/constants";
+import type { MemoryBaseStatRarity } from "../lib/hero-utils";
 import type { HeroMemoryType } from "../lib/save-data";
 
 interface MemoryAffixSlotState {
   effectIndex: number | undefined;
   quality: number;
 }
+
+const DEFAULT_BASE_STAT_RARITY: MemoryBaseStatRarity = "epic";
+const DEFAULT_BASE_STAT_LEVEL = 40;
 
 interface HeroUIState {
   // Memory modal state
@@ -17,7 +21,10 @@ interface HeroUIState {
 
   // Memory crafting state
   craftingMemoryType: HeroMemoryType | undefined;
-  craftingBaseStat: string | undefined;
+  craftingRarity: MemoryBaseStatRarity;
+  craftingLevel: number;
+  existingBaseStat: string | undefined; // Existing base stat text from edit mode
+  craftingBaseStatIndex: number | undefined; // Index into filtered AllHeroMemoryBaseStats
   existingFixedAffixes: string[]; // Existing affix text from edit mode
   existingRandomAffixes: string[]; // Existing affix text from edit mode
   fixedAffixSlots: MemoryAffixSlotState[];
@@ -27,7 +34,10 @@ interface HeroUIState {
   openMemoryModal: (memoryId?: string) => void;
   closeMemoryModal: () => void;
   setCraftingMemoryType: (type: HeroMemoryType | undefined) => void;
-  setCraftingBaseStat: (stat: string | undefined) => void;
+  setCraftingRarity: (rarity: MemoryBaseStatRarity) => void;
+  setCraftingLevel: (level: number) => void;
+  setExistingBaseStat: (value: string | undefined) => void;
+  setCraftingBaseStatIndex: (index: number | undefined) => void;
   setExistingFixedAffix: (index: number, value: string | undefined) => void;
   setExistingRandomAffix: (index: number, value: string | undefined) => void;
   setFixedAffixSlot: (
@@ -48,7 +58,10 @@ const createEmptyAffixSlots = (count: number): MemoryAffixSlotState[] =>
 
 const INITIAL_CRAFTING_STATE = {
   craftingMemoryType: undefined as HeroMemoryType | undefined,
-  craftingBaseStat: undefined as string | undefined,
+  craftingRarity: DEFAULT_BASE_STAT_RARITY as MemoryBaseStatRarity,
+  craftingLevel: DEFAULT_BASE_STAT_LEVEL,
+  existingBaseStat: undefined as string | undefined,
+  craftingBaseStatIndex: undefined as number | undefined,
   existingFixedAffixes: [] as string[],
   existingRandomAffixes: [] as string[],
   fixedAffixSlots: createEmptyAffixSlots(2),
@@ -73,27 +86,42 @@ export const useHeroUIStore = create<HeroUIState>()(
       set((state) => {
         state.isMemoryModalOpen = false;
         state.editingMemoryId = undefined;
-        state.craftingMemoryType = undefined;
-        state.craftingBaseStat = undefined;
-        state.existingFixedAffixes = [];
-        state.existingRandomAffixes = [];
-        state.fixedAffixSlots = createEmptyAffixSlots(2);
-        state.randomAffixSlots = createEmptyAffixSlots(4);
+        Object.assign(state, {
+          ...INITIAL_CRAFTING_STATE,
+          fixedAffixSlots: createEmptyAffixSlots(2),
+          randomAffixSlots: createEmptyAffixSlots(4),
+        });
       }),
 
     setCraftingMemoryType: (type) =>
       set((state) => {
         state.craftingMemoryType = type;
-        state.craftingBaseStat = undefined;
+        state.existingBaseStat = undefined;
+        state.craftingBaseStatIndex = undefined;
         state.existingFixedAffixes = [];
         state.existingRandomAffixes = [];
         state.fixedAffixSlots = createEmptyAffixSlots(2);
         state.randomAffixSlots = createEmptyAffixSlots(4);
       }),
 
-    setCraftingBaseStat: (stat) =>
+    setCraftingRarity: (rarity) =>
       set((state) => {
-        state.craftingBaseStat = stat;
+        state.craftingRarity = rarity;
+      }),
+
+    setCraftingLevel: (level) =>
+      set((state) => {
+        state.craftingLevel = level;
+      }),
+
+    setExistingBaseStat: (value) =>
+      set((state) => {
+        state.existingBaseStat = value;
+      }),
+
+    setCraftingBaseStatIndex: (index) =>
+      set((state) => {
+        state.craftingBaseStatIndex = index;
       }),
 
     setExistingFixedAffix: (index, value) =>
@@ -118,12 +146,11 @@ export const useHeroUIStore = create<HeroUIState>()(
 
     resetMemoryCrafting: () =>
       set((state) => {
-        state.craftingMemoryType = undefined;
-        state.craftingBaseStat = undefined;
-        state.existingFixedAffixes = [];
-        state.existingRandomAffixes = [];
-        state.fixedAffixSlots = createEmptyAffixSlots(2);
-        state.randomAffixSlots = createEmptyAffixSlots(4);
+        Object.assign(state, {
+          ...INITIAL_CRAFTING_STATE,
+          fixedAffixSlots: createEmptyAffixSlots(2),
+          randomAffixSlots: createEmptyAffixSlots(4),
+        });
       }),
   })),
 );

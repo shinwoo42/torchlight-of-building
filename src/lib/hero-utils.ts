@@ -1,6 +1,8 @@
 import { HeroMemories } from "@/src/data/hero-memory/hero-memories";
 import { HeroTraits } from "@/src/data/hero-trait/hero-traits";
 import type { BaseHeroTrait } from "@/src/data/hero-trait/types";
+import { AllHeroMemoryBaseStats } from "@/src/data/manual-entry/hero-memory/hero-memory-data";
+import type { HeroMemoryBaseStats } from "@/src/data/manual-entry/hero-memory/types";
 import type { HeroMemory as LoadoutHeroMemory } from "@/src/tli/core";
 import type { HeroMemory, HeroMemorySlot, HeroMemoryType } from "./save-data";
 
@@ -49,12 +51,69 @@ export const LEVEL_TO_SLOT_MAP: Record<45 | 60 | 75, HeroMemorySlot> = {
   75: "slot75",
 };
 
+export const MEMORY_TYPE_TO_SOURCE: Record<
+  HeroMemoryType,
+  HeroMemoryBaseStats["source"]
+> = {
+  "Memory of Origin": "Origin",
+  "Memory of Discipline": "Discipline",
+  "Memory of Progress": "Progress",
+};
+
+export const MEMORY_BASE_STAT_RARITIES = [
+  "normal",
+  "magic",
+  "rare",
+  "epic",
+  "ultimate",
+] as const;
+
+export type MemoryBaseStatRarity = (typeof MEMORY_BASE_STAT_RARITIES)[number];
+
+const RARITY_LEVELS: Record<MemoryBaseStatRarity, readonly number[]> = {
+  normal: [1, 10],
+  magic: [1, 10, 20],
+  rare: [1, 10, 20, 30],
+  epic: [1, 10, 20, 30, 40],
+  ultimate: [1, 10, 20, 30, 40, 50],
+};
+
+export const getLevelsForRarity = (
+  rarity: MemoryBaseStatRarity,
+): readonly number[] => {
+  return RARITY_LEVELS[rarity];
+};
+
 export const getBaseStatsForMemoryType = (
   memoryType: HeroMemoryType,
-): string[] => {
-  return HeroMemories.filter(
-    (m) => m.item === memoryType && m.type === "Base Stats",
-  ).map((m) => m.affix);
+): HeroMemoryBaseStats[] => {
+  const source = MEMORY_TYPE_TO_SOURCE[memoryType];
+  return AllHeroMemoryBaseStats.filter((entry) => entry.source === source);
+};
+
+export const getMemoryBaseStatValue = (
+  entry: HeroMemoryBaseStats,
+  rarity: MemoryBaseStatRarity,
+  level: number,
+): number => {
+  const rarityData = entry[rarity] as Record<number, number>;
+  const value = rarityData[level];
+  if (value === undefined) {
+    console.error(
+      `No value found for rarity=${rarity} level=${level} in template=${entry.affixTemplate}`,
+    );
+    return 0;
+  }
+  return Math.round(value);
+};
+
+export const renderMemoryBaseStat = (
+  entry: HeroMemoryBaseStats,
+  rarity: MemoryBaseStatRarity,
+  level: number,
+): string => {
+  const value = getMemoryBaseStatValue(entry, rarity, level);
+  return entry.affixTemplate.replace("#", String(value));
 };
 
 export const getFixedAffixesForMemoryType = (

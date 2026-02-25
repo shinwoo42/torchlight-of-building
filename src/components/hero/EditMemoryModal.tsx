@@ -4,11 +4,15 @@ import type { HeroMemory, HeroMemoryType } from "@/src/lib/save-data";
 import { HERO_MEMORY_TYPES } from "@/src/lib/save-data";
 import { useHeroUIStore } from "@/src/stores/heroUIStore";
 import { DEFAULT_QUALITY } from "../../lib/constants";
+import type { MemoryBaseStatRarity } from "../../lib/hero-utils";
 import {
   craftHeroMemoryAffix,
   getBaseStatsForMemoryType,
   getFixedAffixesForMemoryType,
+  getLevelsForRarity,
   getRandomAffixesForMemoryType,
+  MEMORY_BASE_STAT_RARITIES,
+  renderMemoryBaseStat,
 } from "../../lib/hero-utils";
 import { generateItemId } from "../../lib/storage";
 import { Modal, ModalActions, ModalButton } from "../ui/Modal";
@@ -176,13 +180,21 @@ export const EditMemoryModal = ({
   const isOpen = useHeroUIStore((s) => s.isMemoryModalOpen);
   const closeModal = useHeroUIStore((s) => s.closeMemoryModal);
   const craftingMemoryType = useHeroUIStore((s) => s.craftingMemoryType);
-  const craftingBaseStat = useHeroUIStore((s) => s.craftingBaseStat);
+  const craftingRarity = useHeroUIStore((s) => s.craftingRarity);
+  const craftingLevel = useHeroUIStore((s) => s.craftingLevel);
+  const existingBaseStat = useHeroUIStore((s) => s.existingBaseStat);
+  const craftingBaseStatIndex = useHeroUIStore((s) => s.craftingBaseStatIndex);
   const existingFixedAffixes = useHeroUIStore((s) => s.existingFixedAffixes);
   const existingRandomAffixes = useHeroUIStore((s) => s.existingRandomAffixes);
   const fixedAffixSlots = useHeroUIStore((s) => s.fixedAffixSlots);
   const randomAffixSlots = useHeroUIStore((s) => s.randomAffixSlots);
   const setCraftingMemoryType = useHeroUIStore((s) => s.setCraftingMemoryType);
-  const setCraftingBaseStat = useHeroUIStore((s) => s.setCraftingBaseStat);
+  const setCraftingRarity = useHeroUIStore((s) => s.setCraftingRarity);
+  const setCraftingLevel = useHeroUIStore((s) => s.setCraftingLevel);
+  const setExistingBaseStat = useHeroUIStore((s) => s.setExistingBaseStat);
+  const setCraftingBaseStatIndex = useHeroUIStore(
+    (s) => s.setCraftingBaseStatIndex,
+  );
   const setExistingFixedAffix = useHeroUIStore((s) => s.setExistingFixedAffix);
   const setExistingRandomAffix = useHeroUIStore(
     (s) => s.setExistingRandomAffix,
@@ -192,12 +204,44 @@ export const EditMemoryModal = ({
 
   const mode = memory === undefined ? "create" : "edit";
 
+  // Get base stat entries for the selected memory type
+  const baseStatEntries = useMemo(
+    () =>
+      craftingMemoryType !== undefined
+        ? getBaseStatsForMemoryType(craftingMemoryType)
+        : [],
+    [craftingMemoryType],
+  );
+
+  const availableLevels = useMemo(
+    () => getLevelsForRarity(craftingRarity),
+    [craftingRarity],
+  );
+
+  // Whether we have an existing base stat (edit mode) or need to craft a new one
+  const hasExistingBaseStat = existingBaseStat !== undefined;
+
+  // Compute the new crafted base stat string from selections (only used when no existing)
+  const craftedBaseStat = useMemo((): string | undefined => {
+    if (craftingBaseStatIndex === undefined) return undefined;
+    const entry = baseStatEntries[craftingBaseStatIndex];
+    if (entry === undefined) return undefined;
+    return renderMemoryBaseStat(entry, craftingRarity, craftingLevel);
+  }, [baseStatEntries, craftingBaseStatIndex, craftingRarity, craftingLevel]);
+
+  // The effective base stat is either the existing one or the newly crafted one
+  const effectiveBaseStat = hasExistingBaseStat
+    ? existingBaseStat
+    : craftedBaseStat;
+
   // Initialize state from existing memory when opening in edit mode
   useEffect(() => {
     if (isOpen && memory !== undefined) {
       setCraftingMemoryType(memory.memoryType);
-      setCraftingBaseStat(memory.baseStat);
-      // Store existing affix text — these show as ExistingAffix displays
+      setExistingBaseStat(memory.baseStat);
+      setCraftingRarity(memory.rarity);
+      setCraftingLevel(memory.level);
+
       for (const [idx, text] of memory.fixedAffixes.entries()) {
         setExistingFixedAffix(idx, text);
       }
@@ -209,20 +253,26 @@ export const EditMemoryModal = ({
     isOpen,
     memory,
     setCraftingMemoryType,
-    setCraftingBaseStat,
+    setExistingBaseStat,
+    setCraftingRarity,
+    setCraftingLevel,
     setExistingFixedAffix,
     setExistingRandomAffix,
   ]);
 
-  const baseStats = useMemo(
-    () =>
-      craftingMemoryType ? getBaseStatsForMemoryType(craftingMemoryType) : [],
-    [craftingMemoryType],
-  );
+  // Clamp level when rarity changes and current level is no longer available
+  useEffect(() => {
+    if (!availableLevels.includes(craftingLevel)) {
+      const maxLevel = availableLevels[availableLevels.length - 1];
+      if (maxLevel !== undefined) {
+        setCraftingLevel(maxLevel);
+      }
+    }
+  }, [availableLevels, craftingLevel, setCraftingLevel]);
 
   const fixedAffixes = useMemo(
     () =>
-      craftingMemoryType
+      craftingMemoryType !== undefined
         ? getFixedAffixesForMemoryType(craftingMemoryType)
         : [],
     [craftingMemoryType],
@@ -230,7 +280,7 @@ export const EditMemoryModal = ({
 
   const randomAffixes = useMemo(
     () =>
-      craftingMemoryType
+      craftingMemoryType !== undefined
         ? getRandomAffixesForMemoryType(craftingMemoryType)
         : [],
     [craftingMemoryType],
@@ -312,7 +362,7 @@ export const EditMemoryModal = ({
   ]);
 
   const handleSave = (): void => {
-    if (craftingMemoryType === undefined || craftingBaseStat === undefined)
+    if (craftingMemoryType === undefined || effectiveBaseStat === undefined)
       return;
 
     // Collect existing affixes that weren't deleted
@@ -343,7 +393,9 @@ export const EditMemoryModal = ({
     const savedMemory: HeroMemory = {
       id: memory?.id ?? generateItemId(),
       memoryType: craftingMemoryType,
-      baseStat: craftingBaseStat,
+      baseStat: effectiveBaseStat,
+      rarity: craftingRarity,
+      level: craftingLevel,
       fixedAffixes: finalFixedAffixes,
       randomAffixes: finalRandomAffixes,
     };
@@ -385,20 +437,72 @@ export const EditMemoryModal = ({
 
           {craftingMemoryType !== undefined && (
             <>
+              <div className="flex gap-3">
+                <div className="flex-1">
+                  <label className="block text-xs font-medium mb-1 text-zinc-400">
+                    Rarity
+                  </label>
+                  <SearchableSelect
+                    value={craftingRarity}
+                    onChange={(value) => {
+                      if (value !== undefined) {
+                        setCraftingRarity(value as MemoryBaseStatRarity);
+                      }
+                    }}
+                    options={MEMORY_BASE_STAT_RARITIES.map((r) => ({
+                      value: r,
+                      label: r.charAt(0).toUpperCase() + r.slice(1),
+                    }))}
+                    placeholder="Select rarity..."
+                    size="sm"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-xs font-medium mb-1 text-zinc-400">
+                    Level
+                  </label>
+                  <SearchableSelect
+                    value={craftingLevel}
+                    onChange={(value) => {
+                      if (value !== undefined) {
+                        setCraftingLevel(value);
+                      }
+                    }}
+                    options={availableLevels.map((level) => ({
+                      value: level,
+                      label: `Level ${level}`,
+                    }))}
+                    placeholder="Select level..."
+                    size="sm"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block text-sm font-medium mb-2 text-zinc-50">
+                <h3 className="text-sm font-medium mb-2 text-zinc-50">
                   Base Stat
-                </label>
-                <SearchableSelect
-                  value={craftingBaseStat}
-                  onChange={setCraftingBaseStat}
-                  options={baseStats.map((stat) => ({
-                    value: stat,
-                    label: stat,
-                  }))}
-                  placeholder="Select base stat..."
-                  size="lg"
-                />
+                </h3>
+                <div className="space-y-3">
+                  {hasExistingBaseStat ? (
+                    <ExistingAffix
+                      value={existingBaseStat}
+                      onDelete={() => setExistingBaseStat(undefined)}
+                    />
+                  ) : (
+                    <div className="bg-zinc-800 p-3 rounded-lg">
+                      <SearchableSelect
+                        value={craftingBaseStatIndex}
+                        onChange={setCraftingBaseStatIndex}
+                        options={baseStatEntries.map((entry, idx) => ({
+                          value: idx,
+                          label: entry.affixTemplate,
+                        }))}
+                        placeholder="Select base stat..."
+                        size="sm"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div>
@@ -500,7 +604,7 @@ export const EditMemoryModal = ({
         <div className="w-64 shrink-0 overflow-y-auto rounded-lg border border-zinc-700 bg-zinc-800 p-3">
           <MemoryPreview
             memoryType={craftingMemoryType}
-            baseStat={craftingBaseStat}
+            baseStat={effectiveBaseStat}
             previewLines={previewLines}
           />
         </div>
@@ -514,7 +618,7 @@ export const EditMemoryModal = ({
           onClick={handleSave}
           fullWidth
           disabled={
-            craftingMemoryType === undefined || craftingBaseStat === undefined
+            craftingMemoryType === undefined || effectiveBaseStat === undefined
           }
         >
           {mode === "create" ? "Save to Inventory" : "Save"}
